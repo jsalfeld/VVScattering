@@ -1,0 +1,504 @@
+from MitAnalysisRunII.SelMods.LeptonExampleMod import leptonExampleMod
+from MitAna.TreeMod.bambu import mithep, analysis
+from MitAna.TreeMod.sequenceable import Chain, Bundle
+import os
+
+mitdata = os.environ['MIT_DATA']
+
+if analysis.custom['bx'] == '25ns':
+    jecVersion = '25nsV2'
+elif analysis.custom['bx'] == '50ns':
+    jecVersion = '50nsV5'
+
+if analysis.isRealData:
+    jecPattern = 'Summer15_' + jecVersion + '_DATA_{level}_{jettype}.txt'
+    jecLevels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
+
+else:
+    jecPattern = 'Summer15_' + jecVersion + '_MC_{level}_{jettype}.txt'
+    jecLevels = ['L1FastJet', 'L2Relative', 'L3Absolute']
+
+from MitPhysics.SelMods.BadEventsFilterMod import badEventsFilterMod
+from MitPhysics.Mods.GoodPVFilterMod import goodPVFilterMod
+from MitPhysics.Mods.SeparatePileUpMod import separatePileUpMod
+from MitPhysics.Mods.FatJetExtenderMod import fatJetExtenderMod
+
+generator = mithep.GeneratorMod(
+    IsData = False,
+    CopyArrays = False,
+    MCMETName = "GenMet",
+    FillHist = True
+)
+
+jetCorrection = mithep.JetCorrectionMod(
+    InputName = 'AKt4PFJetsCHS',
+    CorrectedJetsName = 'CorrectedJets',
+    RhoAlgo = mithep.PileupEnergyDensity.kFixedGridFastjetAll
+)
+
+metCorrection = mithep.MetCorrectionMod('MetCorrection',
+    InputName = 'PFMet',
+    OutputName = 'PFType1CorrectedMet',
+    JetsName = 'AKt4PFJetsCHS',
+    RhoAlgo = mithep.PileupEnergyDensity.kFixedGridFastjetAll,
+    MaxEMFraction = 0.9,
+    SkipMuons = True
+)
+metCorrection.ApplyType0(False)
+metCorrection.ApplyType1(True)
+metCorrection.ApplyShift(False)
+metCorrection.IsData(analysis.isRealData)
+
+metCorrectionJESUp = metCorrection.clone('MetCorrectionJESUp',
+    OutputName = 'PFType1CorrectedMetJESUp',
+    JESUncertaintySigma = 1.
+)
+metCorrectionJESDown = metCorrection.clone('MetCorrectionJESDown',
+    OutputName = 'PFType1CorrectedMetJESDown',
+    JESUncertaintySigma = -1.
+)
+
+for level in jecLevels:
+    repl = {'level': level, 'jettype': 'AK4PFchs'}
+    jetCorrection.AddCorrectionFromFile(mitdata + '/JEC/' + jecPattern.format(**repl))
+    metCorrection.AddJetCorrectionFromFile(mitdata + '/JEC/' + jecPattern.format(**repl))
+    metCorrectionJESUp.AddJetCorrectionFromFile(mitdata + '/JEC/' + jecPattern.format(**repl))
+    metCorrectionJESDown.AddJetCorrectionFromFile(mitdata + '/JEC/' + jecPattern.format(**repl))
+
+repl = {'level': 'Uncertainty', 'jettype': 'AK4PFchs'}
+metCorrectionJESUp.AddJetCorrectionFromFile(mitdata + '/JEC/' + jecPattern.format(**repl))
+metCorrectionJESDown.AddJetCorrectionFromFile(mitdata + '/JEC/' + jecPattern.format(**repl))
+
+# Will not use PU jet ID here (MVA values to be stored in Nero tree)
+goodAK4Jets = mithep.JetIdMod('AK4JetId',
+    InputName = jetCorrection.GetOutputName(),
+    OutputName = 'GoodAK4Jets',
+    PFId = mithep.JetTools.kPFLoose,
+    MVATrainingSet = mithep.JetIDMVA.nMVATypes,
+    PtMin = 15.,
+    EtaMax = 5.,
+    MaxChargedEMFraction = 0.99,
+    MaxNeutralEMFraction = 0.99,
+    MaxNeutralHadronFraction = 0.99,
+    MaxMuonFraction = 0.80,
+    MinNPFCandidates = 2,
+    MinNChargedPFCandidates = 1
+)
+
+looseTaus = mithep.PFTauIdMod('PFTauId',
+    InputName = mithep.Names.gkHPSTauBrn,
+    OutputName = 'LooseTaus',
+    PtMin = 18.,
+    EtaMax = 2.3
+)
+looseTaus.AddDiscriminator(mithep.PFTau.kDiscriminationByDecayModeFindingNewDMs)
+looseTaus.AddCutDiscriminator(mithep.PFTau.kDiscriminationByRawCombinedIsolationDBSumPtCorr3Hits, 5., False)
+
+verylooseElectrons = mithep.ElectronIdMod('FiducialElectrons',
+    InputName = mithep.Names.gkElectronBrn,
+    OutputName = 'FiducialElectrons',
+    IdType = mithep.ElectronTools.kNoId,
+    IsoType = mithep.ElectronTools.kNoIso,
+    ApplyEcalFiducial = True,
+    ApplyD0Cut = False,
+    ApplyDZCut = False,
+    WhichVertex = 0,
+    PtMin = 10.,
+    EtaMax = 2.5,
+    ApplyConvFilterType1 = False,
+    ApplyConvFilterType2 = False,
+    ApplyNExpectedHitsInnerCut = False,
+    ConversionsName = 'Conversions'    
+)
+
+electronBaselineId = verylooseElectrons.clone('ElectronBaselineId',
+    IsFilterMode = False,
+    InputName = verylooseElectrons.GetOutputName(),
+    OutputName = 'FiducialElectronId'
+)
+
+electronVetoId = electronBaselineId.clone('ElectronVetoId',
+    OutputName = 'VetoElectronId',
+    ApplyD0Cut = True,
+    ApplyDZCut = True,
+    ApplyConvFilterType1 = True,
+    ApplyConvFilterType2 = False,
+    ApplyNExpectedHitsInnerCut = True,
+    IdType = mithep.ElectronTools.kSummer15Veto
+)
+
+electronFakeId = electronVetoId.clone('ElectronFakeId',
+    OutputName = 'FakeElectronId',
+    IdType = mithep.ElectronTools.kSummer15Fake,
+    IsoType = mithep.ElectronTools.kSummer15FakeIso
+)
+
+electronLooseId = electronVetoId.clone('ElectronLooseId',
+    OutputName = 'LooseElectronId',
+    IdType = mithep.ElectronTools.kSummer15Loose
+)
+
+electronMediumId = electronVetoId.clone('ElectronMediumId',
+    OutputName = 'MediumElectronId',
+    IdType = mithep.ElectronTools.kSummer15Medium
+)
+
+electronTightId = electronVetoId.clone('ElectronTightId',
+    OutputName = 'TightElectronId',
+    IdType = mithep.ElectronTools.kSummer15Tight
+)
+
+veryLooseMuons = mithep.MuonIdMod('FiducialMuons',
+    InputName = mithep.Names.gkMuonBrn,
+    OutputName = 'FiducialMuons',
+    MuonClassType = mithep.MuonTools.kAll,
+    IdType = mithep.MuonTools.kNoId,
+    IsoType = mithep.MuonTools.kNoIso,
+    PFNoPileupCandidatesName = 'pfNoPU',
+    PFPileupCandidatesName = 'pfPU',
+    ApplyD0Cut = False,
+    ApplyDZCut = False,
+    PtMin = 3.,
+    EtaMax = 2.4
+)
+
+muonBaselineId = veryLooseMuons.clone('MuonBaselineId',
+    IsFilterMode = False,
+    InputName = veryLooseMuons.GetOutputName(),
+    OutputName = 'BaselineMuonId',
+    MuonClassType = mithep.MuonTools.kGlobalorTracker,
+    ApplyD0Cut = False,
+    ApplyDZCut = False,
+    PtMin = 10.
+)
+
+muonPrivSoftId = veryLooseMuons.clone('MuonPrivSoftId',
+    IsFilterMode = False,
+    InputName = veryLooseMuons.GetOutputName(),
+    OutputName = 'SoftMuonId',
+    MuonClassType = mithep.MuonTools.kSoftMuon
+)
+
+muonFakeId = muonBaselineId.clone('MuonFakeId',
+    OutputName = 'FakeMuonId',
+    MuonClassType = mithep.MuonTools.kPFGlobalorTracker,
+    IdType = mithep.MuonTools.kTight,
+    ApplyD0Cut = True,
+    ApplyDZCut = True,
+    IsoType = mithep.MuonTools.kPFIsoBetaPUCorrected
+)
+
+muonLooseId = muonBaselineId.clone('MuonLooseId',
+    OutputName = 'LooseMuonId',
+    MuonClassType = mithep.MuonTools.kPFGlobalorTracker,
+    IdType = mithep.MuonTools.kLoose,
+    ApplyD0Cut = False,
+    ApplyDZCut = False
+)
+
+muonMediumId = muonBaselineId.clone('MuonMediumId',
+    OutputName = 'MediumMuonId',
+    MuonClassType = mithep.MuonTools.kPFGlobalorTracker,
+    IdType = mithep.MuonTools.kMedium,
+    ApplyD0Cut = True,
+    ApplyDZCut = True
+)
+
+muonTightId = muonBaselineId.clone('MuonTightId',
+    OutputName = 'TightMuonId',
+    MuonClassType = mithep.MuonTools.kPFGlobalorTracker,
+    IdType = mithep.MuonTools.kTight,
+    ApplyD0Cut = True,
+    ApplyDZCut = True
+)
+
+muonMediumIPId = muonBaselineId.clone('MuonMediumIPId',
+    OutputName = 'MediumIPMuonId',
+    MuonClassType = mithep.MuonTools.kPFGlobalorTracker,
+    IdType = mithep.MuonTools.kMediumIP,
+    ApplyD0Cut = True,
+    ApplyDZCut = True
+)
+
+muonTightIPId = muonBaselineId.clone('MuonTightIPId',
+    OutputName = 'TightIPMuonId',
+    MuonClassType = mithep.MuonTools.kPFGlobalorTracker,
+    IdType = mithep.MuonTools.kTightIP,
+    ApplyD0Cut = True,
+    ApplyDZCut = True
+)
+
+tightMuons = mithep.MaskCollectionMod('TightMuons',
+    InputName = veryLooseMuons.GetOutputName(),
+    MaskName = muonTightId.GetOutputName(),
+    OutputName = 'TightMuons'
+)
+
+ak8JetCorrection = mithep.JetCorrectionMod('AK8JetCorrection',
+    InputName = 'AKt8FatJetsCHS',
+    CorrectedJetsName = 'CorrectedAK8Jets',
+    RhoAlgo = mithep.PileupEnergyDensity.kFixedGridFastjetAll
+)
+
+for level in jecLevels:
+    ak8JetCorrection.AddCorrectionFromFile(mitdata + '/JEC/' + jecPattern.format(level = level, jettype = 'AK8PFchs'))
+
+goodAK8Jets = goodAK4Jets.clone('GoodAK8Jets',
+    InputName = ak8JetCorrection.GetOutputName(),
+    OutputName = 'GoodAK8Jets'
+)
+
+ak8JetExtender = fatJetExtenderMod.clone('AK8JetExtender',
+    InputName = goodAK8Jets.GetOutputName(),
+    OutputName = 'XlAK8Jets',
+    ConeSize = 0.8,
+    PFCandsName = mithep.Names.gkPFCandidatesBrn,
+    VertexesName = goodPVFilterMod.GetOutputName(),
+    UseSoftDropLib = False,
+    SoftDropR0 = 0.8,
+    SoftDropZCut = 0.1,
+    QGTaggingOn = False,
+    DoShowerDeconstruction = False,
+    DoECF = False,
+    DoQjets = False,
+    BeVerbose = False
+)
+ak8JetExtender.SetSubJetTypeOn(mithep.XlSubJet.kSoftDrop)
+
+goodCA15Jets = goodAK4Jets.clone('GoodCA15Jets',
+    InputName = 'CA15FatJetsCHS',
+    OutputName = 'GoodCA15Jets'
+)
+
+ca15JetExtender = fatJetExtenderMod.clone('CA15JetExtender',
+    InputName = goodCA15Jets.GetOutputName(),
+    OutputName = 'XlCA15Jets',
+    ConeSize = 1.5,
+    PFCandsName = mithep.Names.gkPFCandidatesBrn,
+    VertexesName = goodPVFilterMod.GetOutputName(),
+    UseSoftDropLib = False,
+    SoftDropR0 = 1.5,
+    SoftDropZCut = 0.2,
+    QGTaggingOn = False,
+    DoShowerDeconstruction = False,
+    DoECF = False,
+    DoQjets = False,
+    BeVerbose = False
+)
+ca15JetExtender.SetSubJetTypeOn(mithep.XlSubJet.kSoftDrop)
+
+loosePhotons = mithep.PhotonIdMod('LoosePhotons',
+    InputName = mithep.Names.gkPhotonBrn,
+    OutputName = 'LoosePhotons',
+    IdType = mithep.PhotonTools.kSummer15Loose,
+    IsoType = mithep.PhotonTools.kSummer15LooseIso,
+    PtMin = 15.,
+    EtaMax = 2.5
+)
+
+photonMediumId = loosePhotons.clone('PhotonMediumId',
+    IsFilterMode = False,
+    InputName = loosePhotons.GetOutputName(),
+    OutputName = 'PhotonMediumId',
+    IdType = mithep.PhotonTools.kSummer15Medium,
+    IsoType = mithep.PhotonTools.kSummer15MediumIso
+)
+
+photonTightId = photonMediumId.clone('PhotonTightId',
+    OutputName = 'PhotonTightId',
+    IdType = mithep.PhotonTools.kSummer15Tight,
+    IsoType = mithep.PhotonTools.kSummer15TightIso
+)
+
+leptonExampleMod = mithep.LeptonExampleMod('leptonExample',
+    VertexName = goodPVFilterMod.GetOutputName(),
+    MuonName = veryLooseMuons.GetOutputName(),
+    ElectronName = verylooseElectrons.GetOutputName()
+)
+
+head = 'HEAD'
+tag = 'BAMBU_042_V0002'
+
+fillers = []
+
+fillers.append(mithep.nero.EventFiller(
+    RhoAlgo = mithep.PileupEnergyDensity.kFixedGridFastjetAll
+))
+
+fillers.append(mithep.nero.VertexFiller(
+    VerticesName = goodPVFilterMod.GetOutputName()
+))
+
+fillers.append(mithep.nero.JetsFiller(
+    JetsName = goodAK4Jets.GetOutputName(),
+    VerticesName = goodPVFilterMod.GetOutputName(),
+    JetIdCutWP = mithep.JetIDMVA.kLoose,
+    JetIdMVATrainingSet = mithep.JetIDMVA.k53BDTCHSFullPlusRMS,
+    JetIdMVAWeightsFile = mitdata + '/TMVAClassification_5x_BDT_chsFullPlusRMS.weights.xml',
+    JetIdCutsFile = mitdata + '/jetIDCuts_121221.dat'
+))
+
+fillers.append(mithep.nero.TausFiller(
+    TausName = looseTaus.GetOutputName()
+))
+
+fillers.append(mithep.nero.LeptonsFiller(
+    MuonsName = veryLooseMuons.GetOutputName(),
+    BaselineMuonIdName = muonBaselineId.GetOutputName(),
+    VetoMuonIdName = muonBaselineId.GetOutputName(),
+    FakeMuonIdName = muonFakeId.GetOutputName(),
+    LooseMuonIdName = muonLooseId.GetOutputName(),
+    MediumMuonIdName = muonMediumId.GetOutputName(),
+    TightMuonIdName = muonTightId.GetOutputName(),
+    MediumIPMuonIdName = muonMediumIPId.GetOutputName(),
+    TightIPMuonIdName = muonTightIPId.GetOutputName(),
+    SoftIPMuonIdName = muonPrivSoftId.GetOutputName(),
+    ElectronsName = verylooseElectrons.GetOutputName(),
+    BaselineElectronIdName = electronBaselineId.GetOutputName(),
+    VetoElectronIdName = electronVetoId.GetOutputName(),
+    FakeElectronIdName = electronFakeId.GetOutputName(),
+    LooseElectronIdName = electronLooseId.GetOutputName(),
+    MediumElectronIdName = electronMediumId.GetOutputName(),
+    TightElectronIdName = electronTightId.GetOutputName(),
+    VerticesName = goodPVFilterMod.GetOutputName(),
+    PFCandsName = mithep.Names.gkPFCandidatesBrn,
+    NoPUPFCandsName = separatePileUpMod.GetPFNoPileUpName(),
+    PUPFCandsName = separatePileUpMod.GetPFPileUpName()
+))
+
+#fillers.append(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kAK8Jets,
+#    FatJetsName = ak8JetExtender.GetOutputName()
+#))
+#
+#fillers.append(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kCA15Jets,
+#    FatJetsName = ca15JetExtender.GetOutputName()
+#))
+
+fillers.append(mithep.nero.MetFiller(
+    MetName = metCorrection.GetOutputName(),
+    JESUpMetName = metCorrectionJESUp.GetOutputName(),
+    JESDownMetName = metCorrectionJESDown.GetOutputName(),
+    MuonsName = tightMuons.GetOutputName(),
+    GenMetName = generator.GetMCMETName()
+))
+
+fillers.append(mithep.nero.PhotonsFiller(
+    PhotonsName = loosePhotons.GetOutputName(),
+    MediumIdName = photonMediumId.GetOutputName(),
+    TightIdName = photonTightId.GetOutputName(),
+    VerticesName = goodPVFilterMod.GetOutputName()
+))
+
+fillers.append(mithep.nero.MonteCarloFiller())
+
+fillers.append(mithep.nero.AllFiller())
+
+triggerFiller = mithep.nero.TriggerFiller()
+fillers.append(triggerFiller)
+
+neroMod = mithep.NeroMod(
+    Info = 'Nero',
+    Head = head,
+    Tag = tag,
+    FileName = 'nero.root',
+    PrintLevel = 0
+)
+for filler in fillers:
+    neroMod.AddFiller(filler)
+
+neroMod.SetCondition(photonTightId)
+
+## SET UP THE SEQUENCE
+modules = []
+
+triggers = [
+    ('HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight_v*' if analysis.isRealData and analysis.custom['bx'] == '25ns' else 'HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight_v*', []),
+    ('HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight_v*' if analysis.isRealData and analysis.custom['bx'] == '25ns' else 'HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight_v*', []),
+    ('HLT_PFMET170_NoiseCleaned_v*', []),
+    ('HLT_Ele27_eta2p1_WPLoose_Gsf_v*' if analysis.isRealData else 'HLT_Ele27_eta2p1_WP75_Gsf_v*', ['hltEle27WPLooseGsfTrackIsoFilter']), # filter only matches data
+    ('HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*', []),
+    ('HLT_IsoMu24_eta2p1_v*', ['hltL3crIsoL1sMu20Eta2p1L1f0L2f10QL3f24QL3trkIsoFiltered0p09']),
+    ('HLT_IsoMu27_v*', ['hltL3crIsoL1sMu25L1f0L2f10QL3f27QL3trkIsoFiltered0p09']),
+    ('HLT_Photon120_v*', ['hltEG120HEFilter']),
+    ('HLT_Photon165_HE10_v*', ['hltEG165HE10Filter']),
+    ('HLT_Photon175_v*', ['hltEG175HEFilter']),
+    ('HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*', []),
+    ('HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*', []),
+    ('HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v*', []),
+    ('HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*', []),
+    ('HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*', []),
+    ('HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*', []),
+    ('HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*', []),
+    ('HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_v*', []),
+    ('HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*', []),
+    ('HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v*', []),
+    ('HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v*', ['hltEle12CaloIdLTrackIdLIsoVLTrackIsoFilter']),
+    ('HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v*', ['hltEle17CaloIdLTrackIdLIsoVLTrackIsoFilter']),
+    ('HLT_Mu8_TrkIsoVVL_v*', ['hltL3fL1sMu5L1f0L2f5L3Filtered8TkIsoFiltered0p4']),
+    ('HLT_Mu17_TrkIsoVVL_v*', ['hltL3fL1sMu12L1f0L2f12L3Filtered17TkIsoFiltered0p4']),
+    ('HLT_Mu24_TrkIsoVVL_v*', ['hltL3fL1sMu16L1f0L2f16L3Filtered24TkIsoFiltered0p4']),
+    ('HLT_Mu34_TrkIsoVVL_v*', ['hltL3fL1sMu20L1f0L2f20L3Filtered34TkIsoFiltered0p4'])
+]
+
+if analysis.isRealData:
+    hltMod = mithep.HLTMod(
+        ExportTrigObjects = False
+    )
+
+    for trig in triggers:
+        hltMod.AddTrigger(trig[0])
+
+    modules.append(hltMod)
+
+for trig in triggers:
+    triggerFiller.AddTriggerName(trig[0])
+    for filt in trig[1]:
+        triggerFiller.AddFilterName(trig[0], filt)
+
+modules += [
+    badEventsFilterMod,
+    goodPVFilterMod,
+    separatePileUpMod,
+    jetCorrection,
+    goodAK4Jets,
+    metCorrection,
+    metCorrectionJESUp,
+    metCorrectionJESDown,
+    looseTaus,
+    veryLooseMuons,
+    muonBaselineId,
+    muonPrivSoftId,
+    muonFakeId,
+    muonLooseId,
+    muonMediumId,
+    muonTightId,
+    muonMediumIPId,
+    muonTightIPId,
+    tightMuons,
+    verylooseElectrons,
+    electronBaselineId,
+    electronVetoId,
+    electronFakeId,
+    electronLooseId,
+    electronMediumId,
+    electronTightId,
+    leptonExampleMod,
+    loosePhotons,
+    photonMediumId,
+    photonTightId
+#    ak8JetCorrection,
+#    goodAK8Jets,
+#    goodCA15Jets,
+#    ak8JetExtender,
+#    ca15JetExtender
+]
+
+if not analysis.isRealData:
+    # run the generator mod for MC
+    modules.append(generator)
+
+# neroMod must be independent of the main chain
+# to ensure that the all events tree is filled properly
+sequence = Chain(modules)
+
+analysis.setSequence(sequence + neroMod)
