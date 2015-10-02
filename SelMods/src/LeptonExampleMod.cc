@@ -19,6 +19,7 @@ LeptonExampleMod::LeptonExampleMod(const char *name, const char *title) :
   fVertexName("NoDefaultNameSet"),
   fMuonName("NoDefaultNameSet"),
   fElectronName("NoDefaultNameSet"),
+  fNEventsRun(0),
   fNEventsSelected(0)
 {
   // Constructor.
@@ -43,14 +44,78 @@ void LeptonExampleMod::SlaveBegin()
 //--------------------------------------------------------------------------------------------------
 void LeptonExampleMod::Process()
 {
+  fNEventsRun++;
 
   auto* OriginalVertex = GetObject<mithep::Collection<Vertex> >(fVertexName, true);
   auto* OriginalCleanMuons = GetObject<mithep::Collection<Muon> >(fMuonName, true);
   auto* OriginalCleanElectrons  = GetObject<mithep::Collection<Electron> >(fElectronName, true);
 
+  mithep::NFArrBool* muIds[32]{};
+  for (unsigned iSel(0); iSel != 32; ++iSel) {
+    if (muonIdName_[iSel].Length() != 0)
+      muIds[iSel] = GetObject<mithep::NFArrBool>(muonIdName_[iSel]);
+  }
+
+  mithep::NFArrBool* eleIds[32]{};
+  for (unsigned iSel(0); iSel != 32; ++iSel) {
+    if (electronIdName_[iSel].Length() != 0)
+      eleIds[iSel] = GetObject<mithep::NFArrBool>(electronIdName_[iSel]);
+  }
+
+  bool eventLeptonFilter = kFALSE;
+
+  unsigned iE(0);
+  unsigned iM(0);
+
+  while (true) {
+    mithep::Electron* ele = 0;
+    if (iE != OriginalCleanElectrons->GetEntries())
+      ele = OriginalCleanElectrons->At(iE);
+
+    mithep::Muon* mu = 0;
+    if (iM != OriginalCleanMuons->GetEntries())
+      mu = OriginalCleanMuons->At(iM);
+
+    if (!ele && !mu)
+      break;
+
+    if (ele && mu) {
+      if (ele->Pt() > mu->Pt())
+        mu = 0;
+      else
+        ele = 0;
+    }
+
+    if (ele) {
+      // at least one lepton Id should be true
+      unsigned iSel(0);
+      for (; iSel != 32; ++iSel) {
+        if (eleIds[iSel] && eleIds[iSel]->At(iE))
+          break;
+      }
+
+      if (iSel != 32 && ele->Pt() > 10) {
+        eventLeptonFilter = kTRUE;
+      }
+      ++iE;
+    }
+    else {
+      // at least one lepton Id should be true
+      unsigned iSel(0);
+      for (; iSel != 32; ++iSel) {
+        if (muIds[iSel] && muIds[iSel]->At(iM))
+          break;
+      }
+
+      if (iSel != 32 && mu->Pt() > 10) {
+        eventLeptonFilter = kTRUE;
+      }
+      ++iM;
+    }
+  }
+
   bool passAllCuts = OriginalVertex->GetEntries() > 0 &&
-                     ((OriginalCleanMuons    ->GetEntries() > 0 && OriginalCleanMuons    ->At(0)->Pt() > 10) ||
-                      (OriginalCleanElectrons->GetEntries() > 0 && OriginalCleanElectrons->At(0)->Pt() > 10));
+                     eventLeptonFilter == kTRUE;
 
   if(passAllCuts) fNEventsSelected++;
   else            SkipEvent();
@@ -63,10 +128,13 @@ void LeptonExampleMod::SlaveTerminate()
 {
   
   // Run finishing code on the computer (slave) that did the analysis. For this
-  // module, we dont do anything here.
-  std::cout << "selected events on LeptonExampleMod: " << fNEventsSelected << std::endl;
+  // module, we dont do anything here
+  if(fNEventsRun > 0)
+    std::cout << "run/selected events on LeptonExampleMod(" << fNEventsSelected << "/" << fNEventsRun << ") = " << (double)fNEventsSelected/fNEventsRun << std::endl;
+  else
+    std::cout << "0 run events on LeptonExampleMod" << std::endl;
 
-} 
+}
 //--------------------------------------------------------------------------------------------------
 void LeptonExampleMod::Terminate()
 {

@@ -49,41 +49,41 @@ void genAnalysis(
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
   //infilenamev.push_back(Form("%sdata_AOD_25ns.root",filesPath.Data()));														  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(1);
-  //infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  //infilecatv.push_back(2);
-  //infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));  	          //infilecatv.push_back(2);
-  //infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  //infilecatv.push_back(3);
-  //infilenamev.push_back(Form("%sST_tW_top_5f_//inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));      //infilecatv.push_back(3);
-  //infilenamev.push_back(Form("%sST_tW_antitop_5f_//inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  //infilecatv.push_back(3);
-  //infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madsp//in_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sZZTo4L_13TeV_powheg_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sWZTo1L1Nu2Q_13TeV_amcatnloFXFX_madsp//in_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madsp//in_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM.root",filesPath.Data()));			  //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sWZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));				  //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sTTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madsp//in-pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sTTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madsp//in-pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madsp//in-pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(5);
-  //infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));                     //infilecatv.push_back(6);
-  //infilenamev.push_back(Form("%sGluGluHToWWTo2L2Nu_M125_13TeV_amcatnloFXFX_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sVBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          //infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sHWm//inusJ_HToWW_M125_13TeV_powheg_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sHWplusJ_HToWW_M125_13TeV_powheg_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sHZJ_HToWW_M125_13TeV_powheg_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sGluGluZH_HToWW_M125_13TeV_powheg_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sGluGluHToTauTau_M125_13TeV_powheg_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sWplusHToTauTau_M125_13TeV_powheg_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sWm//inusHToTauTau_M125_13TeV_powheg_pythia8+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madsp//in_pythia8_mWCutfix+RunIISpr//ing15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));      //infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  //infilecatv.push_back(2);
+  //infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));  	          //infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  //infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sST_tW_top_5f_//inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));      //infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sST_tW_antitop_5f_//inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  //infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  //infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madsp//in_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          //infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sZZTo4L_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  //infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sWZTo1L1Nu2Q_13TeV_amcatnloFXFX_madsp//in_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  //infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madsp//in_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM.root",filesPath.Data()));			  //infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  //infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sWZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));				  //infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sTTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madsp//in-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  //infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sTTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madsp//in-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  //infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          //infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madsp//in-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(4);
+  infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(5);
+  //infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));                     //infilecatv.push_back(6);
+  //infilenamev.push_back(Form("%sGluGluHToWWTo2L2Nu_M125_13TeV_amcatnloFXFX_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sVBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          //infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sHWm//inusJ_HToWW_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sHWplusJ_HToWW_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sHZJ_HToWW_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sGluGluZH_HToWW_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sGluGluHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sWplusHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sWm//inusHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  //infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madsp//in_pythia8_mWCutfix+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));      //infilecatv.push_back(7);
   }
   else {assert(0);}
   
-  infilenamev.clear();infilecatv.clear();
-  infilenamev.push_back(Form("nero.root"));   infilecatv.push_back(1);
+  //infilenamev.clear();infilecatv.clear();
+  //infilenamev.push_back(Form("nero.root"));   infilecatv.push_back(1);
   //infilenamev.push_back(Form("NeroNtuples_1.root"));   infilecatv.push_back(1);
 
   if(infilenamev.size() != infilecatv.size()) assert(0);
@@ -184,18 +184,93 @@ void genAnalysis(
         }
 	if(isGenDupl[ngen0] == 0) nGoodGenLeptons++;
       }
+      histo[80]->Fill((double)nGoodGenLeptons,totalWeight);
       
       for(int ngen=0; ngen<eventMonteCarlo.p4->GetEntriesFast(); ngen++) {
 	if(isGenDupl[ngen] == 1) continue;
         if(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt() <= 10) continue;
-	if(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()) >= 2.5)  continue;
+	if(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()) >= 2.5) continue;
+
 	int nCount = 0;
 	if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==11) nCount = 10;
 	histo[nCount+ 0]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
 	histo[nCount+40]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
-      }
+
+        int whichRecoLepton = -1;
+        for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
+          if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep]) == TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) &&
+	    ((TLorentzVector*)(*eventLeptons.p4)[nlep])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.1) {
+	    whichRecoLepton = nlep;
+	    break;
+	  }
+	}
+
+	if(whichRecoLepton >= 0) {
+	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==13) histo[81]->Fill(TMath::Min((double)(*eventLeptons.iso)   [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
+	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==11) histo[82]->Fill(TMath::Min((double)(*eventLeptons.iso)   [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
+	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==13) histo[83]->Fill(TMath::Min((double)(*eventLeptons.chIso) [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
+	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==11) histo[84]->Fill(TMath::Min((double)(*eventLeptons.chIso) [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
+	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==13) histo[85]->Fill(TMath::Min((double)(*eventLeptons.nhIso) [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
+	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==11) histo[86]->Fill(TMath::Min((double)(*eventLeptons.nhIso) [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
+	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==13) histo[87]->Fill(TMath::Min((double)(*eventLeptons.phoIso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
+	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==11) histo[88]->Fill(TMath::Min((double)(*eventLeptons.phoIso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
+	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==13) histo[89]->Fill(TMath::Min((double)(*eventLeptons.puIso) [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
+	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==11) histo[90]->Fill(TMath::Min((double)(*eventLeptons.puIso) [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
+	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepBaseline) == BareLeptons::LepBaseline) { 
+	    histo[nCount+ 1]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
+   	    histo[nCount+41]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
+	  }
+	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepVeto) == BareLeptons::LepVeto 
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
+	  selectIsoCut("veto",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	    histo[nCount+ 2]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
+   	    histo[nCount+42]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
+	  }
+	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepFake) == BareLeptons::LepFake) {
+	    histo[nCount+ 3]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
+   	    histo[nCount+43]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
+	  }
+	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepLoose) == BareLeptons::LepLoose 
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
+	  selectIsoCut("loose",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	    histo[nCount+ 4]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
+   	    histo[nCount+44]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
+	  }
+	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepMedium) == BareLeptons::LepMedium 
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
+	  selectIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	    histo[nCount+ 5]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
+   	    histo[nCount+45]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
+	  }
+	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepTight) == BareLeptons::LepTight 
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
+	  selectIsoCut("tight",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	    histo[nCount+ 6]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
+   	    histo[nCount+46]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
+	  }
+	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepSoftIP) == BareLeptons::LepSoftIP) {
+	    histo[nCount+ 7]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
+   	    histo[nCount+47]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
+	  }
+	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepMediumIP) == BareLeptons::LepMediumIP 
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
+	  selectIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	    histo[nCount+ 8]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
+   	    histo[nCount+48]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
+	  }
+	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepTightIP) == BareLeptons::LepTightIP 
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
+	  selectIsoCut("tight",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	    histo[nCount+ 9]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
+   	    histo[nCount+49]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
+	  }
+	}
+      } // end loop over gen leptons
+
 
       for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
+	int nCount = 20;
+	if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep])==11) nCount = 30;
         int whichGenLepton = -1;
         for(int ngen=0; ngen<eventMonteCarlo.p4->GetEntriesFast(); ngen++) {
 	  if(isGenDupl[ngen] == 1) continue;
@@ -203,78 +278,12 @@ void genAnalysis(
 	  if(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()) >= 2.5) continue;
           if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep]) == TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) &&
 	    ((TLorentzVector*)(*eventLeptons.p4)[nlep])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.1) {
-	    whichGenLepton = ngen;
+	    whichGenLepton = nlep;
 	    break;
 	  }
 	}
 
-	if(whichGenLepton >= 0) {
-	  int nCount = 0;
-	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[whichGenLepton])==11) nCount = 10;
-	  if(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt() > 30 && TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Eta()) < 1.5) {
-	    if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[whichGenLepton])==13) histo[81]->Fill(TMath::Min((double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),0.999),totalWeight);
-	    if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[whichGenLepton])==11) histo[82]->Fill(TMath::Min((double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),0.999),totalWeight);
-	    if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[whichGenLepton])==13) histo[83]->Fill(TMath::Min((double)(*eventLeptons.chIso)[nlep] /((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),0.999),totalWeight);
-	    if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[whichGenLepton])==11) histo[84]->Fill(TMath::Min((double)(*eventLeptons.chIso)[nlep] /((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),0.999),totalWeight);
-	    if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[whichGenLepton])==13) histo[85]->Fill(TMath::Min((double)(*eventLeptons.nhIso)[nlep] /((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),0.999),totalWeight);
-	    if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[whichGenLepton])==11) histo[86]->Fill(TMath::Min((double)(*eventLeptons.nhIso)[nlep] /((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),0.999),totalWeight);
-	    if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[whichGenLepton])==13) histo[87]->Fill(TMath::Min((double)(*eventLeptons.phoIso)[nlep]/((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),0.999),totalWeight);
-	    if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[whichGenLepton])==11) histo[88]->Fill(TMath::Min((double)(*eventLeptons.phoIso)[nlep]/((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),0.999),totalWeight);
-	    if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[whichGenLepton])==13) histo[89]->Fill(TMath::Min((double)(*eventLeptons.puIso)[nlep] /((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),0.999),totalWeight);
-	    if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[whichGenLepton])==11) histo[90]->Fill(TMath::Min((double)(*eventLeptons.puIso)[nlep] /((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),0.999),totalWeight);
-	  }
-	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepBaseline) == BareLeptons::LepBaseline) { 
-	    histo[nCount+ 1]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),99.999),totalWeight);
-   	    histo[nCount+41]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Eta()),totalWeight);
-	  }
-	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepVeto) == BareLeptons::LepVeto 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("veto",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
-	    histo[nCount+ 2]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),99.999),totalWeight);
-   	    histo[nCount+42]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Eta()),totalWeight);
-	  }
-	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake) == BareLeptons::LepFake) {
-	    histo[nCount+ 3]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),99.999),totalWeight);
-   	    histo[nCount+43]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Eta()),totalWeight);
-	  }
-	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepLoose) == BareLeptons::LepLoose 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("loose",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
-	    histo[nCount+ 4]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),99.999),totalWeight);
-   	    histo[nCount+44]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Eta()),totalWeight);
-	  }
-	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepMedium) == BareLeptons::LepMedium 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
-	    histo[nCount+ 5]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),99.999),totalWeight);
-   	    histo[nCount+45]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Eta()),totalWeight);
-	  }
-	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepTight) == BareLeptons::LepTight 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("tight",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
-	    histo[nCount+ 6]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),99.999),totalWeight);
-   	    histo[nCount+46]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Eta()),totalWeight);
-	  }
-	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepSoftIP) == BareLeptons::LepSoftIP) {
-	    histo[nCount+ 7]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),99.999),totalWeight);
-   	    histo[nCount+47]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Eta()),totalWeight);
-	  }
-	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepMediumIP) == BareLeptons::LepMediumIP 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
-	    histo[nCount+ 8]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),99.999),totalWeight);
-   	    histo[nCount+48]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Eta()),totalWeight);
-	  }
-	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepTightIP) == BareLeptons::LepTightIP 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("tight",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
-	    histo[nCount+ 9]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Pt(),99.999),totalWeight);
-   	    histo[nCount+49]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[whichGenLepton])->Eta()),totalWeight);
-	  }
-	}
-        else { // fakes
-	  int nCount = 20;
-	  if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep])==11) nCount = 30;
+	if(whichGenLepton == -1) {
 	  histo[nCount+ 0]->Fill(TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt(),99.999),totalWeight);
    	  histo[nCount+40]->Fill(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),totalWeight);
 	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepBaseline) == BareLeptons::LepBaseline) { 
@@ -327,8 +336,7 @@ void genAnalysis(
 	  }
 	}
 
-      } // end loop over leptons
-      histo[80]->Fill((double)nGoodGenLeptons,totalWeight);
+      } // end loop over reco leptons
     } // end of loop
   } // end of chain
 

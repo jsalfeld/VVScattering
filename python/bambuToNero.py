@@ -5,10 +5,11 @@ import os
 
 mitdata = os.environ['MIT_DATA']
 
-if analysis.custom['bx'] == '25ns':
-    jecVersion = '25nsV2'
-elif analysis.custom['bx'] == '50ns':
-    jecVersion = '50nsV5'
+def switchBX(case25, case50):
+    global analysis
+    return case25 if analysis.custom['bx'] == '25ns' else case50
+
+jecVersion = switchBX('25nsV2', '50nsV5')
 
 if analysis.isRealData:
     jecPattern = 'Summer15_' + jecVersion + '_DATA_{level}_{jettype}.txt'
@@ -100,6 +101,7 @@ verylooseElectrons = mithep.ElectronIdMod('FiducialElectrons',
     IdType = mithep.ElectronTools.kNoId,
     IsoType = mithep.ElectronTools.kNoIso,
     ApplyEcalFiducial = True,
+    ChargeFilter = False,
     ApplyD0Cut = False,
     ApplyDZCut = False,
     WhichVertex = 0,
@@ -257,7 +259,7 @@ ak8JetExtender = fatJetExtenderMod.clone('AK8JetExtender',
     UseSoftDropLib = False,
     SoftDropR0 = 0.8,
     SoftDropZCut = 0.1,
-    QGTaggingOn = False,
+    QGTaggingOn = True,
     DoShowerDeconstruction = False,
     DoECF = False,
     DoQjets = False,
@@ -279,7 +281,7 @@ ca15JetExtender = fatJetExtenderMod.clone('CA15JetExtender',
     UseSoftDropLib = False,
     SoftDropR0 = 1.5,
     SoftDropZCut = 0.2,
-    QGTaggingOn = False,
+    QGTaggingOn = True,
     DoShowerDeconstruction = False,
     DoECF = False,
     DoQjets = False,
@@ -292,6 +294,7 @@ loosePhotons = mithep.PhotonIdMod('LoosePhotons',
     OutputName = 'LoosePhotons',
     IdType = mithep.PhotonTools.kSummer15Loose,
     IsoType = mithep.PhotonTools.kSummer15LooseIso,
+    ApplyCSafeElectronVeto = True,
     PtMin = 15.,
     EtaMax = 2.5
 )
@@ -313,7 +316,9 @@ photonTightId = photonMediumId.clone('PhotonTightId',
 leptonExampleMod = mithep.LeptonExampleMod('leptonExample',
     VertexName = goodPVFilterMod.GetOutputName(),
     MuonName = veryLooseMuons.GetOutputName(),
-    ElectronName = verylooseElectrons.GetOutputName()
+    ElectronName = verylooseElectrons.GetOutputName(),
+    MuonIdName = muonFakeId.GetOutputName(),
+    ElectronIdName = electronFakeId.GetOutputName()
 )
 
 head = 'HEAD'
@@ -366,9 +371,9 @@ fillers.append(mithep.nero.LeptonsFiller(
     PUPFCandsName = separatePileUpMod.GetPFPileUpName()
 ))
 
-#fillers.append(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kAK8Jets,
-#    FatJetsName = ak8JetExtender.GetOutputName()
-#))
+fillers.append(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kAK8Jets,
+    FatJetsName = ak8JetExtender.GetOutputName()
+))
 #
 #fillers.append(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kCA15Jets,
 #    FatJetsName = ca15JetExtender.GetOutputName()
@@ -406,38 +411,40 @@ neroMod = mithep.NeroMod(
 for filler in fillers:
     neroMod.AddFiller(filler)
 
-neroMod.SetCondition(photonTightId)
+neroMod.SetCondition(ak8JetExtender)
 
 ## SET UP THE SEQUENCE
 modules = []
 
 triggers = [
-    ('HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight_v*' if analysis.isRealData and analysis.custom['bx'] == '25ns' else 'HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight_v*', []),
-    ('HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight_v*' if analysis.isRealData and analysis.custom['bx'] == '25ns' else 'HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight_v*', []),
-    ('HLT_PFMET170_NoiseCleaned_v*', []),
-    ('HLT_Ele27_eta2p1_WPLoose_Gsf_v*' if analysis.isRealData else 'HLT_Ele27_eta2p1_WP75_Gsf_v*', ['hltEle27WPLooseGsfTrackIsoFilter']), # filter only matches data
-    ('HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*', []),
-    ('HLT_IsoMu24_eta2p1_v*', ['hltL3crIsoL1sMu20Eta2p1L1f0L2f10QL3f24QL3trkIsoFiltered0p09']),
-    ('HLT_IsoMu27_v*', ['hltL3crIsoL1sMu25L1f0L2f10QL3f27QL3trkIsoFiltered0p09']),
-    ('HLT_Photon120_v*', ['hltEG120HEFilter']),
-    ('HLT_Photon165_HE10_v*', ['hltEG165HE10Filter']),
-    ('HLT_Photon175_v*', ['hltEG175HEFilter']),
-    ('HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*', []),
-    ('HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*', []),
-    ('HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v*', []),
-    ('HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*', []),
-    ('HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*', []),
-    ('HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*', []),
-    ('HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*', []),
-    ('HLT_Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30_v*', []),
-    ('HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*', []),
-    ('HLT_Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30_v*', []),
-    ('HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v*', ['hltEle12CaloIdLTrackIdLIsoVLTrackIsoFilter']),
-    ('HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v*', ['hltEle17CaloIdLTrackIdLIsoVLTrackIsoFilter']),
-    ('HLT_Mu8_TrkIsoVVL_v*', ['hltL3fL1sMu5L1f0L2f5L3Filtered8TkIsoFiltered0p4']),
-    ('HLT_Mu17_TrkIsoVVL_v*', ['hltL3fL1sMu12L1f0L2f12L3Filtered17TkIsoFiltered0p4']),
-    ('HLT_Mu24_TrkIsoVVL_v*', ['hltL3fL1sMu16L1f0L2f16L3Filtered24TkIsoFiltered0p4']),
-    ('HLT_Mu34_TrkIsoVVL_v*', ['hltL3fL1sMu20L1f0L2f20L3Filtered34TkIsoFiltered0p4'])
+    ('PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight' if analysis.isRealData and analysis.custom['bx'] == '25ns' else 'PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight', []),
+    ('PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight' if analysis.isRealData and analysis.custom['bx'] == '25ns' else 'PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight', []),
+    ('PFMET170_NoiseCleaned', []),
+#    ('Ele23_WPLoose_Gsf' if analysis.isRealData else 'Ele23_CaloIdL_TrackIdL_IsoVL', ['']),
+    ('Ele27_eta2p1_WPLoose_Gsf' if analysis.isRealData else 'Ele27_eta2p1_WP75_Gsf', ['hltEle27WPLooseGsfTrackIsoFilter']), # filter only matches data
+    ('Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', []),
+    ('IsoMu24_eta2p1', ['hltL3crIsoL1sMu20Eta2p1L1f0L2f10QL3f24QL3trkIsoFiltered0p09']),
+    ('IsoMu27', ['hltL3crIsoL1sMu25L1f0L2f10QL3f27QL3trkIsoFiltered0p09']),
+    ('Photon120', ['hltEG120HEFilter']),
+#    ('Photon135_PFMET100_JetIdCleaned', ['hltEG135HEFilter']),
+    ('Photon165_HE10', ['hltEG165HE10Filter']),
+    ('Photon175', ['hltEG175HEFilter']),
+    ('Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ', []),
+    ('Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ', []),
+    ('Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL', []),
+    ('Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL', []),
+    ('Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', []),
+    ('Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', []),
+    ('Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30', []),
+    ('Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30', []),
+    ('Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30', []),
+    ('Ele33_CaloIdL_TrackIdL_IsoVL_PFJet30', []),
+    ('Ele12_CaloIdL_TrackIdL_IsoVL', ['hltEle12CaloIdLTrackIdLIsoVLTrackIsoFilter']),
+    ('Ele17_CaloIdL_TrackIdL_IsoVL', ['hltEle17CaloIdLTrackIdLIsoVLTrackIsoFilter']),
+    ('Mu8_TrkIsoVVL', ['hltL3fL1sMu5L1f0L2f5L3Filtered8TkIsoFiltered0p4']),
+    ('Mu17_TrkIsoVVL', ['hltL3fL1sMu12L1f0L2f12L3Filtered17TkIsoFiltered0p4']),
+    ('Mu24_TrkIsoVVL', ['hltL3fL1sMu16L1f0L2f16L3Filtered24TkIsoFiltered0p4']),
+    ('Mu34_TrkIsoVVL', ['hltL3fL1sMu20L1f0L2f20L3Filtered34TkIsoFiltered0p4'])
 ]
 
 if analysis.isRealData:
@@ -446,14 +453,14 @@ if analysis.isRealData:
     )
 
     for trig in triggers:
-        hltMod.AddTrigger(trig[0])
+        hltMod.AddTrigger('HLT_' + trig[0] + '_v*')
 
     modules.append(hltMod)
 
 for trig in triggers:
-    triggerFiller.AddTriggerName(trig[0])
+    triggerFiller.AddTriggerName('HLT_' + trig[0] + '_v*')
     for filt in trig[1]:
-        triggerFiller.AddFilterName(trig[0], filt)
+        triggerFiller.AddFilterName('HLT_' + trig[0] + '_v*', filt)
 
 modules += [
     badEventsFilterMod,
@@ -485,11 +492,11 @@ modules += [
     leptonExampleMod,
     loosePhotons,
     photonMediumId,
-    photonTightId
-#    ak8JetCorrection,
-#    goodAK8Jets,
+    photonTightId,
+    ak8JetCorrection,
+    goodAK8Jets,
 #    goodCA15Jets,
-#    ak8JetExtender,
+    ak8JetExtender,
 #    ca15JetExtender
 ]
 

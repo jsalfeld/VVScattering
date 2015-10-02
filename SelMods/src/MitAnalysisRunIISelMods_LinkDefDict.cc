@@ -82,7 +82,7 @@ namespace ROOT {
       ::mithep::LeptonExampleMod *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::mithep::LeptonExampleMod >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("mithep::LeptonExampleMod", ::mithep::LeptonExampleMod::Class_Version(), "MitAnalysisRunII/SelMods/interface/LeptonExampleMod.h", 24,
+         instance("mithep::LeptonExampleMod", ::mithep::LeptonExampleMod::Class_Version(), "MitAnalysisRunII/SelMods/interface/LeptonExampleMod.h", 25,
                   typeid(::mithep::LeptonExampleMod), DefineBehavior(ptr, ptr),
                   &::mithep::LeptonExampleMod::Dictionary, isa_proxy, 4,
                   sizeof(::mithep::LeptonExampleMod) );
