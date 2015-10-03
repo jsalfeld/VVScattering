@@ -51,7 +51,7 @@ void genAnalysis(
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  //infilecatv.push_back(2);
   //infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));  	          //infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  //infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  //infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sST_tW_top_5f_//inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));      //infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sST_tW_antitop_5f_//inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  //infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  //infilecatv.push_back(4);
@@ -82,9 +82,13 @@ void genAnalysis(
   }
   else {assert(0);}
   
-  //infilenamev.clear();infilecatv.clear();
+  infilenamev.clear();infilecatv.clear();
   //infilenamev.push_back(Form("nero.root"));   infilecatv.push_back(1);
-  //infilenamev.push_back(Form("NeroNtuples_1.root"));   infilecatv.push_back(1);
+  infilenamev.push_back(Form("/home/ceballos/cms/hist/ww_all/t2mit/filefi/042/WWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM/nero_0007.root"));   infilecatv.push_back(1);
+  infilenamev.push_back(Form("/home/ceballos/cms/hist/ww_all/t2mit/filefi/042/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM/nero_0006.root"));   infilecatv.push_back(1);
+  infilenamev.push_back(Form("/home/ceballos/cms/hist/ww_all/t2mit/filefi/042/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM/nero_0018.root"));   infilecatv.push_back(1);
+  infilenamev.push_back(Form("/home/ceballos/cms/hist/ww_all/t2mit/filefi/042/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM/nero_0009.root"));   infilecatv.push_back(1);
+  infilenamev.push_back(Form("/home/ceballos/cms/hist/ww_all/t2mit/filefi/042/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM/nero_0064.root"));   infilecatv.push_back(1);
 
   if(infilenamev.size() != infilecatv.size()) assert(0);
 
