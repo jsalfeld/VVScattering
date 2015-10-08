@@ -84,12 +84,23 @@ void makeSkimSample(
     the_input_tree->GetEntry(i);
     if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
 
+    vector<int> idLep;
+    for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
+      if(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() <= 10) continue;
+      
+      if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)     == BareLeptons::LepFake     ||
+         ((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepMedium)   == BareLeptons::LepMedium   ||
+         ((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepTight)    == BareLeptons::LepTight    ||
+         ((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepMediumIP) == BareLeptons::LepMediumIP ||
+         ((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepTightIP)  == BareLeptons::LepTightIP) {idLep.push_back(nlep);}
+    }
+
     Bool_t passFilter = kFALSE;
     if     (filterType == -1) passFilter = kTRUE;
     else if(filterType == 0){
-      if(eventLeptons.p4->GetEntriesFast() >= 2 &&
-         ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 20 && 
-         ((TLorentzVector*)(*eventLeptons.p4)[1])->Pt() > 10) passFilter = kTRUE;
+      if(idLep.size() >= 2 &&
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 20 && 
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 10) passFilter = kTRUE;
     }
     else if(filterType == 1){
       bool passTrigger = kFALSE;
@@ -107,15 +118,15 @@ void makeSkimSample(
 	    (*eventTrigger.triggerFired)[nt] == 1) passTrigger = kTRUE;
       }
       if(passTrigger == kTRUE &&
-         eventLeptons.p4->GetEntriesFast() >= 1 &&
-         ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 10 && 
-	 (double)eventMet.pfMet_e3p0->Pt() < 30.0) passFilter = kTRUE;
+         idLep.size() >= 1 &&
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 10 && 
+	 ((TLorentzVector*)(*eventMet.p4)[0])->Pt() < 30.0) passFilter = kTRUE;
     }
     else if(filterType == 2){
-      if(eventLeptons.p4->GetEntriesFast() >= 2 &&
-         ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 20 && 
-         ((TLorentzVector*)(*eventLeptons.p4)[1])->Pt() > 10 && 
-	 TMath::Min((double)eventMet.pfMet_e3p0->Pt(),(double)eventMet.trackMet->Pt()) > 20.0) passFilter = kTRUE;
+      if(idLep.size() >= 2 &&
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 20 && 
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 10 && 
+	 TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt()) > 20.0) passFilter = kTRUE;
     }
 
     if(passFilter == kFALSE) continue;

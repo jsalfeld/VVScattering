@@ -1,2 +1,2 @@
 # MitAnalysisRunII
-Modules for run-II aalyses
+Modules for run-II analyses

@@ -27,7 +27,7 @@ void QCDAnalysis(
 
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/qcd_";
   Double_t lumi = 0.0685;
-  if(period == 1) lumi = 0.0161;
+  if(period == 1) lumi = 0.2351;
 
   Double_t prescale[5];
 
@@ -44,14 +44,14 @@ void QCDAnalysis(
 
   TString puPath = "";
   if     (period==0){
-  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.05120;prescale[2]=0.10650;prescale[3]=0.30903;prescale[4]=0.38352;}
-  else if(typeSel == 13) {prescale[0]=0.01452;prescale[1]=0.05176;prescale[2]=0.06872;prescale[3]=0.07442;prescale[4]=0.09093;}
+  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.05444;prescale[2]=0.12964;prescale[3]=0.32298;prescale[4]=0.39674;}
+  else if(typeSel == 13) {prescale[0]=0.01452;prescale[1]=0.03574;prescale[2]=0.06659;prescale[3]=0.06597;prescale[4]=0.08739;}
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_50ns.root";
   infilenamev.push_back(Form("%sdata_AOD_50ns.root",filesPath.Data()));														  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(1);
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));  	  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(3);
+  infilenamev.push_back(Form("%sTT_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v4+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(3);
   infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data())); infilecatv.push_back(3);
   infilenamev.push_back(Form("%sWZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(4);
   infilenamev.push_back(Form("%sZZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(4);
@@ -204,7 +204,7 @@ void QCDAnalysis(
       if(passTrigger == kTRUE &&
          eventLeptons.p4->GetEntriesFast() >= 1 &&
          ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 10 && 
-	 (double)eventMet.pfMet_e3p0->Pt() < 30.0) passFilter = kTRUE;
+	 (double)((TLorentzVector*)(*eventMet.p4)[0])->Pt() < 30.0) passFilter = kTRUE;
 
       if(passTrigger == kTRUE) nPassCuts[0]++;
       if(passFilter  == kTRUE) nPassCuts[1]++;
@@ -214,7 +214,9 @@ void QCDAnalysis(
       TLorentzVector dilep;double deltaPhiDileptonMet = -999.0; double mtW = -999.0;
       vector<int> idLep; vector<int> idTight;
       for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
-        if     (((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepTight) == BareLeptons::LepTight) {idTight.push_back(1); idLep.push_back(nlep);}
+        if(selectIdIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
+	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]))
+	                                                                                               {idTight.push_back(1); idLep.push_back(nlep);}
         else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idTight.push_back(0); idLep.push_back(nlep);}
       }
 
@@ -258,8 +260,8 @@ void QCDAnalysis(
 	 (infilecatv[ifile] == 0 || isGenLep.size() == 1)) {
           dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) );
           nPassCuts[4]++;
-          deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*eventMet.pfMet_e3p0));
-          mtW = TMath::Sqrt(2.0*dilep.Pt()*eventMet.pfMet_e3p0->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
+          deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
+          mtW = TMath::Sqrt(2.0*dilep.Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
 	  if(mtW < 20) passSel = kTRUE;
 	}
       }
@@ -273,8 +275,8 @@ void QCDAnalysis(
 	 (infilecatv[ifile] == 0 || isGenLep.size() == 1)) {
           dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) );
           nPassCuts[4]++;
-          deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*eventMet.pfMet_e3p0));
-          mtW = TMath::Sqrt(2.0*dilep.Pt()*eventMet.pfMet_e3p0->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
+          deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
+          mtW = TMath::Sqrt(2.0*dilep.Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
 	  if(mtW > 50) passSel = kTRUE;
 	}
       }
@@ -283,8 +285,8 @@ void QCDAnalysis(
       if(passSel == kFALSE) continue;
 
       if(mtW < 0){
-        deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*eventMet.pfMet_e3p0));
-        mtW = TMath::Sqrt(2.0*dilep.Pt()*eventMet.pfMet_e3p0->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
+        deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
+        mtW = TMath::Sqrt(2.0*dilep.Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
       }
 
       double theLumi = lumi; if(infilecatv[ifile] == 0) theLumi = 1.0;
@@ -349,7 +351,7 @@ void QCDAnalysis(
         if     (thePlot ==  0) theVar = TMath::Min(dilep.M(),199.999);
         else if(thePlot ==  1) theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);
         else if(thePlot ==  2) theVar = TMath::Min((double)eventMet.metNoMu->Pt(),199.999);
-        else if(thePlot ==  3) theVar = TMath::Min((double)eventMet.pfMet_e3p0->Pt(),199.999);
+        else if(thePlot ==  3) theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);
         else if(thePlot ==  4) theVar = TMath::Min(dilep.Pt(),199.999);
         else if(thePlot ==  5) theVar = TMath::Min(mtW,199.999);
         else if(thePlot ==  6) theVar = TMath::Min((double)0.0,6.499);

@@ -4,26 +4,26 @@ void InitializeJetIdCuts(Float_t fMVACut[4][4]);
 bool passJetId(Float_t fMVACut[4][4], double mva, double pt, double eta);
 double effScaleFactor(double pt, double eta, int nsel);
 double fakeRateFactor(double pt, double eta, int nsel);
-double selectIsoCut(TString type, int pdgId, double eta);
+double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso, int selBits);
 
-double effSF_m_50[6] = {0.911733,0.888666,0.955146,0.973134,0.989737,0.972520};
-double effSF_e_50[6] = {0.875339,0.974285,0.956408,1.003328,0.960643,0.964143};
+double effSF_m_50[6] = {0.925917,1.008327,0.982077,1.023462,1.004476,0.997671};
+double effSF_e_50[6] = {0.882519,0.969906,0.933259,0.999711,0.951164,0.960134};
 double effSF_m_25[6] = {0.975344,1.287860,1.037558,1.015660,1.027284,1.026771};
 double effSF_e_25[6] = {0.865479,1.056301,1.042451,1.113815,1.041915,0.954874};
 
 double fake_rate_e_50[5][5] = {
-0.123,0.118,0.101,0.016,0.062,
-0.143,0.127,0.099,0.025,0.028,
-0.159,0.160,0.111,0.061,0.029,
-0.182,0.150,0.128,0.084,0.061,
-0.147,0.142,0.127,0.106,0.087
+0.196,0.206,0.174,0.108,0.030,
+0.219,0.207,0.177,0.112,0.045,
+0.272,0.254,0.218,0.142,0.096,
+0.233,0.226,0.201,0.159,0.150,
+0.226,0.243,0.232,0.201,0.198
 };
 double fake_rate_m_50[5][5] = {
-0.140,0.110,0.122,0.097,0.030,
-0.155,0.116,0.089,0.069,0.009,
-0.178,0.133,0.125,0.111,0.020,
-0.206,0.150,0.130,0.088,0.031,
-0.206,0.179,0.101,0.078,0.286
+0.316,0.231,0.200,0.183,0.120,
+0.356,0.260,0.219,0.189,0.087,
+0.383,0.308,0.264,0.274,0.155,
+0.446,0.365,0.327,0.320,0.221,
+0.456,0.366,0.322,0.333,0.200
 };
 
 double fake_rate_e_25[5][5] = {
@@ -92,18 +92,26 @@ double nPUScaleFactor(TH1D *fhDPU, float npu){
   return fhDPU->GetBinContent(npuxbin);
 }
 
-double selectIsoCut(TString type, int pdgId, double eta){
+double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso, int selBits){
   bool isEB = TMath::Abs(eta) < 1.479;
-  if     (TMath::Abs(pdgId) == 13) return 0.12;
-  else if(TMath::Abs(pdgId) == 11) {
-    if     (type == "veto")   return (isEB ? 0.1260 : 0.1440);
-    else if(type == "loose")  return (isEB ? 0.0893 : 0.1210);
-    else if(type == "medium") return (isEB ? 0.0766 : 0.0678);
-    else if(type == "tight")  return (isEB ? 0.0354 : 0.0646);
+  double isoCut = 0.;
+  bool idCut = false;
+  if     (TMath::Abs(pdgId) == 13) {
+    isoCut = 0.12;
+    if     (type == "medium") idCut = (selBits & BareLeptons::LepMediumIP) == BareLeptons::LepMediumIP;
+    else if(type == "tight")  idCut = (selBits & BareLeptons::LepTightIP)  == BareLeptons::LepTightIP;
   }
-  printf("Problem with selectIsoCut!\n");
-  assert(0);
-  return 0.0;
+  else if(TMath::Abs(pdgId) == 11) {
+    if     (type == "medium") isoCut = (isEB ? 0.0766 : 0.0678);
+    else if(type == "tight")  isoCut = (isEB ? 0.0354 : 0.0646);
+    if     (type == "medium") idCut = (selBits & BareLeptons::LepMedium) == BareLeptons::LepMedium;
+    else if(type == "tight")  idCut = (selBits & BareLeptons::LepTight)  == BareLeptons::LepTight;
+  }
+  else {
+    printf("Problem with selectIsoCut!\n");
+    assert(0);
+  }
+  return (idCut && iso/pt < isoCut);
 }
 
 void InitializeJetIdCuts(Float_t fMVACut[4][4])

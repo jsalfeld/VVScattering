@@ -19,7 +19,7 @@
 #include "MitAnalysisRunII/macros/factors.h"
 
 void genAnalysis(
- Int_t period = 1
+ Int_t period = 0
  ){
 
   TString filesPath  = "/scratch5/ceballos/ntuples_noweights/";
@@ -83,12 +83,7 @@ void genAnalysis(
   else {assert(0);}
   
   infilenamev.clear();infilecatv.clear();
-  //infilenamev.push_back(Form("nero.root"));   infilecatv.push_back(1);
-  infilenamev.push_back(Form("/home/ceballos/cms/hist/ww_all/t2mit/filefi/042/WWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM/nero_0007.root"));   infilecatv.push_back(1);
-  infilenamev.push_back(Form("/home/ceballos/cms/hist/ww_all/t2mit/filefi/042/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM/nero_0006.root"));   infilecatv.push_back(1);
-  infilenamev.push_back(Form("/home/ceballos/cms/hist/ww_all/t2mit/filefi/042/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM/nero_0018.root"));   infilecatv.push_back(1);
-  infilenamev.push_back(Form("/home/ceballos/cms/hist/ww_all/t2mit/filefi/042/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM/nero_0009.root"));   infilecatv.push_back(1);
-  infilenamev.push_back(Form("/home/ceballos/cms/hist/ww_all/t2mit/filefi/042/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM/nero_0064.root"));   infilecatv.push_back(1);
+  infilenamev.push_back(Form("/mnt/hscratch/ceballos/test.root"));   infilecatv.push_back(1);
 
   if(infilenamev.size() != infilecatv.size()) assert(0);
 
@@ -167,6 +162,7 @@ void genAnalysis(
       printf("sampleNames(%d): %s\n",ifile,infilenamev[ifile].Data());
     }
 
+    double isoCut;
     for (int i=0; i<int(the_input_tree->GetEntries()/1.); ++i) {
       the_input_tree->GetEntry(i);
       if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
@@ -208,7 +204,6 @@ void genAnalysis(
 	    break;
 	  }
 	}
-
 	if(whichRecoLepton >= 0) {
 	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==13) histo[81]->Fill(TMath::Min((double)(*eventLeptons.iso)   [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
 	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==11) histo[82]->Fill(TMath::Min((double)(*eventLeptons.iso)   [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
@@ -220,51 +215,66 @@ void genAnalysis(
 	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==11) histo[88]->Fill(TMath::Min((double)(*eventLeptons.phoIso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
 	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==13) histo[89]->Fill(TMath::Min((double)(*eventLeptons.puIso) [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
 	  if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen])==11) histo[90]->Fill(TMath::Min((double)(*eventLeptons.puIso) [whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt(),0.999),totalWeight);
+
 	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepBaseline) == BareLeptons::LepBaseline) { 
 	    histo[nCount+ 1]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
    	    histo[nCount+41]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()) ? 0.1260 : 0.1440);
 	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepVeto) == BareLeptons::LepVeto 
-	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
-	  selectIsoCut("veto",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < isoCut) {
 	    histo[nCount+ 2]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
    	    histo[nCount+42]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
 	  }
+
 	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepFake) == BareLeptons::LepFake) {
 	    histo[nCount+ 3]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
    	    histo[nCount+43]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()) ? 0.0893 : 0.1210);
 	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepLoose) == BareLeptons::LepLoose 
-	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
-	  selectIsoCut("loose",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < isoCut) {
 	    histo[nCount+ 4]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
    	    histo[nCount+44]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()) ? 0.0766 : 0.0678);
 	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepMedium) == BareLeptons::LepMedium 
-	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
-	  selectIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < isoCut) {
 	    histo[nCount+ 5]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
    	    histo[nCount+45]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()) ? 0.0354 : 0.0646);
 	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepTight) == BareLeptons::LepTight 
-	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
-	  selectIsoCut("tight",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < isoCut) {
 	    histo[nCount+ 6]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
    	    histo[nCount+46]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
 	  }
+
 	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepSoftIP) == BareLeptons::LepSoftIP) {
 	    histo[nCount+ 7]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
    	    histo[nCount+47]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()) ? 0.0766 : 0.0678);
 	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepMediumIP) == BareLeptons::LepMediumIP 
-	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
-	  selectIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < isoCut) {
 	    histo[nCount+ 8]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
    	    histo[nCount+48]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()) ? 0.0354 : 0.0646);
 	  if(((int)(*eventLeptons.selBits)[whichRecoLepton] & BareLeptons::LepTightIP) == BareLeptons::LepTightIP 
-	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < 
-	  selectIsoCut("tight",TMath::Abs((int)(*eventLeptons.pdgId)[whichRecoLepton]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[whichRecoLepton]/((TLorentzVector*)(*eventLeptons.p4)[whichRecoLepton])->Pt() < isoCut) {
 	    histo[nCount+ 9]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Pt(),99.999),totalWeight);
    	    histo[nCount+49]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])->Eta()),totalWeight);
 	  }
@@ -290,51 +300,66 @@ void genAnalysis(
 	if(whichGenLepton == -1) {
 	  histo[nCount+ 0]->Fill(TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt(),99.999),totalWeight);
    	  histo[nCount+40]->Fill(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),totalWeight);
+
 	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepBaseline) == BareLeptons::LepBaseline) { 
 	    histo[nCount+ 1]->Fill(TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt(),99.999),totalWeight);
    	    histo[nCount+41]->Fill(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()) ? 0.1260 : 0.1440);
 	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepVeto) == BareLeptons::LepVeto 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("veto",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < isoCut) {
 	    histo[nCount+ 2]->Fill(TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt(),99.999),totalWeight);
    	    histo[nCount+42]->Fill(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),totalWeight);
 	  }
+
 	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake) == BareLeptons::LepFake) {
 	    histo[nCount+ 3]->Fill(TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt(),99.999),totalWeight);
    	    histo[nCount+43]->Fill(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()) ? 0.0893 : 0.1210);
 	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepLoose) == BareLeptons::LepLoose 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("loose",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < isoCut) {
 	    histo[nCount+ 4]->Fill(TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt(),99.999),totalWeight);
    	    histo[nCount+44]->Fill(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()) ? 0.0766 : 0.0678);
 	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepMedium) == BareLeptons::LepMedium 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < isoCut) {
 	    histo[nCount+ 5]->Fill(TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt(),99.999),totalWeight);
    	    histo[nCount+45]->Fill(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()) ? 0.0354 : 0.0646);
 	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepTight) == BareLeptons::LepTight 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("tight",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < isoCut) {
 	    histo[nCount+ 6]->Fill(TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt(),99.999),totalWeight);
    	    histo[nCount+46]->Fill(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),totalWeight);
 	  }
+
 	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepSoftIP) == BareLeptons::LepSoftIP) {
 	    histo[nCount+ 7]->Fill(TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt(),99.999),totalWeight);
    	    histo[nCount+47]->Fill(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()) ? 0.0766 : 0.0678);
 	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepMediumIP) == BareLeptons::LepMediumIP 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < isoCut) {
 	    histo[nCount+ 8]->Fill(TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt(),99.999),totalWeight);
    	    histo[nCount+48]->Fill(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),totalWeight);
 	  }
+
+          isoCut = 0.12;
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep]) == 11) isoCut = (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()) ? 0.0354 : 0.0646);
 	  if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepTightIP) == BareLeptons::LepTightIP 
-	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < 
-	  selectIsoCut("tight",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()))) {
+	  && (double)(*eventLeptons.iso)[nlep]/((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() < isoCut) {
 	    histo[nCount+ 9]->Fill(TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt(),99.999),totalWeight);
    	    histo[nCount+49]->Fill(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),totalWeight);
 	  }

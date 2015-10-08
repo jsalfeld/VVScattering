@@ -101,7 +101,6 @@ verylooseElectrons = mithep.ElectronIdMod('FiducialElectrons',
     IdType = mithep.ElectronTools.kNoId,
     IsoType = mithep.ElectronTools.kNoIso,
     ApplyEcalFiducial = True,
-    ChargeFilter = False,
     ApplyD0Cut = False,
     ApplyDZCut = False,
     WhichVertex = 0,
@@ -110,6 +109,7 @@ verylooseElectrons = mithep.ElectronIdMod('FiducialElectrons',
     ApplyConvFilterType1 = False,
     ApplyConvFilterType2 = False,
     ApplyNExpectedHitsInnerCut = False,
+    ChargeFilter = False,
     ConversionsName = 'Conversions'    
 )
 
@@ -184,10 +184,10 @@ muonPrivSoftId = veryLooseMuons.clone('MuonPrivSoftId',
 muonFakeId = muonBaselineId.clone('MuonFakeId',
     OutputName = 'FakeMuonId',
     MuonClassType = mithep.MuonTools.kPFGlobalorTracker,
-    IdType = mithep.MuonTools.kTight,
+    IdType = mithep.MuonTools.kTightIP,
     ApplyD0Cut = True,
     ApplyDZCut = True,
-    IsoType = mithep.MuonTools.kPFIsoBetaPUCorrected
+    IsoType = mithep.MuonTools.kPFIsoBetaPUCorrectedFake
 )
 
 muonLooseId = muonBaselineId.clone('MuonLooseId',
@@ -371,9 +371,9 @@ fillers.append(mithep.nero.LeptonsFiller(
     PUPFCandsName = separatePileUpMod.GetPFPileUpName()
 ))
 
-fillers.append(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kAK8Jets,
-    FatJetsName = ak8JetExtender.GetOutputName()
-))
+#fillers.append(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kAK8Jets,
+#    FatJetsName = ak8JetExtender.GetOutputName()
+#))
 #
 #fillers.append(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kCA15Jets,
 #    FatJetsName = ca15JetExtender.GetOutputName()
@@ -411,7 +411,7 @@ neroMod = mithep.NeroMod(
 for filler in fillers:
     neroMod.AddFiller(filler)
 
-neroMod.SetCondition(ak8JetExtender)
+neroMod.SetCondition(photonTightId)
 
 ## SET UP THE SEQUENCE
 modules = []
@@ -423,8 +423,9 @@ triggers = [
 #    ('Ele23_WPLoose_Gsf' if analysis.isRealData else 'Ele23_CaloIdL_TrackIdL_IsoVL', ['']),
     ('Ele27_eta2p1_WPLoose_Gsf' if analysis.isRealData else 'Ele27_eta2p1_WP75_Gsf', ['hltEle27WPLooseGsfTrackIsoFilter']), # filter only matches data
     ('Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', []),
-    ('IsoMu24_eta2p1', ['hltL3crIsoL1sMu20Eta2p1L1f0L2f10QL3f24QL3trkIsoFiltered0p09']),
     ('IsoMu27', ['hltL3crIsoL1sMu25L1f0L2f10QL3f27QL3trkIsoFiltered0p09']),
+    ('IsoMu20', ['hltL3crIsoL1sMu16L1f0L2f10QL3f20QL3trkIsoFiltered0p09']),
+    ('IsoTkMu20', ['hltL3fL1sMu16L1f0Tkf20QL3trkIsoFiltered0p09']),
     ('Photon120', ['hltEG120HEFilter']),
 #    ('Photon135_PFMET100_JetIdCleaned', ['hltEG135HEFilter']),
     ('Photon165_HE10', ['hltEG165HE10Filter']),
@@ -492,11 +493,11 @@ modules += [
     leptonExampleMod,
     loosePhotons,
     photonMediumId,
-    photonTightId,
-    ak8JetCorrection,
-    goodAK8Jets,
+    photonTightId
+#    ak8JetCorrection,
+#    goodAK8Jets,
 #    goodCA15Jets,
-    ak8JetExtender,
+#    ak8JetExtender,
 #    ca15JetExtender
 ]
 

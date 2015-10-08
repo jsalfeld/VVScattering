@@ -27,7 +27,8 @@ void topAnalysis(
  ){
 
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
-  Double_t lumi = 0.040;
+  Double_t lumi = 0.0685;
+  if(period == 1) lumi = 0.2351;
   enum { kOther, kTTBAR, kTW, kData };
 
   //*******************************************************
@@ -178,8 +179,20 @@ void topAnalysis(
       if(eventLeptons.p4->GetEntriesFast() >= 2 &&
      	 ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 20 && 
      	 ((TLorentzVector*)(*eventLeptons.p4)[1])->Pt() > 20) passFilter[0] = kTRUE;
-      for (int nt = 0; nt <=TMath::Min((int)numtokens,8); nt++) {
-        if((*eventTrigger.triggerFired)[nt] == 1) passFilter[1] = kTRUE;
+      for (int nt = 0; nt <(int)numtokens; nt++) {
+	if((strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v*")  == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*")  == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*") == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*") == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*")             == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*")           == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_IsoMu27_v*")                                     == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_IsoMu20_v*")				            == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_IsoTkMu20_v*")				    == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")       == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_Ele27_eta2p1_WP75_Gsf_v*")                       == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_Ele27_eta2p1_WPLoose_Gsf_v*")                    == 0 && (*eventTrigger.triggerFired)[nt] == 1)
+           ) passFilter[1] = kTRUE;
       }
 
       if(passFilter[0] == kFALSE) continue;
@@ -187,9 +200,11 @@ void topAnalysis(
 
       vector<int> idLep; vector<int> idTight; vector<int> idSoft; unsigned int goodIsTight = 0;
       for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
-        if     (((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepTight) == BareLeptons::LepTight) {idTight.push_back(1); idLep.push_back(nlep); goodIsTight++;}
+        if(selectIdIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
+	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]))
+	                                                                                               {idTight.push_back(1); idLep.push_back(nlep); goodIsTight++;}
         else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idTight.push_back(0); idLep.push_back(nlep);}
-        else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepSoft)  == BareLeptons::LepSoft ) {idSoft.push_back(nlep);}
+        else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepSoftIP)== BareLeptons::LepSoftIP){idSoft.push_back(nlep);}
       }
       if(idLep.size()!=idTight.size()) assert(0);
       if(idLep.size()==2) passFilter[2] = kTRUE;
@@ -208,8 +223,17 @@ void topAnalysis(
 
       if(passFilter[4] == kFALSE) continue;
 
+      double dPhiLepMETMin = 999.;
+      for(unsigned nl=0; nl<idLep.size(); nl++){
+        if(dPhiLepMETMin > TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nl])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0]))))
+           dPhiLepMETMin = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nl])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));      
+      }
+      double minMET  = TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt());
+      double minPMET = TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt());
+      if(dPhiLepMETMin < TMath::Pi()/2) minPMET = minPMET * sin(dPhiLepMETMin);
+
       TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) )); 
-      if(dilep.M() > 12 && (double)eventMet.pfMet_e3p0->Pt() > 20 && dilep.Pt() > 30) passFilter[4] = kTRUE;
+      if(dilep.M() > 12 && minMET > 20 && dilep.Pt() > 30) passFilter[4] = kTRUE;
       if(passFilter[4] == kFALSE) continue;
 
       int nJets = 0;

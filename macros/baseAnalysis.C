@@ -20,8 +20,6 @@
 
 bool usePureMC = false;
 
-const int softMuId = 512;
-
 void baseAnalysis(
  Int_t nsel = 0,
  Int_t typeSel = 4,
@@ -30,7 +28,7 @@ void baseAnalysis(
 
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
   Double_t lumi = 0.0685;
-  if(period == 1) lumi = 0.0161;
+  if(period == 1) lumi = 0.2351;
 
   if(nsel == 2) usePureMC = true;
 
@@ -45,13 +43,13 @@ void baseAnalysis(
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_50ns.root";
   infilenamev.push_back(Form("%sdata_AOD_50ns.root",filesPath.Data()));														  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(1);
-  infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(2);
+  //infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(2);
   //infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));  	  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data())); infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sWZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sZZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(5);
+  //infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data())); infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sZZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(5);
   }
   else if(period==1){
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
@@ -111,10 +109,10 @@ void baseAnalysis(
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 19;
+  const int allPlots = 20;
   const int histBins = 8;
   TH1D* histo[allPlots][histBins];
-  
+
   for(int thePlot=0; thePlot<allPlots; thePlot++){
     if     (thePlot >=  0 && thePlot <=  5) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >=  6 && thePlot <=  6) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
@@ -123,8 +121,8 @@ void baseAnalysis(
     else if(thePlot >=  9 && thePlot <=  9) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
     else if(thePlot >= 10 && thePlot <= 11) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot =   3.5;}
     else if(thePlot >= 12 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
-    else if(thePlot >= 15 && thePlot <= 17) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >= 18 && thePlot <= 18) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
+    else if(thePlot >= 15 && thePlot <= 18) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
+    else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
@@ -132,6 +130,9 @@ void baseAnalysis(
   }
   unsigned int numberOfLeptons = 2;
   if(nsel == 4) numberOfLeptons = 3;
+
+  double totalEventsProcess[50];
+  std::vector<double> sumEventsProcess(infilenamev.size(), 0.0);
 
   //*******************************************************
   // Chain Loop
@@ -198,8 +199,9 @@ void baseAnalysis(
            (strcmp(tokens[nt],"HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*") == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
            (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*")             == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
            (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*")           == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
-           (strcmp(tokens[nt],"HLT_IsoMu24_eta2p1_v*")                              == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
            (strcmp(tokens[nt],"HLT_IsoMu27_v*")                                     == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_IsoMu20_v*")				            == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
+           (strcmp(tokens[nt],"HLT_IsoTkMu20_v*")				    == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
            (strcmp(tokens[nt],"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")       == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
            (strcmp(tokens[nt],"HLT_Ele27_eta2p1_WP75_Gsf_v*")                       == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
            (strcmp(tokens[nt],"HLT_Ele27_eta2p1_WPLoose_Gsf_v*")                    == 0 && (*eventTrigger.triggerFired)[nt] == 1)
@@ -213,9 +215,11 @@ void baseAnalysis(
 
       vector<int> idLep; vector<int> idTight; vector<int> idSoft; unsigned int goodIsTight = 0;
       for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
-        if     (((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepTight) == BareLeptons::LepTight) {idTight.push_back(1); idLep.push_back(nlep); goodIsTight++;}
+        if(selectIdIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
+	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]))
+	                                                                                               {idTight.push_back(1); idLep.push_back(nlep); goodIsTight++;}
         else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idTight.push_back(0); idLep.push_back(nlep);}
-        else if(((int)(*eventLeptons.selBits)[nlep] & softMuId)              == softMuId )             {idSoft.push_back(nlep);}
+        else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepSoftIP)== BareLeptons::LepSoftIP){idSoft.push_back(nlep);}
       }
       if(idLep.size()!=idTight.size()) assert(0);
       if(idLep.size()==numberOfLeptons) passFilter[2] = kTRUE;
@@ -234,10 +238,17 @@ void baseAnalysis(
       else if(typeSel == 6 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])!=TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]))         passFilter[4] = kTRUE;
       else if(typeSel == 4)                                                                                                               passFilter[4] = kTRUE;
 
+      double dPhiLepMETMin = 999.;
       int signQ = 0;
       for(unsigned nl=0; nl<idLep.size(); nl++){
         signQ = signQ + (int)(*eventLeptons.pdgId)[idLep[nl]]/TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]);
+        if(dPhiLepMETMin > TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nl])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0]))))
+           dPhiLepMETMin = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nl])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));      
       }
+      double minMET  = TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt());
+      double minPMET = TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt());
+      if(dPhiLepMETMin < TMath::Pi()/2) minPMET = minPMET * sin(dPhiLepMETMin);
+
       if     (numberOfLeptons == 2) passFilter[4] = passFilter[4] * (signQ == 0);
       else if(numberOfLeptons == 3) passFilter[4] = passFilter[4] * (TMath::Abs(signQ) == 1);
 
@@ -280,7 +291,7 @@ void baseAnalysis(
         if(dPhiJetMET   == -1) dPhiJetMET   = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])))*180./TMath::Pi();
         if(dPhiJetDiLep == -1) dPhiJetDiLep = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventJets.p4)[nj])))*180./TMath::Pi();
 
-	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 15 && 
+	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 10 && 
 	   (float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
 
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) continue;
@@ -297,24 +308,24 @@ void baseAnalysis(
       if(nsel == 0){ // WW selection
         if(nJets == 0) passFilter[6] = kTRUE;
 	if(bDiscrMax < 0.605 && idSoft.size() == 0) passFilter[7] = kTRUE;
-	if((double)eventMet.pfMet_e3p0->Pt() > 20) passFilter[8] = kTRUE;
+	if(minPMET > 20) passFilter[8] = kTRUE;
 	if(dilep.Pt() > 30) passFilter[9] = kTRUE;
 	if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])){
-	  if(TMath::Min((double)eventMet.pfMet_e3p0->Pt(),(double)eventMet.trackMet->Pt()) < 50 || dPhiJetDiLep > 140) passFilter[8] = kFALSE;
-	  if(dilep.Pt() < 45) passFilter[9] = kFALSE;
-	  if(TMath::Abs(dilep.M()-91.1876)<15.0) passFilter[5] = kFALSE;
+	  if(minPMET <= 45) passFilter[8] = kFALSE;
+	  if(dilep.Pt() <= 45) passFilter[9] = kFALSE;
+	  if(TMath::Abs(dilep.M()-91.1876) <= 15.0) passFilter[5] = kFALSE;
 	}
       }
       else if(nsel == 1){ // ttbar selection
         passFilter[6] = kTRUE;
 	//if(bDiscrMax > 0.605) 
 	passFilter[7] = kTRUE;
-	if(TMath::Min((double)eventMet.pfMet_e3p0->Pt(),(double)eventMet.trackMet->Pt()) > 20) passFilter[8] = kTRUE;
+	if(minPMET > 20) passFilter[8] = kTRUE;
 	if(dilep.Pt() > 30) passFilter[9] = kTRUE;
 	if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])){
-	  if(TMath::Min((double)eventMet.pfMet_e3p0->Pt(),(double)eventMet.trackMet->Pt()) < 50) passFilter[8] = kFALSE;
-	  if(dilep.Pt() < 45) passFilter[9] = kFALSE;
-	  if(TMath::Abs(dilep.M()-91.1876)<15.0) passFilter[5] = kFALSE;
+	  if(minPMET <= 45) passFilter[8] = kFALSE;
+	  if(dilep.Pt() <= 45) passFilter[9] = kFALSE;
+	  if(TMath::Abs(dilep.M()-91.1876) <= 15.0) passFilter[5] = kFALSE;
 	}
       }
       else if(nsel == 2){ // Z selection in mZ mass window, anti b-tagging against top events for e-mu
@@ -343,7 +354,7 @@ void baseAnalysis(
 	                          ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + 
 	                          ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) ) ));
         mass3l = dilepAux.M();
-	if(TMath::Min((double)eventMet.pfMet_e3p0->Pt(),(double)eventMet.trackMet->Pt()) > 20) passFilter[6] = kTRUE;
+	if(minMET > 20) passFilter[6] = kTRUE;
         passFilter[7] = TMath::Abs(minMassZ-91.1876) < 15.0;
         passFilter[8] = ((TLorentzVector*)(*eventLeptons.p4)[2])->Pt() > 10;
 	if(bDiscrMax < 0.605 && idSoft.size() == 0) passFilter[9] = kTRUE;
@@ -352,7 +363,7 @@ void baseAnalysis(
 	if   (TMath::Abs(dilep.M()-91.1876)>15.0) passFilter[5] = kFALSE;
 	else                                      passFilter[5] = kTRUE;              
         passFilter[6] = nJets == 0;
-	passFilter[7] = eventMet.pfMet_e3p0->Pt() > 100.;
+	passFilter[7] = ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 100.;
 	passFilter[8] = ptFrac < 0.5 && dPhiDiLepMET > 150.;
 	passFilter[9] = bDiscrMax < 0.605 && idSoft.size() == 0;
       }
@@ -368,11 +379,11 @@ void baseAnalysis(
       if(passFilter[8] == kFALSE) continue;
       if(passFilter[9] == kTRUE) nPassCuts[9]++;
       if(passFilter[9] == kFALSE) continue;
-      double deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*eventMet.pfMet_e3p0));
-      double mtW = TMath::Sqrt(2.0*dilep.Pt()*eventMet.pfMet_e3p0->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
+      double deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
+      double mtW = TMath::Sqrt(2.0*dilep.Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
 
-      double deltaPhiLeptonMet = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[tagZ[2]])->DeltaPhi(*eventMet.pfMet_e3p0));
-      double mtLN = TMath::Sqrt(2.0*((TLorentzVector*)(*eventLeptons.p4)[tagZ[2]])->Pt()*eventMet.pfMet_e3p0->Pt()*(1.0 - cos(deltaPhiLeptonMet)));
+      double deltaPhiLeptonMet = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[tagZ[2]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
+      double mtLN = TMath::Sqrt(2.0*((TLorentzVector*)(*eventLeptons.p4)[tagZ[2]])->Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiLeptonMet)));
 
       // begin event weighting
       vector<bool> isGenDupl;
@@ -449,13 +460,14 @@ void baseAnalysis(
       //double totalWeight = eventMonteCarlo.mcWeight*theLumi*puWeight*effSF*fakeSF;
       double totalWeight = eventMonteCarlo.mcWeight*theLumi*puWeight*effSF*fakeSF;
       // end event weighting
+      if(infilecatv[ifile] != 0 || theCategory == 0) if(totalWeight>0)sumEventsProcess[ifile] += totalWeight;
 
       for(int thePlot=0; thePlot<allPlots; thePlot++){
 	double theVar = 0.0;
 	if     (thePlot ==  0) theVar = TMath::Min(minMassll,199.999);
 	else if(thePlot ==  1) theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);
 	else if(thePlot ==  2) theVar = TMath::Min((double)eventMet.trackMet->Pt(),199.999);
-	else if(thePlot ==  3) theVar = TMath::Min((double)eventMet.pfMet_e3p0->Pt(),199.999);
+	else if(thePlot ==  3) theVar = TMath::Min(minPMET,199.999);
 	else if(thePlot ==  4) theVar = TMath::Min(dilep.Pt(),199.999);
 	else if(thePlot ==  5) theVar = TMath::Min(mtW,199.999);
 	else if(thePlot ==  6) theVar = TMath::Min((double)nJets,6.499);
@@ -466,15 +478,16 @@ void baseAnalysis(
 	else if(thePlot == 11) theVar = (double)type3l;
 	else if(thePlot == 12) theVar = TMath::Min(mass3l,199.999);
 	else if(thePlot == 13) theVar = TMath::Min(mtLN,199.999);
-	else if(thePlot == 14) theVar = TMath::Min(TMath::Min((double)eventMet.trackMet->Pt(),(double)eventMet.pfMet_e3p0->Pt()),199.999);
+	else if(thePlot == 14) theVar = TMath::Min(minMET,199.999);
 	else if(thePlot == 15) theVar = dPhiJetMET;
 	else if(thePlot == 16) theVar = dPhiJetDiLep;
 	else if(thePlot == 17) theVar = dPhiDiLepMET;
-	else if(thePlot == 18) theVar = TMath::Min(ptFrac,0.999);
+	else if(thePlot == 18) theVar = dPhiLepMETMin*180/TMath::Pi();
+	else if(thePlot == 19) theVar = TMath::Min(ptFrac,0.999);
 	histo[thePlot][theCategory]->Fill(theVar,totalWeight);
       }
     }
-    printf("eff_cuts: ");
+    printf("eff_cuts(%f): ",sumEventsProcess[ifile]);
     for(int nc=0; nc<10; nc++){
       double nminusone = the_input_tree->GetEntries();
       if(nc>0) nminusone = nPassCuts[nc-1];
