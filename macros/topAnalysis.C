@@ -23,12 +23,12 @@ const int etaBins = 5;
 
 void topAnalysis(
  Int_t typeSel = 6,
- Int_t period = 0
+ Int_t period = 1
  ){
 
-  TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
-  Double_t lumi = 0.0685;
-  if(period == 1) lumi = 0.2351;
+  TString filesPath  = "/scratch5/ceballos/ntuples_weights/met_";
+  Double_t lumi = 0.0715;
+  if(period == 1) lumi = 0.5947;
   enum { kOther, kTTBAR, kTW, kData };
 
   //*******************************************************
@@ -37,53 +37,52 @@ void topAnalysis(
   vector<TString> infilenamev;  
   vector<Int_t> infilecatv;  
 
+  // careful, ttbar myst be category 3 and tW must be category 4
   TString puPath = "";
-  if     (period==0){
+  if      (period==0){
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_50ns.root";
   infilenamev.push_back(Form("%sdata_AOD_50ns.root",filesPath.Data()));														  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(1);
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));  	  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data())); infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sWZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sZZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(4);
+  infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data())); infilecatv.push_back(4);
+  infilenamev.push_back(Form("%sWZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sZZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(7);
   infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(5);
+  assert(0);
   }
   else if(period==1){
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
   infilenamev.push_back(Form("%sdata_AOD_25ns.root",filesPath.Data()));														  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(1);
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));  	          infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));      infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sZZTo4L_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sWZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sWZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));				  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sTTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sTTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(4);
+  infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(4);
+  infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  infilecatv.push_back(4);
+  infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sZZTo4L_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sWZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sWZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));				  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sTTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sTTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(7);
   infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(5);
-  infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));                     infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(6);
   infilenamev.push_back(Form("%sGluGluHToWWTo2L2Nu_M125_13TeV_amcatnloFXFX_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(7);
-  infilenamev.push_back(Form("%sVBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          infilecatv.push_back(7);
-  infilenamev.push_back(Form("%sHWminusJ_HToWW_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  infilecatv.push_back(7);
-  infilenamev.push_back(Form("%sHWplusJ_HToWW_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  infilecatv.push_back(7);
-  infilenamev.push_back(Form("%sHZJ_HToWW_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  infilecatv.push_back(7);
-  infilenamev.push_back(Form("%sGluGluZH_HToWW_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  infilecatv.push_back(7);
-  infilenamev.push_back(Form("%sGluGluHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  infilecatv.push_back(7);
-  infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  infilecatv.push_back(7);
-  infilenamev.push_back(Form("%sWplusHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  infilecatv.push_back(7);
-  infilenamev.push_back(Form("%sWminusHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		                  infilecatv.push_back(7);
-  infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));      infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sVBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  		  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sGluGluHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data())); 			  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));				  infilecatv.push_back(7);
+  /////infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data())); 		  infilecatv.push_back(7);
+  /////infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data())); infilecatv.push_back(7);
+
   }
   else {assert(0);}
 
@@ -209,6 +208,8 @@ void topAnalysis(
       if(idLep.size()!=idTight.size()) assert(0);
       if(idLep.size()==2) passFilter[2] = kTRUE;
       if(passFilter[2] == kFALSE) continue;
+      if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <= 20 ||
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <= 20) continue;
 
       if(idTight[0]==1&&idTight[1]==1) passFilter[3] = kTRUE;
       if(usePureMC ==  true && passFilter[3] == kFALSE) continue;
@@ -225,22 +226,25 @@ void topAnalysis(
 
       double dPhiLepMETMin = 999.;
       for(unsigned nl=0; nl<idLep.size(); nl++){
-        if(dPhiLepMETMin > TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nl])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0]))))
-           dPhiLepMETMin = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nl])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));      
+        if(dPhiLepMETMin > TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0]))))
+           dPhiLepMETMin = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));      
       }
       double minMET  = TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt());
       double minPMET = TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt());
       if(dPhiLepMETMin < TMath::Pi()/2) minPMET = minPMET * sin(dPhiLepMETMin);
 
       TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) )); 
-      if(dilep.M() > 12 && minMET > 20 && dilep.Pt() > 30) passFilter[4] = kTRUE;
-      if(passFilter[4] == kFALSE) continue;
+      if(dilep.M() > 12 && minPMET > 20 && dilep.Pt() > 30) passFilter[5] = kTRUE;
+      if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])){
+	if(TMath::Abs(dilep.M()-91.1876) <= 15.0 || minPMET <= 45 || dilep.Pt() <= 45) passFilter[5] = kFALSE;
+      }
+      if(passFilter[5] == kFALSE) continue;
 
       int nJets = 0;
       double bDiscrLowPt = -999.;
       int n_jet[2]  = {-999, -999};
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
-        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 15) continue;
+        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 10) continue;
         bool passId = passJetId(fMVACut, (float)(*eventJets.puId)[nj], ((TLorentzVector*)(*eventJets.p4)[nj])->Pt(), TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()));
         if(passId == false) continue;        
 
@@ -257,6 +261,14 @@ void topAnalysis(
 	nJets++;
         if     (n_jet[0] == -999) n_jet[0] = nj;
 	else if(n_jet[1] == -999) n_jet[1] = nj;
+      }
+
+      vector<int> idSoftNotInJet;
+      for(unsigned nl=0; nl<idSoft.size(); nl++){
+        bool isInsideJet = kFALSE;
+        if(n_jet[0] >= 0) if(((TLorentzVector*)(*eventJets.p4)[n_jet[0]])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idSoft[nl]])) < 0.4) isInsideJet = kTRUE;
+        if(n_jet[1] >= 0) if(((TLorentzVector*)(*eventJets.p4)[n_jet[1]])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idSoft[nl]])) < 0.4) isInsideJet = kTRUE;
+	if(isInsideJet == kFALSE) idSoftNotInJet.push_back(idSoft[nl]);
       }
 
       // begin event weighting
@@ -291,7 +303,7 @@ void topAnalysis(
       // luminosity
       double theLumi  = 1.0; if(infilecatv[ifile] != 0) theLumi  = lumi;
       // pile-up
-      double puWeight = 1.0; if(infilecatv[ifile] != 0) puWeight = nPUScaleFactor(fhDPU, (double)eventEvent.rho);
+      double puWeight = 1.0; if(infilecatv[ifile] != 0) puWeight = nPUScaleFactor(fhDPU, (double)eventVertex.npv);
       // lepton efficiency
       double effSF = 1.0;
       if(infilecatv[ifile] != 0){
@@ -299,6 +311,7 @@ void topAnalysis(
           effSF = effSF * effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period);
         }
       }
+
       // fake rate
       int theCategory = infilecatv[ifile];
       double fakeSF = 1.0;
@@ -309,7 +322,7 @@ void topAnalysis(
         else if(theCategory == 2 && goodIsTight != idTight.size()){ // remove Z+jets from MC as fakeable objects
           fakeSF = 0.0;
         }
-        else if((infilecatv[ifile] == 0 || goodIsGenLep == isGenLep.size()) && goodIsTight != idTight.size()){ // add W+jets from data
+        else if((infilecatv[ifile] == 0 || infilecatv[ifile] == 6 || goodIsGenLep == isGenLep.size()) && goodIsTight != idTight.size()){ // add W+jets from data
           for(unsigned int nl=0; nl<idLep.size(); nl++){
 	    if(idTight[nl] == 1) continue;
 	    effSF = effSF * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period);
@@ -320,15 +333,19 @@ void topAnalysis(
           else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) effSF = -1.0 * effSF; // double fake, data
           else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) effSF =  1.0 * effSF; // single fake, data
         }
-        else if(infilecatv[ifile] != 0 && goodIsGenLep != isGenLep.size()){ // remove dilepton fakes from ll events
+        else if(infilecatv[ifile] != 0 && infilecatv[ifile] != 6 && goodIsGenLep != isGenLep.size()){ // remove MC dilepton fakes from ll events
           fakeSF = 0.0;
         }
-        else if(infilecatv[ifile] != 0 && goodIsGenLep == isGenLep.size()){
-	  //fakeSF = 0.0;
+        else if(infilecatv[ifile] != 0 && goodIsGenLep == isGenLep.size()){ // MC with all good leptons
+	  fakeSF = 1.0;
         }
-        else if(infilecatv[ifile] == 0){
-	  //fakeSF = 0.0;
+        else if(infilecatv[ifile] == 0 || infilecatv[ifile] == 6){ // data or W+gamma with all good leptons
+	  fakeSF = 1.0;
         }
+	else {
+	  printf("PROBLEM: %d %d %d %d %d\n",infilecatv[ifile],goodIsGenLep,(int)isGenLep.size(),goodIsTight,(int)idTight.size());
+	  assert(0);
+	}
       }
       double totalWeight = eventMonteCarlo.mcWeight*theLumi*puWeight*effSF*fakeSF;
       // end event weighting
@@ -336,7 +353,7 @@ void topAnalysis(
       int classType = kOther;
       if(theCategory == 0) classType = kData;
       if(theCategory == 3) classType = kTTBAR;
-      if(theCategory == 4) classType = kTW;	 
+      if(theCategory == 4) classType = kTW;
 
       Double_t etaMin = 0; Double_t bTagMax[2] = {0,0};
       if(nJets >= 2){
@@ -354,13 +371,13 @@ void topAnalysis(
         int nEta = TMath::Min(etaMin,2.499)/2.5*etaBins;
         btag_central_2j_den[classType][nEta] 	     += totalWeight;
         btag_central_2j_den_error[classType][nEta]   += totalWeight*totalWeight;
-        if(bTagMax[0] >= 0.605){
+        if(bTagMax[0] >= 0.605 || idSoftNotInJet.size() != 0){
           btag_central_2j_num[classType][nEta]	     += totalWeight;
           btag_central_2j_num_error[classType][nEta] += totalWeight*totalWeight;
         }
         btag_central_All_2j_den[classType]	     += totalWeight;
         btag_central_All_2j_den_error[classType]     += totalWeight*totalWeight;
-        if(bTagMax[0] >= 0.605){
+        if(bTagMax[0] >= 0.605 || idSoftNotInJet.size() != 0){
           btag_central_All_2j_num[classType]         += totalWeight;
           btag_central_All_2j_num_error[classType]   += totalWeight*totalWeight;
         }
@@ -369,7 +386,7 @@ void topAnalysis(
       if(bDiscrLowPt < 0.605 && nJets == 2 && (float)(*eventJets.bDiscr)[n_jet[1]] > 0.605 && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[n_jet[0]])->Eta()) < 2.5 && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[n_jet[1]])->Eta()) < 2.5){
         btag_highestpt_2j_den[classType][0]       += totalWeight;
         btag_highestpt_2j_den_error[classType][0] += totalWeight*totalWeight;
-        if((float)(*eventJets.bDiscr)[n_jet[0]] > 0.605){
+        if((float)(*eventJets.bDiscr)[n_jet[0]] > 0.605 || idSoftNotInJet.size() != 0){
           btag_highestpt_2j_num[classType][0]       += totalWeight;
           btag_highestpt_2j_num_error[classType][0] += totalWeight*totalWeight;
         }
@@ -378,7 +395,7 @@ void topAnalysis(
       if(bDiscrLowPt < 0.605 && nJets == 1 && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[n_jet[0]])->Eta()) < 2.5){
         btag_highestpt_1j_den[classType][0]       += totalWeight;
         btag_highestpt_1j_den_error[classType][0] += totalWeight*totalWeight;
-        if((float)(*eventJets.bDiscr)[n_jet[0]] > 0.605){
+        if((float)(*eventJets.bDiscr)[n_jet[0]] > 0.605 || idSoftNotInJet.size() != 0){
           btag_highestpt_1j_num[classType][0]       += totalWeight;
           btag_highestpt_1j_num_error[classType][0] += totalWeight*totalWeight;
         }
@@ -387,7 +404,7 @@ void topAnalysis(
       if((float)(*eventJets.bDiscr)[n_jet[0]] > 0.605 && nJets == 1){
         btag_lowpt_1j_den[classType][0]       += totalWeight;
         btag_lowpt_1j_den_error[classType][0] += totalWeight*totalWeight;
-        if(bDiscrLowPt > 0.605){
+        if(bDiscrLowPt > 0.605 || idSoftNotInJet.size() != 0){
           btag_lowpt_1j_num[classType][0]       += totalWeight;
           btag_lowpt_1j_num_error[classType][0] += totalWeight*totalWeight;
         }
@@ -396,7 +413,7 @@ void topAnalysis(
      if(nJets == 0){
         btag_lowpt_0j_den[classType][0]       += totalWeight;
         btag_lowpt_0j_den_error[classType][0] += totalWeight*totalWeight;
-        if(bDiscrLowPt > 0.605){
+        if(bDiscrLowPt > 0.605 || idSoftNotInJet.size() != 0){
           btag_lowpt_0j_num[classType][0]       += totalWeight;
           btag_lowpt_0j_num_error[classType][0] += totalWeight*totalWeight;
         }
@@ -766,7 +783,7 @@ void topAnalysis(
   printf("\\hline\n");
   printf(" Sample & 0-jet & 1-jet & 2-jet \\\\\n");
   printf("\\hline\n");
-  printf("estimated top events in simulation  & %5.1f $\\pm$ %5.1f &  %5.1f $\\pm$ %5.1f & %5.1f $\\pm$ %5.1f \\\\\n",N_top_expected_0j[numberEff],estimationMC_btag_lowpt_0j_error[numberEff],
+  printf("estimated top events in simulation  & %5.3f $\\pm$ %5.1f &  %5.1f $\\pm$ %5.1f & %5.1f $\\pm$ %5.1f \\\\\n",N_top_expected_0j[numberEff],estimationMC_btag_lowpt_0j_error[numberEff],
   (btag_highestpt_1j_den[1][numberEff]+btag_highestpt_1j_den[2][numberEff])-(btag_highestpt_1j_num[1][numberEff]+btag_highestpt_1j_num[2][numberEff]),estimationMC_btag_highestpt_1j_err[numberEff],
   (btag_central_All_2j_den[1]+btag_central_All_2j_den[2])-(btag_central_All_2j_num[1]+btag_central_All_2j_num[2]),sqrt(btag_central_All_2j_den_error[1]+btag_central_All_2j_den_error[2]));
   printf("tagging efficiency                  & %4.1f $\\pm$ %4.1f & %4.1f $\\pm$ %4.1f & %4.1f $\\pm$ %4.1f \\\\ \n",effDA_btag_lowpt_0j[numberEff]*100,effDA_btag_lowpt_0j_error[numberEff]*100,

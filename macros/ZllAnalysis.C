@@ -18,11 +18,11 @@
 
 #include "MitAnalysisRunII/macros/factors.h"
 
-void ZllAnalysis(Int_t period = 0){
+void ZllAnalysis(Int_t period = 1){
 
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
-  Double_t lumi = 0.0685;
-  if(period == 1) lumi = 0.2351;
+  Double_t lumi = 0.0715;
+  if(period == 1) lumi = 0.5947;
 
   //*******************************************************
   //Input Files
@@ -36,6 +36,7 @@ void ZllAnalysis(Int_t period = 0){
   infilenamev.push_back(Form("%sdata_AOD_50ns.root",filesPath.Data()));														  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(1);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));  	  infilecatv.push_back(1);
+  assert(0);
   }
   else if(period==1){
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";

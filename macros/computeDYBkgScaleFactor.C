@@ -24,11 +24,11 @@
 // compute systematic uncertainty
 Double_t computeSyst(const TH1D *hout, const TH1D *hin, Int_t binUsed, Double_t rErrorMax, Bool_t useRFromData = false, Bool_t isDebug = false);
 
-void computeDYBkgScaleFactor(Int_t period = 0, Double_t MassZCut = 10){
+void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
 
-  TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
-  Double_t lumi = 0.0685;
-  if(period == 1) lumi = 0.2351;
+  TString filesPath  = "/scratch5/ceballos/ntuples_weights/met_";
+  Double_t lumi = 0.0715;
+  if(period == 1) lumi = 0.5947;
 
   //*******************************************************
   //Input Files
@@ -44,18 +44,20 @@ void computeDYBkgScaleFactor(Int_t period = 0, Double_t MassZCut = 10){
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));  	  infilecatv.push_back(1);
   infilenamev.push_back(Form("%sWZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sZZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(2);
+  assert(0);
   }
   else if(period==1){
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
   infilenamev.push_back(Form("%sdata_AOD_25ns.root",filesPath.Data()));														  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(1);
-  infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));  	          infilecatv.push_back(1);
+  infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(1);
   infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sZZTo4L_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sWZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
   }
   else {assert(0);}
 
@@ -110,7 +112,7 @@ void computeDYBkgScaleFactor(Int_t period = 0, Double_t MassZCut = 10){
 	  bins[0] = 20; bins[1] = 25; bins[2] = 30; bins[3] =  45; bins[4] = 50; 
 	}
       } else {
-	bins[0] = 20; bins[1] = 25; bins[2] = 35; bins[3] =  50; bins[4] = 70; 
+	bins[0] = 20; bins[1] = 25; bins[2] = 35; bins[3] =  45; bins[4] = 70; 
       }
 
       sprintf(hname,"hNin_%iJet_ree_mc_m%i",Int_t(jetIndex),(Int_t)mH[imass]);  tmp_hNin_ree_mc.push_back(new TH1D(hname,"",nbins,bins));  tmp_hNin_ree_mc[imass]->Sumw2();
@@ -227,9 +229,21 @@ void computeDYBkgScaleFactor(Int_t period = 0, Double_t MassZCut = 10){
       if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
 
       Bool_t passFilter[6] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
-      if(eventLeptons.p4->GetEntriesFast() >= 2 &&
-     	 ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 20 && 
-     	 ((TLorentzVector*)(*eventLeptons.p4)[1])->Pt() > 10) passFilter[0] = kTRUE;
+      vector<int> idLep; vector<int> idTight; vector<int> idSoft; unsigned int goodIsTight = 0;
+      for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
+        if(selectIdIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
+	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]))
+	                                                                                               {idTight.push_back(1); idLep.push_back(nlep); goodIsTight++;}
+        else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idTight.push_back(0); idLep.push_back(nlep);}
+        else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepSoftIP)== BareLeptons::LepSoftIP){idSoft.push_back(nlep);}
+      }
+      if(idLep.size()!=idTight.size()) assert(0);
+      if(idLep.size()==2) passFilter[0] = kTRUE;
+      if(passFilter[0] == kFALSE) continue;
+
+      if(idLep.size() >= 2 &&
+     	 ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 20 && 
+     	 ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20) passFilter[1] = kTRUE;
       for (int nt = 0; nt <(int)numtokens; nt++) {
 	if((strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v*")  == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
            (strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*")  == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
@@ -243,22 +257,10 @@ void computeDYBkgScaleFactor(Int_t period = 0, Double_t MassZCut = 10){
            (strcmp(tokens[nt],"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")       == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
            (strcmp(tokens[nt],"HLT_Ele27_eta2p1_WP75_Gsf_v*")                       == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
            (strcmp(tokens[nt],"HLT_Ele27_eta2p1_WPLoose_Gsf_v*")                    == 0 && (*eventTrigger.triggerFired)[nt] == 1)
-           ) passFilter[1] = kTRUE;
+           ) passFilter[2] = kTRUE;
       }
 
-      if(passFilter[0] == kFALSE) continue;
       if(passFilter[1] == kFALSE) continue;
-
-      vector<int> idLep; vector<int> idTight; vector<int> idSoft; unsigned int goodIsTight = 0;
-      for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
-        if(selectIdIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
-	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]))
-	                                                                                               {idTight.push_back(1); idLep.push_back(nlep); goodIsTight++;}
-        else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idTight.push_back(0); idLep.push_back(nlep);}
-        else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepSoftIP)== BareLeptons::LepSoftIP){idSoft.push_back(nlep);}
-      }
-      if(idLep.size()!=idTight.size()) assert(0);
-      if(idLep.size()==2) passFilter[2] = kTRUE;
       if(passFilter[2] == kFALSE) continue;
 
       if(goodIsTight == idTight.size()) passFilter[3] = kTRUE;
@@ -271,8 +273,8 @@ void computeDYBkgScaleFactor(Int_t period = 0, Double_t MassZCut = 10){
 
       double dPhiLepMETMin = 999.;
       for(unsigned nl=0; nl<idLep.size(); nl++){
-        if(dPhiLepMETMin > TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nl])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0]))))
-           dPhiLepMETMin = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nl])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));      
+        if(dPhiLepMETMin > TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0]))))
+           dPhiLepMETMin = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));      
       }
       double minMET  = TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt());
       double minPMET = TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt());
@@ -284,23 +286,25 @@ void computeDYBkgScaleFactor(Int_t period = 0, Double_t MassZCut = 10){
       double dPhiJetMET = -1.0;
       double dPhiJetDiLep = -1.0;
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
-        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 15) continue;
+        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 10) continue;
         bool passId = passJetId(fMVACut, (float)(*eventJets.puId)[nj], ((TLorentzVector*)(*eventJets.p4)[nj])->Pt(), TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()));
         if(passId == false) continue;        
-
-        if(dPhiJetMET   == -1) dPhiJetMET   = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])))*180./TMath::Pi();
-        if(dPhiJetDiLep == -1) dPhiJetDiLep = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventJets.p4)[nj])))*180./TMath::Pi();
-
-	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 15 && 
-	   (float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
-
-        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) continue;
 
         Bool_t isLepton = kFALSE;
         for(unsigned int nl=0; nl<idLep.size(); nl++){
           if(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])) < 0.4) isLepton = kTRUE;
 	}
-	if(isLepton == kFALSE) nJets++;
+	if(isLepton == kTRUE) continue;
+
+        if(dPhiJetMET   == -1) dPhiJetMET   = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])))*180./TMath::Pi();
+        if(dPhiJetDiLep == -1) dPhiJetDiLep = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventJets.p4)[nj])))*180./TMath::Pi();
+
+	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 10 && 
+	   (float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
+
+        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) continue;
+
+        nJets++;
       }
 
       if(nJets <= 2) passFilter[5] = kTRUE;  	    
@@ -320,16 +324,45 @@ void computeDYBkgScaleFactor(Int_t period = 0, Double_t MassZCut = 10){
       if(minPMET <= 20) continue;
       
       double theLumi = lumi; if(infilecatv[ifile] == 0) theLumi = 1.0;
-      double puWeight = nPUScaleFactor(fhDPU, (double)eventEvent.rho); if(infilecatv[ifile] == 0) puWeight = 1.0;
+      double puWeight = nPUScaleFactor(fhDPU, (double)eventVertex.npv); if(infilecatv[ifile] == 0) puWeight = 1.0;
       double effSF = 1.0;
 
       if(infilecatv[ifile] != 0){
         effSF = effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),period)*
                 effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]),period);
-        effSF=1;
       }
 
       double totalWeight = eventMonteCarlo.mcWeight*theLumi*puWeight*effSF;
+
+      vector<bool> isGenDupl;
+      for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
+        isGenDupl.push_back(0);
+	if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 11 &&
+	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 13) isGenDupl[ngen0] = 1;
+	if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 11 &&
+	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 13) continue;
+        for(int ngen1=ngen0+1; ngen1<eventMonteCarlo.p4->GetEntriesFast(); ngen1++) {
+          if(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen1])) < 0.02) {
+	    isGenDupl[ngen0] = 1;
+	    break;
+	  }
+        }
+      }
+      vector<int> isGenLep; unsigned int goodIsGenLep = 0;
+      for(unsigned nl=0; nl<idLep.size(); nl++){
+        bool isGenLepton = false;
+        for(int ngen=0; ngen<eventMonteCarlo.p4->GetEntriesFast(); ngen++) {
+	  if(isGenDupl[ngen] == 1) continue;
+          if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) &&
+	    ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.1) {
+	    isGenLepton = true;
+	    break;
+	  }
+	}
+	if(isGenLepton == true) {isGenLep.push_back(1); goodIsGenLep++;}
+	else                    {isGenLep.push_back(0);}
+      }
+      if(infilecatv[ifile] != 0 && goodIsGenLep != isGenLep.size()) totalWeight = 0.0;
 
       //loop over analyses
       for(Int_t imass=0; imass<nmass; imass++) {
@@ -337,7 +370,7 @@ void computeDYBkgScaleFactor(Int_t period = 0, Double_t MassZCut = 10){
         double theCutMassHigh = 1000.;
 	if(dilep.Pt() <= 45.0) continue;
         if(bDiscrMax > 0.605 || idSoft.size() != 0) continue;
-        if(dPhiJetDiLep > 140) continue;
+	if(dilep.M() <= 12.0) continue;
 
         if(infilecatv[ifile] == 1){ // Z MC
 	  if     (TMath::Abs(dilep.M()-mZ)<MassZCut) {
@@ -372,7 +405,7 @@ void computeDYBkgScaleFactor(Int_t period = 0, Double_t MassZCut = 10){
           }
         }
 
-	bool passMET = (double)eventMet.pfMet_e3p0->Pt() > 50;
+	bool passMET = varMet > 45;
 	if(passMET == kFALSE) continue;
 
         if(infilecatv[ifile] == 1){ // Z MC
