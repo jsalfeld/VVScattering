@@ -57,6 +57,7 @@ t2mit/filefi/042 ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP
 t2mit/filefi/042 ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
 t2mit/filefi/042 WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
 t2mit/filefi/042 TT_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM - 25ns ~
+t2mit/filefi/042 TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
 t2mit/filefi/042 TTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
 t2mit/filefi/042 WWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
 t2mit/filefi/042 WW_DoubleScattering_13TeV-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
@@ -86,3 +87,9 @@ t2mit/filefi/042 GluGluHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asy
 t2mit/filefi/042 WplusHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
 t2mit/filefi/042 WminusHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
 t2mit/filefi/042 ZHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
+t2mit+filefi+042 GluGluToZZTo2e2mu_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
+t2mit+filefi+042 GluGluToZZTo2e2tau_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
+t2mit+filefi+042 GluGluToZZTo2mu2tau_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
+t2mit+filefi+042 GluGluToZZTo4e_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
+t2mit+filefi+042 GluGluToZZTo4mu_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~
+t2mit+filefi+042 GluGluToZZTo4tau_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns ~

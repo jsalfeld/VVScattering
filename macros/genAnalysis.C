@@ -19,7 +19,7 @@
 #include "MitAnalysisRunII/macros/factors.h"
 
 void genAnalysis(
- Int_t period = 0
+ Int_t period = 1
  ){
 
   TString filesPath  = "/scratch5/ceballos/ntuples_noweights/";
@@ -48,10 +48,10 @@ void genAnalysis(
   else if(period==1){
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
   //infilenamev.push_back(Form("%sdata_AOD_25ns.root",filesPath.Data()));														  infilecatv.push_back(0);
-  infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  //infilecatv.push_back(2);
   //infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));  	          //infilecatv.push_back(2);
-  //infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  //infilecatv.push_back(3);
+  infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sST_tW_top_5f_//inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));      //infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sST_tW_antitop_5f_//inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  //infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  //infilecatv.push_back(4);
@@ -66,7 +66,7 @@ void genAnalysis(
   //infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(4);
   //infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          //infilecatv.push_back(4);
   //infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madsp//in-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(5);
+  //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(5);
   //infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));                     //infilecatv.push_back(6);
   //infilenamev.push_back(Form("%sGluGluHToWWTo2L2Nu_M125_13TeV_amcatnloFXFX_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  //infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sVBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          //infilecatv.push_back(7);
@@ -82,8 +82,8 @@ void genAnalysis(
   }
   else {assert(0);}
   
-  infilenamev.clear();infilecatv.clear();
-  infilenamev.push_back(Form("/mnt/hscratch/ceballos/test.root"));   infilecatv.push_back(1);
+  //infilenamev.clear();infilecatv.clear();
+  //infilenamev.push_back(Form("/mnt/hscratch/ceballos/test.root"));   infilecatv.push_back(1);
 
   if(infilenamev.size() != infilecatv.size()) assert(0);
 
@@ -101,14 +101,20 @@ void genAnalysis(
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 91;
+  const int allPlots = 160;
   TH1D* histo[allPlots];
-  
+
   for(int thePlot=0; thePlot<allPlots; thePlot++){
     if     (thePlot >=  0 && thePlot <= 39) {nBinPlot =  20; xminPlot = 0.0; xmaxPlot = 100.0;}
     else if(thePlot >= 40 && thePlot <= 79) {nBinPlot =   5; xminPlot = 0.0; xmaxPlot =   2.5;}
     else if(thePlot >= 80 && thePlot <= 80) {nBinPlot =   5; xminPlot =-0.5; xmaxPlot =   4.5;}
     else if(thePlot >= 81 && thePlot <= 90) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
+    else if(thePlot >=100 && thePlot <=109) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot = 100.0;}
+    else if(thePlot >=110 && thePlot <=119) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot =   5.0;}
+    else if(thePlot >=120 && thePlot <=129) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot = 100.0;}
+    else if(thePlot >=130 && thePlot <=139) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot =   5.0;}
+    else if(thePlot >=140 && thePlot <=149) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot = 100.0;}
+    else if(thePlot >=150 && thePlot <=159) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot =   5.0;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     histo[thePlot] = (TH1D*) histos->Clone(Form("histo%d",thePlot));
@@ -366,6 +372,116 @@ void genAnalysis(
 	}
 
       } // end loop over reco leptons
+
+      vector<int> idLep;
+      for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
+        if(selectIdIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
+	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]))
+	                                                                                               {idLep.push_back(nlep);}
+        else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idLep.push_back(nlep);}
+      }
+
+      vector<int> idGenJet;
+      for(int ngenj=0; ngenj<eventMonteCarlo.jetP4->GetEntriesFast(); ngenj++) {
+        Bool_t isGenLepton = kFALSE;
+        for(int ngenl=0; ngenl<eventMonteCarlo.p4->GetEntriesFast(); ngenl++) {
+	if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngenl]) != 12 &&
+	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngenl]) != 14 &&
+	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngenl]) != 16 &&
+	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngenl]) != 11 &&
+	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngenl]) != 13) continue;
+          if(((TLorentzVector*)(*eventMonteCarlo.jetP4)[ngenj])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngenl])) < 0.3) isGenLepton = kTRUE;
+        }
+        if(isGenLepton == kTRUE) continue;
+        if(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[ngenj])->Eta()) >= 5) continue;
+        idGenJet.push_back(ngenj);
+      }
+
+      vector<int> idJet;
+      vector<int> idMVAJet;
+      for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
+        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 10) continue;
+        Bool_t isLepton = kFALSE;
+        for(unsigned int nl=0; nl<idLep.size(); nl++){
+          if(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])) < 0.3) isLepton = kTRUE;
+	}
+	if(isLepton == kTRUE) continue;
+
+        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) continue;        
+	idJet.push_back(nj);
+
+        bool passId = passJetId(fMVACut, (float)(*eventJets.puId)[nj], ((TLorentzVector*)(*eventJets.p4)[nj])->Pt(), TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()));
+        if(passId == false) continue;        
+	idMVAJet.push_back(nj);
+      }
+
+      for(unsigned int ngenj=0; ngenj<idGenJet.size(); ngenj++) {
+	int nCount = 100;
+	if(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Eta()) < 2.5)
+	histo[nCount+ 0]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Pt(),99.999),totalWeight);
+	if(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Pt() > 30)
+	histo[nCount+10]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Eta()),totalWeight);
+	
+	bool isRecoJet = kFALSE;
+        for(unsigned int nj=0; nj<idJet.size(); nj++){
+          if(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->DeltaR(*((TLorentzVector*)(*eventJets.p4)[idJet[nj]])) < 0.4) isRecoJet = kTRUE;
+        }
+        if(isRecoJet == kTRUE) {
+	  if(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Eta()) < 2.5)
+	  histo[nCount+ 1]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Pt(),99.999),totalWeight);
+	  if(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Pt() > 30)
+	  histo[nCount+11]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Eta()),totalWeight);
+	}
+
+        isRecoJet = kFALSE;
+        for(unsigned int nj=0; nj<idMVAJet.size(); nj++){
+          if(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->DeltaR(*((TLorentzVector*)(*eventJets.p4)[idMVAJet[nj]])) < 0.4) isRecoJet = kTRUE;
+        }
+        if(isRecoJet == kTRUE) {
+	  if(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Eta()) < 2.5)
+	  histo[nCount+ 2]->Fill(TMath::Min(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Pt(),99.999),totalWeight);
+	  if(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Pt() > 30)
+	  histo[nCount+12]->Fill(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])->Eta()),totalWeight);
+	}
+      }
+
+      for(unsigned int nj=0; nj<idJet.size(); nj++) {
+	int nCount = 120;
+	if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Eta()) < 2.5)
+	histo[nCount+ 0]->Fill(TMath::Min(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Pt(),99.999),totalWeight);
+	if(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Pt() > 30)
+	histo[nCount+10]->Fill(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Eta()),totalWeight);
+	
+	bool isGenJet = kFALSE;
+        for(unsigned int ngenj=0; ngenj<idGenJet.size(); ngenj++){
+          if(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])) < 0.4) isGenJet = kTRUE;
+        }
+        if(isGenJet == kFALSE) {
+  	  if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Eta()) < 2.5)
+  	  histo[nCount+ 1]->Fill(TMath::Min(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Pt(),99.999),totalWeight);
+	  if(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Pt() > 30)
+	  histo[nCount+11]->Fill(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Eta()),totalWeight);
+	}
+      }
+
+      for(unsigned int nj=0; nj<idMVAJet.size(); nj++) {
+	int nCount = 140;
+        if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idMVAJet[nj]])->Eta()) < 2.5)
+	histo[nCount+ 0]->Fill(TMath::Min(((TLorentzVector*)(*eventJets.p4)[idMVAJet[nj]])->Pt(),99.999),totalWeight);
+	if(((TLorentzVector*)(*eventJets.p4)[idMVAJet[nj]])->Pt() > 30)
+	histo[nCount+10]->Fill(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idMVAJet[nj]])->Eta()),totalWeight);
+	
+	bool isGenJet = kFALSE;
+        for(unsigned int ngenj=0; ngenj<idGenJet.size(); ngenj++){
+          if(((TLorentzVector*)(*eventJets.p4)[idMVAJet[nj]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[ngenj]])) < 0.4) isGenJet = kTRUE;
+        }
+        if(isGenJet == kFALSE) {
+  	  if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idMVAJet[nj]])->Eta()) < 2.5)
+  	  histo[nCount+ 1]->Fill(TMath::Min(((TLorentzVector*)(*eventJets.p4)[idMVAJet[nj]])->Pt(),99.999),totalWeight);
+	  if(((TLorentzVector*)(*eventJets.p4)[idMVAJet[nj]])->Pt() > 30)
+	  histo[nCount+11]->Fill(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idMVAJet[nj]])->Eta()),totalWeight);
+	}
+      }
     } // end of loop
   } // end of chain
 
@@ -378,10 +494,16 @@ void genAnalysis(
   for(int np=61; np<70; np++) histo[np]->Divide(histo[60]);
   for(int np=71; np<80; np++) histo[np]->Divide(histo[70]);
   for(int np=80; np<=90; np++) histo[np]->Scale(1./histo[np]->GetSumOfWeights());
+  for(int np=101; np<110; np++) histo[np]->Divide(histo[100]);
+  for(int np=111; np<120; np++) histo[np]->Divide(histo[110]);
+  for(int np=121; np<130; np++) histo[np]->Divide(histo[120]);
+  for(int np=131; np<140; np++) histo[np]->Divide(histo[130]);
+  for(int np=141; np<150; np++) histo[np]->Divide(histo[140]);
+  for(int np=151; np<160; np++) histo[np]->Divide(histo[150]);
   char output[200];
   sprintf(output,"histo_geneff.root");	  
   TFile* outFilePlotsNote = new TFile(output,"recreate");
   outFilePlotsNote->cd();
-  for(int np=0; np<91; np++) histo[np]->Write();
+  for(int np=0; np<160; np++) histo[np]->Write();
   outFilePlotsNote->Close();
 }

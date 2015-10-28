@@ -27,6 +27,7 @@
 //            - 0  ==> ptl1>20 && ptl2>10
 //            - 1  ==> QCD enriched sample
 //            - 2  ==> ptl1>20 && ptl2>10 && min(met,trackMet) > 20, adding DYMVA
+//            - 3  ==> ptl1>30, met>30
 
 void makeSkimSample(
  TString input_file     = "nero_old.root",
@@ -132,6 +133,14 @@ void makeSkimSample(
          ((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepTightIP)  == BareLeptons::LepTightIP) {idOnlyLep.push_back(nlep);}
     }
 
+    vector<int> idLep; vector<int> idTight;
+    for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
+      if(selectIdIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
+         TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]))
+        											     {idTight.push_back(1); idLep.push_back(nlep);}
+      else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idTight.push_back(0); idLep.push_back(nlep);}
+    }
+
     Bool_t passFilter = kFALSE;
     if     (filterType == -1) passFilter = kTRUE;
     else if(filterType == 0){
@@ -160,14 +169,6 @@ void makeSkimSample(
 	 ((TLorentzVector*)(*eventMet.p4)[0])->Pt() < 30.0) passFilter = kTRUE;
     }
     else if(filterType == 2){
-      vector<int> idLep; vector<int> idTight;
-      for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
-        if(selectIdIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
-	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]))
-	                                                                                               {idTight.push_back(1); idLep.push_back(nlep);}
-        else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idTight.push_back(0); idLep.push_back(nlep);}
-      }
-
       dymva_= -999.;
       nlep_= 0;
       njets_= 0;
@@ -270,6 +271,11 @@ void makeSkimSample(
 
       } // pass filter 2
     } // end filter 2
+    else if(filterType == 3){
+      if(idLep.size() == 1 &&
+        ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 30 && 
+	((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 30.0) passFilter = kTRUE;
+    } // end filter 3
 
     if(passFilter == kFALSE) continue;
 

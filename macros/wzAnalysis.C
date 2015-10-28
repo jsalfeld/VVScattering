@@ -20,19 +20,14 @@
 
 bool usePureMC = false; 
 double mcPrescale = 1.0;
-const bool useDYMVA = false;
 
-void baseAnalysis(
- Int_t nsel = 4,
- Int_t typeSel = 4,
+void wzAnalysis(
  Int_t period = 1
  ){
 
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
   Double_t lumi = 0.0715;
   if(period == 1) lumi = 0.5947;
-
-  if(nsel == 2) usePureMC = true;
 
   //*******************************************************
   //Input Files
@@ -63,20 +58,9 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(3);
   infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));      infilecatv.push_back(3);
   infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));				          infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sZZTo4L_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));				          infilecatv.push_back(4);
   infilenamev.push_back(Form("%sWZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          infilecatv.push_back(4);
   infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM.root",filesPath.Data()));		          infilecatv.push_back(4);
   infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));                          infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sWWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			          infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sWZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			          infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			          infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sTTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));        infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sTTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));         infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	          infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	          infilecatv.push_back(4);
   infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	          infilecatv.push_back(5);
   infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  		  infilecatv.push_back(6);
   infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          infilecatv.push_back(6);
@@ -86,6 +70,17 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			          infilecatv.push_back(7);
   /////infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data())); 		  infilecatv.push_back(7);
   /////infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data())); infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));				          infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sZZTo4L_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));				          infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sWWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			          infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sWZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			          infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM.root",filesPath.Data()));			          infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sTTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));        infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sTTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));         infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	          infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		          infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	          infilecatv.push_back(8);
 
   //infilenamev.push_back(Form("%sHWminusJ_HToWW_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  			  infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sHWplusJ_HToWW_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));				  infilecatv.push_back(7);
@@ -108,10 +103,6 @@ void baseAnalysis(
   Float_t fMVACut[4][4];
   InitializeJetIdCuts(fMVACut);
  
-  float dymva_= -999.;
-  unsigned int nlep_= -1;
-  unsigned int njets_= -1;
-
   TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
   TH1D *fhDPU = (TH1D*)(fPUFile->Get("puWeights"));
   assert(fhDPU);
@@ -123,34 +114,31 @@ void baseAnalysis(
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 26;
-  const int histBins = 8;
+  const int allPlots = 18;
+  const int histBins = 9;
   TH1D* histo[allPlots][histBins];
+  TString processName[histBins] = {"..Data", "....WW", "...DY", "...Top", "....WZ", "Vgamma", ".Fakes", ".Higgs", "ZZ/VVV"};
 
   for(int thePlot=0; thePlot<allPlots; thePlot++){
-    if     (thePlot >=  0 && thePlot <=  5) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
-    else if(thePlot >=  6 && thePlot <=  6) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
-    else if(thePlot >=  7 && thePlot <=  7) {nBinPlot =  40; xminPlot = 0.0; xmaxPlot =  40.0;}
-    else if(thePlot >=  8 && thePlot <=  8) {nBinPlot =  40; xminPlot =-0.5; xmaxPlot =  39.5;}
-    else if(thePlot >=  9 && thePlot <=  9) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
-    else if(thePlot >= 10 && thePlot <= 11) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot =   3.5;}
-    else if(thePlot >= 12 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
-    else if(thePlot >= 15 && thePlot <= 18) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
-    else if(thePlot >= 20 && thePlot <= 20) {nBinPlot = 100; xminPlot =-1.0; xmaxPlot =   1.0;}
-    else if(thePlot >= 21 && thePlot <= 23) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
-    else if(thePlot >= 24 && thePlot <= 24) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   5.0;}
-    else if(thePlot >= 25 && thePlot <= 25) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot =   4.0;}
+    if     (thePlot >=  0 && thePlot <=  0) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >=  1 && thePlot <=  1) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot =   4.0;}
+    else if(thePlot >=  2 && thePlot <=  2) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >=  3 && thePlot <=  3) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 100.0;}
+    else if(thePlot >=  4 && thePlot <=  9) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 10 && thePlot <= 10) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 400.0;}
+    else if(thePlot >= 11 && thePlot <= 11) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
+    else if(thePlot >= 12 && thePlot <= 12) {nBinPlot =  40; xminPlot = 0.0; xmaxPlot =  40.0;}
+    else if(thePlot >= 13 && thePlot <= 13) {nBinPlot =  40; xminPlot =-0.5; xmaxPlot =  39.5;}
+    else if(thePlot >= 14 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
+    else if(thePlot >= 15 && thePlot <= 15) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot =   3.5;}
+    else if(thePlot >= 16 && thePlot <= 17) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
     histos->Clear();
   }
 
-  unsigned int numberOfLeptons = 2;
-  double ptl2nd = 20;
-  if(nsel == 4) {numberOfLeptons = 3; ptl2nd = 10;}
-  if(nsel == 7) {numberOfLeptons = 4; ptl2nd = 10;}
+  unsigned int numberOfLeptons = 3;
 
   double totalEventsProcess[50];
   std::vector<double> sumEventsProcess(infilenamev.size(), 0.0);
@@ -189,12 +177,6 @@ void baseAnalysis(
     BareMonteCarlo eventMonteCarlo;
     eventMonteCarlo.setBranchAddresses(the_input_tree);
 
-    if(useDYMVA == true){
-      the_input_tree->SetBranchAddress("dymva", &dymva_);
-      the_input_tree->SetBranchAddress("nlep", &nlep_ );
-      the_input_tree->SetBranchAddress("njets", &njets_);
-    }
-
     TNamed *triggerNames = (TNamed*)the_input_file.FindObjectAny("triggerNames");
     char **tokens;
     size_t numtokens;
@@ -208,13 +190,9 @@ void baseAnalysis(
       printf("sampleNames(%d): %s\n",ifile,infilenamev[ifile].Data());
     }
 
-    Int_t nPassTrigger[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
-
-    Int_t nPassCuts[10] = {0,0,0,0,0,0,0,0,0,0};
     double theMCPrescale = mcPrescale;
     if(infilecatv[ifile] == 0) theMCPrescale = 1.0;
     for (int i=0; i<int(the_input_tree->GetEntries()/theMCPrescale); ++i) {
-    //for (int i=0; i<10000; ++i) {
       the_input_tree->GetEntry(i);
 
       if(i%1000000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
@@ -239,9 +217,7 @@ void baseAnalysis(
            ) passFilter[1] = kTRUE;
       }
 
-      if(passFilter[0] == kTRUE) nPassCuts[0]++;
       if(passFilter[0] == kFALSE) continue;
-      if(passFilter[1] == kTRUE) nPassCuts[1]++;
       if(passFilter[1] == kFALSE) continue;
       vector<int> idLep; vector<int> idTight; vector<int> idSoft; unsigned int goodIsTight = 0;
       for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
@@ -253,20 +229,13 @@ void baseAnalysis(
       }
       if(idLep.size()!=idTight.size()) {assert(1); return;}
       if(idLep.size()==numberOfLeptons) passFilter[2] = kTRUE;
-      if(passFilter[2] == kTRUE) nPassCuts[2]++;
       if(passFilter[2] == kFALSE) continue;
 
       if(goodIsTight == idTight.size()) passFilter[3] = kTRUE;
-      if(usePureMC == false || passFilter[3] ==  kTRUE) nPassCuts[3]++;
       if(usePureMC ==  true && passFilter[3] == kFALSE) continue;
       if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <= 20 ||
-         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <= ptl2nd) continue;
-
-      if     (typeSel == 0 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==13&&TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])==13) passFilter[4] = kTRUE;
-      else if(typeSel == 3 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==11&&TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])==11) passFilter[4] = kTRUE;
-      else if(typeSel == 5 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]))         passFilter[4] = kTRUE;
-      else if(typeSel == 6 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])!=TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]))         passFilter[4] = kTRUE;
-      else if(typeSel == 4)                                                                                                               passFilter[4] = kTRUE;
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <= 10 ||
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt() <= 10) continue;
 
       double dPhiLepMETMin = 999.;
       int signQ = 0;
@@ -279,15 +248,9 @@ void baseAnalysis(
       double minPMET = TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt());
       if(dPhiLepMETMin < TMath::Pi()/2) minPMET = minPMET * sin(dPhiLepMETMin);
 
-      if     (numberOfLeptons == 2 && nsel == 6)            passFilter[4] = passFilter[4] * (signQ != 0);
-      else if(numberOfLeptons == 2 || numberOfLeptons == 4) passFilter[4] = passFilter[4] * (signQ == 0);
-      else if(numberOfLeptons == 3)                         passFilter[4] = passFilter[4] * (TMath::Abs(signQ) == 1);
-      else {printf("PROBLEM numberOfLeptons\n");assert(0);return;}
-
-      if(passFilter[4] == kTRUE) nPassCuts[4]++;
+      passFilter[4] = TMath::Abs(signQ) == 1;
       if(passFilter[4] == kFALSE) continue;
 
-      TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) )); 
       double minMassll = 999.0;
       double minMassZ = 999.0;
       double mass3l = 0.0;
@@ -312,7 +275,6 @@ void baseAnalysis(
 	  if(minMassll > dilepAux.M()) minMassll = dilepAux.M();
         }
       }
-      if(minMassll > 12 || (numberOfLeptons == 4 && minMassll > 4) || numberOfLeptons == 3) passFilter[5] = kTRUE;
 
       vector<int> idJet;
       bool isBtag = kFALSE;
@@ -330,8 +292,7 @@ void baseAnalysis(
 	}
 	if(isLepton == kTRUE) continue;
 
-        if(dPhiJetMET   == -1) dPhiJetMET   = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])))*180./TMath::Pi();
-        if(dPhiJetDiLep == -1) dPhiJetDiLep = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventJets.p4)[nj])))*180./TMath::Pi();
+        if(dPhiJetMET   == -1) dPhiJetMET   = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
 
 	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 10 && 
 	   (float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
@@ -340,150 +301,33 @@ void baseAnalysis(
         
 	idJet.push_back(nj);
       }
-      double dPhiDiLepMET = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])))*180./TMath::Pi();
-      double ptFrac = TMath::Abs(dilep.Pt()-((TLorentzVector*)(*eventMet.p4)[0])->Pt())/dilep.Pt();
 
-      if(useDYMVA == true){
-        if(nlep_ != idLep.size()) {printf("PROBLEM nlep %d != %d\n",(int)nlep_,(int)idLep.size()); assert(1); return;}
-        if(njets_ != idJet.size()) {printf("PROBLEM njet %d != %d\n",(int)njets_,(int)idJet.size()); assert(1); return;}
+      for(unsigned nl0=0; nl0<idLep.size(); nl0++){
+        if((int)nl0==tagZ[0]||(int)nl0==tagZ[1]) continue;
+        tagZ[2] = nl0;
+        break;
       }
+      if(TMath::Abs((int)(*eventLeptons.pdgId)[tagZ[2]]) == 13) type3l += 0;
+      else							type3l += 2;
+      TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + 
+        			( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + 
+        			( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) ) ));
+      mass3l = dilepAux.M();
 
-      if(nsel == 0 || nsel == 6){ // WW selection (opposite-sign / same-sign)
-        if(idJet.size() == 0) passFilter[6] = kTRUE;
-	if(bDiscrMax < 0.605 && idSoft.size() == 0) passFilter[7] = kTRUE;
-	if(minPMET > 20) passFilter[8] = kTRUE;
-	if(dilep.Pt() > 30) passFilter[9] = kTRUE;
-	if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])){
-	  if(TMath::Abs(dilep.M()-91.1876) <= 15.0) passFilter[5] = kFALSE;
-	  if(minPMET <= 45) passFilter[8] = kFALSE;
-	  if(dilep.Pt() <= 45) passFilter[9] = kFALSE;
-	}
-        //passFilter[5] = kTRUE;
-        //passFilter[6] = kTRUE;
-        //passFilter[7] = kTRUE;
-        //passFilter[8] = kTRUE;
-        //passFilter[9] = kTRUE;
-      }
-      else if(nsel == 1){ // ttbar selection
-        passFilter[6] = kTRUE;
-	passFilter[7] = kTRUE;
-	if(minPMET > 20) passFilter[8] = kTRUE;
-	if(dilep.Pt() > 30) passFilter[9] = kTRUE;
-	if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])){
-	  if(TMath::Abs(dilep.M()-91.1876) <= 15.0) passFilter[5] = kFALSE;
-	  if(minPMET <= 45) passFilter[8] = kFALSE;
-	  if(dilep.Pt() <= 45) passFilter[9] = kFALSE;
-	}
-      }
-      else if(nsel == 2){ // Z selection in mZ mass window, anti b-tagging against top events for e-mu
-        passFilter[6] = kTRUE;
-	if((bDiscrMax < 0.605 && idSoft.size() == 0) || TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])) passFilter[7] = kTRUE;
-	passFilter[8] = kTRUE;
-	passFilter[9] = kTRUE;
-	if   (TMath::Abs(dilep.M()-91.1876)>15.0 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])) passFilter[5] = kFALSE;
-	else                                                                                                                                            passFilter[5] = kTRUE;              
-      }
-      else if(nsel == 3) { // Z selection
-        passFilter[6] = kTRUE;
-        passFilter[7] = kTRUE;
-        passFilter[8] = kTRUE;
-        passFilter[9] = kTRUE;
-      }
-      else if(nsel == 4) { // WZ selection
-        for(unsigned nl0=0; nl0<idLep.size(); nl0++){
-	  if((int)nl0==tagZ[0]||(int)nl0==tagZ[1]) continue;
-	  tagZ[2] = nl0;
-	  break;
-	}
-	if(TMath::Abs((int)(*eventLeptons.pdgId)[tagZ[2]]) == 13) type3l += 0;
-	else							  type3l += 2;
-        TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + 
-	                          ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + 
-	                          ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) ) ));
-        mass3l = dilepAux.M();
-	passFilter[6] = ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 30;
-        passFilter[7] = TMath::Abs(minMassZ-91.1876) < 30.0;
-        passFilter[8] = ((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt() > 20;
-	passFilter[9] = mass3l > 100 && deltaRllMin > 0.1;
-	if(passFilter[7]==kTRUE && (tagZ[0] == tagZ[1] || tagZ[0] == tagZ[2] || tagZ[1] == tagZ[2])) {printf("ZPROBLEM!\n");assert(0);return;}
-      }
-      else if(nsel == 5){ // Z(ll)H(inv)
-	if   (TMath::Abs(dilep.M()-91.1876)>15.0) passFilter[5] = kFALSE;
-	else                                      passFilter[5] = kTRUE;              
-        passFilter[6] = idJet.size() == 0;
-	passFilter[7] = ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 100.;
-	passFilter[8] = ptFrac < 0.5 && dPhiDiLepMET > 150.;
-	passFilter[9] = bDiscrMax < 0.605 && idSoft.size() == 0;
-      }
-      else if(nsel == 7) { // ZZ4l selection
-        TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + 
-	                          ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + 
-	                          ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) ) + 
-	                          ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[3])) ) ));
-        mass3l = dilepAux.M();
-	int typeL[2] = {0,0};
-        for(unsigned nl0=0; nl0<idLep.size(); nl0++){
-          if     (TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]]) == 11) typeL[0]++;
-          else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]]) == 13) typeL[1]++;
-          else {printf("ZZ4lPROBLEM!\n");assert(0);return;}
-        }
-	passFilter[6] = typeL[0] == 4 || typeL[1] == 4 || (typeL[0] == 2 && typeL[1] == 2);
-        passFilter[7] = kTRUE;
-        passFilter[8] = kTRUE;
-        passFilter[9] = kTRUE;
-	if     (typeL[0] == 4) type3l = 0;
-	else if(typeL[1] == 4) type3l = 1;
-	else if(typeL[0] == 2) type3l = 2;
-	else                   type3l = 3;
-      }
-      else {assert(0); return;}
-      //printf("5 %d %f\n",(int)eventEvent.eventNum,minMassll);
-      if(passFilter[5] == kTRUE) nPassCuts[5]++;
-      if(passFilter[5] == kFALSE) continue;
-      //printf("6 %d %f\n",(int)eventEvent.eventNum,((TLorentzVector*)(*eventMet.p4)[0])->Pt());
-      if(passFilter[6] == kTRUE) nPassCuts[6]++;
-      if(passFilter[6] == kFALSE) continue;
-      //printf("7 %d %f\n",(int)eventEvent.eventNum,TMath::Abs(minMassZ-91.1876));
-      if(passFilter[7] == kTRUE) nPassCuts[7]++;
-      if(passFilter[7] == kFALSE) continue;
-      //printf("8 %d %f\n",(int)eventEvent.eventNum,((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt());
-      if(passFilter[8] == kTRUE) nPassCuts[8]++;
-      if(passFilter[8] == kFALSE) continue;
-      //printf("9 %d %f %f\n",(int)eventEvent.eventNum,mass3l,deltaRllMin);
-      if(passFilter[9] == kTRUE) nPassCuts[9]++;
-      if(passFilter[9] == kFALSE) continue;
-      double deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
-      double mtW = TMath::Sqrt(2.0*dilep.Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
+      passFilter[5] = deltaRllMin > 0.1;
+      passFilter[6] = ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 30;
+      passFilter[7] = TMath::Abs(minMassZ-91.1876) < 30.0;
+      passFilter[8] = ((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt() > 20;
+      passFilter[9] = mass3l > 100;
+      if(passFilter[7]==kTRUE && (tagZ[0] == tagZ[1] || tagZ[0] == tagZ[2] || tagZ[1] == tagZ[2])) {printf("ZPROBLEM!\n");assert(0);return;}
 
-      double deltaPhiLeptonMet = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[tagZ[2]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
-      double mtLN = TMath::Sqrt(2.0*((TLorentzVector*)(*eventLeptons.p4)[tagZ[2]])->Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiLeptonMet)));
-
-      vector<int> idGenJet;
-      //printf("----------------------------\n");
-      for(int ngenj=0; ngenj<eventMonteCarlo.jetP4->GetEntriesFast(); ngenj++) {
-        //printf("ngenj(%d) %f %f %f\n",ngenj,((TLorentzVector*)(*eventMonteCarlo.jetP4)[ngenj])->Pt(),
-	//                                    ((TLorentzVector*)(*eventMonteCarlo.jetP4)[ngenj])->Eta(),
-	//				    ((TLorentzVector*)(*eventMonteCarlo.jetP4)[ngenj])->Phi());
-        Bool_t isGenLepton = kFALSE;
-        for(int ngenl=0; ngenl<eventMonteCarlo.p4->GetEntriesFast(); ngenl++) {
-	if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngenl]) != 12 &&
-	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngenl]) != 14 &&
-	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngenl]) != 16 &&
-	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngenl]) != 11 &&
-	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngenl]) != 13) continue;
-          if(((TLorentzVector*)(*eventMonteCarlo.jetP4)[ngenj])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngenl])) < 0.3) isGenLepton = kTRUE;
-        }
-        if(isGenLepton == kTRUE) continue;
-        if(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[ngenj])->Eta()) >= 5) continue;
-        idGenJet.push_back(ngenj);
-        //printf("iso genjet\n");
-      }
-      //for(int ngenl=0; ngenl<eventMonteCarlo.p4->GetEntriesFast(); ngenl++) {
-      //  printf("ngenl(%d) %f %f %f %d\n",ngenl,((TLorentzVector*)(*eventMonteCarlo.p4)[ngenl])->Pt(),
-     //	                                    ((TLorentzVector*)(*eventMonteCarlo.p4)[ngenl])->Eta(),
-	//				    ((TLorentzVector*)(*eventMonteCarlo.p4)[ngenl])->Phi(),
-	//				    (int)(*eventMonteCarlo.pdgId)[ngenl]);
-      //}
+      bool passNMinusOne[5] = {                 passFilter[6] && passFilter[7] && passFilter[8] && passFilter[9],
+                               passFilter[5] &&                  passFilter[7] && passFilter[8] && passFilter[9],
+                               passFilter[5] && passFilter[6] &&                  passFilter[8] && passFilter[9],
+                               passFilter[5] && passFilter[6] && passFilter[7] &&                  passFilter[9],
+                               passFilter[5] && passFilter[6] && passFilter[7] && passFilter[8]};
+      bool passAllCuts = passFilter[5] && passFilter[6] && passFilter[7] && passFilter[8] && passFilter[9];
+                               
       // begin event weighting
       vector<bool> isGenDupl;
       for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
@@ -563,58 +407,37 @@ void baseAnalysis(
       }
       //double totalWeight = eventMonteCarlo.mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale;
       double totalWeight = eventMonteCarlo.mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale;
-      //double totalWeight = eventMonteCarlo.mcWeight*theLumi;
       if(totalWeight == 0) continue;
-      //printf("AAA %d %d\n",(int)eventEvent.runNum,(int)eventEvent.eventNum);
       // end event weighting
-      if(infilecatv[ifile] != 0 || theCategory == 0) sumEventsProcess[ifile] += totalWeight;
+      if((infilecatv[ifile] != 0 || theCategory == 0) && passAllCuts) sumEventsProcess[ifile] += totalWeight;
 
       for(int thePlot=0; thePlot<allPlots; thePlot++){
 	double theVar = 0.0;
-	if     (thePlot ==  0) theVar = TMath::Min(minMassll,199.999);
-	else if(thePlot ==  1) theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);
-	else if(thePlot ==  2) theVar = TMath::Min((double)eventMet.trackMet->Pt(),199.999);
-	else if(thePlot ==  3) theVar = TMath::Min(minPMET,199.999);
-	else if(thePlot ==  4) theVar = TMath::Min(dilep.Pt(),199.999);
-	else if(thePlot ==  5) theVar = TMath::Min(mtW,199.999);
-	else if(thePlot ==  6) theVar = TMath::Min((double)idJet.size(),6.499);
-	else if(thePlot ==  7) theVar = TMath::Min((double)eventEvent.rho,39.999);
-	else if(thePlot ==  8) theVar = TMath::Min((double)eventVertex.npv,39.499);
-	else if(thePlot ==  9) theVar = TMath::Min(bDiscrMax,0.999);
-	else if(thePlot == 10) theVar = 1.0*(goodIsGenLep);
-	else if(thePlot == 11) theVar = (double)type3l;
-	else if(thePlot == 12) theVar = TMath::Min(mass3l,199.999);
-	else if(thePlot == 13) theVar = TMath::Min(mtLN,199.999);
-	else if(thePlot == 14) theVar = TMath::Min(minMET,199.999);
-	else if(thePlot == 15) theVar = dPhiJetMET;
-	else if(thePlot == 16) theVar = dPhiJetDiLep;
-	else if(thePlot == 17) theVar = dPhiDiLepMET;
-	else if(thePlot == 18) theVar = dPhiLepMETMin*180/TMath::Pi();
-	else if(thePlot == 19) theVar = TMath::Min(ptFrac,0.999);
-	else if(thePlot == 20) theVar = TMath::Max(TMath::Min((double)dymva_,0.999),-0.999);
-	else if(thePlot == 21) theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);
-	else if(thePlot == 22) theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);
-	else if(thePlot == 23) {if(idGenJet.size() >= 1) theVar = TMath::Min(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[0]])->Pt(),199.999);else theVar = 0;}
-	else if(thePlot == 24) {if(idGenJet.size() >= 1 && ((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[0]])->Pt() > 30) theVar = TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[0]])->Eta());else theVar = -1.0;}
-	else if(thePlot == 25) theVar = TMath::Min(deltaRllMin,3.999);
-	histo[thePlot][theCategory]->Fill(theVar,totalWeight);
+	bool makePlot = false;
+	if     (thePlot ==  0 && passAllCuts)      {makePlot = true;theVar = TMath::Min((double)eventMet.trackMet->Pt(),199.999);}
+	else if(thePlot ==  1 && passNMinusOne[0]) {makePlot = true;theVar = TMath::Min(deltaRllMin,3.999);}
+	else if(thePlot ==  2 && passNMinusOne[1]) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+	else if(thePlot ==  3 && passNMinusOne[2]) {makePlot = true;theVar = TMath::Min(TMath::Abs(minMassZ-91.1876),99.999);}
+	else if(thePlot ==  4 && passNMinusOne[3]) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt(),199.999);}
+	else if(thePlot ==  5 && passNMinusOne[0]) {makePlot = true;theVar = TMath::Min(minMassll,199.999);}
+	else if(thePlot ==  6 && passAllCuts)      {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
+	else if(thePlot ==  7 && passAllCuts)      {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[0]]])->Pt(),199.999);}
+	else if(thePlot ==  8 && passAllCuts)      {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[1]]])->Pt(),199.999);}
+	else if(thePlot ==  9 && passAllCuts)      {makePlot = true;theVar = TMath::Min(minMET,199.999);}
+	else if(thePlot == 10 && passNMinusOne[4]) {makePlot = true;theVar = TMath::Min(mass3l,399.999);}
+	else if(thePlot == 11 && passAllCuts)      {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 12 && passAllCuts)      {makePlot = true;theVar = TMath::Min((double)eventEvent.rho,39.999);}
+	else if(thePlot == 13 && passAllCuts)      {makePlot = true;theVar = TMath::Min((double)eventVertex.npv,39.499);}
+	else if(thePlot == 14 && passAllCuts)      {makePlot = true;theVar = TMath::Min(bDiscrMax,0.999);}
+	else if(thePlot == 15 && passAllCuts)      {makePlot = true;theVar = (double)type3l;}
+	else if(thePlot == 16 && passAllCuts)      {makePlot = true;theVar = dPhiJetMET*180/TMath::Pi();}
+	else if(thePlot == 17 && passAllCuts)      {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
+
+	if(makePlot) histo[thePlot][theCategory]->Fill(theVar,totalWeight);
       }
     }
-    printf("eff_cuts(%f): ",sumEventsProcess[ifile]);
-    for(int nc=0; nc<10; nc++){
-      double nminusone = the_input_tree->GetEntries();
-      if(nc>0) nminusone = nPassCuts[nc-1];
-      printf("(%d): %6.3f(%4.1f) | ",nc,100*(double)nPassCuts[nc]/the_input_all->GetEntries()*theMCPrescale,100*(double)nPassCuts[nc]/nminusone);
-    }
-    printf("\n");
+    printf("eff_cuts: %f\n",sumEventsProcess[ifile]);
 
-    /*printf("trigger_cuts: ");
-    for(int nc=0; nc<12; nc++){
-      double nminusone = the_input_tree->GetEntries();
-      printf("%4.1f ",100*(double)nPassTrigger[nc]/the_input_tree->GetEntries());
-    }
-    printf("\n");
-    */
   } // end of chain
 
   double sumEvents = 0;
@@ -622,9 +445,36 @@ void baseAnalysis(
   printf("yields: %f |",histo[0][0]->GetSumOfWeights());
   for(int np=1; np<histBins; np++) printf(" %.3f",histo[0][np]->GetSumOfWeights());
   printf(" = %.3f\n",sumEvents);
+  double sumEventsType[5] = {0,0,0,0,0};
+  double sumEventsTypeE[5] = {0,0,0,0,0};
+  printf("                  all                 mmm                 eem                 mme                 eee\n");
+  printf("-----------------------------------------------------------------------------------------------------------\n");
+  for(int np=0; np<histBins; np++) {
+    double sumEvents = 0.; double sumEventsE = 0.;
+    for(int i=1; i<=4; i++) {sumEvents = sumEvents + histo[15][np]->GetBinContent(i); sumEventsE = sumEventsE + histo[15][np]->GetBinError(i)*histo[15][np]->GetBinError(i);}
+    if(np!=0){
+    sumEventsType[0] = sumEventsType[0] + sumEvents;                       sumEventsTypeE[0] = sumEventsTypeE[0] + sumEventsE * sumEventsE;
+    sumEventsType[1] = sumEventsType[1] + histo[15][np]->GetBinContent(1); sumEventsTypeE[1] = sumEventsTypeE[1] + histo[15][np]->GetBinError(1) * histo[15][np]->GetBinError(1);
+    sumEventsType[2] = sumEventsType[2] + histo[15][np]->GetBinContent(2); sumEventsTypeE[2] = sumEventsTypeE[2] + histo[15][np]->GetBinError(2) * histo[15][np]->GetBinError(2);
+    sumEventsType[3] = sumEventsType[3] + histo[15][np]->GetBinContent(3); sumEventsTypeE[3] = sumEventsTypeE[3] + histo[15][np]->GetBinError(3) * histo[15][np]->GetBinError(3);
+    sumEventsType[4] = sumEventsType[4] + histo[15][np]->GetBinContent(4); sumEventsTypeE[4] = sumEventsTypeE[4] + histo[15][np]->GetBinError(4) * histo[15][np]->GetBinError(4);
+    }
+    sumEventsE = sqrt(sumEventsE);
+    printf("(%6s): %7.2f +/- %5.2f | %7.2f +/- %5.2f | %7.2f +/- %5.2f | %7.2f +/- %5.2f | %7.2f +/- %5.2f\n",
+    processName[np].Data(),sumEvents,sumEventsE,
+    histo[15][np]->GetBinContent(1),histo[15][np]->GetBinError(1),histo[15][np]->GetBinContent(2),histo[15][np]->GetBinError(2),
+    histo[15][np]->GetBinContent(3),histo[15][np]->GetBinError(3),histo[15][np]->GetBinContent(4),histo[15][np]->GetBinError(4));
+    if(np==0)
+    printf("-----------------------------------------------------------------------------------------------------------\n");
+  }
+    printf("-----------------------------------------------------------------------------------------------------------\n");
+    printf("(%6s): %7.2f +/- %5.2f | %7.2f +/- %5.2f | %7.2f +/- %5.2f | %7.2f +/- %5.2f | %7.2f +/- %5.2f\n",
+    "   all",sumEventsType[0],sqrt(sumEventsType[0]),
+    sumEventsType[1],sqrt(sumEventsTypeE[1]),sumEventsType[2],sqrt(sumEventsTypeE[2]),
+    sumEventsType[3],sqrt(sumEventsTypeE[3]),sumEventsType[4],sqrt(sumEventsTypeE[4]));
   for(int thePlot=0; thePlot<allPlots; thePlot++){
     char output[200];
-    sprintf(output,"histo_nice_%d_%d_%d.root",thePlot,nsel,typeSel);	  
+    sprintf(output,"histowz_nice_%d.root",thePlot);	  
     TFile* outFilePlotsNote = new TFile(output,"recreate");
     outFilePlotsNote->cd();
     for(int np=0; np<histBins; np++) histo[thePlot][np]->Write();
