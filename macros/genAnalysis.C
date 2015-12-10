@@ -24,7 +24,7 @@ void genAnalysis(
 
   TString filesPath  = "/scratch5/ceballos/ntuples_noweights/";
   Double_t lumi = 0.0715;
-  if(period == 1) lumi = 0.5947;
+  if(period == 1) lumi = 2.2;
 
   //*******************************************************
   //Input Files
@@ -48,10 +48,10 @@ void genAnalysis(
   else if(period==1){
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
   //infilenamev.push_back(Form("%sdata_AOD_25ns.root",filesPath.Data()));														  infilecatv.push_back(0);
-  //infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(1);
+  infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  //infilecatv.push_back(2);
   //infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));  	          //infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sST_tW_top_5f_//inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));      //infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sST_tW_antitop_5f_//inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  //infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  //infilecatv.push_back(4);
@@ -83,7 +83,7 @@ void genAnalysis(
   else {assert(0);}
   
   //infilenamev.clear();infilecatv.clear();
-  //infilenamev.push_back(Form("/mnt/hscratch/ceballos/test.root"));   infilecatv.push_back(1);
+  //infilenamev.push_back(Form("/scratch5/ceballos/test/test.root"));   infilecatv.push_back(1);
 
   if(infilenamev.size() != infilecatv.size()) assert(0);
 
@@ -173,7 +173,7 @@ void genAnalysis(
       the_input_tree->GetEntry(i);
       if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
 
-      double totalWeight = eventMonteCarlo.mcWeight*lumi;
+      double totalWeight = 1;//eventMonteCarlo.mcWeight*lumi;
 
       vector<bool> isGenDupl; int nGoodGenLeptons = 0;
       for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {

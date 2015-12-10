@@ -18,11 +18,13 @@
 
 #include "MitAnalysisRunII/macros/factors.h"
 
+const TString typeLepSel = "medium";
+
 void triggerAnalysis(Int_t period = 1){
 
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
   Double_t lumi = 0.0715;
-  if(period == 1) lumi = 0.5947;
+  if(period == 1) lumi = 2.2;
 
   //*******************************************************
   //Input Files
@@ -39,7 +41,9 @@ void triggerAnalysis(Int_t period = 1){
   }
   else if(period==1){
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
-  infilenamev.push_back(Form("%sdata_AOD_25ns.root",filesPath.Data()));														  infilecatv.push_back(0);
+  infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
+  infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
+  infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));  	          infilecatv.push_back(1);
   }
   else {assert(0);}
@@ -132,9 +136,10 @@ void triggerAnalysis(Int_t period = 1){
       vector<int> idTrigger;
       for (int iL = 0; iL != eventLeptons.p4->GetEntriesFast(); ++iL) idTrigger.push_back(-1);
       for (int nt = 0; nt <(int)numtokens; nt++) {
-	if((strcmp(tokens[nt],"HLT_IsoMu27_v*")                                     == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
-           (strcmp(tokens[nt],"HLT_IsoMu20_v*")				            == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
-           (strcmp(tokens[nt],"HLT_IsoTkMu20_v*")				    == 0 && (*eventTrigger.triggerFired)[nt] == 1)
+        if((*eventTrigger.triggerFired)[nt] == 0) continue;
+	if((strcmp(tokens[nt],"HLT_IsoMu27_v*")                                     == 0) ||
+           (strcmp(tokens[nt],"HLT_IsoMu20_v*")				            == 0) ||
+           (strcmp(tokens[nt],"HLT_IsoTkMu20_v*")				    == 0)
            ) {
 	  passFilter[1] = kTRUE;
           for (int iL = 0; iL != eventLeptons.p4->GetEntriesFast(); ++iL) {
@@ -142,8 +147,10 @@ void triggerAnalysis(Int_t period = 1){
           }
         }
         else
-	if((strcmp(tokens[nt],"HLT_Ele27_eta2p1_WP75_Gsf_v*")                       == 0 && (*eventTrigger.triggerFired)[nt] == 1) ||
-           (strcmp(tokens[nt],"HLT_Ele27_eta2p1_WPLoose_Gsf_v*")                    == 0 && (*eventTrigger.triggerFired)[nt] == 1)
+	if((strcmp(tokens[nt],"HLT_Ele23_WPLoose_Gsf_v*")			    == 0) ||
+           (strcmp(tokens[nt],"HLT_Ele22_eta2p1_WP75_Gsf_v*")			    == 0) ||
+           (strcmp(tokens[nt],"HLT_Ele27_WPLoose_Gsf_v*")			    == 0) ||
+           (strcmp(tokens[nt],"HLT_Ele27_WP85_Gsf_v*")  			    == 0)
            ) {
 	  passFilter[1] = kTRUE;
           for (int iL = 0; iL != eventLeptons.p4->GetEntriesFast(); ++iL) {
@@ -157,7 +164,7 @@ void triggerAnalysis(Int_t period = 1){
 
       vector<int> idLep; vector<int> idTight;
       for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
-        if(selectIdIsoCut("medium",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
+        if(selectIdIsoCut(typeLepSel.Data(),TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
 	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]))
 	                                                                                               {idTight.push_back(1); idLep.push_back(nlep);}
         else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idTight.push_back(0); idLep.push_back(nlep);}
@@ -189,8 +196,8 @@ void triggerAnalysis(Int_t period = 1){
       double effSF = 1.0;
 
       if(infilecatv[ifile] != 0){
-        effSF = effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),period)*
-                effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]),period);
+        effSF = effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),period,typeLepSel.Data())*
+                effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]),period,typeLepSel.Data());
       }
 
       double totalWeight = eventMonteCarlo.mcWeight*theLumi*puWeight*effSF;

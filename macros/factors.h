@@ -1,45 +1,57 @@
-char **strsplit(const char* str, const char* delim, size_t* numtokens);
-double nPUScaleFactor(TH1D *fhDPU, float npu);
-void InitializeJetIdCuts(Float_t fMVACut[4][4]);
-bool passJetId(Float_t fMVACut[4][4], double mva, double pt, double eta);
-double effScaleFactor(double pt, double eta, int nsel);
-double fakeRateFactor(double pt, double eta, int nsel);
-double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso, int selBits);
+double effSF_m_25_medium[10] = {0.893181,0.903896,0.918628,0.970606,0.961617,0.988883,0.981609,0.988133,0.997004,0.980483};
+double effSF_e_25_medium[10] = {0.891279,0.897481,0.915062,0.973597,0.925746,1.038128,0.942930,1.031350,0.965295,0.961879};
+double effSF_m_25_tight[10]  = {0.890531,0.912268,0.916243,0.974802,0.959355,0.994539,0.978811,0.993689,0.993997,0.981905};
+double effSF_e_25_tight[10]  = {0.888321,0.855963,0.905287,0.940666,0.915090,1.028653,0.938059,1.028201,0.957405,0.955777};
 
-double effSF_m_50[6] = {0.906369,0.987096,0.961330,1.001347,0.983206,0.976484};
-double effSF_e_50[6] = {0.863793,0.949225,0.913466,0.978506,0.930974,0.939785};
-double effSF_m_25[6] = {0.910382,0.948537,0.969327,0.993834,0.990649,0.976285};
-double effSF_e_25[6] = {0.903335,0.965685,0.933310,1.049067,0.963457,0.957635};
+double fake_rate_m_25_medium[5][5] = {
+0.289,0.199,0.183,0.168,0.164,
+0.311,0.218,0.199,0.188,0.191,
+0.345,0.260,0.241,0.227,0.225,
+0.373,0.299,0.284,0.266,0.261,
+0.376,0.304,0.294,0.293,0.289
+};
+double fake_rate_e_25_medium[5][5] = {
+0.233,0.219,0.187,0.202,0.188,
+0.236,0.221,0.199,0.165,0.185,
+0.293,0.248,0.215,0.191,0.195,
+0.281,0.242,0.236,0.256,0.279,
+0.284,0.262,0.268,0.291,0.317
+};
+double fake_rate_m_25_tight[5][5] = {
+0.297,0.204,0.188,0.174,0.175,
+0.315,0.220,0.201,0.190,0.196,
+0.348,0.260,0.241,0.228,0.229,
+0.377,0.300,0.284,0.267,0.265,
+0.380,0.304,0.295,0.295,0.294
+};
+double fake_rate_e_25_tight[5][5] = {
+0.136,0.111,0.101,0.111,0.097,
+0.131,0.118,0.113,0.087,0.101,
+0.170,0.144,0.115,0.107,0.102,
+0.205,0.177,0.154,0.151,0.154,
+0.206,0.165,0.154,0.168,0.184
+};
 
-double fake_rate_e_50[5][5] = {
-0.196,0.205,0.173,0.106,0.023,
-0.219,0.206,0.176,0.109,0.040,
-0.272,0.254,0.218,0.140,0.093,
-0.233,0.225,0.201,0.159,0.149,
-0.226,0.243,0.232,0.201,0.197
-};
-double fake_rate_m_50[5][5] = {
-0.330,0.230,0.199,0.182,0.112,
-0.370,0.260,0.218,0.187,0.079,
-0.397,0.307,0.263,0.272,0.147,
-0.460,0.364,0.326,0.318,0.214,
-0.470,0.365,0.321,0.331,0.186
-};
+double weightEWKCorr(float pt, int type){
+  double parWZ08[2] = { 2.85714,-0.05714};
+  double parZZ08[2] = {-4.57143,-0.06857};
+  double parWZ14[3] = {3.69800,-0.0726117,0.0000318044};
+  double parZZ14[3] = {-0.586985000,-0.099845900,0.0000445083};
+  double corrA = 0.0;
+  double corrB = 0.0;
+  if     (type == 0){ // WZ13
+    corrA = (parWZ08[0]+parWZ08[1]*pt)/100.;
+    corrB = (parWZ14[0]+parWZ14[1]*pt+parWZ14[2]*pt*pt)/100.;
+  }
+  else if(type == 1){ // ZZ13
+    corrA = (parZZ08[0]+parZZ08[1]*pt)/100.;
+    corrB = (parZZ14[0]+parZZ14[1]*pt+parZZ14[2]*pt*pt)/100.;
+  }
+  double corr = corrB - (corrB-corrA)/6.;
 
-double fake_rate_e_25[5][5] = {
-0.236,0.247,0.217,0.192,0.153,
-0.256,0.255,0.223,0.200,0.159,
-0.308,0.285,0.243,0.209,0.169,
-0.262,0.231,0.211,0.194,0.173,
-0.250,0.247,0.236,0.221,0.219
-};
-double fake_rate_m_25[5][5] = {
-0.301,0.208,0.196,0.176,0.150,
-0.305,0.232,0.214,0.198,0.164,
-0.355,0.278,0.256,0.228,0.184,
-0.381,0.320,0.300,0.273,0.232,
-0.393,0.316,0.313,0.292,0.241
-};
+  if(corr >= 0.0) return 1.0;
+  return (1.0+corr);
+}
 
 char **strsplit(const char* str, const char* delim, size_t* numtokens) {
 
@@ -90,6 +102,11 @@ double nPUScaleFactor(TH1D *fhDPU, float npu){
   double mynpu = TMath::Min(npu,(float)39.999);
   Int_t npuxbin = fhDPU->GetXaxis()->FindBin(mynpu);
   return fhDPU->GetBinContent(npuxbin);
+}
+
+double ratioFactor(TH1D *fhDVar, float var){
+  Int_t nbin = fhDVar->GetXaxis()->FindBin(var);
+  return fhDVar->GetBinContent(nbin);
 }
 
 double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso, int selBits){
@@ -159,11 +176,13 @@ bool passJetId(Float_t fMVACut[4][4], double mva, double pt, double eta){
 
 }
 
-double effScaleFactor(double pt, double eta, int nsel, int period){
+double effScaleFactor(double pt, double eta, int nsel, int period, TString type){
   int iPt = -1;
-  if	 (pt < 20) iPt = 0;
-  else if(pt < 30) iPt = 1;
-  else  	   iPt = 2;
+  if	 (pt < 15) iPt = 0;
+  else if(pt < 20) iPt = 1;
+  else if(pt < 25) iPt = 2;
+  else if(pt < 30) iPt = 3;
+  else  	   iPt = 4;
 
   int iEta = -1;
   if	 (TMath::Abs(eta) < 1.5) iEta = 0;
@@ -177,19 +196,23 @@ double effScaleFactor(double pt, double eta, int nsel, int period){
   else if(iPt==1&&iEta==1) iPoint = 3;
   else if(iPt==2&&iEta==0) iPoint = 4;
   else if(iPt==2&&iEta==1) iPoint = 5;
+  else if(iPt==3&&iEta==0) iPoint = 6;
+  else if(iPt==3&&iEta==1) iPoint = 7;
+  else if(iPt==4&&iEta==0) iPoint = 8;
+  else if(iPt==4&&iEta==1) iPoint = 9;
   else assert(0);
 
-  if     (TMath::Abs(nsel) == 13 && period == 0) return effSF_m_50[iPoint];
-  else if(TMath::Abs(nsel) == 11 && period == 0) return effSF_e_50[iPoint];
-  else if(TMath::Abs(nsel) == 13 && period == 1) return effSF_m_25[iPoint];
-  else if(TMath::Abs(nsel) == 11 && period == 1) return effSF_e_25[iPoint];
+  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default"))  return effSF_m_25_medium[iPoint];
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")                       return effSF_e_25_medium[iPoint];
+  else if(TMath::Abs(nsel) == 13 && period == 1 &&  type== "tight")                        return effSF_m_25_tight [iPoint];
+  else if(TMath::Abs(nsel) == 11 && period == 1 && (type== "tight" || type== "default"))   return effSF_e_25_tight [iPoint];
 
   assert(0);
 
   return 0.0;
 }
 
-double fakeRateFactor(double pt, double eta, int nsel, int period){
+double fakeRateFactor(double pt, double eta, int nsel, int period, TString type){
   int iPt = -1;
   if	 (pt < 15) iPt = 0;
   else if(pt < 20) iPt = 1;
@@ -204,12 +227,73 @@ double fakeRateFactor(double pt, double eta, int nsel, int period){
   else if(TMath::Abs(eta) < 2.0) iEta = 3;
   else  			 iEta = 4;
 
-  if     (TMath::Abs(nsel) == 13) return fake_rate_m_50[iPt][iEta]/(1.0-fake_rate_m_50[iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11) return fake_rate_e_50[iPt][iEta]/(1.0-fake_rate_e_50[iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11) return fake_rate_e_25[iPt][iEta]/(1.0-fake_rate_e_25[iPt][iEta]);
-  else if(TMath::Abs(nsel) == 13) return fake_rate_m_25[iPt][iEta]/(1.0-fake_rate_m_25[iPt][iEta]);
+  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default"))  return fake_rate_m_25_medium[iPt][iEta]/(1.0-fake_rate_m_25_medium[iPt][iEta]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")			   return fake_rate_e_25_medium[iPt][iEta]/(1.0-fake_rate_e_25_medium[iPt][iEta]);
+  else if(TMath::Abs(nsel) == 13 && period == 1 &&  type== "tight")			   return fake_rate_m_25_tight [iPt][iEta]/(1.0-fake_rate_m_25_tight [iPt][iEta]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 && (type== "tight" || type== "default"))   return fake_rate_e_25_tight [iPt][iEta]/(1.0-fake_rate_e_25_tight [iPt][iEta]);
 
   assert(0);
 
   return 0.0;
+}
+
+double weightTruePileupFall15_74X(double ntrue){
+
+  if(ntrue > 50) return 1.0;
+
+  double w[50] = {
+      1.0,
+      56.8425,
+      177.583,
+      34.0851,
+      16.3021,
+      3.35763,
+      1.95107,
+      2.55352,
+      3.43094,
+      3.30801,
+      3.00642,
+      2.6491,
+      2.08474,
+      1.40075,
+      0.790461,
+      0.388935,
+      0.180224,
+      0.0992476,
+      0.0706173,
+      0.0586083,
+      0.0526078,
+      0.0504808,
+      0.0516041,
+      0.0536805,
+      0.0577468,
+      0.0618779,
+      0.0658613,
+      0.0714884,
+      0.0765815,
+      0.0789806,
+      0.0737378,
+      0.0596836,
+      0.0366257,
+      0.0227363,
+      0.0106934,
+      0.00547676,
+      0.00289044,
+      0.00138031,
+      0.000810801,
+      0.000408625,
+      0.00024114,
+      0.000115888,
+      7.0553e-05,
+      3.67137e-05,
+      2.29998e-05,
+      1.01618e-05,
+      5.60541e-06,
+      1.01912e-05,
+      1.0745e-05,
+      1.0
+  };
+
+ return w[(int)floor(ntrue)];
+
 }
