@@ -20,9 +20,9 @@
 
 bool usePureMC = false; 
 double mcPrescale = 1.0;
-const bool useDYMVA = false;
+const bool useDYMVA = true;
 const bool doTriggerStudy = true;
-const TString typeLepSel = "medium";
+const TString typeLepSel = "default";
 
 void baseAnalysis(
  Int_t nsel = 4,
@@ -30,7 +30,7 @@ void baseAnalysis(
  Int_t period = 1
  ){
 
-  TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
+  TString filesPath  = "/scratch5/ceballos/ntuples_weights/met_";
   Double_t lumi = 0.0715;
   if(period == 1) lumi = 2.2;
 
@@ -131,7 +131,7 @@ void baseAnalysis(
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 41;
+  const int allPlots = 67;
   const int histBins = 8;
   TH1D* histo[allPlots][histBins];
 
@@ -145,7 +145,7 @@ void baseAnalysis(
     else if(thePlot >= 12 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 15 && thePlot <= 18) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
     else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
-    else if(thePlot >= 20 && thePlot <= 20) {nBinPlot = 100; xminPlot =-1.0; xmaxPlot =   1.0;}
+    else if(thePlot >= 20 && thePlot <= 20) {nBinPlot = 200; xminPlot =-1.0; xmaxPlot =   1.0;}
     else if(thePlot >= 21 && thePlot <= 23) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 24 && thePlot <= 24) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   5.0;}
     else if(thePlot >= 25 && thePlot <= 27) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
@@ -155,10 +155,25 @@ void baseAnalysis(
     else if(thePlot >= 33 && thePlot <= 35) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 36 && thePlot <= 36) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
     else if(thePlot >= 37 && thePlot <= 40) {nBinPlot = 400; xminPlot = -50; xmaxPlot =  50.0;}
+    else if(thePlot >= 41 && thePlot <= 42) {nBinPlot = 200; xminPlot = -TMath::Pi(); xmaxPlot = TMath::Pi();}
+    else if(thePlot >= 43 && thePlot <= 46) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
+    else if(thePlot >= 47 && thePlot <= 54) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 55 && thePlot <= 60) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 61 && thePlot <= 66) {nBinPlot = 200; xminPlot =-1.0; xmaxPlot =   1.0;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
     histos->Clear();
+  }
+  TH1D* histo_rinout_met[2][3][2];
+  TH1D* histo_rinout_dym[2][3][2];
+  for(int i=0; i<2; i++){
+    for(int j=0; j<3; j++){
+      for(int k=0; k<2; k++){
+        histo_rinout_met[i][j][k] = new TH1D(Form("histo_rinout_met_%d_%d_%d",i,j,k), Form("histo_rinout_met_%d_%d_%d",i,j,k), 4, -0.5, 3.5);
+        histo_rinout_dym[i][j][k] = new TH1D(Form("histo_rinout_dym_%d_%d_%d",i,j,k), Form("histo_rinout_dym_%d_%d_%d",i,j,k), 4, -0.5, 3.5);
+      }
+    }
   }
 
   unsigned int numberOfLeptons = 2;
@@ -469,6 +484,12 @@ void baseAnalysis(
 	else if(typeL[0] == 2) type3l = 2;
 	else                   type3l = 3;
       }
+      else if(nsel == 8){ // WW same-flavor like selection for all final states with loose MET
+        passFilter[6] = dilep.M() > 20;
+	if(bDiscrMax < 0.605 && idSoft.size() == 0) passFilter[7] = kTRUE;
+	if(minPMET > 20) passFilter[8] = kTRUE;
+	if(dilep.Pt() > 45) passFilter[9] = kTRUE;
+      }
       else {assert(0); return;}
       //printf("5 %d %f\n",(int)eventEvent.eventNum,minMassll);
       if(passFilter[5] == kTRUE) nPassCuts[5]++;
@@ -554,6 +575,7 @@ void baseAnalysis(
       double theLumi  = 1.0; if(infilecatv[ifile] != 0) theLumi  = lumi;
       // pile-up
       double puWeight = 1.0; if(infilecatv[ifile] != 0) puWeight = nPUScaleFactor(fhDPU, (double)eventVertex.npv);
+      //double puWeight = 1.0; if(infilecatv[ifile] != 0) puWeight = weightTruePileupFall15_74X((double)eventMonteCarlo.puTrueInt);
       // lepton efficiency
       double effSF = 1.0;
       if(infilecatv[ifile] != 0){
@@ -618,6 +640,39 @@ void baseAnalysis(
       double phiv_trkmet = utv_trkmet.DeltaPhi(dilv);
       double the_upara_trkmet = utv_trkmet.Mod()*TMath::Cos(phiv_trkmet);
       double the_uperp_trkmet = utv_trkmet.Mod()*TMath::Sin(phiv_trkmet);
+      if(nsel == 8){
+	double theRinoutBin[2] = {-1, -1}; int nJetsBin = -1;
+	if     (minPMET > 20 && minPMET <= 25    ) theRinoutBin[0] = 0;
+	else if(minPMET > 25 && minPMET <= 35    ) theRinoutBin[0] = 1;
+	else if(minPMET > 35 && minPMET <= 45    ) theRinoutBin[0] = 2;
+	else if(minPMET > 45		         ) theRinoutBin[0] = 3;
+	if     (dymva_ > -0.20 && dymva_ <=  0.10 && idJet.size() == 0) theRinoutBin[1] = 0;
+	else if(dymva_ >  0.10 && dymva_ <=  0.20 && idJet.size() == 0) theRinoutBin[1] = 1;
+	else if(dymva_ >  0.20 && dymva_ <=  0.30 && idJet.size() == 0) theRinoutBin[1] = 2;
+	else if(dymva_ >  0.30		          && idJet.size() == 0) theRinoutBin[1] = 3;
+	else if(dymva_ > -0.20 && dymva_ <= -0.05 && idJet.size() == 1) theRinoutBin[1] = 0;
+	else if(dymva_ > -0.05 && dymva_ <=  0.05 && idJet.size() == 1) theRinoutBin[1] = 1;
+	else if(dymva_ >  0.05 && dymva_ <=  0.20 && idJet.size() == 1) theRinoutBin[1] = 2;
+	else if(dymva_ >  0.20		          && idJet.size() == 1) theRinoutBin[1] = 3;
+	else if(dymva_ > -0.20 && dymva_ <= -0.05 && idJet.size() == 2) theRinoutBin[1] = 0;
+	else if(dymva_ > -0.05 && dymva_ <=  0.05 && idJet.size() == 2) theRinoutBin[1] = 1;
+	else if(dymva_ >  0.05 && dymva_ <=  0.15 && idJet.size() == 2) theRinoutBin[1] = 2;
+	else if(dymva_ >  0.15		          && idJet.size() == 2) theRinoutBin[1] = 3;
+	if     (idJet.size() == 0) nJetsBin = 0;
+	else if(idJet.size() == 1) nJetsBin = 1;
+	else if(idJet.size() == 2) nJetsBin = 2;
+	int theInOut = 1; if(TMath::Abs(dilep.M()-91.1876) <= 15.0) theInOut = 0;
+	double leptonPair = 1;if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])!=TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])) leptonPair = -1;
+	if(theCategory == 4) leptonPair = -1 * leptonPair;
+	int plotType = -1;
+	if     (theCategory == 0 || theCategory == 4) plotType = 0;
+	else if(theCategory == 2) plotType = 1;
+        // no emu substraction for Z MC
+	if(theCategory == 2 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])!=TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])) nJetsBin = -1;
+	
+	if(theRinoutBin[0] >= 0 && plotType >= 0 && nJetsBin >= 0) histo_rinout_met[plotType][nJetsBin][theInOut]->Fill(theRinoutBin[0],totalWeight*leptonPair);
+	if(theRinoutBin[1] >= 0 && plotType >= 0 && nJetsBin >= 0) histo_rinout_dym[plotType][nJetsBin][theInOut]->Fill(theRinoutBin[1],totalWeight*leptonPair);
+      }
 
       for(int thePlot=0; thePlot<allPlots; thePlot++){
 	double theVar = 0.0;
@@ -633,7 +688,7 @@ void baseAnalysis(
 	else if(thePlot ==  8) {makePlot = true;theVar = TMath::Min((double)eventVertex.npv,39.499);}
 	else if(thePlot ==  9) {makePlot = true;theVar = TMath::Min(bDiscrMax,0.999);}
 	else if(thePlot == 10) {makePlot = true;theVar = TMath::Min((double)(numberQuarks[0]+10*numberQuarks[1]),49.499);}
-	else if(thePlot == 11 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 11 && bDiscrMax < 0.97 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 12) {makePlot = true;theVar = TMath::Min(mass3l,199.999);}
 	else if(thePlot == 13) {makePlot = true;theVar = TMath::Min(mtLN,199.999);}
 	else if(thePlot == 14) {makePlot = true;theVar = TMath::Min(minMET,199.999);}
@@ -663,6 +718,32 @@ void baseAnalysis(
 	else if(thePlot == 38 && idJet.size() == 0) {makePlot = true;theVar = the_uperp_met;}
 	else if(thePlot == 39 && idJet.size() == 0) {makePlot = true;theVar = the_upara_trkmet;}
 	else if(thePlot == 40 && idJet.size() == 0) {makePlot = true;theVar = the_uperp_trkmet;}
+	else if(thePlot == 41) {makePlot = true;theVar = ((TLorentzVector*)(*eventMet.p4)[0])->Phi();}
+	else if(thePlot == 42) {makePlot = true;theVar = (double)eventMet.trackMet->Py();}
+	else if(thePlot == 43 && numberQuarks[1] == 0                                          ) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 44 && numberQuarks[1] == 0 && bDiscrMax < 0.97 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 45 && numberQuarks[1]  > 0                                          ) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 46 && numberQuarks[1]  > 0 && bDiscrMax < 0.97 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 47 && idJet.size() == 0 && minPMET > 20 && minPMET <= 25)                     {makePlot = true;theVar = TMath::Min(minMassll,199.999);}
+	else if(thePlot == 48 && idJet.size() == 0 && minPMET > 25 && minPMET <= 35)                     {makePlot = true;theVar = TMath::Min(minMassll,199.999);}
+	else if(thePlot == 49 && idJet.size() == 0 && minPMET > 35 && minPMET <= 45)                     {makePlot = true;theVar = TMath::Min(minMassll,199.999);}
+	else if(thePlot == 50 && idJet.size() == 0 && minPMET > 45                 )                     {makePlot = true;theVar = TMath::Min(minMassll,199.999);}
+	else if(thePlot == 51 && idJet.size() == 0 && minPMET > 20 && dymva_ > -0.20 && dymva_ <=  0.10) {makePlot = true;theVar = TMath::Min(minMassll,199.999);}
+	else if(thePlot == 52 && idJet.size() == 0 && minPMET > 20 && dymva_ >  0.10 && dymva_ <=  0.20) {makePlot = true;theVar = TMath::Min(minMassll,199.999);}
+	else if(thePlot == 53 && idJet.size() == 0 && minPMET > 20 && dymva_ >  0.20 && dymva_ <=  0.30) {makePlot = true;theVar = TMath::Min(minMassll,199.999);}
+	else if(thePlot == 54 && idJet.size() == 0 && minPMET > 20 && dymva_ >  0.30                   ) {makePlot = true;theVar = TMath::Min(minMassll,199.999);}
+	else if(thePlot == 55 && idJet.size() == 0 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
+	else if(thePlot == 56 && idJet.size() == 1 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
+	else if(thePlot == 57 && idJet.size() == 2 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
+	else if(thePlot == 58 && idJet.size() == 0 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
+	else if(thePlot == 59 && idJet.size() == 1 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
+	else if(thePlot == 60 && idJet.size() == 2 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
+	else if(thePlot == 61 && idJet.size() == 0 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = dymva_;}
+	else if(thePlot == 62 && idJet.size() == 1 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = dymva_;}
+	else if(thePlot == 63 && idJet.size() == 2 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = dymva_;}
+	else if(thePlot == 64 && idJet.size() == 0 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = dymva_;}
+	else if(thePlot == 65 && idJet.size() == 1 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = dymva_;}
+	else if(thePlot == 66 && idJet.size() == 2 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = dymva_;}
 	if(makePlot == true) histo[thePlot][theCategory]->Fill(theVar,totalWeight);
       }
     }
@@ -682,6 +763,30 @@ void baseAnalysis(
       printf("\n");
     }
   } // end of chain
+
+  if(nsel == 8){
+    for(int i=1; i<=histo_rinout_met[0][0][0]->GetNbinsX(); i++){
+      printf("MET MC: %7.1f/%7.1f=%.3f %7.1f/%7.1f=%.3f %7.1f/%7.1f=%.3f | DA: %7.1f/%7.1f=%.3f %7.1f/%7.1f=%.3f %7.1f/%7.1f=%.3f\n",
+      histo_rinout_met[1][0][1]->GetBinContent(i),histo_rinout_met[1][0][0]->GetBinContent(i),histo_rinout_met[1][0][1]->GetBinContent(i)/histo_rinout_met[1][0][0]->GetBinContent(i),
+      histo_rinout_met[1][1][1]->GetBinContent(i),histo_rinout_met[1][1][0]->GetBinContent(i),histo_rinout_met[1][1][1]->GetBinContent(i)/histo_rinout_met[1][1][0]->GetBinContent(i),
+      histo_rinout_met[1][2][1]->GetBinContent(i),histo_rinout_met[1][2][0]->GetBinContent(i),histo_rinout_met[1][2][1]->GetBinContent(i)/histo_rinout_met[1][2][0]->GetBinContent(i),
+      histo_rinout_met[0][0][1]->GetBinContent(i),histo_rinout_met[0][0][0]->GetBinContent(i),histo_rinout_met[0][0][1]->GetBinContent(i)/histo_rinout_met[0][0][0]->GetBinContent(i),
+      histo_rinout_met[0][1][1]->GetBinContent(i),histo_rinout_met[0][1][0]->GetBinContent(i),histo_rinout_met[0][1][1]->GetBinContent(i)/histo_rinout_met[0][1][0]->GetBinContent(i),
+      histo_rinout_met[0][2][1]->GetBinContent(i),histo_rinout_met[0][2][0]->GetBinContent(i),histo_rinout_met[0][2][1]->GetBinContent(i)/histo_rinout_met[0][2][0]->GetBinContent(i)
+      );
+    }
+    for(int i=1; i<=histo_rinout_met[0][0][0]->GetNbinsX(); i++){
+      printf("dym MC: %7.1f/%7.1f=%.3f %7.1f/%7.1f=%.3f %7.1f/%7.1f=%.3f | DA: %7.1f/%7.1f=%.3f %7.1f/%7.1f=%.3f %7.1f/%7.1f=%.3f\n",
+      histo_rinout_dym[1][0][1]->GetBinContent(i),histo_rinout_dym[1][0][0]->GetBinContent(i),histo_rinout_dym[1][0][1]->GetBinContent(i)/histo_rinout_dym[1][0][0]->GetBinContent(i),
+      histo_rinout_dym[1][1][1]->GetBinContent(i),histo_rinout_dym[1][1][0]->GetBinContent(i),histo_rinout_dym[1][1][1]->GetBinContent(i)/histo_rinout_dym[1][1][0]->GetBinContent(i),
+      histo_rinout_dym[1][2][1]->GetBinContent(i),histo_rinout_dym[1][2][0]->GetBinContent(i),histo_rinout_dym[1][2][1]->GetBinContent(i)/histo_rinout_dym[1][2][0]->GetBinContent(i),
+      histo_rinout_dym[0][0][1]->GetBinContent(i),histo_rinout_dym[0][0][0]->GetBinContent(i),histo_rinout_dym[0][0][1]->GetBinContent(i)/histo_rinout_dym[0][0][0]->GetBinContent(i),
+      histo_rinout_dym[0][1][1]->GetBinContent(i),histo_rinout_dym[0][1][0]->GetBinContent(i),histo_rinout_dym[0][1][1]->GetBinContent(i)/histo_rinout_dym[0][1][0]->GetBinContent(i),
+      histo_rinout_dym[0][2][1]->GetBinContent(i),histo_rinout_dym[0][2][0]->GetBinContent(i),histo_rinout_dym[0][2][1]->GetBinContent(i)/histo_rinout_dym[0][2][0]->GetBinContent(i)
+      );
+    }
+  }
+
 
   double sumEvents = 0;
   for(int np=1; np<histBins; np++) sumEvents += histo[0][np]->GetSumOfWeights();

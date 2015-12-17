@@ -22,15 +22,21 @@
 #include "MitAnalysisRunII/macros/factors.h"
 
 const TString typeLepSel = "default";
+const bool useDYMVA = true;
+double mcPrescale = 1.0;
 
 // compute systematic uncertainty
 Double_t computeSyst(const TH1D *hout, const TH1D *hin, Int_t binUsed, Double_t rErrorMax, Bool_t useRFromData = false, Bool_t isDebug = false);
 
-void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
+void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
 
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/met_";
   Double_t lumi = 0.0715;
   if(period == 1) lumi = 2.2;
+
+  float dymva_= -999.;
+  unsigned int nlep_= -1;
+  unsigned int njets_= -1;
 
   //*******************************************************
   //Input Files
@@ -51,22 +57,22 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
   else if(period==1){
   puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
   infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
-  infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
-  infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
-  infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(1);
+  infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
+  infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
+  infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	infilecatv.push_back(1);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));		  infilecatv.push_back(1);
-  infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sZZTo4L_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sGluGluToZZTo2e2mu_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sGluGluToZZTo2e2tau_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sGluGluToZZTo2mu2tau_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sGluGluToZZTo4e_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  			  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sGluGluToZZTo4mu_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data())); 			  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sGluGluToZZTo4tau_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sWZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			  infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sZZTo4L_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sGluGluToZZTo2e2mu_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sGluGluToZZTo2e2tau_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sGluGluToZZTo2mu2tau_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sGluGluToZZTo4e_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));  			infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sGluGluToZZTo4mu_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data())); 			infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sGluGluToZZTo4tau_BackgroundOnly_13TeV_MCFM+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sWZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM.root",filesPath.Data()));			infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			infilecatv.push_back(2);
   }
   else {assert(0);}
 
@@ -78,8 +84,7 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
   Float_t bins[nbins+1];
 
   const Int_t nmass = 3;
-  const Double_t mH[nmass]     = {0,125,200};  
-        Bool_t useDYMVA[nmass] = {0,0,0};
+  const Double_t mH[nmass]     = {0, 125, 200};  
   bool useRFromData[3] = {1, 1, 1};
 
   //*******************************************************
@@ -110,15 +115,15 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
 
     char hname[50];
     for(Int_t imass=0; imass<nmass; imass++) {
-      if     (useDYMVA[imass] == kTRUE){
+      if     (useDYMVA == kTRUE){
         if     (jetIndex == 0){
-	  bins[0] = -0.90; bins[1] = -0.85; bins[2] = -0.60; bins[3] =  0.88; bins[4] = 1.0; 
+	  bins[0] = -0.20; bins[1] =  0.10; bins[2] = +0.20; bins[3] =  0.30; bins[4] = 1.0; 
 	}
 	else if(jetIndex == 1){
-	  bins[0] = -0.90; bins[1] = -0.85; bins[2] = -0.60; bins[3] =  0.84; bins[4] = 1.0; 
+	  bins[0] = -0.20; bins[1] = +0.10; bins[2] = +0.20; bins[3] =  0.30; bins[4] = 1.0; 
 	}
 	else if(jetIndex == 2){
-	  bins[0] = 20; bins[1] = 25; bins[2] = 30; bins[3] =  45; bins[4] = 50; 
+	  bins[0] = -0.20; bins[1] = +0.10; bins[2] = +0.20; bins[3] =  0.30; bins[4] = 1.0; 
 	}
       } else {
 	bins[0] = 20; bins[1] = 25; bins[2] = 35; bins[3] =  45; bins[4] = 70; 
@@ -222,6 +227,12 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
     BareVertex eventVertex;
     eventVertex.setBranchAddresses(the_input_tree);
 
+    if(useDYMVA == true){
+      the_input_tree->SetBranchAddress("dymva", &dymva_);
+      the_input_tree->SetBranchAddress("nlep", &nlep_ );
+      the_input_tree->SetBranchAddress("njets", &njets_);
+    }
+
     TNamed *triggerNames = (TNamed*)the_input_file.FindObjectAny("triggerNames");
     char **tokens;
     size_t numtokens;
@@ -232,8 +243,9 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
       }
     }
 
-    int MAX = the_input_tree->GetEntries();
-    for (int i=0; i<MAX; ++i) {
+    double theMCPrescale = mcPrescale;
+    if(infilecatv[ifile] == 0) theMCPrescale = 1.0;
+    for (int i=0; i<int(the_input_tree->GetEntries()/theMCPrescale); ++i) {
       the_input_tree->GetEntry(i);
       if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
 
@@ -292,7 +304,7 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
       double minPMET = TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt());
       if(dPhiLepMETMin < TMath::Pi()/2) minPMET = minPMET * sin(dPhiLepMETMin);
 
-      int nJets = 0;
+      unsigned int nJets = 0;
       bool isBtag = kFALSE;
       double bDiscrMax = 0.0;
       double dPhiJetMET = -1.0;
@@ -300,23 +312,28 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 10) continue;
         bool passId = passJetId(fMVACut, (float)(*eventJets.puId)[nj], ((TLorentzVector*)(*eventJets.p4)[nj])->Pt(), TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()));
-        if(passId == false) continue;        
+        //if(passId == false) continue;        
 
         Bool_t isLepton = kFALSE;
         for(unsigned int nl=0; nl<idLep.size(); nl++){
-          if(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])) < 0.4) isLepton = kTRUE;
+          if(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])) < 0.3) isLepton = kTRUE;
 	}
 	if(isLepton == kTRUE) continue;
 
         if(dPhiJetMET   == -1) dPhiJetMET   = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])))*180./TMath::Pi();
         if(dPhiJetDiLep == -1) dPhiJetDiLep = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventJets.p4)[nj])))*180./TMath::Pi();
 
-	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 10 && 
+	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 15 && 
 	   (float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
 
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) continue;
 
         nJets++;
+      }
+
+      if(useDYMVA == true){
+        if(nlep_ != idLep.size()) {printf("PROBLEM nlep %d != %d\n",(int)nlep_,(int)idLep.size()); assert(1); return;}
+        if(njets_ != nJets) {printf("PROBLEM njet %d != %d\n",(int)njets_,nJets); assert(1); return;}
       }
 
       if(nJets <= 2) passFilter[5] = kTRUE;  	    
@@ -331,10 +348,13 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
         if(typeLep == 1) nin_kee_data[nJets]++;
       }
 
+      if(minPMET <= 20) continue;
       double varMet = minPMET;
       if(varMet>=70) varMet=69;
-      if(minPMET <= 20) continue;
-      
+      if(useDYMVA == kTRUE) {
+        varMet = dymva_;
+      }
+
       double theLumi = lumi; if(infilecatv[ifile] == 0) theLumi = 1.0;
       double puWeight = nPUScaleFactor(fhDPU, (double)eventVertex.npv); if(infilecatv[ifile] == 0) puWeight = 1.0;
       double effSF = 1.0;
@@ -344,7 +364,7 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
                 effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]),period,typeLepSel.Data());
       }
 
-      double totalWeight = eventMonteCarlo.mcWeight*theLumi*puWeight*effSF;
+      double totalWeight = eventMonteCarlo.mcWeight*theLumi*puWeight*effSF*theMCPrescale;
 
       vector<bool> isGenDupl;
       for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
@@ -418,6 +438,7 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
         }
 
 	bool passMET = varMet > 45;
+	if(useDYMVA == kTRUE) passMET = dymva_ > 0.3;
 	if(passMET == kFALSE) continue;
 
         if(infilecatv[ifile] == 1){ // Z MC
@@ -433,11 +454,11 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
 
            } 
 	   else if(TMath::Abs(dilep.M()-mZ) >= 15 && dilep.M() < theCutMassHigh) {
-	    if     (typeLep == 1) { 
+	    if     (typeLep == 1) {
 	      nout_ee_dy[nJets][imass]+=totalWeight; 
 	      varout_ee_dy[nJets][imass]+=totalWeight*totalWeight;
 	    }  
-	    else if(typeLep == 0) { 
+	    else if(typeLep == 0) {
 	      nout_mm_dy[nJets][imass]+=totalWeight;
 	      varout_mm_dy[nJets][imass]+=totalWeight*totalWeight;
 	    }
@@ -700,6 +721,7 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 10){
       //
       // out-yield in MC
       //
+      printf("SSS %f %f %f\n",nout_ee_dy[jetIndex][imass]+nout_mm_dy[jetIndex][imass],nout_ee_dy[jetIndex][imass],nout_mm_dy[jetIndex][imass]);
       sprintf(buffer,"%.2f +/- %.2f",nout_ee_dy[jetIndex][imass]+nout_mm_dy[jetIndex][imass],sqrt(varout_ee_dy[jetIndex][imass] + varout_mm_dy[jetIndex][imass]));
 //    sprintf(buffer,"%.2f +/- %.2f",nout_ee_dy[jetIndex][imass],sqrt(varout_ee_dy[jetIndex][imass]));
 //    sprintf(buffer,"%.2f +/- %.2f",nout_mm_dy[jetIndex][imass],sqrt(varout_mm_dy[jetIndex][imass]));
