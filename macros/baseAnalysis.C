@@ -398,6 +398,7 @@ void baseAnalysis(
 
       if(nsel == 0 || nsel == 6){ // WW selection (opposite-sign / same-sign)
         if(idJet.size() == 0) passFilter[6] = kTRUE;
+	passFilter[6] = kTRUE;
 	if(bDiscrMax < 0.605 && idSoft.size() == 0) passFilter[7] = kTRUE;
 	if(minPMET > 20) passFilter[8] = kTRUE;
 	if(dilep.Pt() > 30) passFilter[9] = kTRUE;

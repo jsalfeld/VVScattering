@@ -18,7 +18,7 @@
 
 #include "MitAnalysisRunII/macros/factors.h"
 
-const TString typeLepSel = "medium";
+const TString typeLepSel = "default";
 
 void ZllAnalysis(Int_t period = 1){
 
