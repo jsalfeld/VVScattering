@@ -384,7 +384,7 @@ void wzAnalysis(
            (strcmp(tokens[nt],"HLT_Ele27_WPLoose_Gsf_v*")			    == 0) ||
            (strcmp(tokens[nt],"HLT_Ele27_WP85_Gsf_v*")  			    == 0)
            ) passFilter[1] = kTRUE;
-     }
+      }
 
       if(passFilter[0] == kFALSE) continue;
       if(passFilter[1] == kFALSE) continue;
@@ -505,7 +505,7 @@ void wzAnalysis(
       passFilter[ 8] = ((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt() > 20;
       passFilter[ 9] = mass3l > 100;
       passFilter[10] = true;
-      if(applyBtagging) passFilter[10] = bDiscrMax < 0.97 && idSoft.size() == 0;
+      if(applyBtagging) passFilter[10] = bDiscrMax < 0.97;
 
       if(passFilter[7]==kTRUE && (tagZ[0] == tagZ[1] || tagZ[0] == tagZ[2] || tagZ[1] == tagZ[2])) {printf("ZPROBLEM!\n");assert(0);return;}
 

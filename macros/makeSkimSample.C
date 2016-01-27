@@ -36,7 +36,8 @@ void makeSkimSample(
  TString input_file     = "nero_old.root",
  TString outputFileName = "nero_new.root",
  TString processName    = "data",
- Int_t   filterType     = -1
+ Int_t   filterType     = -1,
+ Int_t   useFakeMET     = 0
  ){
 
   bool fillPDFInfo = true;
@@ -332,6 +333,19 @@ void makeSkimSample(
 
     if(passFilter == kFALSE) continue;
     N_pass++;
+
+    if(useFakeMET == 1){
+      vector<int>idBoson;
+      for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
+        if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 24) {
+	  idBoson.push_back(ngen0);
+	}
+      }
+      if(idBoson.size() == 2){
+        TLorentzVector wwSystem(( ( *(TLorentzVector*)(eventMonteCarlo.p4->At(idBoson[0])) ) + ( *(TLorentzVector*)(eventMonteCarlo.p4->At(idBoson[1])) ) )); 
+        ((TLorentzVector*)(*eventMet.p4)[0])->SetXYZT(wwSystem.Px(), wwSystem.Py(), wwSystem.Pz(), wwSystem.E());
+      }
+    }
 
     if(eventMonteCarlo.mcWeight == 0 && processName.CompareTo("data") != 0) {printf("PROBLEM WIH WEIGTHS\n");return;}
 
