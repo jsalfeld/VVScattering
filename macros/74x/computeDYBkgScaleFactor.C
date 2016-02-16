@@ -19,7 +19,7 @@
 #include "NeroProducer/Core/interface/BareTrigger.hpp"
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 
-#include "MitAnalysisRunII/macros/factors.h"
+#include "MitAnalysisRunII/macros/74x/factors.h"
 
 const TString typeLepSel = "default";
 const bool useDYMVA = true;
@@ -32,7 +32,7 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
 
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/met_";
   Double_t lumi = 0.0715;
-  if(period == 1) lumi = 2.2;
+  if(period == 1) lumi = 2.263;
 
   float dymva_= -999.;
   unsigned int nlep_= -1;
@@ -46,7 +46,7 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
 
   TString puPath = "";
   if      (period==0){
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_50ns.root";
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_50ns.root";
   infilenamev.push_back(Form("%sdata_AOD_50ns.root",filesPath.Data()));														  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(1);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));  	  infilecatv.push_back(1);
@@ -55,7 +55,7 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
   assert(0);
   }
   else if(period==1){
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_25ns.root";
   infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
@@ -386,7 +386,7 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
         for(int ngen=0; ngen<eventMonteCarlo.p4->GetEntriesFast(); ngen++) {
 	  if(isGenDupl[ngen] == 1) continue;
           if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) &&
-	    ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.1) {
+	    ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.3) {
 	    isGenLepton = true;
 	    break;
 	  }

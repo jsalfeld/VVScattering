@@ -18,7 +18,7 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
-#include "MitAnalysisRunII/macros/factors.h"
+#include "MitAnalysisRunII/macros/74x/factors.h"
 #include "WWAnalysis/resummation/WWpTreweight.h"
 
 enum selType                     { SIGSEL, nSelTypes};
@@ -33,6 +33,9 @@ bool usePureMC = false;
 const TString typeLepSel = "default";
 //const bool usePUPPI = true;
 
+double topNorm[3]  = {0.80, 1.14, 0.95};
+double topNormE[3] = {0.12, 0.08, 0.02};
+
 void wwAnalysis(
  unsigned int nJetsType = 0,
  bool useDYMVA = false,
@@ -41,7 +44,7 @@ void wwAnalysis(
 
   Int_t period = 1;
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/met_";
-  Double_t lumi = 2.2;
+  Double_t lumi = 2.263;
 
   //*******************************************************
   //Input Files
@@ -51,7 +54,8 @@ void wwAnalysis(
 
   TString puPath = "";
   if      (period==1){
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_25ns.root";
+
   infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
@@ -100,6 +104,7 @@ void wwAnalysis(
   infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));			          infilecatv.push_back(11);
   /////infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data())); 		  infilecatv.push_back(11);
   /////infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data())); infilecatv.push_back(11);
+
   }
   else {assert(0); return;}
 
@@ -140,6 +145,24 @@ void wwAnalysis(
   fhDPU->SetDirectory(0);
   delete fPUFile;
 
+  TFile *fWWPtRatio = TFile::Open(Form("/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/MyRatioWWpTHistogramAll.root"));
+  TH1D *fhDWWPtRatio           = (TH1D*)(fWWPtRatio->Get("wwpt"));
+  TH1D *fhDWWPtRatio_scaleup   = (TH1D*)(fWWPtRatio->Get("wwpt_scaleup"));
+  TH1D *fhDWWPtRatio_scaledown = (TH1D*)(fWWPtRatio->Get("wwpt_scaledown"));
+  TH1D *fhDWWPtRatio_resumup   = (TH1D*)(fWWPtRatio->Get("wwpt_resumup"));
+  TH1D *fhDWWPtRatio_resumdown = (TH1D*)(fWWPtRatio->Get("wwpt_resumdown"));
+  assert(fhDWWPtRatio	       );
+  assert(fhDWWPtRatio_scaleup  );
+  assert(fhDWWPtRatio_scaledown);
+  assert(fhDWWPtRatio_resumup  );
+  assert(fhDWWPtRatio_resumdown);
+  fhDWWPtRatio  	->SetDirectory(0);
+  fhDWWPtRatio_scaleup  ->SetDirectory(0);
+  fhDWWPtRatio_scaledown->SetDirectory(0);
+  fhDWWPtRatio_resumup  ->SetDirectory(0);
+  fhDWWPtRatio_resumdown->SetDirectory(0);
+  delete fWWPtRatio;
+
   TString ECMsb  = "13TeV2015";
   const int nBinMVA = 2; Float_t xbins[nBinMVA+1] = {0, 1, 2};
   TH1D* histoMVA = new TH1D("histoMVA", "histoMVA", nBinMVA, xbins);
@@ -158,6 +181,8 @@ void wwAnalysis(
   TH1D *histo_WjetsE = (TH1D*) histoMVA->Clone("histo_WjetsE");	 
   TH1D *histo_Higgs  = (TH1D*) histoMVA->Clone("histo_Higgs");	 
 
+  double totalFakeDataCount[4][4];
+  for(int i=0; i<4; i++) for(int j=0; j<4; j++) totalFakeDataCount[i][j] = 0;
   double xmin = 0.0;
   double xmax = 1.0;
   int nBinPlot      = 200;
@@ -213,7 +238,6 @@ void wwAnalysis(
   TH1D* histo_qqWW_CMS_MVAWW_qdown_nlo = new TH1D( Form("histo_qqWW_CMS_MVAWW_qdown_nlo"), Form("histo_qqWW_CMS_MVAWW_qdown_nlo"), nBinMVA, xbins); histo_qqWW_CMS_MVAWW_qdown_nlo->Sumw2();
   TH1D* histo_qqWW_CMS_MVAWW_sup_nlo   = new TH1D( Form("histo_qqWW_CMS_MVAWW_sup_nlo"), Form("histo_qqWW_CMS_MVAWW_sup_nlo"), nBinMVA, xbins); histo_qqWW_CMS_MVAWW_sup_nlo->Sumw2();
   TH1D* histo_qqWW_CMS_MVAWW_sdown_nlo = new TH1D( Form("histo_qqWW_CMS_MVAWW_sdown_nlo"), Form("histo_qqWW_CMS_MVAWW_sdown_nlo"), nBinMVA, xbins); histo_qqWW_CMS_MVAWW_sdown_nlo->Sumw2();
-  TH1D* histo_qqWW_CMS_MVAWW_bare      = new TH1D( Form("histo_qqWW_CMS_MVAWW_bare"), Form("histo_qqWW_CMS_MVAWW_bare"), nBinMVA, xbins); histo_qqWW_CMS_MVAWW_bare->Sumw2();
 
   TH1D* histo_Diff = new TH1D("dummy", "dummy",1000,-1,1); histo_Diff->Sumw2();
 
@@ -587,7 +611,7 @@ void wwAnalysis(
       }
       if(dPhiLepMETMin < TMath::Pi()/2) {minPMET[0] = minPMET[0] * sin(dPhiLepMETMin);minPMET[1] = minPMET[1] * sin(dPhiLepMETMin);minPMET[2] = minPMET[2] * sin(dPhiLepMETMin);}
 
-       passFilter[0] = passFilter[0] * (signQ == 0);
+      passFilter[0] = passFilter[0] * (signQ == 0);
 
       TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) )); 
       if(dilep.M() > 12) passFilter[2] = kTRUE;
@@ -673,15 +697,19 @@ void wwAnalysis(
 	  }
         }
       }
-      double thePtwwWeight[6] = {1.0,1.0,1.0,1.0,1.0,1.0};
+      double thePtwwWeight[5] = {1.0,1.0,1.0,1.0,1.0};
       if(infilecatv[ifile] == 1 && idBoson.size() == 2){
         TLorentzVector wwSystem(( ( *(TLorentzVector*)(eventMonteCarlo.p4->At(idBoson[0])) ) + ( *(TLorentzVector*)(eventMonteCarlo.p4->At(idBoson[1])) ) )); 
-        thePtwwWeight[0] = theWWpTreweight.reweight(wwSystem.Pt(), 0);
-        thePtwwWeight[1] = theWWpTreweight.reweight(wwSystem.Pt(), 1);
-        thePtwwWeight[2] = theWWpTreweight.reweight(wwSystem.Pt(), 2);
-        thePtwwWeight[3] = theWWpTreweight.reweight(wwSystem.Pt(), 3);
-        thePtwwWeight[4] = theWWpTreweight.reweight(wwSystem.Pt(), 4);
-        thePtwwWeight[5] = theWWpTreweight.reweight(wwSystem.Pt(), 5);
+        Int_t nptwwbin[5] = {fhDWWPtRatio	   ->GetXaxis()->FindBin(TMath::Min(wwSystem.Pt(),499.999)),
+	                     fhDWWPtRatio_scaleup  ->GetXaxis()->FindBin(TMath::Min(wwSystem.Pt(),499.999)),
+	                     fhDWWPtRatio_scaledown->GetXaxis()->FindBin(TMath::Min(wwSystem.Pt(),499.999)),
+	                     fhDWWPtRatio_resumup  ->GetXaxis()->FindBin(TMath::Min(wwSystem.Pt(),499.999)),
+	                     fhDWWPtRatio_resumdown->GetXaxis()->FindBin(TMath::Min(wwSystem.Pt(),499.999))};
+        thePtwwWeight[0] = fhDWWPtRatio 	 ->GetBinContent(nptwwbin[0]);
+	thePtwwWeight[1] = fhDWWPtRatio_scaleup  ->GetBinContent(nptwwbin[1]);
+	thePtwwWeight[2] = fhDWWPtRatio_scaledown->GetBinContent(nptwwbin[2]);
+	thePtwwWeight[3] = fhDWWPtRatio_resumup  ->GetBinContent(nptwwbin[3]);
+	thePtwwWeight[4] = fhDWWPtRatio_resumdown->GetBinContent(nptwwbin[4]);
       }
       vector<int> isGenLep; unsigned int goodIsGenLep = 0;
       for(unsigned nl=0; nl<idLep.size(); nl++){
@@ -689,7 +717,7 @@ void wwAnalysis(
         for(int ngen=0; ngen<eventMonteCarlo.p4->GetEntriesFast(); ngen++) {
 	  if(isGenDupl[ngen] == 1) continue;
           if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) &&
-	    ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.1) {
+	    ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.3) {
 	    isGenLepton = true;
 	    break;
 	  }
@@ -711,6 +739,13 @@ void wwAnalysis(
       }
 
       // fake rate
+      int type2l = -1;
+      if     (TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 13 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]) == 13) type2l = 0;
+      else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 13 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]) == 11) type2l = 1;
+      else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 11 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]) == 13) type2l = 2;
+      else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 11 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]) == 11) type2l = 3;
+      else {printf("IMPOSSIBLE TYPE2L\n");}
+      int nFakeCount = 0;
       unsigned int typeFakeLepton[2] = {0,0};
       int theCategory = infilecatv[ifile];
       double fakeSF = 1.0;
@@ -724,6 +759,9 @@ void wwAnalysis(
         else if((infilecatv[ifile] == 0 || infilecatv[ifile] == 7 || goodIsGenLep == isGenLep.size()) && goodIsTight != idTight.size()){ // add W+jets from data or W+gamma from MC
 	  for(unsigned int nl=0; nl<idLep.size(); nl++){
 	    if(idTight[nl] == 1) continue;
+	    if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 13) nFakeCount = nFakeCount + 1;
+	    else                                                        nFakeCount = nFakeCount + 2;
+
 	    effSF = effSF * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data());
 	    theCategory = 9;
 	    if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 13) typeFakeLepton[0]++;
@@ -752,10 +790,16 @@ void wwAnalysis(
       double mcWeight = eventMonteCarlo.mcWeight;
       if(infilecatv[ifile] == 0) mcWeight = 1.0;
       //double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale;
-      //double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*thePtwwWeight[5];
-      double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale;
+      double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*thePtwwWeight[0];
+      //double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale;
+
+      // top-quark estimation
+      if(infilecatv[ifile] == 3) totalWeight = totalWeight * topNorm[TMath::Min((int)nJetsType,2)];
+
       if(totalWeight == 0) continue;
       // end event weighting
+
+      if(passAllCuts[0] && infilecatv[ifile] == 0) totalFakeDataCount[type2l][nFakeCount] = totalFakeDataCount[type2l][nFakeCount] + 1;
 
       for(int nl=0; nl <=sumEvol[typeSel]; nl++) hDWWLL[typeSel]->Fill((double)nl,totalWeight);
 
@@ -776,12 +820,11 @@ void wwAnalysis(
 	  if(passAllCuts[SIGSEL]) {
 	     histo_qqWW->Fill(MVAVar,totalWeight);
 
-             histo_qqWW_CMS_MVAWW_nlo      ->Fill(MVAVar,totalWeight*thePtwwWeight[0]);
+             histo_qqWW_CMS_MVAWW_nlo      ->Fill(MVAVar,totalWeight);
              histo_qqWW_CMS_MVAWW_qup_nlo  ->Fill(MVAVar,totalWeight*thePtwwWeight[1]);
              histo_qqWW_CMS_MVAWW_qdown_nlo->Fill(MVAVar,totalWeight*thePtwwWeight[2]);
              histo_qqWW_CMS_MVAWW_sup_nlo  ->Fill(MVAVar,totalWeight*thePtwwWeight[3]);
              histo_qqWW_CMS_MVAWW_sdown_nlo->Fill(MVAVar,totalWeight*thePtwwWeight[4]);
-             histo_qqWW_CMS_MVAWW_bare     ->Fill(MVAVar,totalWeight/thePtwwWeight[5]);
 
 	     histo_qqWW_CMS_QCDScaleBounding[0]  ->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2));
 	     histo_qqWW_CMS_QCDScaleBounding[1]  ->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5));
@@ -1035,6 +1078,12 @@ void wwAnalysis(
     }
   } // end of chain
 
+  printf("----------------------totalFakeDataCount--------------------------------\n");
+  for(int ni=0; ni<4; ni++) {
+    printf("(%d): ",ni);
+    for(int nj=0; nj<4; nj++) printf("%6.1f ",totalFakeDataCount[ni][nj]);
+    printf("\n");
+  }
   printf("                    em                     ee/mm                     ll\n");
   printf("----------------------------------------------------------------------------------\n");
   for(int ns=0; ns<nSelTypes; ns++) {
@@ -1068,7 +1117,7 @@ void wwAnalysis(
   }
   for(int thePlot=0; thePlot<allPlots; thePlot++){
     char output[200];
-    sprintf(output,"histoww_nice_%d.root",thePlot);	  
+    sprintf(output,"histoww_nice%d_%d.root",nJetsType,thePlot);	  
     TFile* outFilePlotsNote = new TFile(output,"recreate");
     outFilePlotsNote->cd();
     for(int np=0; np<histBins; np++) histo[thePlot][np]->Write();
@@ -1085,10 +1134,10 @@ void wwAnalysis(
     histo_WGS->GetSumOfWeights(),histo_WGS_CMS_QCDScaleBounding[0]->GetSumOfWeights(),histo_WGS_CMS_QCDScaleBounding[1]->GetSumOfWeights(),histo_WGS_CMS_QCDScaleBounding[2]->GetSumOfWeights(),histo_WGS_CMS_QCDScaleBounding[3]->GetSumOfWeights(),histo_WGS_CMS_QCDScaleBounding[4]->GetSumOfWeights(),histo_WGS_CMS_QCDScaleBounding[5]->GetSumOfWeights(),
     histo_Higgs->GetSumOfWeights(),histo_Higgs_CMS_QCDScaleBounding[0]->GetSumOfWeights(),histo_Higgs_CMS_QCDScaleBounding[1]->GetSumOfWeights(),histo_Higgs_CMS_QCDScaleBounding[2]->GetSumOfWeights(),histo_Higgs_CMS_QCDScaleBounding[3]->GetSumOfWeights(),histo_Higgs_CMS_QCDScaleBounding[4]->GetSumOfWeights(),histo_Higgs_CMS_QCDScaleBounding[5]->GetSumOfWeights());
 
-  printf("ptWW  raw: nlo(%f)up/down(%f/%f/%f/%f)nnlo(%f),bare(%f)\n",histo_qqWW_CMS_MVAWW_nlo->GetSumOfWeights(),
+  printf("ptWW  raw: nlo(%f)up/down(%f/%f/%f/%f)nnlo(%f)\n",histo_qqWW_CMS_MVAWW_nlo->GetSumOfWeights(),
                                      histo_qqWW_CMS_MVAWW_qup_nlo->GetSumOfWeights(),histo_qqWW_CMS_MVAWW_qdown_nlo->GetSumOfWeights(),
                                      histo_qqWW_CMS_MVAWW_sup_nlo->GetSumOfWeights(),histo_qqWW_CMS_MVAWW_sdown_nlo->GetSumOfWeights(),
-				     histo_qqWW->GetSumOfWeights(),histo_qqWW_CMS_MVAWW_bare->GetSumOfWeights());
+				     histo_qqWW->GetSumOfWeights());
 
   double ratio_nnlo_nlo = histo_qqWW->GetSumOfWeights()/histo_qqWW_CMS_MVAWW_nlo->GetSumOfWeights();
   histo_qqWW_CMS_MVAWW_nlo      ->Scale(ratio_nnlo_nlo);
@@ -1097,10 +1146,10 @@ void wwAnalysis(
   histo_qqWW_CMS_MVAWW_sup_nlo  ->Scale(ratio_nnlo_nlo);
   histo_qqWW_CMS_MVAWW_sdown_nlo->Scale(ratio_nnlo_nlo);
 
-  printf("ptWW norm: nlo(%f)up/down(%f/%f/%f/%f)nnlo(%f),bare(%f)\n",histo_qqWW_CMS_MVAWW_nlo->GetSumOfWeights(),
+  printf("ptWW norm: nlo(%f)up/down(%f/%f/%f/%f)nnlo(%f)\n",histo_qqWW_CMS_MVAWW_nlo->GetSumOfWeights(),
                                      histo_qqWW_CMS_MVAWW_qup_nlo->GetSumOfWeights(),histo_qqWW_CMS_MVAWW_qdown_nlo->GetSumOfWeights(),
                                      histo_qqWW_CMS_MVAWW_sup_nlo->GetSumOfWeights(),histo_qqWW_CMS_MVAWW_sdown_nlo->GetSumOfWeights(),
-				     histo_qqWW->GetSumOfWeights(),histo_qqWW_CMS_MVAWW_bare->GetSumOfWeights());
+				     histo_qqWW->GetSumOfWeights());
 
   for(int i=1; i<=histo_qqWW->GetNbinsX(); i++){
     double factorUp = +1.0; double factorDown = -1.0;
@@ -1128,7 +1177,7 @@ void wwAnalysis(
     histo_Higgs_CMS_MVAHiggsStatBoundingDown   ->SetBinContent(i,TMath::Max(histo_Higgs    ->GetBinContent(i)+factorDown*histo_Higgs    ->GetBinError(i),0.000001));
   }
   char outputLimits[200];
-  sprintf(outputLimits,"ww%4s_input_%s.root",finalStateName,ECMsb.Data());
+  sprintf(outputLimits,"ww%4s_%dj_input_%s.root",finalStateName,nJetsType,ECMsb.Data());
   TFile* outFileLimits = new TFile(outputLimits,"recreate");
   outFileLimits->cd();
   histo_Data ->Write();
@@ -1286,7 +1335,7 @@ void wwAnalysis(
       if(TMath::Abs(histo_WG_CMS_QCDScaleBounding[nqcd]->GetBinContent(nb)-histo_WG->GetBinContent(nb)) >       systQCDScale[6]) systQCDScale[6] = TMath::Abs(histo_WG_CMS_QCDScaleBounding[nqcd]->GetBinContent(nb)-histo_WG->GetBinContent(nb));
       if(TMath::Abs(histo_WGS_CMS_QCDScaleBounding[nqcd]->GetBinContent(nb)-histo_WGS->GetBinContent(nb)) >     systQCDScale[7]) systQCDScale[7] = TMath::Abs(histo_WGS_CMS_QCDScaleBounding[nqcd]->GetBinContent(nb)-histo_WGS->GetBinContent(nb));
       if(TMath::Abs(histo_Higgs_CMS_QCDScaleBounding[nqcd]->GetBinContent(nb)-histo_Higgs->GetBinContent(nb)) > systQCDScale[8]) systQCDScale[8] = TMath::Abs(histo_Higgs_CMS_QCDScaleBounding[nqcd]->GetBinContent(nb)-histo_Higgs->GetBinContent(nb));
-    }                 
+    }
     if(histo_qqWW ->GetBinContent(nb) != 0) systQCDScale[0] = 1 + systQCDScale[0]/histo_qqWW ->GetBinContent(nb); else systQCDScale[0] = 1;
     if(histo_ggWW ->GetBinContent(nb) != 0) systQCDScale[1] = 1 + systQCDScale[1]/histo_ggWW ->GetBinContent(nb); else systQCDScale[1] = 1;
     if(histo_Top  ->GetBinContent(nb) != 0) systQCDScale[2] = 1 + systQCDScale[2]/histo_Top  ->GetBinContent(nb); else systQCDScale[2] = 1;
@@ -1298,6 +1347,10 @@ void wwAnalysis(
     if(histo_Higgs->GetBinContent(nb) != 0) systQCDScale[8] = 1 + systQCDScale[8]/histo_Higgs->GetBinContent(nb); else systQCDScale[8] = 1;
     printf("QCDScale(%d): %f %f %f %f %f %f %f %f %f\n",nb,systQCDScale[0],systQCDScale[1],systQCDScale[2],systQCDScale[3],systQCDScale[4],systQCDScale[5],systQCDScale[6],systQCDScale[7],systQCDScale[8]);
     
+    // TOP and DY QCDScale change
+    systQCDScale[2] = 1.0 + topNormE[TMath::Min((int)nJetsType,2)]/topNorm[TMath::Min((int)nJetsType,2)];
+    systQCDScale[3] = 1.10;
+
     // PDF study
     double systPDF[9];
     histo_Diff->Reset();
@@ -1359,24 +1412,24 @@ void wwAnalysis(
     else if(histo_Higgs_CMS_MVALepEffMBoundingAvg->GetBinContent(nb) > 0 && histo_Higgs_CMS_MVALepEffMBoundingDown ->GetBinContent(nb) > 0) systLepEffM[8] = histo_Higgs_CMS_MVALepEffMBoundingAvg->GetBinContent(nb)/histo_Higgs_CMS_MVALepEffMBoundingDown->GetBinContent(nb);
 
     double systLepEffE[9] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
-    if     (histo_qqWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_qqWW_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffM[0] = histo_qqWW_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_qqWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
-    else if(histo_qqWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_qqWW_CMS_MVALepEffEBoundingDown   ->GetBinContent(nb) > 0) systLepEffM[0] = histo_qqWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_qqWW_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
-    if     (histo_ggWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_ggWW_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffM[1] = histo_ggWW_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_ggWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
-    else if(histo_ggWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_ggWW_CMS_MVALepEffEBoundingDown   ->GetBinContent(nb) > 0) systLepEffM[1] = histo_ggWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_ggWW_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
-    if     (histo_Top_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_Top_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffM[2] = histo_Top_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_Top_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
-    else if(histo_Top_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_Top_CMS_MVALepEffEBoundingDown     ->GetBinContent(nb) > 0) systLepEffM[2] = histo_Top_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_Top_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
-    if     (histo_DY_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_DY_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffM[3] = histo_DY_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_DY_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
-    else if(histo_DY_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_DY_CMS_MVALepEffEBoundingDown       ->GetBinContent(nb) > 0) systLepEffM[3] = histo_DY_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_DY_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
-    if     (histo_VV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_VV_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffM[4] = histo_VV_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_VV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
-    else if(histo_VV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_VV_CMS_MVALepEffEBoundingDown       ->GetBinContent(nb) > 0) systLepEffM[4] = histo_VV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_VV_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
-    if     (histo_VVV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_VVV_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffM[5] = histo_VVV_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_VVV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
-    else if(histo_VVV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_VVV_CMS_MVALepEffEBoundingDown     ->GetBinContent(nb) > 0) systLepEffM[5] = histo_VVV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_VVV_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
-    if     (histo_WG_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_WG_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffM[6] = histo_WG_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_WG_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
-    else if(histo_WG_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_WG_CMS_MVALepEffEBoundingDown       ->GetBinContent(nb) > 0) systLepEffM[6] = histo_WG_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_WG_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
-    if     (histo_WGS_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_WGS_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffM[7] = histo_WGS_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_WGS_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
-    else if(histo_WGS_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_WGS_CMS_MVALepEffEBoundingDown     ->GetBinContent(nb) > 0) systLepEffM[7] = histo_WGS_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_WGS_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
-    if     (histo_Higgs_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_Higgs_CMS_MVALepEffEBoundingUp   ->GetBinContent(nb) > 0) systLepEffM[8] = histo_Higgs_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_Higgs_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
-    else if(histo_Higgs_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_Higgs_CMS_MVALepEffEBoundingDown ->GetBinContent(nb) > 0) systLepEffM[8] = histo_Higgs_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_Higgs_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
+    if     (histo_qqWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_qqWW_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffE[0] = histo_qqWW_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_qqWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
+    else if(histo_qqWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_qqWW_CMS_MVALepEffEBoundingDown   ->GetBinContent(nb) > 0) systLepEffE[0] = histo_qqWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_qqWW_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
+    if     (histo_ggWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_ggWW_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffE[1] = histo_ggWW_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_ggWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
+    else if(histo_ggWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_ggWW_CMS_MVALepEffEBoundingDown   ->GetBinContent(nb) > 0) systLepEffE[1] = histo_ggWW_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_ggWW_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
+    if     (histo_Top_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_Top_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffE[2] = histo_Top_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_Top_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
+    else if(histo_Top_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_Top_CMS_MVALepEffEBoundingDown     ->GetBinContent(nb) > 0) systLepEffE[2] = histo_Top_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_Top_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
+    if     (histo_DY_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_DY_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffE[3] = histo_DY_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_DY_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
+    else if(histo_DY_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_DY_CMS_MVALepEffEBoundingDown       ->GetBinContent(nb) > 0) systLepEffE[3] = histo_DY_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_DY_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
+    if     (histo_VV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_VV_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffE[4] = histo_VV_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_VV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
+    else if(histo_VV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_VV_CMS_MVALepEffEBoundingDown       ->GetBinContent(nb) > 0) systLepEffE[4] = histo_VV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_VV_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
+    if     (histo_VVV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_VVV_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffE[5] = histo_VVV_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_VVV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
+    else if(histo_VVV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_VVV_CMS_MVALepEffEBoundingDown     ->GetBinContent(nb) > 0) systLepEffE[5] = histo_VVV_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_VVV_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
+    if     (histo_WG_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_WG_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffE[6] = histo_WG_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_WG_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
+    else if(histo_WG_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_WG_CMS_MVALepEffEBoundingDown       ->GetBinContent(nb) > 0) systLepEffE[6] = histo_WG_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_WG_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
+    if     (histo_WGS_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_WGS_CMS_MVALepEffEBoundingUp	   ->GetBinContent(nb) > 0) systLepEffE[7] = histo_WGS_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_WGS_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
+    else if(histo_WGS_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_WGS_CMS_MVALepEffEBoundingDown     ->GetBinContent(nb) > 0) systLepEffE[7] = histo_WGS_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_WGS_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
+    if     (histo_Higgs_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_Higgs_CMS_MVALepEffEBoundingUp   ->GetBinContent(nb) > 0) systLepEffE[8] = histo_Higgs_CMS_MVALepEffEBoundingUp->GetBinContent(nb)/histo_Higgs_CMS_MVALepEffEBoundingAvg->GetBinContent(nb);
+    else if(histo_Higgs_CMS_MVALepEffEBoundingAvg->GetBinContent(nb) > 0 && histo_Higgs_CMS_MVALepEffEBoundingDown ->GetBinContent(nb) > 0) systLepEffE[8] = histo_Higgs_CMS_MVALepEffEBoundingAvg->GetBinContent(nb)/histo_Higgs_CMS_MVALepEffEBoundingDown->GetBinContent(nb);
 
     double systMet[9] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
     if     (histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_MVAMETBoundingUp	    ->GetBinContent(nb) > 0) systMet[0] = histo_qqWW_CMS_MVAMETBoundingUp->GetBinContent(nb)/histo_qqWW->GetBinContent(nb);
@@ -1426,7 +1479,7 @@ void wwAnalysis(
 
 
     char outputLimitsShape[200];
-    sprintf(outputLimitsShape,"histo_limits_ww%s_%s_bin%d.txt",finalStateName,ECMsb.Data(),nb-1);
+    sprintf(outputLimitsShape,"histo_limits_ww%s_%dj_%s_bin%d.txt",finalStateName,nJetsType,ECMsb.Data(),nb-1);
     ofstream newcardShape;
     newcardShape.open(outputLimitsShape);
     newcardShape << Form("imax 1 number of channels\n");
@@ -1446,18 +1499,19 @@ void wwAnalysis(
     newcardShape << Form("CMS_scale_met                          lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systMet[0],systMet[1],systMet[2],systMet[3],systMet[4],systMet[5],systMet[6],systMet[7],systMet[8]);
     newcardShape << Form("CMS_scale_j                            lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systJes[0],systJes[1],systJes[2],systJes[3],systJes[4],systJes[5],systJes[6],systJes[7],systJes[8]);
     newcardShape << Form("CMS_eff_b                              lnN  %7.5f %7.5f   -   %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",syst_btag,syst_btag,syst_btag,syst_btag,syst_btag,syst_btag,syst_btag,syst_btag);
-    newcardShape << Form("pdf_gg                                 lnN  %7.5f  -      -   %7.5f %7.5f %7.5f %7.5f %7.5f   -    -    -  \n",systPDF[0],systPDF[3],systPDF[4],systPDF[5],systPDF[6],systPDF[7]);
-    newcardShape << Form("pdf_qqbar                              lnN    -   %7.5f %7.5f   -	-     -     -	  -   %7.5f  -    -  \n",systPDF[1],systPDF[2],systPDF[8]);
+    newcardShape << Form("pdf_qqbar                              lnN  %7.5f  -      -   %7.5f %7.5f %7.5f %7.5f %7.5f   -    -    -  \n",systPDF[0],systPDF[3],systPDF[4],systPDF[5],systPDF[6],systPDF[7]);
+    newcardShape << Form("pdf_gg                                 lnN    -   %7.5f %7.5f   -	-     -     -	  -   %7.5f  -    -  \n",1.01,systPDF[2],systPDF[8]);
     newcardShape << Form("QCDscale_VVV		                 lnN    -     -     -     -     -   %7.5f   -	  -	-    -    -  \n",systQCDScale[5]);	    
-    newcardShape << Form("QCDscale_ggVV		                 lnN    -   %7.5f   -     -     -     -     -     -     -    -    -  \n",systQCDScale[1]);	    
+    newcardShape << Form("QCDscale_ggVV		                 lnN    -   %7.5f   -     -     -     -     -     -     -    -    -  \n",1.30);	    
     newcardShape << Form("QCDscale_qqVV		                 lnN  %7.5f   -     -     -   %7.5f   -   %7.5f	%7.5f	-    -    -  \n",systQCDScale[0],systQCDScale[4],systQCDScale[6],systQCDScale[7]);	    
     newcardShape << Form("QCDscale_ggH		                 lnN    -     -     -     -     -     -     -     -   %7.5f  -    -  \n",systQCDScale[8]);	    
     newcardShape << Form("norm_Top		                 lnN    -     -   %7.5f   -     -     -     -     -     -    -    -  \n",systQCDScale[2]);	    
     newcardShape << Form("norm_DY		                 lnN    -     -     -   %7.5f   -     -     -     -     -    -    -  \n",systQCDScale[3]);	    
     newcardShape << Form("norm_WjetsM		                 lnN    -     -     -     -     -     -     -     -     -   %7.5f -  \n",1.36);	    
     newcardShape << Form("norm_WjetsE		                 lnN    -     -     -     -     -     -     -     -     -    -  %7.5f\n",1.36);	    
-    newcardShape << Form("WWNNLO_resum		                 lnN  %7.5f   -     -     -     -     -     -     -	-    -  \n -  ",systWWNNLO[0]);	    
-    newcardShape << Form("WWNNLO_scale		                 lnN  %7.5f   -     -     -     -     -     -     -	-    -  \n -  ",systWWNNLO[1]);	    
+    newcardShape << Form("WWNNLO_resum		                 lnN  %7.5f   -     -     -     -     -     -     -	-    -    -  \n",systWWNNLO[0]);	    
+    newcardShape << Form("WWNNLO_scale		                 lnN  %7.5f   -     -     -     -     -     -     -	-    -    -  \n",systWWNNLO[1]);	    
+    newcardShape << Form("UEPS                                   lnN  %7.5f %7.5f   -     -     -     -     -     -     -    -    -  \n",1.03,1.03);	    
     if(histo_qqWW->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVAqqWWStatBounding_%s_Bin%d    lnN  %7.5f   -	 -     -     -     -	 -     -     -     -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_qqWW->GetBinError(nb)/histo_qqWW->GetBinContent(nb));
     if(histo_ggWW->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVAggWWStatBounding_%s_Bin%d    lnN    -   %7.5f   -     -     -     -	 -     -     -     -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_ggWW->GetBinError(nb)/histo_ggWW->GetBinContent(nb));
     if(histo_Top->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVATopStatBounding_%s_Bin%d     lnN    -     -   %7.5f   -     -     -	 -     -     -     -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_Top->GetBinError(nb)/histo_Top->GetBinContent(nb));

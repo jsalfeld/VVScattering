@@ -18,7 +18,7 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
-#include "MitAnalysisRunII/macros/factors.h"
+#include "MitAnalysisRunII/macros/74x/factors.h"
 
 enum selType                     { SIGSEL, nSelTypes};
 TString selTypeName[nSelTypes]= { "SIGSEL"};
@@ -32,8 +32,8 @@ double mcPrescale = 1.0;
 bool usePureMC = false;
 
 void wzAnalysis(
- double minMass =  76.1876,
- double maxMass = 106.1876,
+ double minMass =  76,
+ double maxMass = 106,
  bool applyBtagging = true,
  TString typeLepSel = "medium",
  TString type3rdLepSel = "default"
@@ -42,7 +42,7 @@ void wzAnalysis(
   Int_t period = 1;
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
   Double_t lumi = 0.0715;
-  if(period == 1) lumi = 2.2;
+  if(period == 1) lumi = 2.263;
 
   //*******************************************************
   //Input Files
@@ -52,11 +52,12 @@ void wzAnalysis(
 
   TString puPath = "";
   if      (period==1){
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_25ns.root";
 
   infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
+
   if(usePureMC == true){
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));					          infilecatv.push_back(1);
   infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));		  		          infilecatv.push_back(1);
@@ -113,6 +114,23 @@ void wzAnalysis(
   fhDPU->SetDirectory(0);
   delete fPUFile;
 
+  TFile *fElSF = TFile::Open(Form("/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/scalefactors_dylan.root"));
+  TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Medium_ele"));
+  TH2D *fhDElTightSF  = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Tight_ele"));
+  assert(fhDElMediumSF);
+  assert(fhDElTightSF);
+  fhDElMediumSF->SetDirectory(0);
+  fhDElTightSF ->SetDirectory(0);
+  delete fElSF;
+
+  TFile *fMuSF = TFile::Open(Form("/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/scalefactors_dylan.root"));
+  TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Medium_mu"));
+  assert(fhDMuMediumSF);
+  fhDMuMediumSF->SetDirectory(0);
+  delete fMuSF;
+
+  double totalFakeDataCount[4][9];
+  for(int i=0; i<4; i++) for(int j=0; j<9; j++) totalFakeDataCount[i][j] = 0;
   double xmin = 0.0;
   double xmax = 1.0;
   int nBinPlot      = 200;
@@ -188,6 +206,7 @@ void wzAnalysis(
 
   TH1D* histo_Diff = new TH1D("dummy", "dummy",1000,-1,1); histo_Diff->Sumw2();
 
+  double histo_WZ_CMS_QCDScaleInitial[7] = {0,0,0,0,0,0,0};
   TH1D* histo_Zg_CMS_QCDScaleBounding[6];
   TH1D* histo_VVV_CMS_QCDScaleBounding[6];
   TH1D* histo_WZ_CMS_QCDScaleBounding[6];
@@ -360,6 +379,16 @@ void wzAnalysis(
     if(infilecatv[ifile] == 0) theMCPrescale = 1.0;
     for (int i=0; i<int(the_input_tree->GetEntries()/theMCPrescale); ++i) {
       the_input_tree->GetEntry(i);
+      // WZ QCD initial
+      if(infilecatv[ifile] == 3) {
+	histo_WZ_CMS_QCDScaleInitial[0] = histo_WZ_CMS_QCDScaleInitial[0] + TMath::Abs((double)eventMonteCarlo.r1f2);
+	histo_WZ_CMS_QCDScaleInitial[1] = histo_WZ_CMS_QCDScaleInitial[1] + TMath::Abs((double)eventMonteCarlo.r1f5);
+	histo_WZ_CMS_QCDScaleInitial[2] = histo_WZ_CMS_QCDScaleInitial[2] + TMath::Abs((double)eventMonteCarlo.r2f1);
+	histo_WZ_CMS_QCDScaleInitial[3] = histo_WZ_CMS_QCDScaleInitial[3] + TMath::Abs((double)eventMonteCarlo.r2f2);
+	histo_WZ_CMS_QCDScaleInitial[4] = histo_WZ_CMS_QCDScaleInitial[4] + TMath::Abs((double)eventMonteCarlo.r5f1);
+	histo_WZ_CMS_QCDScaleInitial[5] = histo_WZ_CMS_QCDScaleInitial[5] + TMath::Abs((double)eventMonteCarlo.r5f5);
+        histo_WZ_CMS_QCDScaleInitial[6] = histo_WZ_CMS_QCDScaleInitial[6] + 1.0;
+      }
 
       if(i%1000000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
 
@@ -410,8 +439,8 @@ void wzAnalysis(
       int signQ = 0;
       double systTotLep[2] = {1.0, 1.0}; // m/e
       for(unsigned nl=0; nl<idLep.size(); nl++){
-        if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 13) systTotLep[0] = systTotLep[0] * 1.02;
-        if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 11) systTotLep[1] = systTotLep[1] * 1.02;
+        if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 13) systTotLep[0] = systTotLep[0] * 1.005;
+        if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 11) systTotLep[1] = systTotLep[1] * 1.015;
         signQ = signQ + (int)(*eventLeptons.pdgId)[idLep[nl]]/TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]);
         if(dPhiLepMETMin > TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0]))))
            dPhiLepMETMin = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));      
@@ -423,6 +452,7 @@ void wzAnalysis(
       passFilter[4] = TMath::Abs(signQ) == 1;
       if(passFilter[4] == kFALSE) continue;
 
+      int nFakeCount = 0;
       double minMassll = 999.0;
       double minMassZ = 999.0;
       double mass3l = 0.0;
@@ -467,7 +497,7 @@ void wzAnalysis(
 
         if(dPhiJetMET   == -1) dPhiJetMET   = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
 
-	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 10 && 
+	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 15 && 
 	   (float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
 
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) continue;
@@ -560,7 +590,7 @@ void wzAnalysis(
         for(int ngen=0; ngen<eventMonteCarlo.p4->GetEntriesFast(); ngen++) {
 	  if(isGenDupl[ngen] == 1) continue;
           if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) &&
-	    ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.1) {
+	    ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.3) {
 	    isGenLepton = true;
 	    break;
 	  }
@@ -572,26 +602,35 @@ void wzAnalysis(
       // luminosity
       double theLumi  = 1.0; if(infilecatv[ifile] != 0) theLumi  = lumi;
       // pile-up
-      double puWeight = 1.0; if(infilecatv[ifile] != 0) puWeight = nPUScaleFactor(fhDPU, (double)eventVertex.npv);
+      //double puWeight = 1.0; if(infilecatv[ifile] != 0) puWeight = nPUScaleFactor(fhDPU, (double)eventVertex.npv);
+      double puWeight = 1.0; if(infilecatv[ifile] != 0) puWeight = weightTruePileupFall15_74X((double)eventMonteCarlo.puTrueInt);
       // lepton efficiency
       double effSF = 1.0;
       if(infilecatv[ifile] != 0){
         for(unsigned int nl=0; nl<idLep.size(); nl++){
+	  //if(tagZ[2] != (int)nl)
+          //effSF = effSF * effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data());
+          //else
+	  //effSF = effSF * effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,type3rdLepSel.Data());
 	  if(tagZ[2] != (int)nl)
-          effSF = effSF * effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data());
+          effSF = effSF * effhDScaleFactor(true,((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF);
           else
-	  effSF = effSF * effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,type3rdLepSel.Data());
+	  effSF = effSF * effhDScaleFactor(true,((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,type3rdLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF);
         }
       }
 
       // fake rate
+      nFakeCount = 0;
       unsigned int typeFakeLepton[2] = {0,0};
       int theCategory = infilecatv[ifile];
       double fakeSF = 1.0;
       if(usePureMC == false){
         if     ((infilecatv[ifile] == 0 || goodIsGenLep == isGenLep.size()) && goodIsTight != idTight.size()){ // add Z+jets from data
-          for(unsigned int nl=0; nl<idLep.size(); nl++){
+	  for(unsigned int nl=0; nl<idLep.size(); nl++){
 	    if(idTight[nl] == 1) continue;
+	    if(tagZ[0] == (int)nl) nFakeCount = nFakeCount + 1;
+	    if(tagZ[1] == (int)nl) nFakeCount = nFakeCount + 2;
+	    if(tagZ[2] == (int)nl) nFakeCount = nFakeCount + 4;
 	    if(tagZ[2] != (int)nl)
 	    fakeSF = fakeSF * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data());
 	    else
@@ -606,6 +645,7 @@ void wzAnalysis(
           else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-3) fakeSF = +1.0 * fakeSF; // triple fake, data
           else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) fakeSF = -1.0 * fakeSF; // double fake, data
           else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) fakeSF = +1.0 * fakeSF; // single fake, data
+	  /*
 	  if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) {
 	    if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[2]]) == 13){
 	      if     (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Eta()) <  1.479 && 
@@ -618,6 +658,7 @@ void wzAnalysis(
 	             ((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt() < 20) fakeSF = 2.0 * fakeSF;
             }
           }
+	  */
 	}
         else if(infilecatv[ifile] != 0 && infilecatv[ifile] != 2 && goodIsGenLep != isGenLep.size()){ // remove MC dilepton fakes from ll events
           fakeSF = 0.0;
@@ -643,6 +684,8 @@ void wzAnalysis(
       if(totalWeight == 0) continue;
       // end event weighting
       if((infilecatv[ifile] != 0 || theCategory == 0) && passAllCuts[0]) sumEventsProcess[ifile] += totalWeight;
+
+      if(passAllCuts[0] && infilecatv[ifile] == 0) totalFakeDataCount[type3l][nFakeCount]++;
 
       for(int thePlot=0; thePlot<allPlots; thePlot++){
 	double theVar = 0.0;
@@ -808,6 +851,14 @@ void wzAnalysis(
 
   } // end of chain
 
+  printf("----------------------totalFakeDataCount--------------------------------\n");
+  printf("      TTT    FTT    TFT    FFT    TTF    FTF    TFF    FFF\n");
+  for(int ni=0; ni<4; ni++) {
+    printf("(%d): ",ni);
+    for(int nj=0; nj<9; nj++) printf("%6.1f ",totalFakeDataCount[ni][nj]);
+    printf("\n");
+  }
+
   double sumEvents = 0;
   for(int np=1; np<histBins; np++) sumEvents += histo[4][0][np]->GetSumOfWeights();
   printf("yields: %f |",histo[4][0][0]->GetSumOfWeights());
@@ -850,6 +901,16 @@ void wzAnalysis(
       outFilePlotsNote->Close();
     }
   }
+
+  printf("QCD Init: WZ(%f:%f/%f/%f/%f/%f/%f)\n",
+    histo_WZ_CMS_QCDScaleInitial[6],histo_WZ_CMS_QCDScaleInitial[0],histo_WZ_CMS_QCDScaleInitial[1],histo_WZ_CMS_QCDScaleInitial[2],histo_WZ_CMS_QCDScaleInitial[3],histo_WZ_CMS_QCDScaleInitial[4],histo_WZ_CMS_QCDScaleInitial[5]);
+  for(int nj=0; nj<6; nj++) histo_WZ_CMS_QCDScaleInitial[nj] = histo_WZ_CMS_QCDScaleInitial[nj] / histo_WZ_CMS_QCDScaleInitial[6];
+  printf("QCD RateInit: WZ(%f/%f/%f/%f/%f/%f)\n",
+    histo_WZ_CMS_QCDScaleInitial[0],histo_WZ_CMS_QCDScaleInitial[1],histo_WZ_CMS_QCDScaleInitial[2],histo_WZ_CMS_QCDScaleInitial[3],histo_WZ_CMS_QCDScaleInitial[4],histo_WZ_CMS_QCDScaleInitial[5]);
+
+  // correcting by initial normalization
+  for(int nj=0; nj<6; nj++) histo_WZ_CMS_QCDScaleBounding[nj]->Scale(1.0/histo_WZ_CMS_QCDScaleInitial[nj]);
+
   printf("QCD Corr: WZ(%f:%f/%f/%f/%f/%f/%f) ZZ(%f:%f/%f/%f/%f/%f/%f) VVV(%f:%f/%f/%f/%f/%f/%f) ZH(%f:%f/%f/%f/%f/%f/%f)\n",
     histo_WZ->GetSumOfWeights(),histo_WZ_CMS_QCDScaleBounding[0]->GetSumOfWeights(),histo_WZ_CMS_QCDScaleBounding[1]->GetSumOfWeights(),histo_WZ_CMS_QCDScaleBounding[2]->GetSumOfWeights(),histo_WZ_CMS_QCDScaleBounding[3]->GetSumOfWeights(),histo_WZ_CMS_QCDScaleBounding[4]->GetSumOfWeights(),histo_WZ_CMS_QCDScaleBounding[5]->GetSumOfWeights(),
     histo_ZZ->GetSumOfWeights(),histo_ZZ_CMS_QCDScaleBounding[0]->GetSumOfWeights(),histo_ZZ_CMS_QCDScaleBounding[1]->GetSumOfWeights(),histo_ZZ_CMS_QCDScaleBounding[2]->GetSumOfWeights(),histo_ZZ_CMS_QCDScaleBounding[3]->GetSumOfWeights(),histo_ZZ_CMS_QCDScaleBounding[4]->GetSumOfWeights(),histo_ZZ_CMS_QCDScaleBounding[5]->GetSumOfWeights(),
@@ -948,7 +1009,7 @@ void wzAnalysis(
   double lumiE = 1.046;
   double systLepResE[4] = {1.01,1.01,1.01,1.01};
   double systLepResM[4] = {1.01,1.01,1.01,1.01};
-  double syst_btag = 1.02;
+
   for(int nb=1; nb<=nBinMVA; nb++){
      // QCD study
     double systQCDScale[4] = {TMath::Abs(histo_Zg_CMS_QCDScaleBounding[0] ->GetBinContent(nb)-histo_Zg ->GetBinContent(nb)),
@@ -1031,12 +1092,13 @@ void wzAnalysis(
     newcardShape << Form("%s                                     lnN  %7.5f   %7.5f %7.5f %7.5f   -    -  \n",momMName,systLepResM[0],systLepResM[1],systLepResM[2],systLepResM[3]);
     newcardShape << Form("%s                                     lnN  %7.5f   %7.5f %7.5f %7.5f   -    -  \n",momEName,systLepResE[0],systLepResE[1],systLepResE[2],systLepResE[3]);
     newcardShape << Form("CMS_scale_met                          lnN  %7.5f   %7.5f %7.5f %7.5f   -    -  \n",systMet[0],systMet[1],systMet[2],systMet[3]);
-    newcardShape << Form("CMS_eff_b                              lnN  %7.5f   %7.5f %7.5f %7.5f   -    -  \n",syst_btag,syst_btag,syst_btag,syst_btag);
+    newcardShape << Form("CMS_eff_b_mistag                       lnN  %7.5f     -   %7.5f %7.5f   -    -  \n",1.02,1.02,1.02);
+    newcardShape << Form("CMS_eff_b_bjet                         lnN	-     %7.5f   -     -	  -    -  \n",1.07);
     newcardShape << Form("pdf_qqbar                              lnN  %7.5f   %7.5f %7.5f %7.5f   -    -  \n",systPDF[0],systPDF[1],systPDF[2],systPDF[3]);
     newcardShape << Form("QCDscale_VVV		                 lnN    -     %7.5f   -     -	  -    -  \n",systQCDScale[1]); 	   
     newcardShape << Form("QCDscale_VV		                 lnN  %7.5f     -   %7.5f %7.5f   -    -  \n",systQCDScale[0],systQCDScale[2],systQCDScale[3]); 	   
-    newcardShape << Form("CMS_wz3l_FakeMSyst_%4s                 lnN -       -     -	 -   %7.5f  -  \n",ECMsb.Data(),1.36);  	
-    newcardShape << Form("CMS_wz3l_FakeESyst_%4s                 lnN -       -     -	 -     -  %7.5f\n",ECMsb.Data(),1.36);  	
+    newcardShape << Form("CMS_wz3l_FakeMSyst_%4s                 lnN -       -     -	 -   %7.5f  -  \n",ECMsb.Data(),1.25);  	
+    newcardShape << Form("CMS_wz3l_FakeESyst_%4s                 lnN -       -     -	 -     -  %7.5f\n",ECMsb.Data(),1.25);  	
     if(histo_Zg->GetBinContent(nb)        > 0) newcardShape << Form("CMS_wz3l%s_MVAZgStatBounding_%s_Bin%d	  lnN    %7.5f   -    -    -	-    -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_Zg    ->GetBinError(nb)/histo_Zg    ->GetBinContent(nb));
     if(histo_VVV->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_wz3l%s_MVAVVVStatBounding_%s_Bin%d       lnN      -  %7.5f   -    -	-    -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_VVV   ->GetBinError(nb)/histo_VVV   ->GetBinContent(nb));
     if(histo_WZ->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_wz3l%s_MVAWZStatBounding_%s_Bin%d	  lnN      -     -  %7.5f  -	-    -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_WZ    ->GetBinError(nb)/histo_WZ    ->GetBinContent(nb));

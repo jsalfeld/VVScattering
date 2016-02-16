@@ -16,15 +16,15 @@
 #include "NeroProducer/Core/interface/BareTrigger.hpp"
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 
-#include "MitAnalysisRunII/macros/factors.h"
+#include "MitAnalysisRunII/macros/74x/factors.h"
 
-const TString typeLepSel = "default";
+const TString typeLepSel = "medium";
 
-void ZllAnalysis(Int_t period = 1){
+void triggerAnalysis(Int_t period = 1){
 
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
   Double_t lumi = 0.0715;
-  if(period == 1) lumi = 2.2;
+  if(period == 1) lumi = 2.263;
 
   //*******************************************************
   //Input Files
@@ -33,12 +33,17 @@ void ZllAnalysis(Int_t period = 1){
   vector<Int_t> infilecatv;  
 
   TString puPath = "";
-  if     (period==1){
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
-  infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data())); 												  infilecatv.push_back(0);
-  infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data())); 												  infilecatv.push_back(0);
-  infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data())); 												  infilecatv.push_back(0);
-  infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(1);
+  if     (period==0){
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_50ns.root";
+  infilenamev.push_back(Form("%sdata_AOD_50ns.root",filesPath.Data()));														  infilecatv.push_back(0);
+  infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));  	  infilecatv.push_back(1);
+  assert(0);
+  }
+  else if(period==1){
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_25ns.root";
+  infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
+  infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
+  infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3+AODSIM.root",filesPath.Data()));  	          infilecatv.push_back(1);
   }
   else {assert(0);}
@@ -55,27 +60,22 @@ void ZllAnalysis(Int_t period = 1){
   delete fPUFile;
 
   const int ptBins = 5;
-  const int etaBins = 2;
+  const int etaBins = 3;
 
-  double yields[2][ptBins][etaBins][ptBins][etaBins][3],yieldsE[2][ptBins][etaBins][ptBins][etaBins][3];
+  double yieldsP[2][ptBins][etaBins][2],yieldsF[2][ptBins][etaBins][2],eff[2][ptBins][etaBins][2];
   for (int ch=0; ch<2; ch++){
     for (int pt0=0; pt0<ptBins; pt0++){
       for (int eta0=0; eta0<etaBins; eta0++){
-        for (int pt1=0; pt1<ptBins; pt1++){
-          for (int eta1=0; eta1<etaBins; eta1++){
-            for (int nlep=0; nlep<3; nlep++){
-              yields[ch][pt0][eta0][pt1][eta1][nlep] = 0; yieldsE[ch][pt0][eta0][pt1][eta1][nlep] = 0;
-            }
-          }
+        for (int nlep=0; nlep<2; nlep++){
+          yieldsP[ch][pt0][eta0][nlep] = 0; yieldsF[ch][pt0][eta0][nlep] = 0; eff[ch][pt0][eta0][nlep] = 0;
         }
       }
     }
   }
-  double yieldsTotal[2][3],yieldsTotal20[2][3];
+  double yieldsTotal[2][2];
   for (int ch=0; ch<2; ch++){
-    for (int nlep=0; nlep<3; nlep++){
+    for (int nlep=0; nlep<2; nlep++){
       yieldsTotal[ch][nlep] = 0;
-      yieldsTotal20[ch][nlep] = 0;
     }
   }
   //*******************************************************
@@ -116,14 +116,14 @@ void ZllAnalysis(Int_t period = 1){
     char **tokens;
     size_t numtokens;
     tokens = strsplit(triggerNames->GetTitle(), ",", &numtokens);
-    if(infilecatv[ifile] == 0){
+    if(infilecatv[ifile] != 10){
       for (int i = 0; i < (int)numtokens; i++) {
         printf("triggerNames(%2d): \"%s\"\n",(int)i,tokens[i]);
       }
     }
 
     int MAX = the_input_tree->GetEntries();
-    //if(infilecatv[ifile] == 1) MAX = MAX/10.;
+    if(infilecatv[ifile] == 1) MAX = MAX/10.;
     for (int i=0; i<MAX; ++i) {
       the_input_tree->GetEntry(i);
       if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
@@ -132,23 +132,31 @@ void ZllAnalysis(Int_t period = 1){
       if(eventLeptons.p4->GetEntriesFast() >= 2 &&
      	 ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 20 && 
      	 ((TLorentzVector*)(*eventLeptons.p4)[1])->Pt() > 10) passFilter[0] = kTRUE;
+
+      vector<int> idTrigger;
+      for (int iL = 0; iL != eventLeptons.p4->GetEntriesFast(); ++iL) idTrigger.push_back(-1);
       for (int nt = 0; nt <(int)numtokens; nt++) {
         if((*eventTrigger.triggerFired)[nt] == 0) continue;
-        if((strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v*")  == 0) ||
-           (strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*")  == 0) ||
-           (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*") == 0) ||
-           (strcmp(tokens[nt],"HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*") == 0) ||
-           (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*") 	    == 0) ||
-           (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*")	    == 0) ||
-           (strcmp(tokens[nt],"HLT_IsoMu27_v*") 				    == 0) ||
-           (strcmp(tokens[nt],"HLT_IsoMu20_v*") 				    == 0) ||
-           (strcmp(tokens[nt],"HLT_IsoTkMu20_v*")				    == 0) ||
-           (strcmp(tokens[nt],"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")	    == 0) ||
-           (strcmp(tokens[nt],"HLT_Ele23_WPLoose_Gsf_v*")			    == 0) ||
+	if((strcmp(tokens[nt],"HLT_IsoMu27_v*")                                     == 0) ||
+           (strcmp(tokens[nt],"HLT_IsoMu20_v*")				            == 0) ||
+           (strcmp(tokens[nt],"HLT_IsoTkMu20_v*")				    == 0)
+           ) {
+	  passFilter[1] = kTRUE;
+          for (int iL = 0; iL != eventLeptons.p4->GetEntriesFast(); ++iL) {
+            if (((*eventTrigger.triggerLeps)[iL] & (1 << nt)) != 0) idTrigger[iL] = 0;
+          }
+        }
+        else
+	if((strcmp(tokens[nt],"HLT_Ele23_WPLoose_Gsf_v*")			    == 0) ||
            (strcmp(tokens[nt],"HLT_Ele22_eta2p1_WP75_Gsf_v*")			    == 0) ||
            (strcmp(tokens[nt],"HLT_Ele27_WPLoose_Gsf_v*")			    == 0) ||
            (strcmp(tokens[nt],"HLT_Ele27_WP85_Gsf_v*")  			    == 0)
-           ) passFilter[1] = kTRUE;
+           ) {
+	  passFilter[1] = kTRUE;
+          for (int iL = 0; iL != eventLeptons.p4->GetEntriesFast(); ++iL) {
+            if (((*eventTrigger.triggerLeps)[iL] & (1 << nt)) != 0) idTrigger[iL] = 1;
+          }
+        }
       }
 
       if(passFilter[0] == kFALSE) continue;
@@ -166,8 +174,8 @@ void ZllAnalysis(Int_t period = 1){
 
       if(idTight[0]==1&&idTight[1]==1) passFilter[3] = kTRUE;
       if(passFilter[3] == kFALSE) continue;
-      if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <= 20 ||
-         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <= 10) continue;
+      if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <= 30 ||
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <= 30) continue;
 
       passFilter[4] = ((int)(*eventLeptons.pdgId)[idLep[0]]*(int)(*eventLeptons.pdgId)[idLep[1]] < 0);
       if(passFilter[4] == kFALSE) continue;
@@ -177,27 +185,11 @@ void ZllAnalysis(Int_t period = 1){
       if(TMath::Abs(dilep.M()-91.1876)<15.0) passFilter[5] = kTRUE;  	    
       if(passFilter[5] == kFALSE) continue;
 
-      int iPt[2] = {-1, -1};
-      if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 15) iPt[0] = 0;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 20) iPt[0] = 1;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 25) iPt[0] = 2;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 30) iPt[0] = 3;
-      else                                                                iPt[0] = 4;
-      if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 15) iPt[1] = 0;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 20) iPt[1] = 1;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 25) iPt[1] = 2;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 30) iPt[1] = 3;
-      else                                                                iPt[1] = 4;
-
-      int iEta[2] = {-1, -1};
-      if     (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 1.5) iEta[0] = 0;
-      else                                                                              iEta[0] = 1;
-      if     (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 1.5) iEta[1] = 0;
-      else                                                                              iEta[1] = 1;
-
       Int_t typeLep = 2;
       if     (TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==13&&TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])==13) typeLep = 0;
       else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==11&&TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])==11) typeLep = 1;
+
+      if(typeLep == 2) continue;
 
       double theLumi = lumi; if(infilecatv[ifile] == 0) theLumi = 1.0;
       double puWeight = nPUScaleFactor(fhDPU, (double)eventVertex.npv); if(infilecatv[ifile] == 0) puWeight = 1.0;
@@ -206,20 +198,33 @@ void ZllAnalysis(Int_t period = 1){
       if(infilecatv[ifile] != 0){
         effSF = effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),period,typeLepSel.Data())*
                 effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]),period,typeLepSel.Data());
-        effSF=1; // SF efficiency == 1!
       }
 
-      double mcWeight = eventMonteCarlo.mcWeight;
-      if(infilecatv[ifile] == 0) mcWeight = 1.0;
-      double totalWeight = mcWeight*theLumi*puWeight*effSF;
-   
-      yields [infilecatv[ifile]][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeLep] =  yields[infilecatv[ifile]][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeLep] + totalWeight;
+      double totalWeight = eventMonteCarlo.mcWeight*theLumi*puWeight*effSF;
 
-      yieldsE[infilecatv[ifile]][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeLep] = yieldsE[infilecatv[ifile]][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeLep] + totalWeight * totalWeight;
+      for(unsigned int nlep0=0; nlep0<idLep.size(); nlep0++) {
+        for(unsigned int nlep1=0; nlep1<idLep.size(); nlep1++) {
+	  if(idTrigger[idLep[nlep0]] == typeLep) {
+            int iPt = -1;
+            if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[nlep1]])->Pt() < 35) iPt = 0;
+            else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[nlep1]])->Pt() < 40) iPt = 1;
+            else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[nlep1]])->Pt() < 45) iPt = 2;
+            else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[nlep1]])->Pt() < 50) iPt = 3;
+            else                                                                    iPt = 4;
 
-      yieldsTotal[infilecatv[ifile]][typeLep]   = yieldsTotal  [infilecatv[ifile]][typeLep] + totalWeight;
-      if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20)
-      yieldsTotal20[infilecatv[ifile]][typeLep] = yieldsTotal20[infilecatv[ifile]][typeLep] + totalWeight;
+            int iEta = -1;
+            if     (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nlep1]])->Eta()) < 1.0) iEta = 0;
+            else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nlep1]])->Eta()) < 1.5) iEta = 1;
+            else                                                                                  iEta = 2;
+	  
+	    if(idTrigger[idLep[nlep1]] == typeLep) yieldsP[infilecatv[ifile]][iPt][iEta][typeLep] = yieldsP[infilecatv[ifile]][iPt][iEta][typeLep] + totalWeight;
+	    else                                   yieldsF[infilecatv[ifile]][iPt][iEta][typeLep] = yieldsF[infilecatv[ifile]][iPt][iEta][typeLep] + totalWeight;
+	     
+	  }
+        }
+       }
+
+      yieldsTotal[infilecatv[ifile]][typeLep] = yieldsTotal[infilecatv[ifile]][typeLep] + totalWeight;
     }
   } // end of chain
 
@@ -231,29 +236,19 @@ void ZllAnalysis(Int_t period = 1){
 
   for (int pt0=0; pt0<ptBins; pt0++){
     for (int eta0=0; eta0<etaBins; eta0++){
-      for (int pt1=0; pt1<ptBins; pt1++){
-        for (int eta1=0; eta1<etaBins; eta1++){
-	  if(pt0>=pt1)
-          printf("yield %1d %1d %1d %1d: %6.1f %6.1f %6.1f - %6.1f %6.1f %6.1f\n",pt0,eta0,pt1,eta1,yields[0][pt0][eta0][pt1][eta1][0],yields[0][pt0][eta0][pt1][eta1][1],yields[0][pt0][eta0][pt1][eta1][2],yields[1][pt0][eta0][pt1][eta1][0],yields[1][pt0][eta0][pt1][eta1][1],yields[1][pt0][eta0][pt1][eta1][2]);
-        }         
+      for (int nl=0; nl<2; nl++){
+        eff[0][pt0][eta0][nl] = yieldsP[0][pt0][eta0][nl] / (yieldsP[0][pt0][eta0][nl]+yieldsF[0][pt0][eta0][nl]);
+        eff[1][pt0][eta0][nl] = yieldsP[1][pt0][eta0][nl] / (yieldsP[1][pt0][eta0][nl]+yieldsF[1][pt0][eta0][nl]);
       }
     }
   }
-
-  printf("yieldTotal:   %8.1f %8.1f %8.1f - %8.1f %8.1f %8.1f\n",yieldsTotal  [0][0],yieldsTotal  [0][1],yieldsTotal  [0][2],yieldsTotal  [1][0],yieldsTotal  [1][1],yieldsTotal  [1][2]);
-  printf("yieldTotal20: %8.1f %8.1f %8.1f - %8.1f %8.1f %8.1f\n",yieldsTotal20[0][0],yieldsTotal20[0][1],yieldsTotal20[0][2],yieldsTotal20[1][0],yieldsTotal20[1][1],yieldsTotal20[1][2]);
-
   for (int pt0=0; pt0<ptBins; pt0++){
     for (int eta0=0; eta0<etaBins; eta0++){
-      for (int pt1=0; pt1<ptBins; pt1++){
-        for (int eta1=0; eta1<etaBins; eta1++){
-	  if(pt0>=pt1)
-          printf("yield %1d %1d %1d %1d: %6.4f +/- %6.4f - %6.4f +/- %6.4f\n",pt0,eta0,pt1,eta1,(yields[0][pt0][eta0][pt1][eta1][0]-yields[0][pt0][eta0][pt1][eta1][2]*kFactor[0])/(yields[1][pt0][eta0][pt1][eta1][0]-yields[1][pt0][eta0][pt1][eta1][2]*kFactor[1]),
-                                                                                                                              sqrt(yieldsE[0][pt0][eta0][pt1][eta1][0])*kFactor[0]/(yields[1][pt0][eta0][pt1][eta1][0]-yields[1][pt0][eta0][pt1][eta1][2]*kFactor[1]),
-                                                                                                (yields[0][pt0][eta0][pt1][eta1][1]-yields[0][pt0][eta0][pt1][eta1][2]*kFactor[0])/(yields[1][pt0][eta0][pt1][eta1][1]-yields[1][pt0][eta0][pt1][eta1][2]*kFactor[1]),
-                                                                                                                              sqrt(yieldsE[0][pt0][eta0][pt1][eta1][0])*kFactor[0]/(yields[1][pt0][eta0][pt1][eta1][1]-yields[1][pt0][eta0][pt1][eta1][2]*kFactor[1]));
-        }
-      }
+      printf("yield %1d %1d: %6.3f %6.3f - %6.3f %6.3f\n",pt0,eta0,eff[0][pt0][eta0][0],eff[0][pt0][eta0][1],
+                                                                   eff[1][pt0][eta0][0],eff[1][pt0][eta0][1]);
     }
   }
+
+  printf("yieldTotal:   %8.1f %8.1f - %8.1f %8.1f\n",yieldsTotal[0][0],yieldsTotal[0][1],yieldsTotal[1][0],yieldsTotal[1][1]);
+
 }

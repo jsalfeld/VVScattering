@@ -16,7 +16,7 @@
 #include "NeroProducer/Core/interface/BareTrigger.hpp"
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 
-#include "MitAnalysisRunII/macros/factors.h"
+#include "MitAnalysisRunII/macros/74x/factors.h"
 
 double mcPrescale = 1.0;
 
@@ -30,7 +30,7 @@ void QCDAnalysis(
   Int_t period = 1;
   TString filesPath  = "/scratch5/ceballos/ntuples_weights/qcd_";
   Double_t lumi = 0.0715;
-  if(period == 1) lumi = 2.2;
+  if(period == 1) lumi = 2.263;
 
   Double_t prescale[5];
 
@@ -49,9 +49,10 @@ void QCDAnalysis(
   if     (period==0){
   }
   else if(period==1){
-  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00859;prescale[2]=0.00520;prescale[3]=0.00750;prescale[4]=0.00956;}
-  else if(typeSel == 13) {prescale[0]=0.00250;prescale[1]=0.07087;prescale[2]=0.09861;prescale[3]=0.09744;prescale[4]=0.09616;}
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/puWeights_13TeV_25ns.root";
+  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00835;prescale[2]=0.00505;prescale[3]=0.00729;prescale[4]=0.00930;}
+  else if(typeSel == 13) {prescale[0]=0.00244;prescale[1]=0.06839;prescale[2]=0.09516;prescale[3]=0.09427;prescale[4]=0.09332;}
+
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_25ns.root";
   infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data())); 												  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data())); 												  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data())); 												  infilecatv.push_back(0);
@@ -226,7 +227,7 @@ void QCDAnalysis(
         bool isGenLepton = false;
         for(int ngen=0; ngen<eventMonteCarlo.p4->GetEntriesFast(); ngen++) {
           if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) &&
-	    ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.1) {
+	    ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.3) {
 	    isGenLepton = true;
 	    break;
 	  }
@@ -311,6 +312,7 @@ void QCDAnalysis(
       if(infilecatv[ifile] == 0) mcWeight = 1.0;
       double theLumi = lumi; if(infilecatv[ifile] == 0) theLumi = 1.0;
       double puWeight = nPUScaleFactor(fhDPU, (double)eventVertex.npv); if(infilecatv[ifile] == 0) puWeight = 1.0;
+      //double puWeight = 1.0; if(infilecatv[ifile] != 0) puWeight = weightTruePileupFall15_74X((double)eventMonteCarlo.puTrueInt);
       double effSF = 1.0;
       if(infilecatv[ifile] != 0){
         for(unsigned int nl=0; nl<idLep.size(); nl++){

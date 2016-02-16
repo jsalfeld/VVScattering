@@ -8,4 +8,4 @@ export MIT_DATA=/cvmfs/cvmfs.cmsaf.mit.edu/hidsk0001/cmsprod/cms/MitPhysics/data
 
 $CMSSW_BASE/src/MitAna/bin/analysis.py \
 --nentries=$1 --book=t2mit/filefi/042 --dataset=$2 $3 --custom bx=25ns \
---fileset=0000 --output=test.root $CMSSW_BASE/src/MitAnalysisRunII/python/bambuToNero.py;
+--fileset=0000 --output=test.root $CMSSW_BASE/src/MitAnalysisRunII/python/74x/bambuToNero.py;
