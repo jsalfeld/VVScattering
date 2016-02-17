@@ -26,7 +26,7 @@ void zzAnalysis(
  Int_t period = 1
  ){
 
-  TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
+  TString filesPath  = "/scratch5/ceballos/ntuples_weights_74x/";
   Double_t lumi = 0.0715;
   if(period == 1) lumi = 2.263;
 

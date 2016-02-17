@@ -30,7 +30,7 @@ Double_t computeSyst(const TH1D *hout, const TH1D *hin, Int_t binUsed, Double_t 
 
 void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
 
-  TString filesPath  = "/scratch5/ceballos/ntuples_weights/met_";
+  TString filesPath  = "/scratch5/ceballos/ntuples_weights_74x/met_";
   Double_t lumi = 0.0715;
   if(period == 1) lumi = 2.263;
 

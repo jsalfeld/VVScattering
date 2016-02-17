@@ -30,7 +30,7 @@ void baseAnalysis(
  Int_t period = 1
  ){
 
-  TString filesPath  = "/scratch5/ceballos/ntuples_weights/";
+  TString filesPath  = "/scratch5/ceballos/ntuples_weights_74x/";
   Double_t lumi = 0.0715;
   if(period == 1) lumi = 2.263;
 
@@ -109,7 +109,7 @@ void baseAnalysis(
   else {assert(0);}
   
   //infilenamev.clear();infilecatv.clear();
-  //infilenamev.push_back(Form("/scratch5/ceballos/ntuples_weights/WWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root")); infilecatv.push_back(1);
+  //infilenamev.push_back(Form("/scratch5/ceballos/ntuples_weights_74x/WWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root")); infilecatv.push_back(1);
 
   if(infilenamev.size() != infilecatv.size()) {assert(0); return;}
 

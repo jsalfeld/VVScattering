@@ -43,7 +43,7 @@ void wwAnalysis(
  ){
 
   Int_t period = 1;
-  TString filesPath  = "/scratch5/ceballos/ntuples_weights/met_";
+  TString filesPath  = "/scratch5/ceballos/ntuples_weights_74x/met_";
   Double_t lumi = 2.263;
 
   //*******************************************************

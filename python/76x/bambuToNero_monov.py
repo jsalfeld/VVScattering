@@ -333,16 +333,6 @@ baselinePhotons = mithep.PhotonIdMod('BaselinePhotons',
     EtaMax = 2.5
 )
 
-photonSkimId = mithep.PhotonIdMod('PhotonSkimId',
-    IsFilterMode = False,
-    InputName = baselinePhotons.GetOutputName(),
-    OutputName = 'PhotonSkimId',
-    IdType = mithep.PhotonTools.kSpring15Loose,
-    IsoType = mithep.PhotonTools.kSpring15LooseIso,
-    PtMin = 60.,
-    ApplyCSafeElectronVeto = False # veto applied in the filler code
-)
-
 photonLooseId = mithep.PhotonIdMod('PhotonLooseId',
     IsFilterMode = False,
     InputName = baselinePhotons.GetOutputName(),
@@ -552,7 +542,7 @@ metSkim = mithep.MonoXSkimMod('MetSkim',
     GoodElectronsName = veryLooseElectrons.GetOutputName(),
     GoodMuonsName = veryLooseMuons.GetOutputName(),
     GoodPhotonsName = loosePhotons.GetOutputName(),
-    MinMetPt = 20000.
+    MinMetPt = 90.
 )
 metSkim.SetCategoryActive(mithep.MonoXSkimMod.kMet, True)
 metSkim.SetCategoryActive(mithep.MonoXSkimMod.kDielectron, True)
@@ -571,14 +561,13 @@ metSkim.SetCategoryActive(mithep.MonoXSkimMod.kPhoton, True)
 
 electronBaselineId.SetMinOutput(1)
 muonBaselineId.SetMinOutput(1)
-photonSkimId.SetMinOutput(1)
 
 def OR(expr1, expr2):
     global mithep
     return mithep.BooleanMod.Expression(expr1, expr2, mithep.BooleanMod.Expression.kOR)
 
 skim = mithep.BooleanMod('Skim',
-    Expression = OR(metSkim, OR(photonSkimId, OR(electronBaselineId, muonBaselineId)))
+    Expression = OR(metSkim, OR(electronBaselineId, muonBaselineId))
 )
 
 ###############
@@ -658,23 +647,23 @@ neroMod.AddFiller(mithep.nero.LeptonsFiller(
     PUPFCandsName = separatePileUpMod.GetPFPileUpName()
 ))
 
-#neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kAK8Jets,
-#    FatJetsName = ak8JetExtender.GetOutputName()
-#))
+neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kAK8Jets,
+    FatJetsName = ak8JetExtender.GetOutputName()
+))
 
-#neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kCA15Jets,
-#    FatJetsName = ca15JetExtender.GetOutputName(),
-#    MJIdOn = True
-#))
+neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kCA15Jets,
+    FatJetsName = ca15JetExtender.GetOutputName(),
+    MJIdOn = True
+))
 
-#neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kAK8PuppiJets,
-#    FatJetsName = ak8PuppiJetExtender.GetOutputName()
-#))
+neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kAK8PuppiJets,
+    FatJetsName = ak8PuppiJetExtender.GetOutputName()
+))
 
-#neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kCA15PuppiJets,
-#    FatJetsName = ca15PuppiJetExtender.GetOutputName(),
-#    MJIdOn = True
-#))
+neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kCA15PuppiJets,
+    FatJetsName = ca15PuppiJetExtender.GetOutputName(),
+    MJIdOn = True
+))
 
 metFiller = mithep.nero.MetFiller(
     MetName = metCorrection.GetOutputName(),
@@ -707,10 +696,9 @@ neroMod.AddFiller(triggerFiller)
 ################
 
 triggers = [
-    ('Photon50_R9Id90_HE10_IsoM', []),
-    ('Photon75_R9Id90_HE10_IsoM', []),
-    ('Photon90_R9Id90_HE10_IsoM', []),
-    ('Photon120_R9Id90_HE10_IsoM', []),
+    (['PFMETNoMu90_%sCleaned_PFMHTNoMu90_IDTight' % c for c in ['JetId', 'HBHE', 'Noise']] if analysis.isRealData and analysis.custom['bx'] == '25ns' else 'PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight', []),
+    (['PFMETNoMu120_%sCleaned_PFMHTNoMu120_IDTight' % c for c in ['JetId', 'HBHE', 'Noise']] if analysis.isRealData and analysis.custom['bx'] == '25ns' else 'PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight', []),
+    (['PFMET170_%sCleaned' % c for c in ['JetId', 'HBHE', 'Noise']], []),
     ('PFMET170', []),
     ('Ele23_WPLoose_Gsf' if analysis.isRealData else 'Ele22_eta2p1_WP75_Gsf', ['hltEle23WPLooseGsfTrackIsoFilter' if analysis.isRealData else 'hltSingleEle22WP75GsfTrackIsoFilter']),
     ('Ele27_WPLoose_Gsf' if analysis.isRealData else 'Ele27_WP85_Gsf', ['hltEle27WPLooseGsfTrackIsoFilter' if analysis.isRealData else 'hltL1EG25Ele27WP85GsfTrackIsoFilter']), # filter only matches data
@@ -730,7 +718,6 @@ triggers = [
     ('Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL', []),
     ('Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', ['hltMu17TrkIsoVVLEle12CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered17']),
     ('Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', ['hltMu17TrkIsoVVLEle12CaloIdLTrackIdLIsoVLElectronlegTrackIsoFilter']),
-    ('Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', []),
     ('Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30', []),
     ('Ele18_CaloIdL_TrackIdL_IsoVL_PFJet30', []),
     ('Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30', []),
@@ -769,7 +756,7 @@ preskimSequence = Chain([
     metCorrection
 ])
 
-filterMods = metSkim + muonBaselineId + electronBaselineId + photonSkimId
+filterMods = metSkim + muonBaselineId + electronBaselineId
 
 postskimSequence = Chain([
     skim,
@@ -808,20 +795,20 @@ postskimSequence = Chain([
     photonMediumId,
     photonTightId,
     photonHighPtId,
-    #ak8JetCorrection,
-    #ca15JetCorrection,
-    #goodAK8Jets,
-    #goodCA15Jets,
-    #ak8JetExtender,
-    #ca15JetExtender,
-    #puppiAK8Jets,
-    #puppiCA15Jets,
-    #puppiAK8CorrectionMod,
-    #puppiCA15CorrectionMod,
-    #goodAK8PuppiJets,
-    #goodCA15PuppiJets,
-    #ak8PuppiJetExtender,
-    #ca15PuppiJetExtender
+    ak8JetCorrection,
+    ca15JetCorrection,
+    goodAK8Jets,
+    goodCA15Jets,
+    ak8JetExtender,
+    ca15JetExtender,
+    puppiAK8Jets,
+    puppiCA15Jets,
+    puppiAK8CorrectionMod,
+    puppiCA15CorrectionMod,
+    goodAK8PuppiJets,
+    goodCA15PuppiJets,
+    ak8PuppiJetExtender,
+    ca15PuppiJetExtender
 ])
 
 #############################
@@ -830,14 +817,10 @@ postskimSequence = Chain([
 
 if analysis.isRealData:
     badEventsFilterMod = mithep.BadEventsFilterMod('BadEventsFilterMod',
-       FillHist = True,
-       TaggingMode = False
+        EEBadScFilter = True,
+        HBHENoiseFilter = True,
+        FillHist = True
     )
-    badEventsFilterMod.SetFilter('HBHENoiseFilter')
-    badEventsFilterMod.SetFilter('HBHENoiseIsoFilter')
-    badEventsFilterMod.SetFilter('EEBadScFilter')
-    badEventsFilterMod.SetFilter('CSCTightHaloFilter')
-    badEventsFilterMod.SetFilter('EcalDeadCellTriggerPrimitiveFilter')
 
     hltMod = mithep.HLTMod(
         ExportTrigObjects = False

@@ -77,7 +77,7 @@ void wlnAnalysis(
  Int_t period = 1
  ){
 
-  TString filesPath  = "/scratch5/ceballos/ntuples_weights/wln_";
+  TString filesPath  = "/scratch5/ceballos/ntuples_weights_74x/wln_";
   Double_t lumi = 0.0715;
   if(period == 1) lumi = 2.263;
 

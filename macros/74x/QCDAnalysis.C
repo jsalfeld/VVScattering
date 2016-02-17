@@ -28,7 +28,7 @@ void QCDAnalysis(
  ){
 
   Int_t period = 1;
-  TString filesPath  = "/scratch5/ceballos/ntuples_weights/qcd_";
+  TString filesPath  = "/scratch5/ceballos/ntuples_weights_74x/qcd_";
   Double_t lumi = 0.0715;
   if(period == 1) lumi = 2.263;
 
