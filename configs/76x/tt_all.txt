@@ -1,0 +1,14 @@
+book dataset skim bx pdfrwgt json
+
+t2mit/filefi/043  MuonEG+Run2015C_25ns-16Dec2015-v1+AOD - 25ns - -
+t2mit/filefi/043  MuonEG+Run2015D-16Dec2015-v1+AOD - 25ns - -
+t2mit/filefi/043  DoubleMuon+Run2015C_25ns-16Dec2015-v1+AOD - 25ns - -
+t2mit/filefi/043  DoubleMuon+Run2015D-16Dec2015-v1+AOD - 25ns - -
+t2mit/filefi/043  DoubleEG+Run2015C_25ns-16Dec2015-v1+AOD - 25ns - -
+t2mit/filefi/043  DoubleEG+Run2015D-16Dec2015-v2+AOD - 25ns - -
+t2mit/filefi/043  SingleMuon+Run2015C_25ns-16Dec2015-v1+AOD - 25ns - -
+t2mit/filefi/043  SingleMuon+Run2015D-16Dec2015-v1+AOD - 25ns - -
+t2mit/filefi/043  SingleElectron+Run2015C_25ns-16Dec2015-v1+AOD - 25ns - -
+t2mit/filefi/043  SingleElectron+Run2015D-16Dec2015-v1+AOD - 25ns - -
+t2mit/filefi/043  SinglePhoton+Run2015C_25ns-16Dec2015-v1+AOD - 25ns - -
+t2mit/filefi/043  SinglePhoton+Run2015D-16Dec2015-v1+AOD - 25ns - -

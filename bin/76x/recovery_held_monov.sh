@@ -18,6 +18,6 @@ chmod a+x lll3;./lll3;
 rm -f lll0 lll1 lll2 lll3;
 
 cp $CMSSW_BASE/src/MitAnalysisRunII/bin/76x/submit_configs_monov.sh submit_configs_temp.sh;
-sed -i 's|--analysis|--update --name=monov_all --analysis|' submit_configs_temp.sh;
+sed -i 's|--analysis=$CMSSW_BASE/src/MitAnalysisRunII/python/76x/bambuToNero.py|--update --name=monov_all --analysis|' submit_configs_temp.sh;
 ./submit_configs_temp.sh;
 rm -f submit_configs_temp.sh;

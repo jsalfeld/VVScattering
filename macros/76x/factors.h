@@ -1,43 +1,27 @@
-double effSF_m_25_medium_tight[10] = {0.893181,0.903896,0.918628,0.970606,0.961617,0.988883,0.981609,0.988133,0.997004,0.980483};
-double effSF_m_25_medium[10] = {0.883965,0.888433,0.911088,0.962104,0.950514,0.981674,0.969118,0.978893,0.983652,0.968170};
-double effSF_e_25_medium[10] = {0.882568,0.897607,0.907722,0.966725,0.947403,0.987567,0.966422,0.984508,0.980736,0.969033};
-double effSF_m_25_tight[10]  = {0.874456,0.881048,0.900731,0.958797,0.912054,1.023287,0.929299,1.017120,0.951510,0.948481};
-double effSF_e_25_tight[10]  = {0.870300,0.838181,0.890720,0.925357,0.901283,1.013620,0.924440,1.013939,0.943693,0.942360};
+double effSF_m_25_medium[10] = {0.921496,0.909645,0.915082,0.943475,0.952196,0.987913,0.955240,0.985827,0.979746,0.966712};
+double effSF_e_25_medium[10] = {0.850016,0.802405,0.884492,0.924319,0.909337,0.968089,0.933551,0.975992,0.961504,0.953784};
+double effSF_e_25_tight[10]  = {0.854552,0.784695,0.877789,0.919625,0.903191,0.964315,0.927477,0.972640,0.956129,0.951669};
 
-double fake_rate_m_25_medium_tight[5][5] = {
-0.289,0.199,0.183,0.168,0.165,
-0.311,0.218,0.199,0.189,0.191,
-0.345,0.260,0.241,0.228,0.225,
-0.373,0.299,0.284,0.266,0.261,
-0.376,0.304,0.294,0.294,0.289
-};
 double fake_rate_m_25_medium[5][5] = {
-0.352,0.259,0.242,0.222,0.218,
-0.377,0.283,0.260,0.250,0.245,
-0.412,0.329,0.308,0.293,0.286,
-0.444,0.370,0.355,0.337,0.328,
-0.443,0.375,0.369,0.366,0.359
+0.358,0.268,0.251,0.233,0.211,
+0.383,0.290,0.266,0.255,0.255,
+0.417,0.335,0.318,0.309,0.282,
+0.455,0.383,0.370,0.358,0.356,
+0.467,0.400,0.391,0.394,0.387
 };
 double fake_rate_e_25_medium[5][5] = {
-0.233,0.219,0.187,0.201,0.189,
-0.236,0.221,0.199,0.164,0.185,
-0.293,0.248,0.215,0.191,0.195,
-0.281,0.242,0.236,0.256,0.279,
-0.284,0.262,0.268,0.291,0.317
-};
-double fake_rate_m_25_tight[5][5] = {
-0.360,0.265,0.249,0.232,0.236,
-0.381,0.285,0.263,0.253,0.255,
-0.416,0.330,0.309,0.295,0.295,
-0.447,0.370,0.355,0.337,0.336,
-0.448,0.377,0.369,0.366,0.369
+0.193,0.220,0.210,0.207,0.185,
+0.211,0.213,0.203,0.184,0.200,
+0.283,0.257,0.229,0.210,0.194,
+0.294,0.261,0.256,0.248,0.281,
+0.315,0.294,0.294,0.312,0.347
 };
 double fake_rate_e_25_tight[5][5] = {
-0.136,0.111,0.101,0.112,0.102,
-0.131,0.118,0.113,0.087,0.106,
-0.170,0.144,0.115,0.107,0.105,
-0.205,0.177,0.154,0.151,0.156,
-0.206,0.165,0.154,0.168,0.185
+0.114,0.121,0.107,0.114,0.093,
+0.107,0.117,0.108,0.097,0.106,
+0.173,0.145,0.124,0.112,0.102,
+0.230,0.188,0.165,0.153,0.160,
+0.229,0.195,0.179,0.179,0.201
 };
 
 double weightEWKCorr(float pt, int type){
@@ -107,7 +91,7 @@ char **strsplit(const char* str, const char* delim, size_t* numtokens) {
 }
 
 double nPUScaleFactor(TH1D *fhDPU, float npu){
-  double mynpu = TMath::Min(npu,(float)39.999);
+  double mynpu = TMath::Min(npu,(float)50.999);
   Int_t npuxbin = fhDPU->GetXaxis()->FindBin(mynpu);
   return fhDPU->GetBinContent(npuxbin);
 }
@@ -122,16 +106,16 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
   double isoCut = 0.;
   bool idCut = false;
   if     (TMath::Abs(pdgId) == 13) {
-    isoCut = 0.15; if(type == "default_tight") isoCut = 0.12;
-    if     (type == "default" || type == "default_tight" || type == "medium") idCut = (selBits & BareLeptons::LepMediumIP) == BareLeptons::LepMediumIP;
-    else if(type == "tight")                                                  idCut = (selBits & BareLeptons::LepTightIP)  == BareLeptons::LepTightIP;
+    isoCut = 0.15;
+    if     (type == "default" || type == "medium") idCut = (selBits & BareLeptons::LepMediumIP) == BareLeptons::LepMediumIP;
+    else printf("Problem with selectIsoCut!\n");
   }
   else if(TMath::Abs(pdgId) == 11) {
-    if     (type == "medium")                                                isoCut = (isEB ? 0.0766 : 0.0678);
-    else if(type == "default" || type == "default_tight" || type == "tight") isoCut = (isEB ? 0.0354 : 0.0646);
+    if     (type == "medium")  isoCut = (isEB ? 0.0766 : 0.0678);
+    else if(type == "default") isoCut = (isEB ? 0.0354 : 0.0646);
 
-    if     (type == "medium")                                                idCut = (selBits & BareLeptons::LepMedium) == BareLeptons::LepMedium;
-    else if(type == "default" || type == "default_tight" || type == "tight") idCut = (selBits & BareLeptons::LepTight)  == BareLeptons::LepTight;
+    if     (type == "medium")  idCut = (selBits & BareLeptons::LepMedium) == BareLeptons::LepMedium;
+    else if(type == "default") idCut = (selBits & BareLeptons::LepTight)  == BareLeptons::LepTight;
   }
   else {
     printf("Problem with selectIsoCut!\n");
@@ -182,19 +166,24 @@ bool passJetId(Float_t fMVACut[4][4], double mva, double pt, double eta){
 
 }
 
-double effhDScaleFactor(bool isAbs, double pt, double eta, int nsel, int period, TString type, TH2D *fhDMuMediumSF, TH2D *fhDElMediumSF, TH2D *fhDElTightSF){
-  if(isAbs == true) eta = abs(eta);
-  Int_t binX = 0;
-  Int_t binY = 0;
+double effhDScaleFactor(double pt, double eta, int nsel, int period, TString type, TH2D *fhDMuMediumSF, TH2D *fhDMuIsoSF, TH2D *fhDElMediumSF, TH2D *fhDElTightSF){
+  if(TMath::Abs(nsel) == 11) eta = abs(eta);
+  Int_t binXA = 0;
+  Int_t binYA = 0;
+  Int_t binXB = 0;
+  Int_t binYB = 0;
+  if(pt>=100) pt = +99.999;
+  if     (eta>=+2.4) eta = +2.399;
+  else if(eta<=-2.4) eta = -2.399;
 
-  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default")) {binX = fhDMuMediumSF->GetXaxis()->FindFixBin(TMath::Min(eta,2.399));binY = fhDMuMediumSF->GetYaxis()->FindFixBin(TMath::Min(pt,99.999));}
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")                      {binX = fhDElMediumSF->GetXaxis()->FindFixBin(TMath::Min(eta,2.399));binY = fhDElMediumSF->GetYaxis()->FindFixBin(TMath::Min(pt,99.999));}
-  else if(TMath::Abs(nsel) == 11 && period == 1 && (type== "default"))                    {binX = fhDElTightSF ->GetXaxis()->FindFixBin(TMath::Min(eta,2.399));binY = fhDElTightSF ->GetYaxis()->FindFixBin(TMath::Min(pt,99.999));}
+  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default"))  {binXA = fhDMuMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDMuMediumSF->GetYaxis()->FindFixBin(pt);binXB = fhDMuIsoSF->GetXaxis()->FindFixBin(eta);binYB = fhDMuIsoSF->GetYaxis()->FindFixBin(pt);}
+  else if(TMath::Abs(nsel) == 11 && period == 1 && type== "medium")                        {binXA = fhDElMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDElMediumSF->GetYaxis()->FindFixBin(pt);}
+  else if(TMath::Abs(nsel) == 11 && period == 1 && type== "default")                       {binXA = fhDElTightSF ->GetXaxis()->FindFixBin(eta);binYA = fhDElTightSF ->GetYaxis()->FindFixBin(pt);}
   else    printf("PROBLEM WITH BINS\n");
 
-  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default")) return fhDMuMediumSF->GetBinContent(binX, binY);
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")                      return fhDElMediumSF->GetBinContent(binX, binY);
-  else if(TMath::Abs(nsel) == 11 && period == 1 && (type== "default"))                    return fhDElTightSF ->GetBinContent(binX, binY);
+  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default")) return fhDMuMediumSF->GetBinContent(binXA, binYA)*fhDMuIsoSF->GetBinContent(binXB, binYB);
+  else if(TMath::Abs(nsel) == 11 && period == 1 && type== "medium")                       return fhDElMediumSF->GetBinContent(binXA, binYA);
+  else if(TMath::Abs(nsel) == 11 && period == 1 && type== "default")                      return fhDElTightSF ->GetBinContent(binXA, binYA);
   return 0;
 }
 
@@ -224,11 +213,9 @@ double effScaleFactor(double pt, double eta, int nsel, int period, TString type)
   else if(iPt==4&&iEta==1) iPoint = 9;
   else assert(0);
 
-  if     (TMath::Abs(nsel) == 13 && period == 1 &&  type== "default_tight")                                         return effSF_m_25_medium_tight[iPoint];
-  else if(TMath::Abs(nsel) == 13 && period == 1 &&  type== "tight")                                                 return effSF_m_25_tight [iPoint];
-  else if(TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default"))                           return effSF_m_25_medium[iPoint];
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")                                                return effSF_e_25_medium[iPoint];
-  else if(TMath::Abs(nsel) == 11 && period == 1 && (type== "tight" || type== "default" || type== "default_tight" )) return effSF_e_25_tight [iPoint];
+  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default")) return effSF_m_25_medium[iPoint];
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")                      return effSF_e_25_medium[iPoint];
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default")                     return effSF_e_25_tight [iPoint];
 
   assert(0);
 
@@ -250,11 +237,9 @@ double fakeRateFactor(double pt, double eta, int nsel, int period, TString type)
   else if(TMath::Abs(eta) < 2.0) iEta = 3;
   else  			 iEta = 4;
 
-  if     (TMath::Abs(nsel) == 13 && period == 1 &&  type== "default_tight")					    return fake_rate_m_25_medium_tight[iPt][iEta]/(1.0-fake_rate_m_25_medium_tight[iPt][iEta]);
-  else if(TMath::Abs(nsel) == 13 && period == 1 &&  type== "tight")						    return fake_rate_m_25_tight [iPt][iEta]/(1.0-fake_rate_m_25_tight [iPt][iEta]);
-  else if(TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default"))			    return fake_rate_m_25_medium[iPt][iEta]/(1.0-fake_rate_m_25_medium[iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")						    return fake_rate_e_25_medium[iPt][iEta]/(1.0-fake_rate_e_25_medium[iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11 && period == 1 && (type== "tight" || type== "default" || type== "default_tight" )) return fake_rate_e_25_tight [iPt][iEta]/(1.0-fake_rate_e_25_tight [iPt][iEta]);
+  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default")) return fake_rate_m_25_medium[iPt][iEta]/(1.0-fake_rate_m_25_medium[iPt][iEta]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")			  return fake_rate_e_25_medium[iPt][iEta]/(1.0-fake_rate_e_25_medium[iPt][iEta]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default")			  return fake_rate_e_25_tight [iPt][iEta]/(1.0-fake_rate_e_25_tight [iPt][iEta]);
 
   assert(0);
 

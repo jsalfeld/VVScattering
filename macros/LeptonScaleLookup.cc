@@ -68,9 +68,6 @@ float LeptonScaleLookup::GetError(float eta, float pt, TH2F *hist)
     if (eta > (hist->GetXaxis()->GetBinLowEdge(nbins) +  hist->GetXaxis()->GetBinWidth(nbins)))
         eta =  hist->GetXaxis()->GetBinLowEdge(nbins) + (hist->GetXaxis()->GetBinWidth(nbins)/2.0);
 
-    // make sure eta to look up is in range
-    // eta is abs
-    pt = fabs(pt);
     nbins = hist->GetYaxis()->GetNbins();
     if (pt > (hist->GetYaxis()->GetBinLowEdge(nbins) +  hist->GetYaxis()->GetBinWidth(nbins)))
         pt =  hist->GetYaxis()->GetBinLowEdge(nbins) + (hist->GetYaxis()->GetBinWidth(nbins)/2.0);
