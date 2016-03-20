@@ -29,6 +29,7 @@ void topAnalysis(
  Int_t period = 1
  ){
 
+  Double_t btagCut = 0.605;
   TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_76x/met_";
   TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_76x/met_";
   Double_t lumi = 2.318;
@@ -77,7 +78,7 @@ void topAnalysis(
   //infilenamev.push_back(Form("%sZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                         infilecatv.push_back(7);
   infilenamev.push_back(Form("%sTTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));	   infilecatv.push_back(7);
   infilenamev.push_back(Form("%sTTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));	   infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(7);
   infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(7);
   infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));           infilecatv.push_back(7);
 
@@ -226,7 +227,7 @@ void topAnalysis(
            ) passFilter[1] = kTRUE;
       }
 
-      if(infilecatv[ifile] != 0) passFilter[1] = kTRUE; // do not apply trigger filters to MC
+      //if(infilecatv[ifile] != 0) passFilter[1] = kTRUE; // do not apply trigger filters to MC
       if(passFilter[0] == kFALSE) continue;
       if(passFilter[1] == kFALSE) continue;
 
@@ -335,11 +336,11 @@ void topAnalysis(
 
       // trigger efficiency
       double trigEff = 1.0;
-      if(infilecatv[ifile] != 0) {
-        trigEff = trigLookup.GetExpectedTriggerEfficiency(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),
-        						  ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),
-        						 TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]));
-      }
+      //if(infilecatv[ifile] != 0) {
+      //  trigEff = trigLookup.GetExpectedTriggerEfficiency(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),
+      //  						  ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),
+      //  						 TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]));
+      //}
       // luminosity
       double theLumi  = 1.0; if(infilecatv[ifile] != 0) theLumi  = lumi;
       // pile-up
@@ -411,44 +412,44 @@ void topAnalysis(
 	}
       }
 
-      if((bDiscrLowPt < 0.605 && idSoftNotInJet.size() == 0) && idJet.size() == 2 && bTagMax[1] < 0.605){
+      if((bDiscrLowPt < btagCut && idSoftNotInJet.size() == 0) && idJet.size() == 2 && bTagMax[1] < btagCut){
         int nEta = TMath::Min(etaMin,2.499)/2.5*etaBins;
         btag_central_2j_den[classType][nEta] 	     += totalWeight;
         btag_central_2j_den_error[classType][nEta]   += totalWeight*totalWeight;
-        if(bTagMax[0] >= 0.605 || idSoftNotInJet.size() != 0){
+        if(bTagMax[0] >= btagCut || idSoftNotInJet.size() != 0){
           btag_central_2j_num[classType][nEta]	     += totalWeight;
           btag_central_2j_num_error[classType][nEta] += totalWeight*totalWeight;
         }
         btag_central_All_2j_den[classType]	     += totalWeight;
         btag_central_All_2j_den_error[classType]     += totalWeight*totalWeight;
-        if(bTagMax[0] >= 0.605 || idSoftNotInJet.size() != 0){
+        if(bTagMax[0] >= btagCut || idSoftNotInJet.size() != 0){
           btag_central_All_2j_num[classType]         += totalWeight;
           btag_central_All_2j_num_error[classType]   += totalWeight*totalWeight;
         }
       }
 
-      if((bDiscrLowPt < 0.605 && idSoftNotInJet.size() == 0) && idJet.size() == 2 && (float)(*eventJets.bDiscr)[idJet[1]] > 0.605 && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()) < 2.5 && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta()) < 2.5){
+      if((bDiscrLowPt < btagCut && idSoftNotInJet.size() == 0) && idJet.size() == 2 && (float)(*eventJets.bDiscr)[idJet[1]] > btagCut && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()) < 2.5 && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta()) < 2.5){
         btag_highestpt_2j_den[classType][0]       += totalWeight;
         btag_highestpt_2j_den_error[classType][0] += totalWeight*totalWeight;
-        if((float)(*eventJets.bDiscr)[idJet[0]] > 0.605 || idSoftNotInJet.size() != 0){
+        if((float)(*eventJets.bDiscr)[idJet[0]] > btagCut || idSoftNotInJet.size() != 0){
           btag_highestpt_2j_num[classType][0]       += totalWeight;
           btag_highestpt_2j_num_error[classType][0] += totalWeight*totalWeight;
         }
       }
 
-      if((bDiscrLowPt < 0.605 && idSoftNotInJet.size() == 0) && idJet.size() == 1 && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()) < 2.5){
+      if((bDiscrLowPt < btagCut && idSoftNotInJet.size() == 0) && idJet.size() == 1 && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()) < 2.5){
         btag_highestpt_1j_den[classType][0]       += totalWeight;
         btag_highestpt_1j_den_error[classType][0] += totalWeight*totalWeight;
-        if((float)(*eventJets.bDiscr)[idJet[0]] > 0.605 || idSoftNotInJet.size() != 0){
+        if((float)(*eventJets.bDiscr)[idJet[0]] > btagCut || idSoftNotInJet.size() != 0){
           btag_highestpt_1j_num[classType][0]       += totalWeight;
           btag_highestpt_1j_num_error[classType][0] += totalWeight*totalWeight;
         }
       }
 
-      if(idJet.size() == 1 && (float)(*eventJets.bDiscr)[idJet[0]] > 0.605){
+      if(idJet.size() == 1 && (float)(*eventJets.bDiscr)[idJet[0]] > btagCut){
         btag_lowpt_1j_den[classType][0]       += totalWeight;
         btag_lowpt_1j_den_error[classType][0] += totalWeight*totalWeight;
-        if(bDiscrLowPt > 0.605 || idSoftNotInJet.size() != 0){
+        if(bDiscrLowPt > btagCut || idSoftNotInJet.size() != 0){
           btag_lowpt_1j_num[classType][0]       += totalWeight;
           btag_lowpt_1j_num_error[classType][0] += totalWeight*totalWeight;
         }
@@ -457,7 +458,7 @@ void topAnalysis(
      if(idJet.size() == 0){
         btag_lowpt_0j_den[classType][0]       += totalWeight;
         btag_lowpt_0j_den_error[classType][0] += totalWeight*totalWeight;
-        if(bDiscrLowPt > 0.605 || idSoftNotInJet.size() != 0){
+        if(bDiscrLowPt > btagCut || idSoftNotInJet.size() != 0){
           btag_lowpt_0j_num[classType][0]       += totalWeight;
           btag_lowpt_0j_num_error[classType][0] += totalWeight*totalWeight;
         }

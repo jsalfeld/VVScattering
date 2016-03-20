@@ -172,7 +172,7 @@ void ZllAnalysis(TString typeLepSel = "default"){
            ) passFilter[1] = kTRUE;
       }
 
-      if(infilecatv[ifile] != 0) passFilter[1] = kTRUE; // do not apply trigger filters to MC
+      //if(infilecatv[ifile] != 0) passFilter[1] = kTRUE; // do not apply trigger filters to MC
       if(passFilter[0] == kFALSE) continue;
       if(passFilter[1] == kFALSE) continue;
 
@@ -223,11 +223,11 @@ void ZllAnalysis(TString typeLepSel = "default"){
 
       // trigger efficiency
       double trigEff = 1.0;
-      if(infilecatv[ifile] != 0) {
-        trigEff = trigLookup.GetExpectedTriggerEfficiency(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),
-        						  ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),
-        						 TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]));
-      }
+      //if(infilecatv[ifile] != 0) {
+      //  trigEff = trigLookup.GetExpectedTriggerEfficiency(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),
+      //  						  ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),
+      //  						 TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]));
+      //}
       // luminosity
       double theLumi  = 1.0; if(infilecatv[ifile] != 0) theLumi  = lumi;
       // pile-up

@@ -174,12 +174,12 @@ void makeSkimSample(
 	 if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep]) == 13) nTypeLep[1]++;}
     }
 
-    vector<int> idLep; vector<int> idTight;
+    vector<int> idLep;
     for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
       if(selectIdIsoCut("default",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
          TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]))
-        											     {idTight.push_back(1); idLep.push_back(nlep);}
-      else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idTight.push_back(0); idLep.push_back(nlep);}
+        											     {idLep.push_back(nlep);}
+      else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idLep.push_back(nlep);}
     }
 
     Bool_t passFilter = kFALSE;
@@ -208,110 +208,119 @@ void makeSkimSample(
 	 ((TLorentzVector*)(*eventMet.p4)[0])->Pt() < 30.0) passFilter = kTRUE;
     }
     else if(filterType == 2){
+      double maxDilepPt = 0.0;
+      if(idOnlyLep.size() >= 2) {
+        for(unsigned int i=0; i<idOnlyLep.size()-1; i++){
+          for(unsigned int j=i+1; j<idOnlyLep.size(); j++){
+	    if(( ( *(TLorentzVector*)(eventLeptons.p4->At(idOnlyLep[i])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idOnlyLep[j])) ) ).Pt() > maxDilepPt)
+              maxDilepPt = ( ( *(TLorentzVector*)(eventLeptons.p4->At(idOnlyLep[i])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idOnlyLep[j])) ) ).Pt();
+	  }
+	}
+      }
       dymva_= -999.;
       nlep_= 0;
       njets_= 0;
-      if(idLep.size() >= 3 ||
-        (idLep.size() >= 2 &&
-         ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 20 && 
-         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 10 && 
+      if(idOnlyLep.size() >= 3 ||
+        (idOnlyLep.size() >= 2 &&
+         ((TLorentzVector*)(*eventLeptons.p4)[idOnlyLep[0]])->Pt() > 20 && 
+         ((TLorentzVector*)(*eventLeptons.p4)[idOnlyLep[1]])->Pt() > 10 && 
 	 ((TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt()) > 20.0 && nTypeLep[0] > 0 && nTypeLep[1] > 0) ||
-	 (( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) ).Pt() > 55 &&
-	   ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 40)))
+	 ( maxDilepPt> 55 && ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 40)))
 	 ){
 	
 	passFilter = kTRUE;
 
-        // Begin DYMVA implementation
-	TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) )); 
-        double the_met = ((TLorentzVector*)(*eventMet.p4)[0])->Pt();
-	double the_metsig = ((TLorentzVector*)(*eventMet.p4)[0])->Pt()/sqrt((double)eventMet.sumEtRaw);
-	TVector2 metv(((TLorentzVector*)(*eventMet.p4)[0])->Px(), ((TLorentzVector*)(*eventMet.p4)[0])->Py());
-        TVector2 dilv(dilep.Px(), dilep.Py());
-        TVector2 utv = -1.*(metv+dilv);
-        double phiv = utv.DeltaPhi(dilv);
-        double the_upara = utv.Mod()*TMath::Cos(phiv);
-        double the_uperp = utv.Mod()*TMath::Sin(phiv);
-	double the_nGoodVertices =  (double)eventVertex.npv;
-	double the_dilep_pt = dilep.Pt();
-        double the_min_mt = 999999.;
-        double the_max_mt = -1.;
-        double the_min_lep_met_dphi = 999.;
-        double the_max_lep_met_dphi = -1.;
-        for(unsigned nl=0; nl<idLep.size(); nl++){
-          double deltaPhiLeptonMet = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
-          if(the_min_lep_met_dphi > deltaPhiLeptonMet) the_min_lep_met_dphi = deltaPhiLeptonMet;      
-          if(the_max_lep_met_dphi < deltaPhiLeptonMet) the_max_lep_met_dphi = deltaPhiLeptonMet;      
+        if(idLep.size() >= 2){
+          // Begin DYMVA implementation
+	  TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) )); 
+          double the_met = ((TLorentzVector*)(*eventMet.p4)[0])->Pt();
+	  double the_metsig = ((TLorentzVector*)(*eventMet.p4)[0])->Pt()/sqrt((double)eventMet.sumEtRaw);
+	  TVector2 metv(((TLorentzVector*)(*eventMet.p4)[0])->Px(), ((TLorentzVector*)(*eventMet.p4)[0])->Py());
+          TVector2 dilv(dilep.Px(), dilep.Py());
+          TVector2 utv = -1.*(metv+dilv);
+          double phiv = utv.DeltaPhi(dilv);
+          double the_upara = utv.Mod()*TMath::Cos(phiv);
+          double the_uperp = utv.Mod()*TMath::Sin(phiv);
+	  double the_nGoodVertices =  (double)eventVertex.npv;
+	  double the_dilep_pt = dilep.Pt();
+          double the_min_mt = 999999.;
+          double the_max_mt = -1.;
+          double the_min_lep_met_dphi = 999.;
+          double the_max_lep_met_dphi = -1.;
+          for(unsigned nl=0; nl<idLep.size(); nl++){
+            double deltaPhiLeptonMet = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
+            if(the_min_lep_met_dphi > deltaPhiLeptonMet) the_min_lep_met_dphi = deltaPhiLeptonMet;      
+            if(the_max_lep_met_dphi < deltaPhiLeptonMet) the_max_lep_met_dphi = deltaPhiLeptonMet;      
 
-          double mtW = TMath::Sqrt(2.0*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiLeptonMet)));
-	  if(the_min_mt > mtW) the_min_mt = mtW;
-	  if(the_max_mt < mtW) the_max_mt = mtW;
-        }
+            double mtW = TMath::Sqrt(2.0*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiLeptonMet)));
+	    if(the_min_mt > mtW) the_min_mt = mtW;
+	    if(the_max_mt < mtW) the_max_mt = mtW;
+          }
 
-        vector<int> idJet;
-        for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
-          if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 10) continue;
-          bool passId = passJetId(fMVACut, (float)(*eventJets.puId)[nj], ((TLorentzVector*)(*eventJets.p4)[nj])->Pt(), TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()));
-          //if(passId == false) continue;
+          vector<int> idJet;
+          for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
+            if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 10) continue;
+            bool passId = passJetId(fMVACut, (float)(*eventJets.puId)[nj], ((TLorentzVector*)(*eventJets.p4)[nj])->Pt(), TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()));
+            //if(passId == false) continue;
 
-          Bool_t isLepton = kFALSE;
-          for(unsigned int nl=0; nl<idLep.size(); nl++){
-            if(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])) < 0.3) isLepton = kTRUE;
+            Bool_t isLepton = kFALSE;
+            for(unsigned int nl=0; nl<idLep.size(); nl++){
+              if(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])) < 0.3) isLepton = kTRUE;
+	    }
+	    if(isLepton == kTRUE) continue;
+
+            if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) continue;
+
+            idJet.push_back(nj);
+          }
+
+	  double the_jet1_met_dphi = -1;
+	  double the_jet1_pt = -1;
+	  double the_dilep_jet1_dphi = -1;
+	  if(idJet.size() >= 1){
+	    the_jet1_met_dphi = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
+	    the_jet1_pt = ((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Pt();
+	    the_dilep_jet1_dphi = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->DeltaPhi(dilep));
 	  }
-	  if(isLepton == kTRUE) continue;
+	  double the_min_jet_met_dphi = 999.;
+	  double the_max_jet_met_dphi = -1.;
+	  double the_jet2_pt = -1;
+	  double the_dilep_jet2_dphi = -1;
+	  double the_jet1_jet2_dphi = -1.;
+	  if(idJet.size() >= 2){
+	    double dPhiJetMET = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
+	    if(the_min_jet_met_dphi > dPhiJetMET) the_min_jet_met_dphi = dPhiJetMET;
+	    if(the_max_jet_met_dphi < dPhiJetMET) the_max_jet_met_dphi = dPhiJetMET;
+            dPhiJetMET = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[1]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
+	    if(the_min_jet_met_dphi > dPhiJetMET) the_min_jet_met_dphi = dPhiJetMET;
+	    if(the_max_jet_met_dphi < dPhiJetMET) the_max_jet_met_dphi = dPhiJetMET;
+	    the_jet2_pt = ((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Pt();
+	    the_dilep_jet2_dphi = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[1]])->DeltaPhi(dilep));
+	    the_jet1_jet2_dphi =  TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->DeltaPhi(*((TLorentzVector*)(*eventJets.p4)[idJet[1]])));
+          }
 
-          if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) continue;
-
-          idJet.push_back(nj);
-        }
-
-	double the_jet1_met_dphi = -1;
-	double the_jet1_pt = -1;
-	double the_dilep_jet1_dphi = -1;
-	if(idJet.size() >= 1){
-	  the_jet1_met_dphi = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
-	  the_jet1_pt = ((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Pt();
-	  the_dilep_jet1_dphi = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->DeltaPhi(dilep));
-	}
-	double the_min_jet_met_dphi = 999.;
-	double the_max_jet_met_dphi = -1.;
-	double the_jet2_pt = -1;
-	double the_dilep_jet2_dphi = -1;
-	double the_jet1_jet2_dphi = -1.;
-	if(idJet.size() >= 2){
-	  double dPhiJetMET = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
-	  if(the_min_jet_met_dphi > dPhiJetMET) the_min_jet_met_dphi = dPhiJetMET;
-	  if(the_max_jet_met_dphi < dPhiJetMET) the_max_jet_met_dphi = dPhiJetMET;
-          dPhiJetMET = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[1]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
-	  if(the_min_jet_met_dphi > dPhiJetMET) the_min_jet_met_dphi = dPhiJetMET;
-	  if(the_max_jet_met_dphi < dPhiJetMET) the_max_jet_met_dphi = dPhiJetMET;
-	  the_jet2_pt = ((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Pt();
-	  the_dilep_jet2_dphi = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[1]])->DeltaPhi(dilep));
-	  the_jet1_jet2_dphi =  TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->DeltaPhi(*((TLorentzVector*)(*eventJets.p4)[idJet[1]])));
-        }
-
-        if     (idJet.size() == 0) {
-          std::vector<double> theInputVals;
-          const double inputVals[] = {the_met, the_metsig, the_uperp, the_upara, the_nGoodVertices, the_dilep_pt, the_min_mt, the_max_mt, the_min_lep_met_dphi, the_max_lep_met_dphi};
-          for (int i=0;i<10;++i) theInputVals.push_back(inputVals[i]);
-          dymva_ = rbdtDy_0j.GetMvaValue(theInputVals);
-        }
-	else if(idJet.size() == 1) {
-          std::vector<double> theInputVals;
-          const double inputVals[] = {the_met, the_metsig, the_jet1_met_dphi, the_upara, the_uperp, the_nGoodVertices, the_dilep_pt, the_min_mt, the_max_mt, the_min_lep_met_dphi, the_max_lep_met_dphi, the_jet1_pt, the_dilep_jet1_dphi};
-          for (int i=0;i<13;++i) theInputVals.push_back(inputVals[i]);
-          dymva_ = rbdtDy_1j.GetMvaValue(theInputVals);
-        }
-	else {
-          std::vector<double> theInputVals;
-          const double inputVals[] = {the_met, the_metsig, the_min_jet_met_dphi, the_max_jet_met_dphi, the_upara, the_uperp, the_nGoodVertices, the_dilep_pt, the_min_mt, the_max_mt, the_min_lep_met_dphi, the_max_lep_met_dphi, the_jet1_pt, the_jet2_pt, the_dilep_jet1_dphi, the_dilep_jet2_dphi, the_jet1_jet2_dphi};
-          for (int i=0;i<17;++i) theInputVals.push_back(inputVals[i]);
-          dymva_ = rbdtDy_2j.GetMvaValue(theInputVals);
-        }
-	nlep_ = idLep.size();
-	njets_ = idJet.size();
-        // End DYMVA implementation
-
+          if     (idJet.size() == 0) {
+            std::vector<double> theInputVals;
+            const double inputVals[] = {the_met, the_metsig, the_uperp, the_upara, the_nGoodVertices, the_dilep_pt, the_min_mt, the_max_mt, the_min_lep_met_dphi, the_max_lep_met_dphi};
+            for (int i=0;i<10;++i) theInputVals.push_back(inputVals[i]);
+            dymva_ = rbdtDy_0j.GetMvaValue(theInputVals);
+          }
+	  else if(idJet.size() == 1) {
+            std::vector<double> theInputVals;
+            const double inputVals[] = {the_met, the_metsig, the_jet1_met_dphi, the_upara, the_uperp, the_nGoodVertices, the_dilep_pt, the_min_mt, the_max_mt, the_min_lep_met_dphi, the_max_lep_met_dphi, the_jet1_pt, the_dilep_jet1_dphi};
+            for (int i=0;i<13;++i) theInputVals.push_back(inputVals[i]);
+            dymva_ = rbdtDy_1j.GetMvaValue(theInputVals);
+          }
+	  else {
+            std::vector<double> theInputVals;
+            const double inputVals[] = {the_met, the_metsig, the_min_jet_met_dphi, the_max_jet_met_dphi, the_upara, the_uperp, the_nGoodVertices, the_dilep_pt, the_min_mt, the_max_mt, the_min_lep_met_dphi, the_max_lep_met_dphi, the_jet1_pt, the_jet2_pt, the_dilep_jet1_dphi, the_dilep_jet2_dphi, the_jet1_jet2_dphi};
+            for (int i=0;i<17;++i) theInputVals.push_back(inputVals[i]);
+            dymva_ = rbdtDy_2j.GetMvaValue(theInputVals);
+          }
+	  nlep_ = idLep.size();
+	  njets_ = idJet.size();
+          // End DYMVA implementation
+        } // only events with tight lepton definition
       } // pass filter 2
     } // end filter 2
     else if(filterType == 3){

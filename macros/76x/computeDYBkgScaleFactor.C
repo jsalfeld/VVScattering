@@ -24,7 +24,7 @@
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
 const TString typeLepSel = "default";
-const bool useDYMVA = true;
+const bool useDYMVA = false;
 double mcPrescale = 1.0;
 
 // compute systematic uncertainty
@@ -32,8 +32,8 @@ Double_t computeSyst(const TH1D *hout, const TH1D *hin, Int_t binUsed, Double_t 
 
 void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
 
-  TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_76x/met_";
-  TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_76x/met_";
+  TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_76x/";
+  TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_76x/";
   Double_t lumi = 2.318;
 
   float dymva_= -999.;
@@ -299,7 +299,7 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
            ) passFilter[2] = kTRUE;
       }
 
-      if(infilecatv[ifile] != 0) passFilter[2] = kTRUE; // do not apply trigger filters to MC
+      //if(infilecatv[ifile] != 0) passFilter[2] = kTRUE; // do not apply trigger filters to MC
       if(passFilter[1] == kFALSE) continue;
       if(passFilter[2] == kFALSE) continue;
 
@@ -373,11 +373,11 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
 
       // trigger efficiency
       double trigEff = 1.0;
-      if(infilecatv[ifile] != 0) {
-        trigEff = trigLookup.GetExpectedTriggerEfficiency(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),
-        						  ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),
-        						 TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]));
-      }
+      //if(infilecatv[ifile] != 0) {
+      //  trigEff = trigLookup.GetExpectedTriggerEfficiency(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),
+      //  						  ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),
+      //  						 TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]));
+      //}
       // luminosity
       double theLumi  = 1.0; if(infilecatv[ifile] != 0) theLumi  = lumi;
       // pile-up

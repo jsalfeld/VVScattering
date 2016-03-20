@@ -36,8 +36,8 @@ bool usePureMC = false;
 const TString typeLepSel = "default";
 //const bool usePUPPI = true;
 
-double topNorm[3]  = {0.73,0.95,0.96};
-double topNormE[3] = {0.11,0.08,0.02};
+double topNorm[3]  = {0.90,1.05,0.98};
+double topNormE[3] = {0.13,0.08,0.02};
 
 void wwAnalysis(
  unsigned int nJetsType = 0,
@@ -92,7 +92,7 @@ void wwAnalysis(
   //infilenamev.push_back(Form("%sZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                         infilecatv.push_back(6);
   infilenamev.push_back(Form("%sTTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));	   infilecatv.push_back(6);
   infilenamev.push_back(Form("%sTTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));	   infilecatv.push_back(6);
-  //infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(6);
   infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(6);
   infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));           infilecatv.push_back(6);
 
@@ -144,7 +144,9 @@ void wwAnalysis(
   LeptonScaleLookup trigLookup(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
 
   TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
-  TH1D *fhDPU = (TH1D*)(fPUFile->Get("puWeights"));
+  TH1D *fhDPU     = (TH1D*)(fPUFile->Get("puWeights"));     assert(fhDPU);    fhDPU    ->SetDirectory(0);
+  TH1D *fhDPUUp   = (TH1D*)(fPUFile->Get("puWeightsUp"));   assert(fhDPUUp);  fhDPUUp  ->SetDirectory(0);
+  TH1D *fhDPUDown = (TH1D*)(fPUFile->Get("puWeightsDown")); assert(fhDPUDown);fhDPUDown->SetDirectory(0);
   assert(fhDPU);
   fhDPU->SetDirectory(0);
   delete fPUFile;
@@ -447,6 +449,25 @@ void wwAnalysis(
   TH1D* histo_Higgs_CMS_MVAJESBoundingUp   	 = new TH1D( Form("histo_Higgs_CMS_scale_jUp")  , Form("histo_Higgs_CMS_scale_jUp")  , nBinMVA, xbins); histo_Higgs_CMS_MVAJESBoundingUp  ->Sumw2();
   TH1D* histo_Higgs_CMS_MVAJESBoundingDown 	 = new TH1D( Form("histo_Higgs_CMS_scale_jDown"), Form("histo_Higgs_CMS_scale_jDown"), nBinMVA, xbins); histo_Higgs_CMS_MVAJESBoundingDown->Sumw2();
 
+  TH1D* histo_qqWW_CMS_PUBoundingUp   	         = new TH1D( Form("histo_qqWW_CMS_puUp")  , Form("histo_qqWW_CMS_puUp")  , nBinMVA, xbins); histo_qqWW_CMS_PUBoundingUp  ->Sumw2();
+  TH1D* histo_qqWW_CMS_PUBoundingDown 	         = new TH1D( Form("histo_qqWW_CMS_puDown"), Form("histo_qqWW_CMS_puDown"), nBinMVA, xbins); histo_qqWW_CMS_PUBoundingDown->Sumw2();
+  TH1D* histo_ggWW_CMS_PUBoundingUp   	         = new TH1D( Form("histo_ggWW_CMS_puUp")  , Form("histo_ggWW_CMS_puUp")  , nBinMVA, xbins); histo_ggWW_CMS_PUBoundingUp  ->Sumw2();
+  TH1D* histo_ggWW_CMS_PUBoundingDown 	         = new TH1D( Form("histo_ggWW_CMS_puDown"), Form("histo_ggWW_CMS_puDown"), nBinMVA, xbins); histo_ggWW_CMS_PUBoundingDown->Sumw2();
+  TH1D* histo_Top_CMS_PUBoundingUp   	         = new TH1D( Form("histo_Top_CMS_puUp")  , Form("histo_Top_CMS_puUp")  , nBinMVA, xbins); histo_Top_CMS_PUBoundingUp  ->Sumw2();
+  TH1D* histo_Top_CMS_PUBoundingDown 	         = new TH1D( Form("histo_Top_CMS_puDown"), Form("histo_Top_CMS_puDown"), nBinMVA, xbins); histo_Top_CMS_PUBoundingDown->Sumw2();
+  TH1D* histo_DY_CMS_PUBoundingUp   	         = new TH1D( Form("histo_DY_CMS_puUp")  , Form("histo_DY_CMS_puUp")  , nBinMVA, xbins); histo_DY_CMS_PUBoundingUp  ->Sumw2();
+  TH1D* histo_DY_CMS_PUBoundingDown 	         = new TH1D( Form("histo_DY_CMS_puDown"), Form("histo_DY_CMS_puDown"), nBinMVA, xbins); histo_DY_CMS_PUBoundingDown->Sumw2();
+  TH1D* histo_VV_CMS_PUBoundingUp   	         = new TH1D( Form("histo_VV_CMS_puUp")  , Form("histo_VV_CMS_puUp")  , nBinMVA, xbins); histo_VV_CMS_PUBoundingUp  ->Sumw2();
+  TH1D* histo_VV_CMS_PUBoundingDown 	         = new TH1D( Form("histo_VV_CMS_puDown"), Form("histo_VV_CMS_puDown"), nBinMVA, xbins); histo_VV_CMS_PUBoundingDown->Sumw2();
+  TH1D* histo_VVV_CMS_PUBoundingUp   	         = new TH1D( Form("histo_VVV_CMS_puUp")  , Form("histo_VVV_CMS_puUp")  , nBinMVA, xbins); histo_VVV_CMS_PUBoundingUp  ->Sumw2();
+  TH1D* histo_VVV_CMS_PUBoundingDown 	         = new TH1D( Form("histo_VVV_CMS_puDown"), Form("histo_VVV_CMS_puDown"), nBinMVA, xbins); histo_VVV_CMS_PUBoundingDown->Sumw2();
+  TH1D* histo_WG_CMS_PUBoundingUp   	         = new TH1D( Form("histo_WG_CMS_puUp")  , Form("histo_WG_CMS_puUp")  , nBinMVA, xbins); histo_WG_CMS_PUBoundingUp  ->Sumw2();
+  TH1D* histo_WG_CMS_PUBoundingDown 	         = new TH1D( Form("histo_WG_CMS_puDown"), Form("histo_WG_CMS_puDown"), nBinMVA, xbins); histo_WG_CMS_PUBoundingDown->Sumw2();
+  TH1D* histo_WGS_CMS_PUBoundingUp   	         = new TH1D( Form("histo_WGS_CMS_puUp")  , Form("histo_WGS_CMS_puUp")  , nBinMVA, xbins); histo_WGS_CMS_PUBoundingUp  ->Sumw2();
+  TH1D* histo_WGS_CMS_PUBoundingDown 	         = new TH1D( Form("histo_WGS_CMS_puDown"), Form("histo_WGS_CMS_puDown"), nBinMVA, xbins); histo_WGS_CMS_PUBoundingDown->Sumw2();
+  TH1D* histo_Higgs_CMS_PUBoundingUp   	         = new TH1D( Form("histo_Higgs_CMS_puUp")  , Form("histo_Higgs_CMS_puUp")  , nBinMVA, xbins); histo_Higgs_CMS_PUBoundingUp  ->Sumw2();
+  TH1D* histo_Higgs_CMS_PUBoundingDown 	         = new TH1D( Form("histo_Higgs_CMS_puDown"), Form("histo_Higgs_CMS_puDown"), nBinMVA, xbins); histo_Higgs_CMS_PUBoundingDown->Sumw2();
+
   double bgdDecay[nSelTypes*4][histBins],weiDecay[nSelTypes*2][histBins];
   for(unsigned int i=0; i<nSelTypes*2; i++) {
     for(int j=0; j<histBins; j++) {
@@ -574,7 +595,7 @@ void wwAnalysis(
            (strcmp(tokens[nt],"HLT_Ele27_WP85_Gsf_v*")  			    == 0)
            ) passPresel = kTRUE;
       }
-      if(infilecatv[ifile] != 0) passPresel = kTRUE; // do not apply trigger filters to MC
+      //if(infilecatv[ifile] != 0) passPresel = kTRUE; // do not apply trigger filters to MC
 
       vector<int> idLep; vector<int> idTight; vector<int> idSoft; unsigned int goodIsTight = 0;
       for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
@@ -751,15 +772,17 @@ void wwAnalysis(
 
       // trigger efficiency
       double trigEff = 1.0;
-      if(infilecatv[ifile] != 0) {
-        trigEff = trigLookup.GetExpectedTriggerEfficiency(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),
-        						  ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),
-        						 TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]));
-      }
+      //if(infilecatv[ifile] != 0) {
+      //  trigEff = trigLookup.GetExpectedTriggerEfficiency(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),
+      //  						  ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),
+      //  						 TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]));
+      //}
       // luminosity
       double theLumi  = 1.0; if(infilecatv[ifile] != 0) theLumi  = lumi;
       // pile-up
-      double puWeight = 1.0; if(infilecatv[ifile] != 0) puWeight = nPUScaleFactor(fhDPU, (double)eventMonteCarlo.puTrueInt);
+      double puWeight     = 1.0; if(infilecatv[ifile] != 0) puWeight     = nPUScaleFactor(fhDPU    , (double)eventMonteCarlo.puTrueInt);
+      double puWeightUp   = 1.0; if(infilecatv[ifile] != 0) puWeightUp   = nPUScaleFactor(fhDPUUp  , (double)eventMonteCarlo.puTrueInt);
+      double puWeightDown = 1.0; if(infilecatv[ifile] != 0) puWeightDown = nPUScaleFactor(fhDPUDown, (double)eventMonteCarlo.puTrueInt);
       // lepton efficiency
       double effSF = 1.0;
       if(infilecatv[ifile] != 0){
@@ -873,6 +896,10 @@ void wwAnalysis(
              histo_qqWW_CMS_MVALepEffEBoundingUp  ->Fill(MVAVar,totalWeight*systTotLep[1]);
              histo_qqWW_CMS_MVALepEffMBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
              histo_qqWW_CMS_MVALepEffEBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
+             histo_qqWW_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
+             histo_qqWW_CMS_MVALepEffEBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
+             histo_qqWW_CMS_PUBoundingUp  ->Fill(MVAVar,totalWeight*puWeightUp  /puWeight);
+             histo_qqWW_CMS_PUBoundingDown->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
 	  }
           if(passSystCuts[JESUP])  histo_qqWW_CMS_MVAJESBoundingUp  ->Fill(MVAVar,totalWeight);
           if(passSystCuts[JESDOWN])histo_qqWW_CMS_MVAJESBoundingDown->Fill(MVAVar,totalWeight);
@@ -899,6 +926,8 @@ void wwAnalysis(
              histo_ggWW_CMS_MVALepEffEBoundingUp  ->Fill(MVAVar,totalWeight*systTotLep[1]);
              histo_ggWW_CMS_MVALepEffMBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
              histo_ggWW_CMS_MVALepEffEBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
+             histo_ggWW_CMS_PUBoundingUp  ->Fill(MVAVar,totalWeight*puWeightUp  /puWeight);
+             histo_ggWW_CMS_PUBoundingDown->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
 	  }
           if(passSystCuts[JESUP])  histo_ggWW_CMS_MVAJESBoundingUp  ->Fill(MVAVar,totalWeight);
           if(passSystCuts[JESDOWN])histo_ggWW_CMS_MVAJESBoundingDown->Fill(MVAVar,totalWeight);
@@ -925,6 +954,8 @@ void wwAnalysis(
              histo_Top_CMS_MVALepEffEBoundingUp  ->Fill(MVAVar,totalWeight*systTotLep[1]);
              histo_Top_CMS_MVALepEffMBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
              histo_Top_CMS_MVALepEffEBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
+             histo_Top_CMS_PUBoundingUp  ->Fill(MVAVar,totalWeight*puWeightUp  /puWeight);
+             histo_Top_CMS_PUBoundingDown->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
 	  }
           if(passSystCuts[JESUP])  histo_Top_CMS_MVAJESBoundingUp  ->Fill(MVAVar,totalWeight);
           if(passSystCuts[JESDOWN])histo_Top_CMS_MVAJESBoundingDown->Fill(MVAVar,totalWeight);
@@ -951,6 +982,8 @@ void wwAnalysis(
              histo_DY_CMS_MVALepEffEBoundingUp  ->Fill(MVAVar,totalWeight*systTotLep[1]);
              histo_DY_CMS_MVALepEffMBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
              histo_DY_CMS_MVALepEffEBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
+             histo_DY_CMS_PUBoundingUp  ->Fill(MVAVar,totalWeight*puWeightUp  /puWeight);
+             histo_DY_CMS_PUBoundingDown->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
 	  }
           if(passSystCuts[JESUP])  histo_DY_CMS_MVAJESBoundingUp  ->Fill(MVAVar,totalWeight);
           if(passSystCuts[JESDOWN])histo_DY_CMS_MVAJESBoundingDown->Fill(MVAVar,totalWeight);
@@ -977,6 +1010,8 @@ void wwAnalysis(
              histo_VV_CMS_MVALepEffEBoundingUp  ->Fill(MVAVar,totalWeight*systTotLep[1]);
              histo_VV_CMS_MVALepEffMBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
              histo_VV_CMS_MVALepEffEBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
+             histo_VV_CMS_PUBoundingUp  ->Fill(MVAVar,totalWeight*puWeightUp  /puWeight);
+             histo_VV_CMS_PUBoundingDown->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
 	  }
           if(passSystCuts[JESUP])  histo_VV_CMS_MVAJESBoundingUp  ->Fill(MVAVar,totalWeight);
           if(passSystCuts[JESDOWN])histo_VV_CMS_MVAJESBoundingDown->Fill(MVAVar,totalWeight);
@@ -1003,6 +1038,8 @@ void wwAnalysis(
              histo_VVV_CMS_MVALepEffEBoundingUp  ->Fill(MVAVar,totalWeight*systTotLep[1]);
              histo_VVV_CMS_MVALepEffMBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
              histo_VVV_CMS_MVALepEffEBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
+             histo_VVV_CMS_PUBoundingUp  ->Fill(MVAVar,totalWeight*puWeightUp  /puWeight);
+             histo_VVV_CMS_PUBoundingDown->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
 	  }
           if(passSystCuts[JESUP])  histo_VVV_CMS_MVAJESBoundingUp  ->Fill(MVAVar,totalWeight);
           if(passSystCuts[JESDOWN])histo_VVV_CMS_MVAJESBoundingDown->Fill(MVAVar,totalWeight);
@@ -1029,6 +1066,8 @@ void wwAnalysis(
              histo_WG_CMS_MVALepEffEBoundingUp  ->Fill(MVAVar,totalWeight*systTotLep[1]);
              histo_WG_CMS_MVALepEffMBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
              histo_WG_CMS_MVALepEffEBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
+             histo_WG_CMS_PUBoundingUp  ->Fill(MVAVar,totalWeight*puWeightUp  /puWeight);
+             histo_WG_CMS_PUBoundingDown->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
 	  }
           if(passSystCuts[JESUP])  histo_WG_CMS_MVAJESBoundingUp  ->Fill(MVAVar,totalWeight);
           if(passSystCuts[JESDOWN])histo_WG_CMS_MVAJESBoundingDown->Fill(MVAVar,totalWeight);
@@ -1055,6 +1094,8 @@ void wwAnalysis(
              histo_WGS_CMS_MVALepEffEBoundingUp  ->Fill(MVAVar,totalWeight*systTotLep[1]);
              histo_WGS_CMS_MVALepEffMBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
              histo_WGS_CMS_MVALepEffEBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
+             histo_WGS_CMS_PUBoundingUp  ->Fill(MVAVar,totalWeight*puWeightUp  /puWeight);
+             histo_WGS_CMS_PUBoundingDown->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
 	  }
           if(passSystCuts[JESUP])  histo_WGS_CMS_MVAJESBoundingUp  ->Fill(MVAVar,totalWeight);
           if(passSystCuts[JESDOWN])histo_WGS_CMS_MVAJESBoundingDown->Fill(MVAVar,totalWeight);
@@ -1091,6 +1132,8 @@ void wwAnalysis(
              histo_Higgs_CMS_MVALepEffEBoundingUp  ->Fill(MVAVar,totalWeight*systTotLep[1]);
              histo_Higgs_CMS_MVALepEffMBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
              histo_Higgs_CMS_MVALepEffEBoundingDown->Fill(MVAVar,totalWeight/systTotLep[1]);
+             histo_Higgs_CMS_PUBoundingUp  ->Fill(MVAVar,totalWeight*puWeightUp  /puWeight);
+             histo_Higgs_CMS_PUBoundingDown->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
 	  }
           if(passSystCuts[JESUP])  histo_Higgs_CMS_MVAJESBoundingUp  ->Fill(MVAVar,totalWeight);
           if(passSystCuts[JESDOWN])histo_Higgs_CMS_MVAJESBoundingDown->Fill(MVAVar,totalWeight);
@@ -1335,13 +1378,32 @@ void wwAnalysis(
   histo_WGS_CMS_MVAJESBoundingDown	  ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_WGS    ->GetBinContent(i)>0)printf("%5.1f ",histo_WGS_CMS_MVAJESBoundingDown    ->GetBinContent(i)/histo_WGS    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
   histo_Higgs_CMS_MVAJESBoundingUp	  ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_Higgs    ->GetBinContent(i)>0)printf("%5.1f ",histo_Higgs_CMS_MVAJESBoundingUp      ->GetBinContent(i)/histo_Higgs    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
   histo_Higgs_CMS_MVAJESBoundingDown	  ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_Higgs    ->GetBinContent(i)>0)printf("%5.1f ",histo_Higgs_CMS_MVAJESBoundingDown    ->GetBinContent(i)/histo_Higgs    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  printf("uncertainties PU\n");
+  histo_qqWW_CMS_PUBoundingUp	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_qqWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_qqWW_CMS_PUBoundingUp	   ->GetBinContent(i)/histo_qqWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_qqWW_CMS_PUBoundingDown	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_qqWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_qqWW_CMS_PUBoundingDown    ->GetBinContent(i)/histo_qqWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_ggWW_CMS_PUBoundingUp	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_ggWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_ggWW_CMS_PUBoundingUp	   ->GetBinContent(i)/histo_ggWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_ggWW_CMS_PUBoundingDown	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_ggWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_ggWW_CMS_PUBoundingDown    ->GetBinContent(i)/histo_ggWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_Top_CMS_PUBoundingUp	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_Top    ->GetBinContent(i)>0)printf("%5.1f ",histo_Top_CMS_PUBoundingUp	 ->GetBinContent(i)/histo_Top	 ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_Top_CMS_PUBoundingDown	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_Top    ->GetBinContent(i)>0)printf("%5.1f ",histo_Top_CMS_PUBoundingDown	 ->GetBinContent(i)/histo_Top	 ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_DY_CMS_PUBoundingUp	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_DY    ->GetBinContent(i)>0)printf("%5.1f ",histo_DY_CMS_PUBoundingUp      ->GetBinContent(i)/histo_DY    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_DY_CMS_PUBoundingDown	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_DY    ->GetBinContent(i)>0)printf("%5.1f ",histo_DY_CMS_PUBoundingDown    ->GetBinContent(i)/histo_DY    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_VV_CMS_PUBoundingUp	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_VV    ->GetBinContent(i)>0)printf("%5.1f ",histo_VV_CMS_PUBoundingUp      ->GetBinContent(i)/histo_VV    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_VV_CMS_PUBoundingDown	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_VV    ->GetBinContent(i)>0)printf("%5.1f ",histo_VV_CMS_PUBoundingDown    ->GetBinContent(i)/histo_VV    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_VVV_CMS_PUBoundingUp	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_VVV    ->GetBinContent(i)>0)printf("%5.1f ",histo_VVV_CMS_PUBoundingUp	 ->GetBinContent(i)/histo_VVV	 ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_VVV_CMS_PUBoundingDown	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_VVV    ->GetBinContent(i)>0)printf("%5.1f ",histo_VVV_CMS_PUBoundingDown	 ->GetBinContent(i)/histo_VVV	 ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_WG_CMS_PUBoundingUp	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_WG    ->GetBinContent(i)>0)printf("%5.1f ",histo_WG_CMS_PUBoundingUp      ->GetBinContent(i)/histo_WG    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_WG_CMS_PUBoundingDown	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_WG    ->GetBinContent(i)>0)printf("%5.1f ",histo_WG_CMS_PUBoundingDown    ->GetBinContent(i)/histo_WG    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_WGS_CMS_PUBoundingUp	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_WGS    ->GetBinContent(i)>0)printf("%5.1f ",histo_WGS_CMS_PUBoundingUp	 ->GetBinContent(i)/histo_WGS	 ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_WGS_CMS_PUBoundingDown	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_WGS    ->GetBinContent(i)>0)printf("%5.1f ",histo_WGS_CMS_PUBoundingDown	 ->GetBinContent(i)/histo_WGS	 ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_Higgs_CMS_PUBoundingUp	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_Higgs    ->GetBinContent(i)>0)printf("%5.1f ",histo_Higgs_CMS_PUBoundingUp      ->GetBinContent(i)/histo_Higgs    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+  histo_Higgs_CMS_PUBoundingDown	  ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_Higgs    ->GetBinContent(i)>0)printf("%5.1f ",histo_Higgs_CMS_PUBoundingDown    ->GetBinContent(i)/histo_Higgs    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
   printf("uncertainties WW NNLO\n");
   histo_qqWW_CMS_MVAWW_qup_nlo	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_qqWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_qqWW_CMS_MVAWW_qup_nlo         ->GetBinContent(i)/histo_qqWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
   histo_qqWW_CMS_MVAWW_qdown_nlo	  ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_qqWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_qqWW_CMS_MVAWW_qdown_nlo       ->GetBinContent(i)/histo_qqWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
   histo_qqWW_CMS_MVAWW_sup_nlo	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_qqWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_qqWW_CMS_MVAWW_sup_nlo         ->GetBinContent(i)/histo_qqWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
   histo_qqWW_CMS_MVAWW_sdown_nlo	  ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_qqWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_qqWW_CMS_MVAWW_sdown_nlo       ->GetBinContent(i)/histo_qqWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
   outFileLimits->Close();
-  double lumiE = 1.046;
+  double lumiE = 1.027;
   double systLepResE[9] = {1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01};
   double systLepResM[9] = {1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01};
   double syst_btag = 1.02;
@@ -1502,6 +1564,28 @@ void wwAnalysis(
     if     (histo_Higgs->GetBinContent(nb)> 0 && histo_Higgs_CMS_MVAJESBoundingUp   ->GetBinContent(nb) > 0) systJes[8] = histo_Higgs_CMS_MVAJESBoundingUp->GetBinContent(nb)/histo_Higgs->GetBinContent(nb);
     else if(histo_Higgs->GetBinContent(nb)> 0 && histo_Higgs_CMS_MVAJESBoundingDown ->GetBinContent(nb) > 0) systJes[8] = histo_Higgs->GetBinContent(nb)/histo_Higgs_CMS_MVAJESBoundingDown->GetBinContent(nb);
 
+    double systPU[9] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
+    if     (histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_PUBoundingUp	    ->GetBinContent(nb) > 0) systPU[0] = histo_qqWW_CMS_PUBoundingUp->GetBinContent(nb)/histo_qqWW->GetBinContent(nb);
+    else if(histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_PUBoundingDown       ->GetBinContent(nb) > 0) systPU[0] = histo_qqWW->GetBinContent(nb)/histo_qqWW_CMS_PUBoundingDown->GetBinContent(nb);
+    if     (histo_ggWW->GetBinContent(nb)> 0 && histo_ggWW_CMS_PUBoundingUp	    ->GetBinContent(nb) > 0) systPU[1] = histo_ggWW_CMS_PUBoundingUp->GetBinContent(nb)/histo_ggWW->GetBinContent(nb);
+    else if(histo_ggWW->GetBinContent(nb)> 0 && histo_ggWW_CMS_PUBoundingDown       ->GetBinContent(nb) > 0) systPU[1] = histo_ggWW->GetBinContent(nb)/histo_ggWW_CMS_PUBoundingDown->GetBinContent(nb);
+    if     (histo_Top->GetBinContent(nb)> 0 && histo_Top_CMS_PUBoundingUp	    ->GetBinContent(nb) > 0) systPU[2] = histo_Top_CMS_PUBoundingUp->GetBinContent(nb)/histo_Top->GetBinContent(nb);
+    else if(histo_Top->GetBinContent(nb)> 0 && histo_Top_CMS_PUBoundingDown         ->GetBinContent(nb) > 0) systPU[2] = histo_Top->GetBinContent(nb)/histo_Top_CMS_PUBoundingDown->GetBinContent(nb);
+    if     (histo_DY->GetBinContent(nb)> 0 && histo_DY_CMS_PUBoundingUp	            ->GetBinContent(nb) > 0) systPU[3] = histo_DY_CMS_PUBoundingUp->GetBinContent(nb)/histo_DY->GetBinContent(nb);
+    else if(histo_DY->GetBinContent(nb)> 0 && histo_DY_CMS_PUBoundingDown           ->GetBinContent(nb) > 0) systPU[3] = histo_DY->GetBinContent(nb)/histo_DY_CMS_PUBoundingDown->GetBinContent(nb);
+    if     (histo_VV->GetBinContent(nb)> 0 && histo_VV_CMS_PUBoundingUp	            ->GetBinContent(nb) > 0) systPU[4] = histo_VV_CMS_PUBoundingUp->GetBinContent(nb)/histo_VV->GetBinContent(nb);
+    else if(histo_VV->GetBinContent(nb)> 0 && histo_VV_CMS_PUBoundingDown           ->GetBinContent(nb) > 0) systPU[4] = histo_VV->GetBinContent(nb)/histo_VV_CMS_PUBoundingDown->GetBinContent(nb);
+    if     (histo_VVV->GetBinContent(nb)> 0 && histo_VVV_CMS_PUBoundingUp	    ->GetBinContent(nb) > 0) systPU[5] = histo_VVV_CMS_PUBoundingUp->GetBinContent(nb)/histo_VVV->GetBinContent(nb);
+    else if(histo_VVV->GetBinContent(nb)> 0 && histo_VVV_CMS_PUBoundingDown         ->GetBinContent(nb) > 0) systPU[5] = histo_VVV->GetBinContent(nb)/histo_VVV_CMS_PUBoundingDown->GetBinContent(nb);
+    if     (histo_WG->GetBinContent(nb)> 0 && histo_WG_CMS_PUBoundingUp	            ->GetBinContent(nb) > 0) systPU[6] = histo_WG_CMS_PUBoundingUp->GetBinContent(nb)/histo_WG->GetBinContent(nb);
+    else if(histo_WG->GetBinContent(nb)> 0 && histo_WG_CMS_PUBoundingDown           ->GetBinContent(nb) > 0) systPU[6] = histo_WG->GetBinContent(nb)/histo_WG_CMS_PUBoundingDown->GetBinContent(nb);
+    if     (histo_WGS->GetBinContent(nb)> 0 && histo_WGS_CMS_PUBoundingUp	    ->GetBinContent(nb) > 0) systPU[7] = histo_WGS_CMS_PUBoundingUp->GetBinContent(nb)/histo_WGS->GetBinContent(nb);
+    else if(histo_WGS->GetBinContent(nb)> 0 && histo_WGS_CMS_PUBoundingDown         ->GetBinContent(nb) > 0) systPU[7] = histo_WGS->GetBinContent(nb)/histo_WGS_CMS_PUBoundingDown->GetBinContent(nb);
+    if     (histo_Higgs->GetBinContent(nb)> 0 && histo_Higgs_CMS_PUBoundingUp       ->GetBinContent(nb) > 0) systPU[8] = histo_Higgs_CMS_PUBoundingUp->GetBinContent(nb)/histo_Higgs->GetBinContent(nb);
+    else if(histo_Higgs->GetBinContent(nb)> 0 && histo_Higgs_CMS_PUBoundingDown     ->GetBinContent(nb) > 0) systPU[8] = histo_Higgs->GetBinContent(nb)/histo_Higgs_CMS_PUBoundingDown->GetBinContent(nb);
+    for(int npu=0; npu<9; npu++) if(systPU[npu] > 1.02) systPU[npu] = 1.02;
+    for(int npu=0; npu<9; npu++) if(systPU[npu] < 0.98) systPU[npu] = 0.98;
+
     double systWWNNLO[2] = {1.0,1.0};
     if     (histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_MVAWW_qup_nlo	    ->GetBinContent(nb) > 0) systWWNNLO[0] = histo_qqWW_CMS_MVAWW_qup_nlo->GetBinContent(nb)/histo_qqWW->GetBinContent(nb);
     else if(histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_MVAWW_qdown_nlo      ->GetBinContent(nb) > 0) systWWNNLO[0] = histo_qqWW->GetBinContent(nb)/histo_qqWW_CMS_MVAWW_qdown_nlo->GetBinContent(nb);
@@ -1527,6 +1611,7 @@ void wwAnalysis(
     newcardShape << Form("%s                                     lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",effEName,systLepEffE[0],systLepEffE[1],systLepEffE[2],systLepEffE[3],systLepEffE[4],systLepEffE[5],systLepEffE[6],systLepEffE[7],systLepEffE[8]);
     newcardShape << Form("%s                                     lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",momMName,systLepResM[0],systLepResM[1],systLepResM[2],systLepResM[3],systLepResM[4],systLepResM[5],systLepResM[6],systLepResM[7],systLepResM[8]);
     newcardShape << Form("%s                                     lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",momEName,systLepResE[0],systLepResE[1],systLepResE[2],systLepResE[3],systLepResE[4],systLepResE[5],systLepResE[6],systLepResE[7],systLepResE[8]);
+    newcardShape << Form("CMS_pu                                 lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systPU[0],systPU[1],systPU[2],systPU[3],systPU[4],systPU[5],systPU[6],systPU[7],systPU[8]);
     newcardShape << Form("CMS_scale_met                          lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systMet[0],systMet[1],systMet[2],systMet[3],systMet[4],systMet[5],systMet[6],systMet[7],systMet[8]);
     newcardShape << Form("CMS_scale_j                            lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systJes[0],systJes[1],systJes[2],systJes[3],systJes[4],systJes[5],systJes[6],systJes[7],systJes[8]);
     newcardShape << Form("CMS_eff_b                              lnN  %7.5f %7.5f   -   %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",syst_btag,syst_btag,syst_btag,syst_btag,syst_btag,syst_btag,syst_btag,syst_btag);

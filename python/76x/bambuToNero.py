@@ -7,19 +7,20 @@ import os
 ####################################
 
 mitdata = os.environ['MIT_DATA']
+mitdataAUX = '/home/ceballos/cms/cmssw/043/CMSSW_7_6_3/src'
 
 def switchBX(case25, case50):
     global analysis
     return case25 if analysis.custom['bx'] == '25ns' else case50
 
-jecVersion = switchBX('25nsV6', '50nsV5')
+jecVersion = switchBX('25nsV2', '50nsV5')
 
 if analysis.isRealData:
-    jecPattern = mitdata + '/JEC/Summer15_' + jecVersion + '/Summer15_' + jecVersion + '_DATA_{level}_{jettype}.txt'
+    jecPattern = mitdataAUX + '/JEC/Fall15_' + jecVersion + '/Fall15_' + jecVersion + '_DATA_{level}_{jettype}.txt'
     jecLevels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
 
 else:
-    jecPattern = mitdata +'/JEC/Summer15_' + jecVersion + '/Summer15_' + jecVersion + '_MC_{level}_{jettype}.txt'
+    jecPattern = mitdataAUX +'/JEC/Fall15_' + jecVersion + '/Fall15_' + jecVersion + '_MC_{level}_{jettype}.txt'
     jecLevels = ['L1FastJet', 'L2Relative', 'L3Absolute']
 
 #########################################
@@ -714,7 +715,7 @@ triggers = [
     ('Photon120_R9Id90_HE10_IsoM', []),
     ('PFMET170', []),
     ('Ele23_WPLoose_Gsf', ['hltEle23WPLooseGsfTrackIsoFilter']),
-    ('Ele27_WPLoose_Gsf', ['hltEle27WPLooseGsfTrackIsoFilter']),
+    ('Ele27_WPLoose_Gsf', ['hltEle27noerWPLooseGsfTrackIsoFilter']),
     ('Ele12_CaloIdL_TrackIdL_IsoVL', ['hltEle12CaloIdLTrackIdLIsoVLTrackIsoFilter']),
     ('Ele17_CaloIdL_TrackIdL_IsoVL', ['hltEle17CaloIdLTrackIdLIsoVLTrackIsoFilter']),
     ('IsoMu20', ['hltL3crIsoL1sMu16L1f0L2f10QL3f20QL3trkIsoFiltered0p09']),
