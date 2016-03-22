@@ -506,7 +506,7 @@ float kfactor_qqZZ_qcd_dPhi(float GENdPhiZZ, int finalState = 2)
 }
 
 double ratioFactor_gjets_zll(double pt){
-  double p[4] = {-0.492471,0.00725674,0.000130813,-2.16371e-07};
+  double p[4] = {-1.04869,0.0293761,-5.86547e-05,3.60149e-08};
   if     (pt<= 60) pt = 60;
   else if(pt>=400) pt = 400;
   return (p[0]+p[1]*pt+p[2]*pt*pt+p[3]*pt*pt*pt);
