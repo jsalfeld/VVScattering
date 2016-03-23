@@ -429,7 +429,7 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
         // MET related cuts need to be applied after the Rout/in computation
         double theCutMassHigh = 1000.;
 	if(dilep.Pt() <= 45.0) continue;
-        if(bDiscrMax > 0.605 || idSoft.size() != 0) continue;
+        if(bDiscrMax > 0.560 || idSoft.size() != 0) continue;
 	if(dilep.M() <= 12.0) continue;
 
         if(infilecatv[ifile] == 1){ // Z MC

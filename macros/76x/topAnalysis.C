@@ -29,7 +29,7 @@ void topAnalysis(
  Int_t period = 1
  ){
 
-  Double_t btagCut = 0.605;
+  Double_t btagCut = 0.560;
   TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_76x/met_";
   TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_76x/met_";
   Double_t lumi = 2.318;
