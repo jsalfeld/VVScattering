@@ -130,11 +130,11 @@ float LeptonScaleLookup::GetExpectedTriggerEfficiency(float eta1, float pt1, flo
 
     // calculate event efficiency
     float evt_eff = 
-      1 - ( (1-eff_dbl_1_leadingleg)*(1-eff_dbl_2_leadingleg) + 
-            eff_dbl_1_leadingleg*(1-eff_dbl_2_trailingleg) + 
-            eff_dbl_2_leadingleg*(1-eff_dbl_1_trailingleg))
-      + eff_sgl_2*(1-eff_dbl_1_trailingleg)
-      + eff_sgl_1*(1-eff_dbl_2_trailingleg);
+         eff_sgl_1+eff_sgl_2*(1-eff_sgl_1) +
+      (1-eff_sgl_1-eff_sgl_2*(1-eff_sgl_1))*
+        (eff_dbl_1_trailingleg*eff_dbl_2_leadingleg+
+      (1-eff_dbl_1_trailingleg*eff_dbl_2_leadingleg)*
+         eff_dbl_1_leadingleg*eff_dbl_2_trailingleg);
 
     // return it
     return evt_eff;        

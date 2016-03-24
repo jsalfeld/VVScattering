@@ -7,7 +7,6 @@ import os
 ####################################
 
 mitdata = os.environ['MIT_DATA']
-mitdataAUX = '/home/ceballos/cms/cmssw/043/CMSSW_7_6_3/src'
 
 def switchBX(case25, case50):
     global analysis
@@ -16,11 +15,11 @@ def switchBX(case25, case50):
 jecVersion = switchBX('25nsV2', '50nsV5')
 
 if analysis.isRealData:
-    jecPattern = mitdataAUX + '/JEC/Fall15_' + jecVersion + '/Fall15_' + jecVersion + '_DATA_{level}_{jettype}.txt'
+    jecPattern = mitdata + '/JEC/Fall15_' + jecVersion + '/Fall15_' + jecVersion + '_DATA_{level}_{jettype}.txt'
     jecLevels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
 
 else:
-    jecPattern = mitdataAUX +'/JEC/Fall15_' + jecVersion + '/Fall15_' + jecVersion + '_MC_{level}_{jettype}.txt'
+    jecPattern = mitdata +'/JEC/Fall15_' + jecVersion + '/Fall15_' + jecVersion + '_MC_{level}_{jettype}.txt'
     jecLevels = ['L1FastJet', 'L2Relative', 'L3Absolute']
 
 #########################################

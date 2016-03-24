@@ -177,7 +177,7 @@ void makeSkimSample(
     vector<int> idLep;
     for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
       if(selectIdIsoCut("default",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
-         TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]))
+         TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep]),(double)(*eventLeptons.mva)[nlep])
         											     {idLep.push_back(nlep);}
       else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idLep.push_back(nlep);}
     }
