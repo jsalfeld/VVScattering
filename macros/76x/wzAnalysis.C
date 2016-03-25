@@ -172,6 +172,9 @@ void wzAnalysis(
     else if(thePlot >= 25 && thePlot <= 31) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 32 && thePlot <= 32) {nBinPlot = 100; xminPlot =50.0; xmaxPlot = 250.0;}
     else if(thePlot >= 33 && thePlot <= 36) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
+    else if(thePlot >= 37 && thePlot <= 37) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
+    else if(thePlot >= 38 && thePlot <= 38) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =2000.0;}
+    else if(thePlot >= 39 && thePlot <= 39) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot =   8.0;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) {
@@ -569,8 +572,11 @@ void wzAnalysis(
                             passFilter[5] &&                  !passFilter[7] && passFilter[9] && bDiscrMax > 0.605 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20,
 			    passFilter[5] && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt() > 20};
 
+      bool passVBFLoose = passAllCuts[0] && idJet.size() >= 2 &&
+                     (( ( *(TLorentzVector*)(eventJets.p4->At(idJet[0])) ) + ( *(TLorentzVector*)(eventJets.p4->At(idJet[1])) ) )).M() > 150;
       bool passVBF = passAllCuts[0] && idJet.size() >= 2 &&
-                     (( ( *(TLorentzVector*)(eventJets.p4->At(idJet[0])) ) + ( *(TLorentzVector*)(eventJets.p4->At(idJet[1])) ) )).M() > 500;
+                     (( ( *(TLorentzVector*)(eventJets.p4->At(idJet[0])) ) + ( *(TLorentzVector*)(eventJets.p4->At(idJet[1])) ) )).M() > 500 &&
+		     TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()-((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta()) > 2.5;
 
       double deltaPhiLeptonMet = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
       double mtLN = TMath::Sqrt(2.0*((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiLeptonMet)));
@@ -745,6 +751,9 @@ void wzAnalysis(
 	else if(thePlot == 34 && passNMinusOne[5] && numberQuarks[1] == 0 && passFilter[10]) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 35 && passNMinusOne[5] && numberQuarks[1]  > 0                  ) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 36 && passNMinusOne[5] && numberQuarks[1]  > 0 && passFilter[10]) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 37 && passVBFLoose)                                {makePlot = true;theVar = TMath::Min(mtEvent,499.999);}
+	else if(thePlot == 38 && passVBFLoose)                                {makePlot = true;theVar = TMath::Min((( ( *(TLorentzVector*)(eventJets.p4->At(idJet[0])) ) + ( *(TLorentzVector*)(eventJets.p4->At(idJet[1])) ) )).M(),1499.999);}
+	else if(thePlot == 39 && passVBFLoose)                                {makePlot = true;theVar = TMath::Min(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()-((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta()),7.999);}
 
 	if(makePlot) histo[     4][thePlot][theCategory]->Fill(theVar,totalWeight);
 	if(makePlot) histo[type3l][thePlot][theCategory]->Fill(theVar,totalWeight);
