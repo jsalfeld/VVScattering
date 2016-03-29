@@ -79,9 +79,6 @@ wphtautau125   0.8399*0.0632
 wmhtautau125   0.5327*0.0632
 gghzz4l125     43.920*0.0264*0.101*0.101 
 vbfhzz4l125    3.7820*0.0264*0.101*0.101
-wpwp_ewk_qcd   0.03711
-wpwp_ewk       0.02064
-wpwp_qcd       0.01538
 tthnob125      0.5071*(1-0.577)
 vhnob125       (0.8839+0.8399+0.5327)*(1-0.577)
 
@@ -91,9 +88,9 @@ gjets200_400   2300
 gjets400_600   277.4
 gjets600       93.38
 
+wpwp_ewk_qcd   0.03711
 wpwp_ewk       0.02064
 wpwp_qcd       0.01538
-wpwp_ewk_qcd   0.03711
+wzjj_ewk_qcd   0.509
 wzjj_ewk       0.039
 wzjj_qcd       0.47
-wzjj_ewk_qcd   0.509

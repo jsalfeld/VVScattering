@@ -21,10 +21,10 @@
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
 bool usePureMC = false; 
-double mcPrescale = 50.0;
+double mcPrescale = 5.0;
 const bool useDYMVA = false;
 const bool doTriggerStudy = true;
-const TString typeLepSel = "medium";
+const TString typeLepSel = "default";
 
 void baseAnalysis(
  Int_t nsel = 4,
@@ -32,8 +32,8 @@ void baseAnalysis(
  Int_t period = 1
  ){
 
-  TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_76x/";
-  TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_76x/";
+  TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_76x/met_";
+  TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_76x/met_";
   Double_t lumi = 2.318;
 
   if(nsel == 2) usePureMC = true;
@@ -75,6 +75,7 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(4);
   infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v2+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(4);
 
+  infilenamev.push_back(Form("%sWWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v3+AODSIM.root",filesPathMC.Data())); 			   infilecatv.push_back(4);
   //infilenamev.push_back(Form("%sWWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 			   infilecatv.push_back(4);
   infilenamev.push_back(Form("%sWZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                           infilecatv.push_back(4);
   //infilenamev.push_back(Form("%sZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                         infilecatv.push_back(4);
@@ -86,8 +87,13 @@ void baseAnalysis(
 
   infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(5);
 
+  if(nsel!=11){
   infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                  infilecatv.push_back(6);
-  //infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                 infilecatv.push_back(6);
+  } else {
+  infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                   infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sWGstarToLNuMuMu_012Jets_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 		           infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sWGstarToLNuEE_012Jets_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 		                   infilecatv.push_back(6);
+  }
 
   infilenamev.push_back(Form("%sGluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(7);
   infilenamev.push_back(Form("%sVBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                  infilecatv.push_back(7);
@@ -95,6 +101,7 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                            infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 		   infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(7);
+
   }
   else {assert(0);}
   
@@ -173,9 +180,9 @@ void baseAnalysis(
     else if(thePlot >= 37 && thePlot <= 40) {nBinPlot = 400; xminPlot = -50; xmaxPlot =  50.0;}
     else if(thePlot >= 41 && thePlot <= 42) {nBinPlot = 200; xminPlot = -TMath::Pi(); xmaxPlot = TMath::Pi();}
     else if(thePlot >= 43 && thePlot <= 46) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
-    else if(thePlot >= 47 && thePlot <= 54) {nBinPlot = 200; xminPlot =-1.0; xmaxPlot =   1.0;}
-    else if(thePlot >= 55 && thePlot <= 60) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
-    else if(thePlot >= 61 && thePlot <= 66) {nBinPlot = 200; xminPlot =-1.0; xmaxPlot =   1.0;}
+    else if(thePlot >= 47 && thePlot <= 50) {nBinPlot = 500; xminPlot = 0.0; xmaxPlot = 100.0;}
+    else if(thePlot >= 51 && thePlot <= 52) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot =   3.5;}
+    else if(thePlot >= 53 && thePlot <= 53) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot =   4.0;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
@@ -194,9 +201,10 @@ void baseAnalysis(
 
   unsigned int numberOfLeptons = 2;
   double ptl2nd = 20;
-  if     (nsel == 2) {numberOfLeptons = 2; ptl2nd = 10;}
-  else if(nsel == 4) {numberOfLeptons = 3; ptl2nd = 10;}
-  else if(nsel == 7) {numberOfLeptons = 4; ptl2nd = 10;}
+  if     (nsel == 2)  {numberOfLeptons = 2; ptl2nd = 10;}
+  else if(nsel == 4)  {numberOfLeptons = 3; ptl2nd = 10;}
+  else if(nsel == 7)  {numberOfLeptons = 4; ptl2nd = 10;}
+  else if(nsel == 11) {numberOfLeptons = 3; ptl2nd = 20;}
 
   double totalEventsProcess[50];
   std::vector<double> sumEventsProcess(infilenamev.size(), 0.0);
@@ -357,8 +365,10 @@ void baseAnalysis(
       double minMassZ = 999.0;
       double mass3l = 0.0;
       double deltaRllMin = 999.0;
-      int type3l = 0;
-      int tagZ[3] = {-1,-1,0};
+      double minMassSF = 999.0;
+      double deltaRllMinWGS = 999.0;
+      int type3l = 0;int type3lWGS = 0;
+      int tagZ[3] = {-1,-1,0};int tagWGS[3] = {-1,-1,0};
       for(unsigned nl0=0; nl0<idLep.size()-1; nl0++){
         for(unsigned nl1=nl0+1; nl1<idLep.size(); nl1++){
           double deltaRllAux = ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl0]])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl1]]));
@@ -372,6 +382,12 @@ void baseAnalysis(
 	     minMassZ = dilepAux.M();tagZ[0]=nl0;tagZ[1]=nl1;
 	     if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]]) == 13) type3l = 0;
 	     else                                                         type3l = 1;
+	  }
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl1]]) &&
+	     dilepAux.M() < minMassSF) {
+	     minMassSF = dilepAux.M();tagWGS[0]=nl0;tagWGS[1]=nl1;
+	     if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]]) == 13) type3lWGS = 0;
+	     else                                                         type3lWGS = 1;
 	  }
 
 	  if(minMassll > dilepAux.M()) minMassll = dilepAux.M();
@@ -464,8 +480,8 @@ void baseAnalysis(
 	  tagZ[2] = nl0;
 	  break;
 	}
-	if(TMath::Abs((int)(*eventLeptons.pdgId)[tagZ[2]]) == 13) type3l += 0;
-	else							  type3l += 2;
+	if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[tagZ[2]]]) == 13) type3l += 0;
+	else							         type3l += 2;
         TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + 
 	                          ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + 
 	                          ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) ) ));
@@ -511,6 +527,29 @@ void baseAnalysis(
 	if(minPMET > 20) passFilter[8] = kTRUE;
 	if(dilep.Pt() > 45) passFilter[9] = kTRUE;
       }
+      else if(nsel == 11){ // wg* selection
+        for(unsigned nl0=0; nl0<idLep.size(); nl0++){
+	  if((int)nl0==tagWGS[0]||(int)nl0==tagWGS[1]) continue;
+	  tagWGS[2] = nl0;
+	  break;
+	}
+	if(tagWGS[0]!=-1){
+	  if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[tagWGS[2]]]) == 13) type3lWGS += 0;
+	  else							           type3lWGS += 2;
+          TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + 
+	                            ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + 
+	                            ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) ) ));
+          mass3l = dilepAux.M();
+	  deltaRllMinWGS = ((TLorentzVector*)(*eventLeptons.p4)[idLep[tagWGS[0]]])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[tagWGS[2]]]));
+	  if(deltaRllMinWGS > ((TLorentzVector*)(*eventLeptons.p4)[idLep[tagWGS[1]]])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[tagWGS[2]]]))) 
+	     deltaRllMinWGS = ((TLorentzVector*)(*eventLeptons.p4)[idLep[tagWGS[1]]])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[tagWGS[2]]]));
+	  passFilter[6] = ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 30;
+          passFilter[7] = bDiscrMax < 0.935;
+          passFilter[8] = ((TLorentzVector*)(*eventLeptons.p4)[idLep[tagWGS[2]]])->Pt() > 20;
+          passFilter[9] = minMassSF < 200.0;
+	 if(tagWGS[0] == tagWGS[1] || tagWGS[0] == tagWGS[2] || tagWGS[1] == tagWGS[2]) {printf("WGSPROBLEM!\n");assert(0);return;}
+	}
+      }
       else {assert(0); return;}
       //printf("5 %d %f\n",(int)eventEvent.eventNum,minMassll);
       if(passFilter[5] == kTRUE) nPassCuts[5]++;
@@ -530,8 +569,8 @@ void baseAnalysis(
       double deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
       double mtW = TMath::Sqrt(2.0*dilep.Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
 
-      double deltaPhiLeptonMet = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[tagZ[2]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
-      double mtLN = TMath::Sqrt(2.0*((TLorentzVector*)(*eventLeptons.p4)[tagZ[2]])->Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiLeptonMet)));
+      double deltaPhiLeptonMet = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
+      double mtLN = TMath::Sqrt(2.0*((TLorentzVector*)(*eventLeptons.p4)[idLep[tagWGS[2]]])->Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiLeptonMet)));
 
       vector<int> idGenJet;
       //printf("----------------------------\n");
@@ -754,26 +793,13 @@ void baseAnalysis(
 	else if(thePlot == 44 && numberQuarks[1] == 0 && bDiscrMax < 0.97 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 45 && numberQuarks[1]  > 0                                          ) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 46 && numberQuarks[1]  > 0 && bDiscrMax < 0.97 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-	else if(thePlot == 47 && idJet.size() == 0 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 11 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) <  1.479) {makePlot = true;theVar = TMath::Min((double)(*eventLeptons.mva)[idLep[0]],0.999);}
-	else if(thePlot == 48 && idJet.size() == 0 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 11 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) >= 1.479) {makePlot = true;theVar = TMath::Min((double)(*eventLeptons.mva)[idLep[0]],0.999);}
-	else if(thePlot == 49 && idJet.size() == 0 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]) == 11 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) <  1.479) {makePlot = true;theVar = TMath::Min((double)(*eventLeptons.mva)[idLep[1]],0.999);}
-	else if(thePlot == 50 && idJet.size() == 0 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]) == 11 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) >= 1.479) {makePlot = true;theVar = TMath::Min((double)(*eventLeptons.mva)[idLep[1]],0.999);}
-	else if(thePlot == 51                      && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 11 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) <  1.479) {makePlot = true;theVar = TMath::Min((double)(*eventLeptons.mva)[idLep[0]],0.999);}
-	else if(thePlot == 52                      && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 11 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) >= 1.479) {makePlot = true;theVar = TMath::Min((double)(*eventLeptons.mva)[idLep[0]],0.999);}
-	else if(thePlot == 53                      && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]) == 11 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) <  1.479) {makePlot = true;theVar = TMath::Min((double)(*eventLeptons.mva)[idLep[1]],0.999);}
-	else if(thePlot == 54                      && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]) == 11 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) >= 1.479) {makePlot = true;theVar = TMath::Min((double)(*eventLeptons.mva)[idLep[1]],0.999);}
-	else if(thePlot == 55 && idJet.size() == 0 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
-	else if(thePlot == 56 && idJet.size() == 1 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
-	else if(thePlot == 57 && idJet.size() == 2 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
-	else if(thePlot == 58 && idJet.size() == 0 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
-	else if(thePlot == 59 && idJet.size() == 1 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
-	else if(thePlot == 60 && idJet.size() == 2 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
-	else if(thePlot == 61 && idJet.size() == 0 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = dymva_;}
-	else if(thePlot == 62 && idJet.size() == 1 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = dymva_;}
-	else if(thePlot == 63 && idJet.size() == 2 && TMath::Abs(dilep.M()-91.1876) < 15.0)  {makePlot = true;theVar = dymva_;}
-	else if(thePlot == 64 && idJet.size() == 0 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = dymva_;}
-	else if(thePlot == 65 && idJet.size() == 1 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = dymva_;}
-	else if(thePlot == 66 && idJet.size() == 2 && TMath::Abs(dilep.M()-91.1876) >= 15.0) {makePlot = true;theVar = dymva_;}
+	else if(thePlot == 47 && type3lWGS == 0) {makePlot = true;theVar = TMath::Min(minMassSF,99.999);}
+	else if(thePlot == 48 && type3lWGS == 1) {makePlot = true;theVar = TMath::Min(minMassSF,99.999);}
+	else if(thePlot == 49 && type3lWGS == 2) {makePlot = true;theVar = TMath::Min(minMassSF,99.999);}
+	else if(thePlot == 50 && type3lWGS == 3) {makePlot = true;theVar = TMath::Min(minMassSF,99.999);}
+	else if(thePlot == 51) {makePlot = true;theVar = type3l;}
+	else if(thePlot == 52) {makePlot = true;theVar = type3lWGS;}
+	else if(thePlot == 53) {makePlot = true;theVar = TMath::Min(deltaRllMinWGS,3.999);}
 	if(makePlot == true) histo[thePlot][theCategory]->Fill(theVar,totalWeight);
       }
     }
