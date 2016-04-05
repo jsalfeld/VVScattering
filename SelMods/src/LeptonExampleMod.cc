@@ -50,19 +50,15 @@ void LeptonExampleMod::Process()
   auto* OriginalCleanMuons = GetObject<mithep::Collection<Muon> >(fMuonName, true);
   auto* OriginalCleanElectrons  = GetObject<mithep::Collection<Electron> >(fElectronName, true);
 
-  mithep::NFArrBool* muIds[32]{};
-  for (unsigned iSel(0); iSel != 32; ++iSel) {
-    if (muonIdName_[iSel].Length() != 0)
-      muIds[iSel] = GetObject<mithep::NFArrBool>(muonIdName_[iSel]);
+  mithep::NFArrBool const* ids[nLeptons][32]{};
+  for (unsigned iL(0); iL != nLeptons; ++iL) {
+    for (unsigned iSel(0); iSel != 32; ++iSel) {
+      if (idName_[iL][iSel].Length() != 0)
+        ids[iL][iSel] = GetObject<mithep::NFArrBool>(idName_[iL][iSel]);
+    }
   }
 
-  mithep::NFArrBool* eleIds[32]{};
-  for (unsigned iSel(0); iSel != 32; ++iSel) {
-    if (electronIdName_[iSel].Length() != 0)
-      eleIds[iSel] = GetObject<mithep::NFArrBool>(electronIdName_[iSel]);
-  }
-
-  bool eventLeptonFilter = kFALSE;
+  Int_t eventLeptonCount = 0;
 
   unsigned iE(0);
   unsigned iM(0);
@@ -90,12 +86,12 @@ void LeptonExampleMod::Process()
       // at least one lepton Id should be true
       unsigned iSel(0);
       for (; iSel != 32; ++iSel) {
-        if (eleIds[iSel] && eleIds[iSel]->At(iE))
+        if (ids[kEl][iSel] && ids[kEl][iSel]->At(iE))
           break;
       }
 
       if (iSel != 32 && ele->Pt() > 10) {
-        eventLeptonFilter = kTRUE;
+        eventLeptonCount++;
       }
       ++iE;
     }
@@ -103,19 +99,19 @@ void LeptonExampleMod::Process()
       // at least one lepton Id should be true
       unsigned iSel(0);
       for (; iSel != 32; ++iSel) {
-        if (muIds[iSel] && muIds[iSel]->At(iM))
+        if (ids[kMu][iSel] && ids[kMu][iSel]->At(iM))
           break;
       }
 
       if (iSel != 32 && mu->Pt() > 10) {
-        eventLeptonFilter = kTRUE;
+        eventLeptonCount++;
       }
       ++iM;
     }
   }
 
   bool passAllCuts = OriginalVertex->GetEntries() > 0 &&
-                     eventLeptonFilter == kTRUE;
+                     eventLeptonCount >= 2;
 
   if(passAllCuts) fNEventsSelected++;
   else            SkipEvent();

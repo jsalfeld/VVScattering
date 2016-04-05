@@ -731,10 +731,14 @@ void wwAnalysis(
 	
       // begin event weighting
       vector<bool> isGenDupl;
-      vector<int>idBoson;
+      vector<int>wBoson;
+      vector<int>zBoson;
       for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
-        if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 23||TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 24) {
-	  idBoson.push_back(ngen0);
+        if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 24) {
+	  wBoson.push_back(ngen0);
+	}
+        if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 23) {
+	  zBoson.push_back(ngen0);
 	}
         isGenDupl.push_back(0);
 	if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 11 &&
@@ -749,8 +753,8 @@ void wwAnalysis(
         }
       }
       double thePtwwWeight[5] = {1.0,1.0,1.0,1.0,1.0};
-      if(infilecatv[ifile] == 1 && idBoson.size() == 2){
-        TLorentzVector wwSystem(( ( *(TLorentzVector*)(eventMonteCarlo.p4->At(idBoson[0])) ) + ( *(TLorentzVector*)(eventMonteCarlo.p4->At(idBoson[1])) ) )); 
+      if(infilecatv[ifile] == 1 && wBoson.size() == 2){
+        TLorentzVector wwSystem(( ( *(TLorentzVector*)(eventMonteCarlo.p4->At(wBoson[0])) ) + ( *(TLorentzVector*)(eventMonteCarlo.p4->At(wBoson[1])) ) )); 
         Int_t nptwwbin[5] = {fhDWWPtRatio	   ->GetXaxis()->FindBin(TMath::Min(wwSystem.Pt(),499.999)),
 	                     fhDWWPtRatio_scaleup  ->GetXaxis()->FindBin(TMath::Min(wwSystem.Pt(),499.999)),
 	                     fhDWWPtRatio_scaledown->GetXaxis()->FindBin(TMath::Min(wwSystem.Pt(),499.999)),
@@ -824,15 +828,15 @@ void wwAnalysis(
 	    if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 13) nFakeCount = nFakeCount + 1;
 	    else                                                        nFakeCount = nFakeCount + 2;
 
-	    effSF = effSF * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data());
+	    fakeSF = fakeSF * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data());
 	    theCategory = 9;
 	    if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 13) typeFakeLepton[0]++;
 	    else                                                        typeFakeLepton[1]++;
           }
-          if     (infilecatv[ifile] != 0 && goodIsTight == idTight.size()-2) effSF =  1.0 * effSF; // double fake, MC
-          else if(infilecatv[ifile] != 0 && goodIsTight == idTight.size()-1) effSF = -1.0 * effSF; // single fake, MC
-          else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) effSF = -1.0 * effSF; // double fake, data
-          else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) effSF =  1.0 * effSF; // single fake, data
+          if     (infilecatv[ifile] != 0 && goodIsTight == idTight.size()-2) fakeSF =  1.0 * fakeSF; // double fake, MC
+          else if(infilecatv[ifile] != 0 && goodIsTight == idTight.size()-1) fakeSF = -1.0 * fakeSF; // single fake, MC
+          else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) fakeSF = -1.0 * fakeSF; // double fake, data
+          else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) fakeSF =  1.0 * fakeSF; // single fake, data
         }
         else if(infilecatv[ifile] != 0 && infilecatv[ifile] != 7 && goodIsGenLep != isGenLep.size()){ // remove MC dilepton fakes from ll events
           fakeSF = 0.0;
@@ -857,12 +861,15 @@ void wwAnalysis(
       // top-quark estimation
       if(infilecatv[ifile] == 3) totalWeight = totalWeight * topNorm[TMath::Min((int)nJetsType,2)];
 
+      // z pt correction
+      if(infilecatv[ifile] == 4 && zBoson.size() == 1) totalWeight = totalWeight * zpt_correction(((TLorentzVector*)(*eventMonteCarlo.p4)[zBoson[0]])->Pt(), 0);
+
       if(totalWeight == 0) continue;
       // end event weighting
 
       if(passAllCuts[0] && infilecatv[ifile] == 0) totalFakeDataCount[type2l][nFakeCount] = totalFakeDataCount[type2l][nFakeCount] + 1;
 
-      for(int nl=0; nl <=sumEvol[typeSel]; nl++) hDWWLL[typeSel]->Fill((double)nl,totalWeight);
+      for(int nl=0; nl <=sumEvol[typeSel]; nl++) if(fakeSF == 1) hDWWLL[typeSel]->Fill((double)nl,totalWeight);
 
       for(unsigned int i=0; i<nSelTypes; i++) {
         if(passAllCuts[i]) {

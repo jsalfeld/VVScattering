@@ -29,6 +29,12 @@ namespace mithep
 		 const char *title="Example analysis module with all branches");
       ~LeptonExampleMod() {}
 
+      enum Lepton {
+        kEl,
+        kMu,
+        nLeptons
+      };
+
       const char *GetVertexName()            const { return fVertexName;   }
       const char *GetMuonName()              const { return fMuonName;     }
       const char *GetElectronName()          const { return fElectronName; }
@@ -36,8 +42,8 @@ namespace mithep
       void SetVertexName(const char *name)         { fVertexName   = name; }
       void SetMuonName(const char *name)           { fMuonName     = name; }
       void SetElectronName(const char *name)       { fElectronName = name; }
-      void SetMuonIdName(char const* _name)	   { setDefinedId_(muonIdName_,	 BareLeptons::LepFake, _name); }
-      void SetElectronIdName(char const* _name)    { setDefinedId_(electronIdName_, BareLeptons::LepFake, _name); }
+      void SetMuonIdName(char const* _name)	   { setDefinedId_(kMu, BareLeptons::LepBaseline, _name); }
+      void SetElectronIdName(char const* _name)    { setDefinedId_(kEl, BareLeptons::LepBaseline, _name); }
 
     protected:
       TString fVertexName;	//name of vertex collection
@@ -51,15 +57,14 @@ namespace mithep
       void         SlaveBegin();
       void         SlaveTerminate();
       void         Terminate();      
-      void         setDefinedId_(TString _idNames[], BareLeptons::Selection _selection, char const* _name){
+      void         setDefinedId_(Lepton _lep, BareLeptons::Selection _selection, char const* _name){
                    unsigned idx(0);
                    while ((1 << idx) != _selection)
                      ++idx;
-                     _idNames[idx] = _name;
+                   idName_[_lep][idx] = _name;
                    }
 
-      TString muonIdName_[32]{};
-      TString electronIdName_[32]{};
+      TString idName_[nLeptons][32]{};
 
       ClassDef(LeptonExampleMod,1) // TAM example analysis module
   };

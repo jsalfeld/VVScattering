@@ -1,9 +1,9 @@
 from MitAna.TreeMod.bambu import mithep
 
 leptonExampleMod = mithep.LeptonExampleMod(
-    VertexName = 'newVertex',
-    MuonName = 'looseMuons',
-    ElectronName = 'looseElectrons',
-    MuonIdName = 'muonName',
-    ElectronIdName = 'electronName'
+    VertexName = 'GoodVertexes',
+    MuonName = 'FiducialMuons',
+    ElectronName = 'FiducialElectrons',
+    MuonIdName = 'BaselineMuonId',
+    ElectronIdName = 'FiducialElectronId'
 )

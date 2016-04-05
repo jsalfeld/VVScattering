@@ -400,8 +400,12 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
 
       double totalWeight = eventMonteCarlo.mcWeight*theLumi*puWeight*effSF*theMCPrescale*trigEff;
 
+      vector<int>zBoson;
       vector<bool> isGenDupl;
       for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
+        if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 23) {
+	  zBoson.push_back(ngen0);
+	}
         isGenDupl.push_back(0);
 	if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 11 &&
 	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 13) isGenDupl[ngen0] = 1;
@@ -429,6 +433,9 @@ void computeDYBkgScaleFactor(Int_t period = 1, Double_t MassZCut = 15){
 	else                    {isGenLep.push_back(0);}
       }
       if(infilecatv[ifile] != 0 && goodIsGenLep != isGenLep.size()) totalWeight = 0.0;
+
+      // z pt correction
+      if(infilecatv[ifile] == 1 && zBoson.size() == 1) totalWeight = totalWeight * zpt_correction(((TLorentzVector*)(*eventMonteCarlo.p4)[zBoson[0]])->Pt(), 0);
 
       //loop over analyses
       for(Int_t imass=0; imass<nmass; imass++) {

@@ -116,6 +116,14 @@ double ratioFactor(TH1D *fhDVar, float var){
   return fhDVar->GetBinContent(nbin);
 }
 
+double zpt_correction(double ptll, int type){
+  
+  if     (type == 0) return (0.95 - 0.1*TMath::Erf((ptll-14)/8.8));
+  else if(type == 1) return (1.02852 - 0.0949640*TMath::Erf((ptll-19.0422)/10.4487) + 0.0758834*TMath::Erf((ptll-56.1146)/41.1653));
+
+  return 1.0;
+}
+
 double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso, int selBits, double mva){
   bool isEB = TMath::Abs(eta) < 1.479;
   double isoCut = 0.;

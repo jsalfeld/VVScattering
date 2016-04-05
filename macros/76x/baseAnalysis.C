@@ -21,7 +21,7 @@
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
 bool usePureMC = false; 
-double mcPrescale = 5.0;
+double mcPrescale = 1.0;
 const bool useDYMVA = false;
 const bool doTriggerStudy = true;
 const TString typeLepSel = "default";
@@ -32,8 +32,8 @@ void baseAnalysis(
  Int_t period = 1
  ){
 
-  TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_76x/met_";
-  TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_76x/met_";
+  TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_76x/";
+  TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_76x/";
   Double_t lumi = 2.318;
 
   if(nsel == 2) usePureMC = true;
@@ -54,7 +54,7 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v2+AODSIM.root",filesPathMC.Data()));					   infilecatv.push_back(1);
 
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext1-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(2);
-  infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext4-v1+AODSIM.root",filesPathMC.Data()));    infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext4-v1+AODSIM.root",filesPathMC.Data()));      infilecatv.push_back(2);
 
   infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));						   infilecatv.push_back(3);
   infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v2+AODSIM.root",filesPathMC.Data()));    infilecatv.push_back(3);
@@ -106,7 +106,9 @@ void baseAnalysis(
   else {assert(0);}
   
   //infilenamev.clear();infilecatv.clear();
-  //infilenamev.push_back(Form("/scratch5/ceballos/ntuples_weights_74x/WWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM.root")); infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sTTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsPoisson50_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  		  infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sTTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76Premix-premixPU50_deterministic_76X_mcRun2_asymptotic_v12-v3+AODSIM.root",filesPathMC.Data()));	  infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sTTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76Premix-premixPU50_nondeterministic_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(3);
 
   if(infilenamev.size() != infilecatv.size()) {assert(0); return;}
 
@@ -207,7 +209,8 @@ void baseAnalysis(
   else if(nsel == 11) {numberOfLeptons = 3; ptl2nd = 20;}
 
   double totalEventsProcess[50];
-  std::vector<double> sumEventsProcess(infilenamev.size(), 0.0);
+  std::vector<double> sumEventsProcess (infilenamev.size(), 0.0);
+  std::vector<double> sumEventsEProcess(infilenamev.size(), 0.0);
 
   //*******************************************************
   // Chain Loop
@@ -271,7 +274,7 @@ void baseAnalysis(
     //for (int i=0; i<10000; ++i) {
       the_input_tree->GetEntry(i);
 
-      if(i%1000000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
+      if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
 
       Bool_t passFilter[10] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       if(eventLeptons.p4->GetEntriesFast() >= 2 &&
@@ -451,6 +454,7 @@ void baseAnalysis(
       else if(nsel == 1 || nsel == 9){ // ttbar selection
         if     (idJet.size() == 0 && nsel == 1) passFilter[6] = kTRUE;
         else if(idJet.size() == 1 && nsel == 9) passFilter[6] = kTRUE;
+	passFilter[6] = kTRUE;
 	if(!(bDiscrMax < 0.605 && idSoft.size() == 0)) passFilter[7] = kTRUE;
 	if(minPMET > 20) passFilter[8] = kTRUE;
 	if(dilep.Pt() > 30) passFilter[9] = kTRUE;
@@ -601,7 +605,11 @@ void baseAnalysis(
       // begin event weighting
       vector<bool> isGenDupl;
       int numberQuarks[2] = {0,0};
+      vector<int>zBoson;
       for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
+        if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 23) {
+	  zBoson.push_back(ngen0);
+	}
         if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 4 && ((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Pt() > 15) numberQuarks[0]++;
         if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 5 && ((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Pt() > 15) numberQuarks[1]++;
         isGenDupl.push_back(0);
@@ -692,9 +700,15 @@ void baseAnalysis(
       //double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale;
       double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*trigEff;
       //printf("AAA %f %f %f %f %f %f %f\n",eventMonteCarlo.mcWeight,theLumi,puWeight,effSF,fakeSF,theMCPrescale,trigEff);
+      
+      if(infilecatv[ifile] == 2 && zBoson.size() == 1) {
+        totalWeight = totalWeight * zpt_correction(((TLorentzVector*)(*eventMonteCarlo.p4)[zBoson[0]])->Pt(), 0);
+      }
+
       if(totalWeight == 0) continue;
       // end event weighting
-      if(infilecatv[ifile] != 0 || theCategory == 0) sumEventsProcess[ifile] += totalWeight;
+      if(infilecatv[ifile] == theCategory) sumEventsProcess [ifile] += totalWeight;
+      if(infilecatv[ifile] == theCategory) sumEventsEProcess[ifile] += totalWeight*totalWeight;
 
       TVector2 dilv(dilep.Px(), dilep.Py());
 
@@ -803,7 +817,7 @@ void baseAnalysis(
 	if(makePlot == true) histo[thePlot][theCategory]->Fill(theVar,totalWeight);
       }
     }
-    printf("eff_cuts(%f): ",sumEventsProcess[ifile]);
+    printf("eff_cuts(%f+/-%f): ",sumEventsProcess[ifile],sqrt(sumEventsEProcess[ifile]));
     for(int nc=0; nc<10; nc++){
       double nminusone = the_input_tree->GetEntries();
       if(nc>0) nminusone = nPassCuts[nc-1];
