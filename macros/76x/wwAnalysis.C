@@ -37,7 +37,7 @@ bool usePureMC = false;
 //const bool usePUPPI = true;
 
 double topNorm[3]  = {0.91,1.07,0.98};
-double topNormE[3] = {0.13,0.08,0.01};
+double topNormE[3] = {0.11,0.08,0.01};
 
 void wwAnalysis(
  unsigned int nJetsType = 0,
@@ -1658,17 +1658,17 @@ void wwAnalysis(
     newcardShape << Form("WWNNLO_resum		                 lnN  %7.5f   -     -     -     -     -     -     -	-    -    -  \n",systWWNNLO[0]);	    
     newcardShape << Form("WWNNLO_scale		                 lnN  %7.5f   -     -     -     -     -     -     -	-    -    -  \n",systWWNNLO[1]);	    
     newcardShape << Form("UEPS                                   lnN  %7.5f %7.5f   -     -     -     -     -     -     -    -    -  \n",1.03,1.03);	    
-    if(histo_qqWW->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVAqqWWStatBounding_%s_Bin%d    lnN  %7.5f   -	 -     -     -     -	 -     -     -     -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_qqWW->GetBinError(nb)/histo_qqWW->GetBinContent(nb));
-    if(histo_ggWW->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVAggWWStatBounding_%s_Bin%d    lnN    -   %7.5f   -     -     -     -	 -     -     -     -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_ggWW->GetBinError(nb)/histo_ggWW->GetBinContent(nb));
-    if(histo_Top->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVATopStatBounding_%s_Bin%d     lnN    -     -   %7.5f   -     -     -	 -     -     -     -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_Top->GetBinError(nb)/histo_Top->GetBinContent(nb));
-    if(histo_DY->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVADYStatBounding_%s_Bin%d      lnN    -     -     -   %7.5f   -     -	 -     -     -     -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_DY->GetBinError(nb)/histo_DY->GetBinContent(nb));
-    if(histo_VV->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVAVVStatBounding_%s_Bin%d      lnN    -     -     -     -   %7.5f   -	 -     -     -	   -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_VV->GetBinError(nb)/histo_VV->GetBinContent(nb));
-    if(histo_VVV->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVAVVVStatBounding_%s_Bin%d     lnN    -     -     -     -     -   %7.5f   -     -     -     -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_VVV->GetBinError(nb)/histo_VVV->GetBinContent(nb));
-    if(histo_WG->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVAWGStatBounding_%s_Bin%d      lnN    -     -     -     -     -     -   %7.5f   -     -     -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_WG->GetBinError(nb)/histo_WG->GetBinContent(nb));
-    if(histo_WGS->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVAWGSStatBounding_%s_Bin%d     lnN    -     -     -     -     -     -     -   %7.5f   -     -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_WGS->GetBinError(nb)/histo_WGS->GetBinContent(nb));
-    if(histo_Higgs->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVAHiggsStatBounding_%s_Bin%d   lnN    -     -     -     -     -     -     -     -   %7.5f   -   -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_Higgs->GetBinError(nb)/histo_Higgs->GetBinContent(nb));
-    if(histo_WjetsM ->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVAWjetsMStatBounding_%s_Bin%d  lnN    -     -	 -     -     -     -	 -     -     -   %7.5f -  \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_WjetsM ->GetBinError(nb)/histo_WjetsM ->GetBinContent(nb));
-    if(histo_WjetsE ->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_MVAWjetsEStatBounding_%s_Bin%d  lnN    -     -	 -     -     -     -	 -     -     -     - %7.5f\n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_WjetsE ->GetBinError(nb)/histo_WjetsE ->GetBinContent(nb));
+    if(histo_qqWW->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAqqWWStatBounding_%s_Bin%d    lnN  %7.5f   -     -     -     -     -     -     -     -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_qqWW->GetBinError(nb)/histo_qqWW->GetBinContent(nb));
+    if(histo_ggWW->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAggWWStatBounding_%s_Bin%d    lnN    -   %7.5f   -     -     -     -     -     -	 -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_ggWW->GetBinError(nb)/histo_ggWW->GetBinContent(nb));
+    if(histo_Top->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVATopStatBounding_%s_Bin%d     lnN    -     -   %7.5f   -     -     -     -     -	 -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_Top->GetBinError(nb)/histo_Top->GetBinContent(nb));
+    if(histo_DY->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVADYStatBounding_%s_Bin%d      lnN    -     -     -   %7.5f   -     -     -     -	 -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_DY->GetBinError(nb)/histo_DY->GetBinContent(nb));
+    if(histo_VV->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAVVStatBounding_%s_Bin%d      lnN    -     -     -     -   %7.5f   -     -     -	 -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_VV->GetBinError(nb)/histo_VV->GetBinContent(nb));
+    if(histo_VVV->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAVVVStatBounding_%s_Bin%d     lnN    -     -     -     -     -   %7.5f   -     -     -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_VVV->GetBinError(nb)/histo_VVV->GetBinContent(nb));
+    if(histo_WG->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAWGStatBounding_%s_Bin%d      lnN    -     -     -     -     -     -   %7.5f   -     -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_WG->GetBinError(nb)/histo_WG->GetBinContent(nb));
+    if(histo_WGS->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAWGSStatBounding_%s_Bin%d     lnN    -     -     -     -     -     -     -   %7.5f   -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_WGS->GetBinError(nb)/histo_WGS->GetBinContent(nb));
+    if(histo_Higgs->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAHiggsStatBounding_%s_Bin%d   lnN    -     -     -     -     -     -     -     -   %7.5f   -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_Higgs->GetBinError(nb)/histo_Higgs->GetBinContent(nb));
+    if(histo_WjetsM ->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAWjetsMStatBounding_%s_Bin%d  lnN    -     -     -     -     -     -     -     -	 -   %7.5f -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_WjetsM ->GetBinError(nb)/histo_WjetsM ->GetBinContent(nb));
+    if(histo_WjetsE ->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAWjetsEStatBounding_%s_Bin%d  lnN    -     -     -     -     -     -     -     -	 -     - %7.5f\n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_WjetsE ->GetBinError(nb)/histo_WjetsE ->GetBinContent(nb));
     newcardShape.close();
   }
 }

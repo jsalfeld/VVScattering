@@ -744,7 +744,7 @@ void topAnalysis(
   for(int i=0; i<numberChan; i++) {
     N_top_expected_0j[i] = (btag_lowpt_0j_den[1][i]+btag_lowpt_0j_den[2][i])-(btag_lowpt_0j_num[1][i]+btag_lowpt_0j_num[2][i]);
     fttbar[i] = (btag_lowpt_0j_den[1][i]+btag_lowpt_0j_den[2][i]*ftw_b[i])/(btag_lowpt_0j_den[1][i]+btag_lowpt_0j_den[2][i]);
-    sigma_ftop[i] = 0.17*btag_lowpt_0j_den[1][i]*(1.0-ftw_b[i])/(btag_lowpt_0j_den[1][i]+btag_lowpt_0j_den[2][i]);
+    sigma_ftop[i] = 0.0816*btag_lowpt_0j_den[1][i]*(1.0-ftw_b[i])/(btag_lowpt_0j_den[1][i]+btag_lowpt_0j_den[2][i]);
   }
 
   double effMC_btag_lowpt_tt_0j_expected[numberChan];  
