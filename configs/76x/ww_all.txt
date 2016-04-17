@@ -13,6 +13,13 @@ book dataset skim bx pdfrwgt json
 #t2mit/filefi/043  SinglePhoton+Run2015C_25ns-16Dec2015-v1+AOD - 25ns - -
 #t2mit/filefi/043  SinglePhoton+Run2015D-16Dec2015-v1+AOD - 25ns - -
 
+t2mit/filefi/043  DarkMatter_MonoZToLL_EWK_Scalar_Mx-10_Lambda-3000_TuneCUETP8M1_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns mg5_74 ~
+t2mit/filefi/043  DarkMatter_MonoZToLL_EWK_Scalar_Mx-1300_Lambda-3000_TuneCUETP8M1_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns mg5_74 ~
+t2mit/filefi/043  DarkMatter_MonoZToLL_EWK_Scalar_Mx-1_Lambda-3000_TuneCUETP8M1_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns mg5_74 ~
+t2mit/filefi/043  DarkMatter_MonoZToLL_EWK_Scalar_Mx-200_Lambda-3000_TuneCUETP8M1_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns mg5_74 ~
+t2mit/filefi/043  DarkMatter_MonoZToLL_EWK_Scalar_Mx-400_Lambda-3000_TuneCUETP8M1_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns mg5_74 ~
+t2mit/filefi/043  DarkMatter_MonoZToLL_EWK_Scalar_Mx-50_Lambda-3000_TuneCUETP8M1_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns mg5_74 ~
+t2mit/filefi/043  DarkMatter_MonoZToLL_EWK_Scalar_Mx-800_Lambda-3000_TuneCUETP8M1_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns mg5_74 ~
 #t2mit/filefi/043  ADDMonoZ_ZToLL_MD-3_d-2_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns - ~
 #t2mit/filefi/043  ADDMonoZ_ZToLL_MD-3_d-3_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2+AODSIM - 25ns - ~
 #t2mit/filefi/043  ADDMonoZ_ZToLL_MD-3_d-4_TuneCUETP8M1_13TeV-pythia8+RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1+AODSIM - 25ns - ~
@@ -297,6 +304,8 @@ book dataset skim bx pdfrwgt json
 #t2mit/filefi/043  WGstarToLNuMuMu_012Jets_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns mg5_74 ~
 #t2mit/filefi/043  WGstarToLNuEE_012Jets_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns mg5_74 ~
 
+t2mit/filefi/043  WWTo2L2Nu_13TeV-powheg-CUETP8M1Down+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns pwhg_74 ~
+t2mit/filefi/043  WWTo2L2Nu_13TeV-powheg-CUETP8M1Up+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns pwhg_74 ~
 #t2mit/filefi/043  GluGluHToTauTau_M125_13TeV_powheg_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns pwhg_74 ~
 #t2mit/filefi/043  GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_herwigpp+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns pwhg_74 ~
 #t2mit/filefi/043  GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns pwhg_74 ~

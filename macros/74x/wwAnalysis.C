@@ -33,7 +33,7 @@ bool usePureMC = false;
 const TString typeLepSel = "default";
 //const bool usePUPPI = true;
 
-double topNorm[3]  = {0.80, 1.14, 0.95};
+double topNorm[3]  = {0.76, 1.08, 0.95};
 double topNormE[3] = {0.12, 0.08, 0.02};
 
 void wwAnalysis(
@@ -691,6 +691,7 @@ void wwAnalysis(
 	if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 11 &&
 	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 13) continue;
         for(int ngen1=ngen0+1; ngen1<eventMonteCarlo.p4->GetEntriesFast(); ngen1++) {
+	  if((int)(*eventMonteCarlo.pdgId)[ngen0] != (int)(*eventMonteCarlo.pdgId)[ngen1]) continue;
           if(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen1])) < 0.02) {
 	    isGenDupl[ngen0] = 1;
 	    break;

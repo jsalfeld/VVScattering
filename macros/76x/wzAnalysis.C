@@ -105,12 +105,12 @@ void wzAnalysis(
   
   if(infilenamev.size() != infilecatv.size()) {assert(0); return;}
 
-  infilenamev.clear();infilecatv.clear();
-  infilenamev.push_back(Form("%sWZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v2+AODSIM.root",filesPathMC.Data()));    infilecatv.push_back(4);
+  //infilenamev.clear();infilecatv.clear();
+  //infilenamev.push_back(Form("%sWZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v2+AODSIM.root",filesPathMC.Data()));    infilecatv.push_back(4);
   //infilenamev.push_back(Form("%sWZJJ_EWK_QCD_13TeV-madgraph-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));	       infilecatv.push_back(5);
   //infilenamev.push_back(Form("%sWZJJ_EWK_13TeV-madgraph-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));	       infilecatv.push_back(5);
-  infilenamev.push_back(Form("%sWZJJ_QCD_13TeV-madgraph-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));	       infilecatv.push_back(5);
+  //infilenamev.push_back(Form("%sWZJJ_QCD_13TeV-madgraph-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));	       infilecatv.push_back(5);
 
   Float_t fMVACut[4][4];
   InitializeJetIdCuts(fMVACut);
@@ -609,6 +609,7 @@ void wzAnalysis(
 	if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 11 &&
 	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 13) continue;
         for(int ngen1=ngen0+1; ngen1<eventMonteCarlo.p4->GetEntriesFast(); ngen1++) {
+	  if((int)(*eventMonteCarlo.pdgId)[ngen0] != (int)(*eventMonteCarlo.pdgId)[ngen1]) continue;
           if(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen1])) < 0.02) {
 	    isGenDupl[ngen0] = 1;
 	    break;
