@@ -91,9 +91,9 @@ void wzAnalysis(
   infilenamev.push_back(Form("%sGluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(4);
 
   infilenamev.push_back(Form("%sWWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v3+AODSIM.root",filesPathMC.Data())); 			   infilecatv.push_back(5);
-  //infilenamev.push_back(Form("%sWWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 			   infilecatv.push_back(5);
+  //infilenamev.push_back(Form("%sWWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));       
   infilenamev.push_back(Form("%sWZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                           infilecatv.push_back(5);
-  //infilenamev.push_back(Form("%sZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                         infilecatv.push_back(5);
+  //infilenamev.push_back(Form("%sZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));
   infilenamev.push_back(Form("%sTTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));	   infilecatv.push_back(5);
   infilenamev.push_back(Form("%sTTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));	   infilecatv.push_back(5);
   infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(5);
@@ -175,9 +175,9 @@ void wzAnalysis(
     else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 20 && thePlot <= 20) {nBinPlot = 100; xminPlot =50.0; xmaxPlot = 250.0;}
     else if(thePlot >= 21 && thePlot <= 22) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
-    else if(thePlot >= 23 && thePlot <= 23) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 400.0;}
-    else if(thePlot >= 24 && thePlot <= 24) {nBinPlot =  50; xminPlot =-0.5; xmaxPlot =  49.5;}
-    else if(thePlot >= 25 && thePlot <= 31) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 23 && thePlot <= 24) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =1000.0;}
+    else if(thePlot >= 25 && thePlot <= 25) {nBinPlot =  50; xminPlot =-0.5; xmaxPlot =  49.5;}
+    else if(thePlot >= 26 && thePlot <= 31) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 32 && thePlot <= 32) {nBinPlot = 100; xminPlot =50.0; xmaxPlot = 250.0;}
     else if(thePlot >= 33 && thePlot <= 36) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
     else if(thePlot >= 37 && thePlot <= 37) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
@@ -506,7 +506,7 @@ void wzAnalysis(
         }
       }
 
-      vector<int> idJet;
+      vector<int> idJet; double btagjet[2] = {0., 0.};
       bool isBtag = kFALSE;
       double bDiscrMax = 0.0;
       double dPhiJetMET = -1.0;
@@ -529,6 +529,9 @@ void wzAnalysis(
 	   (float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
 
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) continue;
+	
+        if     ((float)(*eventJets.bDiscr)[nj] > btagjet[0]) {btagjet[1] = btagjet[0]; btagjet[0] = (float)(*eventJets.bDiscr)[nj];}
+	else if((float)(*eventJets.bDiscr)[nj] > btagjet[1]) {btagjet[1] = (float)(*eventJets.bDiscr)[nj];}
 
         theHT = theHT + ((TLorentzVector*)(*eventJets.p4)[nj])->Pt();
 	idJet.push_back(nj);
@@ -579,6 +582,9 @@ void wzAnalysis(
       bool controlSel[3] = {passFilter[5] && passFilter[6] && !passFilter[7] && passFilter[9] && bDiscrMax > 0.605 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20,
                             passFilter[5] &&                  !passFilter[7] && passFilter[9] && bDiscrMax > 0.605 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20,
 			    passFilter[5] && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt() > 20};
+
+      bool passTTZSel[2] = {passFilter[5] && passFilter[6] && passFilter[7] && passFilter[8] && passFilter[9] && idJet.size() >= 4 && btagjet[0] > 0.560 && btagjet[1] > 0.560,
+                            passFilter[5] && passFilter[6] && passFilter[7] && passFilter[8] && passFilter[9] && idJet.size() == 3 && btagjet[0] > 0.800 && btagjet[1] > 0.560};
 
       bool passVBFLoose = passAllCuts[0] && idJet.size() >= 2 &&
                      (( ( *(TLorentzVector*)(eventJets.p4->At(idJet[0])) ) + ( *(TLorentzVector*)(eventJets.p4->At(idJet[1])) ) )).M() > 250;
@@ -746,9 +752,9 @@ void wzAnalysis(
 	else if(thePlot == 20 && controlSel[2])                          {makePlot = true;theVar = TMath::Max(TMath::Min(mass3l,249.999),50.001);}
 	else if(thePlot == 21 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min(mtEvent,499.999);}
 	else if(thePlot == 22 && passVBF)                                {makePlot = true;theVar = TMath::Min(mtEvent,499.999);}
-	else if(thePlot == 23 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min(theHT,399.999);}
-	else if(thePlot == 24 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min((double)(numberQuarks[0]+10*numberQuarks[1]),49.499);}
-	else if(thePlot == 25 && passNMinusOne[1])                       {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+	else if(thePlot == 23 && passTTZSel[0])                          {makePlot = true;theVar = TMath::Min(theHT,999.999);}
+	else if(thePlot == 24 && passTTZSel[1])                          {makePlot = true;theVar = TMath::Min(theHT,999.999);}
+	else if(thePlot == 25 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min((double)(numberQuarks[0]+10*numberQuarks[1]),49.499);}
 	else if(thePlot == 26 && passNMinusOne[3])	                 {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt(),199.999);}
 	else if(thePlot == 27 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min(mtLN,199.999);}
 	else if(thePlot == 28 && controlSel[2] && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[2]]) == 11 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Eta()) <  1.479) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt(),199.999);}

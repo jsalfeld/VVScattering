@@ -1434,6 +1434,10 @@ void wwAnalysis(
   histo_qqWW_CMS_MVAWW_sup_nlo	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_qqWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_qqWW_CMS_MVAWW_sup_nlo         ->GetBinContent(i)/histo_qqWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
   histo_qqWW_CMS_MVAWW_sdown_nlo	  ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_qqWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_qqWW_CMS_MVAWW_sdown_nlo       ->GetBinContent(i)/histo_qqWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
   outFileLimits->Close();
+  double theUEPS[2] = {1.032, 1.036};
+  if(nJetsType != 0){
+    theUEPS[0] = 0.995; theUEPS[1] = 0.947;
+  }
   double lumiE = 1.027;
   double systLepResE[9] = {1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01};
   double systLepResM[9] = {1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01};
@@ -1658,7 +1662,7 @@ void wwAnalysis(
     newcardShape << Form("norm_WjetsE		                 lnN    -     -     -     -     -     -     -     -     -    -  %7.5f\n",1.30);	    
     newcardShape << Form("WWNNLO_resum		                 lnN  %7.5f   -     -     -     -     -     -     -	-    -    -  \n",systWWNNLO[0]);	    
     newcardShape << Form("WWNNLO_scale		                 lnN  %7.5f   -     -     -     -     -     -     -	-    -    -  \n",systWWNNLO[1]);	    
-    newcardShape << Form("UEPS                                   lnN  %7.5f %7.5f   -     -     -     -     -     -     -    -    -  \n",1.03,1.03);	    
+    newcardShape << Form("UEPS                                   lnN  %7.5f %7.5f   -     -     -     -     -     -     -    -    -  \n",theUEPS[0],theUEPS[1]);	    
     if(histo_qqWW->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAqqWWStatBounding_%s_Bin%d    lnN  %7.5f   -     -     -     -     -     -     -     -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_qqWW->GetBinError(nb)/histo_qqWW->GetBinContent(nb));
     if(histo_ggWW->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAggWWStatBounding_%s_Bin%d    lnN    -   %7.5f   -     -     -     -     -     -	 -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_ggWW->GetBinError(nb)/histo_ggWW->GetBinContent(nb));
     if(histo_Top->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVATopStatBounding_%s_Bin%d     lnN    -     -   %7.5f   -     -     -     -     -	 -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+histo_Top->GetBinError(nb)/histo_Top->GetBinContent(nb));
