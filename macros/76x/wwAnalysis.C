@@ -31,7 +31,8 @@ enum systType                     {JESUP=0, JESDOWN,  METUP,  METDOWN, nSystType
 TString systTypeName[nSystTypes]= {"JESUP","JESDOWN","METUP","METDOWN"};
 
 double mcPrescale = 1.0;
-bool usePureMC = false; 
+bool usePureMC = false;
+bool applyGStarVeto = true; 
 //const bool useDYMVA = false;
 //const TString typeLepSel = "default";
 //const bool usePUPPI = true;
@@ -101,6 +102,11 @@ void wwAnalysis(
 
   infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                  infilecatv.push_back(7);
   infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                   infilecatv.push_back(7);
+  
+  if(applyGStarVeto == true) {
+  infilenamev.push_back(Form("%sWGstarToLNuEE_012Jets_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                              infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sWGstarToLNuMuMu_012Jets_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                            infilecatv.push_back(8);
+  }
 
   //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(9);
 
@@ -110,6 +116,7 @@ void wwAnalysis(
   infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                            infilecatv.push_back(11);
   //infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 		   infilecatv.push_back(11);
   //infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(11);
+
   }
   else {assert(0); return;}
 
@@ -560,6 +567,7 @@ void wwAnalysis(
     }
     if(infilecatv[ifile] != 0 && initPDFTag == -1 && infilenamev[ifile].Contains("powheg") == false) {
       printf("PDFTAG PROBLEM\n");
+      /*
       if(the_PDF_tree) {
         printf("PDFTree Entries: %d\n",(int)the_PDF_tree->GetEntries());
         for (int i=0; i<the_PDF_tree->GetEntries(); ++i) {
@@ -570,6 +578,7 @@ void wwAnalysis(
       else {
         printf("PDFTree not available\n");
       }
+      */
       //return;
     }
 
@@ -753,6 +762,13 @@ void wwAnalysis(
 	  }
         }
       }
+
+      int genLep = 0;
+      for(int ngen=0; ngen<eventMonteCarlo.p4->GetEntriesFast(); ngen++) {
+	  if(isGenDupl[ngen] == 1) continue;
+          genLep++;
+      }
+
       double thePtwwWeight[5] = {1.0,1.0,1.0,1.0,1.0};
       if(infilecatv[ifile] == 1 && wBoson.size() == 2){
         TLorentzVector wwSystem(( ( *(TLorentzVector*)(eventMonteCarlo.p4->At(wBoson[0])) ) + ( *(TLorentzVector*)(eventMonteCarlo.p4->At(wBoson[1])) ) )); 
@@ -864,6 +880,12 @@ void wwAnalysis(
 
       // z pt correction
       if(infilecatv[ifile] == 4 && zBoson.size() == 1) totalWeight = totalWeight * zpt_correction(((TLorentzVector*)(*eventMonteCarlo.p4)[zBoson[0]])->Pt(), 0);
+
+      // wg* veto applied in wg events
+      if(infilecatv[ifile] == 7 && applyGStarVeto == true && genLep >= 3) totalWeight = 0;
+      // scale factor on wg* MC events
+      if(infilecatv[ifile] == 8) totalWeight = totalWeight * 1.2;
+
 
       if(totalWeight == 0) continue;
       // end event weighting
@@ -1636,12 +1658,12 @@ void wwAnalysis(
     newcardShape << Form("jmax * number of background\n");
     newcardShape << Form("kmax * number of nuisance parameters\n");
     newcardShape << Form("Observation %d\n",(int)histo_Data->GetBinContent(nb));
-    newcardShape << Form("bin ww%2s%4s%d ww%2s%4s%d ww%2s%4s%d ww%2s%4s%d ww%2s%4s%d ww%2s%4s%d ww%2s%4s%d ww%2s%4s%d ww%2s%4s%d ww%2s%4s%d ww%2s%4s%d\n",finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1);
+    newcardShape << Form("bin ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d\n",finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1);
     //                            0    1    2   3  4  5   6  7   8     9      10
     newcardShape << Form("process qqWW ggWW Top DY VV VVV WG WGS Higgs WjetsM WjetsE\n");
     newcardShape << Form("process -1 0 1 2 3 4 5 6 7 8 9\n");
     newcardShape << Form("rate %8.5f %8.5f  %8.5f  %8.5f %8.5f %8.5f %8.5f  %8.5f  %8.5f %8.5f %8.5f\n",histo_qqWW->GetBinContent(nb),histo_ggWW->GetBinContent(nb),histo_Top->GetBinContent(nb),histo_DY->GetBinContent(nb),histo_VV->GetBinContent(nb),histo_VVV->GetBinContent(nb),histo_WG->GetBinContent(nb),histo_WGS->GetBinContent(nb),histo_Higgs->GetBinContent(nb),histo_WjetsM->GetBinContent(nb),histo_WjetsE->GetBinContent(nb));
-    newcardShape << Form("lumi_%4s                               lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",ECMsb.Data(),lumiE,lumiE,lumiE,lumiE,lumiE,lumiE,lumiE,lumiE,lumiE);		     
+    newcardShape << Form("lumi_%4s                               lnN  %7.5f %7.5f   -   %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",ECMsb.Data(),lumiE,lumiE,lumiE,lumiE,lumiE,lumiE,lumiE,lumiE);		     
     newcardShape << Form("%s                                     lnN  %7.5f %7.5f   -   %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",effMName,systLepEffM[0],systLepEffM[1],systLepEffM[3],systLepEffM[4],systLepEffM[5],systLepEffM[6],systLepEffM[7],systLepEffM[8]);
     newcardShape << Form("%s                                     lnN  %7.5f %7.5f   -   %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",effEName,systLepEffE[0],systLepEffE[1],systLepEffE[3],systLepEffE[4],systLepEffE[5],systLepEffE[6],systLepEffE[7],systLepEffE[8]);
     newcardShape << Form("%s                                     lnN  %7.5f %7.5f   -   %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",momMName,systLepResM[0],systLepResM[1],systLepResM[3],systLepResM[4],systLepResM[5],systLepResM[6],systLepResM[7],systLepResM[8]);
@@ -1650,7 +1672,7 @@ void wwAnalysis(
     newcardShape << Form("CMS_scale_met                          lnN  %7.5f %7.5f   -   %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systMet[0],systMet[1],systMet[3],systMet[4],systMet[5],systMet[6],systMet[7],systMet[8]);
     newcardShape << Form("CMS_scale_j                            lnN  %7.5f %7.5f   -   %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systJes[0],systJes[1],systJes[3],systJes[4],systJes[5],systJes[6],systJes[7],systJes[8]);
     newcardShape << Form("CMS_eff_b                              lnN  %7.5f %7.5f   -   %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",syst_btag,syst_btag,syst_btag,syst_btag,syst_btag,syst_btag,syst_btag,syst_btag);
-    newcardShape << Form("pdf_qqbar                              lnN  %7.5f  -      -   %7.5f %7.5f %7.5f %7.5f %7.5f   -    -    -  \n",systPDF[0],systPDF[3],systPDF[4],systPDF[5],systPDF[6],systPDF[7]);
+    newcardShape << Form("pdf_qqbar                              lnN  %7.5f  -      -   %7.5f %7.5f %7.5f %7.5f %7.5f   -    -    -  \n",systPDF[0],systPDF[3],systPDF[4],systPDF[5],systPDF[6],1.01);
     newcardShape << Form("pdf_gg                                 lnN    -   %7.5f   -     -	-     -     -	  -   %7.5f  -    -  \n",1.01,systPDF[8]);
     newcardShape << Form("QCDscale_VVV		                 lnN    -     -     -     -     -   %7.5f   -	  -	-    -    -  \n",systQCDScale[5]);	    
     newcardShape << Form("QCDscale_ggVV		                 lnN    -   %7.5f   -     -     -     -     -     -     -    -    -  \n",1.15);	    
@@ -1658,6 +1680,7 @@ void wwAnalysis(
     newcardShape << Form("QCDscale_ggH		                 lnN    -     -     -     -     -     -     -     -   %7.5f  -    -  \n",systQCDScale[8]);	    
     newcardShape << Form("norm_Top_%dj		                 lnN    -     -   %7.5f   -     -     -     -     -     -    -    -  \n",nJetsType,systQCDScale[2]);	    
     newcardShape << Form("norm_DY_%dj		                 lnN    -     -     -   %7.5f   -     -     -     -     -    -    -  \n",nJetsType,systQCDScale[3]);	    
+    newcardShape << Form("norm_WGS		                 lnN    -     -     -     -     -     -     -   %7.5f   -    -    -  \n",1.30);	    
     newcardShape << Form("norm_WjetsM		                 lnN    -     -     -     -     -     -     -     -     -   %7.5f -  \n",1.30);	    
     newcardShape << Form("norm_WjetsE		                 lnN    -     -     -     -     -     -     -     -     -    -  %7.5f\n",1.30);	    
     newcardShape << Form("WWNNLO_resum		                 lnN  %7.5f   -     -     -     -     -     -     -	-    -    -  \n",systWWNNLO[0]);	    
