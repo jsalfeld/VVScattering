@@ -22,8 +22,8 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
-enum selType                     { SIGSEL, nSelTypes};
-TString selTypeName[nSelTypes]= { "SIGSEL"};
+enum selType                    { WZSEL,  WHSEL, nSelTypes};
+TString selTypeName[nSelTypes]= {"WZSEL","WHSEL"};
 
 enum systType                     {METUP=0, METDOWN, nSystTypes};
 TString systTypeName[nSystTypes]= {"METUP","METDOWN"};
@@ -70,8 +70,6 @@ void wzAnalysis(
   infilenamev.push_back(Form("%sVBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                  infilecatv.push_back(1);
   infilenamev.push_back(Form("%sGluGluHToTauTau_M125_13TeV_powheg_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(1);
   infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                            infilecatv.push_back(1);
-  //infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 		   infilecatv.push_back(1);
-  //infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(1);
   infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(1);
   infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  				   infilecatv.push_back(1);
   infilenamev.push_back(Form("%sGluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(1);
@@ -99,7 +97,13 @@ void wzAnalysis(
   infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(5);
   infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(5);
   infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));           infilecatv.push_back(5);
+  infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 		   infilecatv.push_back(5);
+  infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));    infilecatv.push_back(5);
 
+  //infilenamev.push_back(Form("%sHWplusJ_HToWW_M125_13TeV_powheg_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));    infilecatv.push_back(5);
+  //infilenamev.push_back(Form("%sHWminusJ_HToWW_M125_13TeV_powheg_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));    infilecatv.push_back(5);
+  //infilenamev.push_back(Form("%sWplusHToTauTau_M125_13TeV_powheg_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));    infilecatv.push_back(5);
+  //infilenamev.push_back(Form("%sWminusHToTauTau_M125_13TeV_powheg_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));    infilecatv.push_back(5);
   }
   else {assert(0);}
   
@@ -145,8 +149,9 @@ void wzAnalysis(
   fhDMuIsoSF->SetDirectory(0);
   delete fMuSF;
 
-  double totalFakeDataCount[4][9];
-  for(int i=0; i<4; i++) for(int j=0; j<9; j++) totalFakeDataCount[i][j] = 0;
+  const int allStates = 6;
+  double totalFakeDataCount[allStates][9];
+  for(int i=0; i<allStates; i++) for(int j=0; j<9; j++) totalFakeDataCount[i][j] = 0;
   double xmin = 0.0;
   double xmax = 1.0;
   int nBinPlot      = 200;
@@ -154,9 +159,15 @@ void wzAnalysis(
   double xmaxPlot   = 200.0;
   const int allPlots = 40;
   const int histBins = 6;
-  const int allStates = 5;
   TH1D* histo[allStates][allPlots][histBins];
   TString processName[histBins] = {"..Data", "....EM", "Zgamma", "....WZ", "...ZZ", "...VVV"};
+
+  double bgdDecay[nSelTypes*allStates][histBins],weiDecay[nSelTypes*allStates][histBins];
+  for(unsigned int i=0; i<nSelTypes*allStates; i++) {
+    for(int j=0; j<histBins; j++) {
+      bgdDecay[i][j] = 0.0; weiDecay[i][j] = 0.0; 
+    }
+  }
 
   for(int thePlot=0; thePlot<allPlots; thePlot++){
     if     (thePlot >=  0 && thePlot <=  2) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
@@ -167,14 +178,15 @@ void wzAnalysis(
     else if(thePlot >=  7 && thePlot <=  7) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot =   4.0;}
     else if(thePlot >=  8 && thePlot <= 11) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 12 && thePlot <= 12) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
-    else if(thePlot >= 13 && thePlot <= 13) {nBinPlot =  40; xminPlot = 0.0; xmaxPlot =  40.0;}
+    else if(thePlot >= 13 && thePlot <= 13) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 100.0;}
     else if(thePlot >= 14 && thePlot <= 14) {nBinPlot =  40; xminPlot =-0.5; xmaxPlot =  39.5;}
-    else if(thePlot >= 15 && thePlot <= 15) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot =   3.5;}
+    else if(thePlot >= 15 && thePlot <= 15) {nBinPlot =   5; xminPlot =-0.5; xmaxPlot =   4.5;}
     else if(thePlot >= 16 && thePlot <= 17) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
     else if(thePlot >= 18 && thePlot <= 18) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
     else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 20 && thePlot <= 20) {nBinPlot = 100; xminPlot =50.0; xmaxPlot = 250.0;}
-    else if(thePlot >= 21 && thePlot <= 22) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
+    else if(thePlot >= 21 && thePlot <= 21) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot =   4.0;}
+    else if(thePlot >= 22 && thePlot <= 22) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
     else if(thePlot >= 23 && thePlot <= 24) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =1000.0;}
     else if(thePlot >= 25 && thePlot <= 25) {nBinPlot =  50; xminPlot =-0.5; xmaxPlot =  49.5;}
     else if(thePlot >= 26 && thePlot <= 31) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
@@ -192,7 +204,7 @@ void wzAnalysis(
   }
 
   TString ECMsb  = "13TeV2015";
-  const int nBinMVA = 4; Float_t xbins[nBinMVA+1] = {0, 1, 2, 3, 4};
+  const int nBinMVA = 5; Float_t xbins[nBinMVA+1] = {0, 1, 2, 3, 4, 5};
   //const int nBinMVA = 1; Float_t xbins[nBinMVA+1] = {0, 1};
   TH1D* histoMVA = new TH1D("histoMVA", "histoMVA", nBinMVA, xbins);
   histoMVA->Sumw2();
@@ -420,7 +432,7 @@ void wzAnalysis(
 
       if(i%1000000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
 
-      Bool_t passFilter[11] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
+      Bool_t passFilter[12] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       if(eventLeptons.p4->GetEntriesFast() >= 2 &&
      	 ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 20 && 
      	 ((TLorentzVector*)(*eventLeptons.p4)[1])->Pt() > 10) passFilter[0] = kTRUE;
@@ -542,13 +554,22 @@ void wzAnalysis(
         tagZ[2] = nl0;
         break;
       }
-      
-      if(tagZ[0] == -1 || tagZ[1] == -1 || tagZ[2] == -1) continue;
-      
+
       bool tight3rdLepId = true;
-      if(idTight[tagZ[2]] == 1){
+      if(idTight[tagZ[2]] == 1 && tagZ[0] != -1){
         tight3rdLepId = selectIdIsoCut(type3rdLepSel.Data(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[tagZ[2]]]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt()),
 	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Eta()),(double)(*eventLeptons.iso)[idLep[tagZ[2]]],(int)(*eventLeptons.selBits)[idLep[tagZ[2]]],(double)(*eventLeptons.mva)[idLep[tagZ[2]]]);
+      }
+      else if(tagZ[0] == -1){
+        if(idTight[0] == 1) tight3rdLepId = tight3rdLepId &&
+	   selectIdIsoCut(type3rdLepSel.Data(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt()),
+	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()),(double)(*eventLeptons.iso)[idLep[0]],(int)(*eventLeptons.selBits)[idLep[0]],(double)(*eventLeptons.mva)[idLep[0]]);
+        if(idTight[1] == 1) tight3rdLepId = tight3rdLepId &&
+	   selectIdIsoCut(type3rdLepSel.Data(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt()),
+	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()),(double)(*eventLeptons.iso)[idLep[1]],(int)(*eventLeptons.selBits)[idLep[1]],(double)(*eventLeptons.mva)[idLep[1]]);
+        if(idTight[2] == 1) tight3rdLepId = tight3rdLepId &&
+	   selectIdIsoCut(type3rdLepSel.Data(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[2]]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt()),
+	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Eta()),(double)(*eventLeptons.iso)[idLep[2]],(int)(*eventLeptons.selBits)[idLep[2]],(double)(*eventLeptons.mva)[idLep[2]]);
       }
 
       if(tight3rdLepId == false) continue;
@@ -559,25 +580,46 @@ void wzAnalysis(
         		      ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + 
         		      ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) ) ));
       mass3l = trilep.M();
+      if(tagZ[0] == -1) type3l = 4;
 
-      passFilter[ 5] = minMassll > 4; //deltaRllMin > 0.1;
+      passFilter[ 5] = minMassll > 4;
       passFilter[ 6] = ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 30;
-      passFilter[ 7] = minMassZ > minMass && minMassZ < maxMass;
+      passFilter[ 7] = minMassZ > minMass && minMassZ < maxMass && type3l != 4;
       passFilter[ 8] = ((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt() > 20;
       passFilter[ 9] = mass3l > 100;
-      passFilter[10] = true;
-      if(applyBtagging) passFilter[10] = bDiscrMax < 0.935;
-
+      passFilter[10] = true; if(applyBtagging) passFilter[10] = bDiscrMax < 0.935;
+      passFilter[11] = true;
       if(passFilter[7]==kTRUE && (tagZ[0] == tagZ[1] || tagZ[0] == tagZ[2] || tagZ[1] == tagZ[2])) {printf("ZPROBLEM!\n");assert(0);return;}
 
-      bool passNMinusOne[6] = {                 passFilter[6] && passFilter[7] && passFilter[8] && passFilter[9] && passFilter[10],
-                               passFilter[5] &&                  passFilter[7] && passFilter[8] && passFilter[9] && passFilter[10],
-                               passFilter[5] && passFilter[6] &&                  passFilter[8] && passFilter[9] && passFilter[10],
-                               passFilter[5] && passFilter[6] && passFilter[7] &&                  passFilter[9] && passFilter[10],
-                               passFilter[5] && passFilter[6] && passFilter[7] && passFilter[8]                  && passFilter[10],
-			       passFilter[5] && passFilter[6] && passFilter[7] && passFilter[8] && passFilter[9]};
+      bool passWHFilter[7] = {false, false, false, false, false, false, false};
+      passWHFilter[0] = minMassll > 4 && minMassll < 80.0;
+      passWHFilter[1] = ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 30;
+      passWHFilter[2] = (minMassZ < 71 || minMassZ > 111) || type3l == 4;
+      passWHFilter[3] = ((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt() > 20;
+      passWHFilter[4] = (mass3l < 76 || mass3l > 106) || type3l == 4;
+      passWHFilter[5] =  bDiscrMax < 0.800 && idSoft.size() == 0;
+      passWHFilter[6] = idJet.size() == 0 || (double)((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Pt() < 40;
+      bool applyWHSel = false;
+      if(applyWHSel){
+        passFilter[ 5] = passWHFilter[0];
+        passFilter[ 6] = passWHFilter[1];
+        passFilter[ 7] = passWHFilter[2];
+        passFilter[ 8] = passWHFilter[3];
+        passFilter[ 9] = passWHFilter[4];
+        passFilter[10] = passWHFilter[5];
+        passFilter[11] = passWHFilter[6];
+      }
 
-      bool passAllCuts[1] = {passFilter[5] && passFilter[6] && passFilter[7] && passFilter[8] && passFilter[9] && passFilter[10]};
+      bool passNMinusOne[7] = {                 passFilter[6] && passFilter[7] && passFilter[8] && passFilter[9] && passFilter[10] && passFilter[11],
+                               passFilter[5] &&                  passFilter[7] && passFilter[8] && passFilter[9] && passFilter[10] && passFilter[11],
+                               passFilter[5] && passFilter[6] && 		  passFilter[8] && passFilter[9] && passFilter[10] && passFilter[11],
+                               passFilter[5] && passFilter[6] && passFilter[7] &&		   passFilter[9] && passFilter[10] && passFilter[11],
+                               passFilter[5] && passFilter[6] && passFilter[7] && passFilter[8] 		 && passFilter[10] && passFilter[11],
+			       passFilter[5] && passFilter[6] && passFilter[7] && passFilter[8] && passFilter[9]                   && passFilter[11],
+			       passFilter[5] && passFilter[6] && passFilter[7] && passFilter[8] && passFilter[9] && passFilter[10]};
+
+      bool passAllCuts[nSelTypes] = {passFilter[5]   && passFilter[6]   && passFilter[7]   && passFilter[8]   && passFilter[9]   && passFilter[10]  && passFilter[11],
+                                     passWHFilter[0] && passWHFilter[1] && passWHFilter[2] && passWHFilter[3] && passWHFilter[4] && passWHFilter[5] && passWHFilter[6]};
 
       bool controlSel[3] = {passFilter[5] && passFilter[6] && !passFilter[7] && passFilter[9] && bDiscrMax > 0.605 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20,
                             passFilter[5] &&                  !passFilter[7] && passFilter[9] && bDiscrMax > 0.605 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20,
@@ -647,7 +689,7 @@ void wzAnalysis(
       double effSF = 1.0;
       if(infilecatv[ifile] != 0){
         for(unsigned int nl=0; nl<idLep.size(); nl++){
-	  if(tagZ[2] != (int)nl)
+	  if(tagZ[2] != (int)nl && tagZ[0] != -1)
           effSF = effSF * effhDScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),
 	        ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),
 		typeLepSel.Data(),fhDMuMediumSF,fhDMuIsoSF,fhDElMediumSF,fhDElTightSF,fhDElMediumMVASF,fhDElTightMVASF);
@@ -670,7 +712,7 @@ void wzAnalysis(
 	    if(tagZ[0] == (int)nl) nFakeCount = nFakeCount + 1;
 	    if(tagZ[1] == (int)nl) nFakeCount = nFakeCount + 2;
 	    if(tagZ[2] == (int)nl) nFakeCount = nFakeCount + 4;
-	    if(tagZ[2] != (int)nl)
+	    if(tagZ[2] != (int)nl && tagZ[0] != -1)
 	    fakeSF = fakeSF * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data());
 	    else
 	    fakeSF = fakeSF * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,type3rdLepSel.Data());
@@ -716,6 +758,7 @@ void wzAnalysis(
 	  assert(0);
 	}
       }
+
       double mcWeight = eventMonteCarlo.mcWeight;
       if(infilecatv[ifile] == 0) mcWeight = 1.0;
       //double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale;
@@ -726,37 +769,44 @@ void wzAnalysis(
 
       if(passAllCuts[0] && infilecatv[ifile] == 0) totalFakeDataCount[type3l][nFakeCount]++;
 
+      for(unsigned int i=0; i<nSelTypes; i++) {
+        if(passAllCuts[i]) {
+          bgdDecay[i+type3l*nSelTypes][theCategory] += totalWeight;
+          weiDecay[i+type3l*nSelTypes][theCategory] += totalWeight*totalWeight;
+        }
+      }
+
       for(int thePlot=0; thePlot<allPlots; thePlot++){
 	double theVar = 0.0;
 	bool makePlot = false;
- 	if     (thePlot ==  0 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min(mtLN,199.999);}
+ 	if     (thePlot ==  0 && passAllCuts[WZSEL])                     {makePlot = true;theVar = TMath::Min(mtLN,199.999);}
 	else if(thePlot ==  1 && passNMinusOne[0])                       {makePlot = true;theVar = TMath::Min(minMassll,199.999);}
 	else if(thePlot ==  2 && passNMinusOne[1])                       {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
 	else if(thePlot ==  3 && passNMinusOne[2])                       {makePlot = true;theVar = TMath::Max(TMath::Min(minMassZ,149.999),50.001);}
 	else if(thePlot ==  4 && passNMinusOne[3])                       {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt(),199.999);}
 	else if(thePlot ==  5 && passNMinusOne[4])                       {makePlot = true;theVar = TMath::Min(mass3l,399.999);}
 	else if(thePlot ==  6 && passNMinusOne[5])                       {makePlot = true;theVar = TMath::Min(bDiscrMax,0.999);}
-	else if(thePlot ==  7 && passNMinusOne[0])                       {makePlot = true;theVar = TMath::Min(deltaRllMin,3.999);}
-	else if(thePlot ==  8 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
-	else if(thePlot ==  9 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[0]]])->Pt(),199.999);}
-	else if(thePlot == 10 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[1]]])->Pt(),199.999);}
-	else if(thePlot == 11 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min(minMET,199.999);}
-	else if(thePlot == 12 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-	else if(thePlot == 13 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min((double)eventEvent.rho,39.999);}
-	else if(thePlot == 14 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min((double)eventVertex.npv,39.499);}
-	else if(thePlot == 15 && passAllCuts[0])                         {makePlot = true;theVar = (double)type3l;}
-	else if(thePlot == 16 && passAllCuts[0])                         {makePlot = true;theVar = dPhiJetMET*180/TMath::Pi();}
-	else if(thePlot == 17 && passAllCuts[0])                         {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
+	else if(thePlot ==  7 && passAllCuts[WZSEL])                     {makePlot = true;theVar = TMath::Min(deltaRllMin,3.999);}
+	else if(thePlot ==  8 && passAllCuts[WZSEL])                     {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
+	else if(thePlot ==  9 && passAllCuts[WZSEL])                     {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[0]]])->Pt(),199.999);}
+	else if(thePlot == 10 && passAllCuts[WZSEL])                     {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[1]]])->Pt(),199.999);}
+	else if(thePlot == 11 && passAllCuts[WZSEL])                     {makePlot = true;theVar = TMath::Min(minMET,199.999);}
+	else if(thePlot == 12 && passNMinusOne[6])                       {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 13 && passNMinusOne[6])                       {makePlot = true;if(idJet.size() >= 1) theVar = TMath::Min((double)((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Pt(),99.999);}
+	else if(thePlot == 14 && passAllCuts[WZSEL])                     {makePlot = true;theVar = TMath::Min((double)eventVertex.npv,39.499);}
+	else if(thePlot == 15 && passAllCuts[WZSEL])                     {makePlot = true;theVar = (double)type3l;}
+	else if(thePlot == 16 && passAllCuts[WZSEL])                     {makePlot = true;theVar = dPhiJetMET*180/TMath::Pi();}
+	else if(thePlot == 17 && passAllCuts[WZSEL])                     {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
 	else if(thePlot == 18 && controlSel[0])                          {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 19 && controlSel[1])                          {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
 	else if(thePlot == 20 && controlSel[2])                          {makePlot = true;theVar = TMath::Max(TMath::Min(mass3l,249.999),50.001);}
-	else if(thePlot == 21 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min(mtEvent,499.999);}
+	else if(thePlot == 21 && passAllCuts[WHSEL])                     {makePlot = true;theVar = TMath::Min(deltaRllMin,3.999);}
 	else if(thePlot == 22 && passVBF)                                {makePlot = true;theVar = TMath::Min(mtEvent,499.999);}
 	else if(thePlot == 23 && passTTZSel[0])                          {makePlot = true;theVar = TMath::Min(theHT,999.999);}
 	else if(thePlot == 24 && passTTZSel[1])                          {makePlot = true;theVar = TMath::Min(theHT,999.999);}
-	else if(thePlot == 25 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min((double)(numberQuarks[0]+10*numberQuarks[1]),49.499);}
+	else if(thePlot == 25 && passAllCuts[WZSEL])                     {makePlot = true;theVar = TMath::Min((double)(numberQuarks[0]+10*numberQuarks[1]),49.499);}
 	else if(thePlot == 26 && passNMinusOne[3])	                 {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->Pt(),199.999);}
-	else if(thePlot == 27 && passAllCuts[0])                         {makePlot = true;theVar = TMath::Min(mtLN,199.999);}
+	else if(thePlot == 27 && passAllCuts[WZSEL])                     {makePlot = true;theVar = TMath::Min(mtLN,199.999);}
 	else if(thePlot == 28 && controlSel[2] && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[2]]) == 11 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Eta()) <  1.479) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt(),199.999);}
 	else if(thePlot == 29 && controlSel[2] && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[2]]) == 13 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Eta()) <  1.479) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt(),199.999);}
 	else if(thePlot == 30 && controlSel[2] && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[2]]) == 11 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Eta()) >= 1.479) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt(),199.999);}
@@ -770,7 +820,7 @@ void wzAnalysis(
 	else if(thePlot == 38 && passVBFLoose)                                {makePlot = true;theVar = TMath::Min((( ( *(TLorentzVector*)(eventJets.p4->At(idJet[0])) ) + ( *(TLorentzVector*)(eventJets.p4->At(idJet[1])) ) )).M(),1999.999);}
 	else if(thePlot == 39 && passVBFLoose)                                {makePlot = true;theVar = TMath::Min(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()-((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta()),7.999);}
 
-	if(makePlot) histo[     4][thePlot][theCategory]->Fill(theVar,totalWeight);
+	if(makePlot) histo[     5][thePlot][theCategory]->Fill(theVar,totalWeight);
 	if(makePlot) histo[type3l][thePlot][theCategory]->Fill(theVar,totalWeight);
       }
       
@@ -778,10 +828,10 @@ void wzAnalysis(
 	double MVAVar = (double)type3l;
 	//double MVAVar = 0;
         if     (theCategory == 0){
-	  if(passAllCuts[SIGSEL]) histo_Data->Fill(MVAVar,totalWeight);
+	  if(passAllCuts[WZSEL]) histo_Data->Fill(MVAVar,totalWeight);
         }
         else if(theCategory == 1){
-	  if(passAllCuts[SIGSEL]) {
+	  if(passAllCuts[WZSEL]) {
 	    if(typeFakeLepton[0]+typeFakeLepton[1] != goodIsTight == idTight.size()) {printf("PROBLEMFake %d %d %d %d\n",typeFakeLepton[0],typeFakeLepton[1],goodIsTight,(int)idTight.size()); return;}
 	    if     (typeFakeLepton[0] > typeFakeLepton[1]) histo_FakeM->Fill(MVAVar,totalWeight);
 	    else if(typeFakeLepton[0] < typeFakeLepton[1]) histo_FakeE->Fill(MVAVar,totalWeight);
@@ -792,7 +842,7 @@ void wzAnalysis(
 	  }
         }
         else if(theCategory == 2){
-	  if(passAllCuts[SIGSEL]) {
+	  if(passAllCuts[WZSEL]) {
 	     histo_Zg->Fill(MVAVar,totalWeight);
 
 	     histo_Zg_CMS_QCDScaleBounding[0]  ->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2));
@@ -820,7 +870,7 @@ void wzAnalysis(
           if(passSystCuts[METDOWN])histo_Zg_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
         }
         else if(theCategory == 3){
-	  if(passAllCuts[SIGSEL]) {
+	  if(passAllCuts[WZSEL]) {
 	     histo_WZ->Fill(MVAVar,totalWeight);
 	     histo_WZ_CMS_QCDScaleBounding[0]  ->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2));
 	     histo_WZ_CMS_QCDScaleBounding[1]  ->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5));
@@ -847,7 +897,7 @@ void wzAnalysis(
           if(passSystCuts[METDOWN])histo_WZ_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
 	}
         else if(theCategory == 4){
-	  if(passAllCuts[SIGSEL]) {
+	  if(passAllCuts[WZSEL]) {
 	     histo_ZZ->Fill(MVAVar,totalWeight);
 	     histo_ZZ_CMS_QCDScaleBounding[0]  ->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2));
 	     histo_ZZ_CMS_QCDScaleBounding[1]  ->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5));
@@ -874,7 +924,7 @@ void wzAnalysis(
           if(passSystCuts[METDOWN])histo_ZZ_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
         }
         else if(theCategory == 5){
-	  if(passAllCuts[SIGSEL]) {
+	  if(passAllCuts[WZSEL]) {
 	     histo_VVV->Fill(MVAVar,totalWeight);
 	     histo_VVV_CMS_QCDScaleBounding[0]  ->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2));
 	     histo_VVV_CMS_QCDScaleBounding[1]  ->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5));
@@ -917,10 +967,33 @@ void wzAnalysis(
     printf("\n");
   }
 
+  for(int ns=0; ns<nSelTypes; ns++) {
+    printf("Selection: %s\n",selTypeName[ns].Data());
+    double sumEventsType[5] = {0,0,0,0,0}; double sumEventsTypeE[5] = {0,0,0,0,0};
+    for(int np=0; np<histBins; np++) {       
+       printf("(%6s): %8.2f +/- %6.2f | %8.2f +/- %6.2f | %8.2f +/- %6.2f | %8.2f +/- %6.2f | %8.2f +/- %6.2f\n",
+       processName[np].Data(),bgdDecay[ns+nSelTypes*0][np],sqrt(weiDecay[ns+nSelTypes*0][np]),bgdDecay[ns+nSelTypes*1][np],sqrt(weiDecay[ns+nSelTypes*1][np]),
+                              bgdDecay[ns+nSelTypes*2][np],sqrt(weiDecay[ns+nSelTypes*2][np]),bgdDecay[ns+nSelTypes*3][np],sqrt(weiDecay[ns+nSelTypes*3][np]),
+			      bgdDecay[ns+nSelTypes*4][np],sqrt(weiDecay[ns+nSelTypes*4][np]));
+       if(np != 0){
+         sumEventsType[0] = sumEventsType[0] + bgdDecay[ns+nSelTypes*0][np]; sumEventsTypeE[0] = sumEventsTypeE[0] + weiDecay[ns+nSelTypes*0][np];
+         sumEventsType[1] = sumEventsType[1] + bgdDecay[ns+nSelTypes*1][np]; sumEventsTypeE[1] = sumEventsTypeE[1] + weiDecay[ns+nSelTypes*1][np];
+         sumEventsType[2] = sumEventsType[2] + bgdDecay[ns+nSelTypes*2][np]; sumEventsTypeE[2] = sumEventsTypeE[2] + weiDecay[ns+nSelTypes*2][np];
+         sumEventsType[3] = sumEventsType[3] + bgdDecay[ns+nSelTypes*3][np]; sumEventsTypeE[3] = sumEventsTypeE[3] + weiDecay[ns+nSelTypes*3][np];
+         sumEventsType[4] = sumEventsType[4] + bgdDecay[ns+nSelTypes*4][np]; sumEventsTypeE[4] = sumEventsTypeE[4] + weiDecay[ns+nSelTypes*4][np];
+      }
+    }
+    printf("(...bkg): %8.2f +/- %6.2f | %8.2f +/- %6.2f | %8.2f +/- %6.2f | %8.2f +/- %6.2f | %8.2f +/- %6.2f\n",
+           sumEventsType[0],sqrt(sumEventsTypeE[0]),sumEventsType[1],sqrt(sumEventsTypeE[1]),
+	   sumEventsType[2],sqrt(sumEventsTypeE[2]),sumEventsType[3],sqrt(sumEventsTypeE[3]),
+	   sumEventsType[4],sqrt(sumEventsTypeE[4]));
+    printf("-----------------------------------------------------------------------------------------------------------\n");
+  }
+
   double sumEvents = 0;
-  for(int np=1; np<histBins; np++) sumEvents += histo[4][0][np]->GetSumOfWeights();
-  printf("yields: %f |",histo[4][0][0]->GetSumOfWeights());
-  for(int np=1; np<histBins; np++) printf(" %.3f",histo[4][0][np]->GetSumOfWeights());
+  for(int np=1; np<histBins; np++) sumEvents += histo[5][0][np]->GetSumOfWeights();
+  printf("yields: %f |",histo[5][0][0]->GetSumOfWeights());
+  for(int np=1; np<histBins; np++) printf(" %.3f",histo[5][0][np]->GetSumOfWeights());
   printf(" = %.3f\n",sumEvents);
   double sumEventsType[5] = {0,0,0,0,0};
   double sumEventsTypeE[5] = {0,0,0,0,0};
@@ -928,19 +1001,19 @@ void wzAnalysis(
   printf("-----------------------------------------------------------------------------------------------------------\n");
   for(int np=0; np<histBins; np++) {
     double sumEvents = 0.; double sumEventsE = 0.;
-    for(int i=1; i<=4; i++) {sumEvents = sumEvents + histo[4][15][np]->GetBinContent(i); sumEventsE = sumEventsE + histo[4][15][np]->GetBinError(i)*histo[4][15][np]->GetBinError(i);}
+    for(int i=1; i<=4; i++) {sumEvents = sumEvents + histo[5][15][np]->GetBinContent(i); sumEventsE = sumEventsE + histo[5][15][np]->GetBinError(i)*histo[5][15][np]->GetBinError(i);}
     if(np!=0){
     sumEventsType[0] = sumEventsType[0] + sumEvents;                          sumEventsTypeE[0] = sumEventsTypeE[0] + sumEventsE;
-    sumEventsType[1] = sumEventsType[1] + histo[4][15][np]->GetBinContent(1); sumEventsTypeE[1] = sumEventsTypeE[1] + histo[4][15][np]->GetBinError(1) * histo[4][15][np]->GetBinError(1);
-    sumEventsType[2] = sumEventsType[2] + histo[4][15][np]->GetBinContent(2); sumEventsTypeE[2] = sumEventsTypeE[2] + histo[4][15][np]->GetBinError(2) * histo[4][15][np]->GetBinError(2);
-    sumEventsType[3] = sumEventsType[3] + histo[4][15][np]->GetBinContent(3); sumEventsTypeE[3] = sumEventsTypeE[3] + histo[4][15][np]->GetBinError(3) * histo[4][15][np]->GetBinError(3);
-    sumEventsType[4] = sumEventsType[4] + histo[4][15][np]->GetBinContent(4); sumEventsTypeE[4] = sumEventsTypeE[4] + histo[4][15][np]->GetBinError(4) * histo[4][15][np]->GetBinError(4);
+    sumEventsType[1] = sumEventsType[1] + histo[5][15][np]->GetBinContent(1); sumEventsTypeE[1] = sumEventsTypeE[1] + histo[5][15][np]->GetBinError(1) * histo[5][15][np]->GetBinError(1);
+    sumEventsType[2] = sumEventsType[2] + histo[5][15][np]->GetBinContent(2); sumEventsTypeE[2] = sumEventsTypeE[2] + histo[5][15][np]->GetBinError(2) * histo[5][15][np]->GetBinError(2);
+    sumEventsType[3] = sumEventsType[3] + histo[5][15][np]->GetBinContent(3); sumEventsTypeE[3] = sumEventsTypeE[3] + histo[5][15][np]->GetBinError(3) * histo[5][15][np]->GetBinError(3);
+    sumEventsType[4] = sumEventsType[4] + histo[5][15][np]->GetBinContent(4); sumEventsTypeE[4] = sumEventsTypeE[4] + histo[5][15][np]->GetBinError(4) * histo[5][15][np]->GetBinError(4);
     }
     sumEventsE = sqrt(sumEventsE);
     printf("(%6s): %7.2f +/- %5.2f | %7.2f +/- %5.2f | %7.2f +/- %5.2f | %7.2f +/- %5.2f | %7.2f +/- %5.2f\n",
     processName[np].Data(),sumEvents,sumEventsE,
-    histo[4][15][np]->GetBinContent(1),histo[4][15][np]->GetBinError(1),histo[4][15][np]->GetBinContent(2),histo[4][15][np]->GetBinError(2),
-    histo[4][15][np]->GetBinContent(3),histo[4][15][np]->GetBinError(3),histo[4][15][np]->GetBinContent(4),histo[4][15][np]->GetBinError(4));
+    histo[5][15][np]->GetBinContent(1),histo[5][15][np]->GetBinError(1),histo[5][15][np]->GetBinContent(2),histo[5][15][np]->GetBinError(2),
+    histo[5][15][np]->GetBinContent(3),histo[5][15][np]->GetBinError(3),histo[5][15][np]->GetBinContent(4),histo[5][15][np]->GetBinError(4));
     if(np==0)
     printf("-----------------------------------------------------------------------------------------------------------\n");
   }
