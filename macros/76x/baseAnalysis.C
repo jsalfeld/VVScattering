@@ -20,7 +20,7 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
-bool usePureMC = false; 
+bool usePureMC = true; 
 double mcPrescale = 1.0;
 const bool useDYMVA = false;
 const bool doTriggerStudy = true;
@@ -56,7 +56,8 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext1-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext4-v1+AODSIM.root",filesPathMC.Data()));      infilecatv.push_back(2);
 
-  infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));						   infilecatv.push_back(3);
+  infilenamev.push_back(Form("%sTT_TuneCUETP8M1_13TeV-powheg-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext3-v1+AODSIM.root",filesPathMC.Data()));                       infilecatv.push_back(3); // tt->X (not tt->2l)
+  //infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));					   infilecatv.push_back(3);
   infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v2+AODSIM.root",filesPathMC.Data()));    infilecatv.push_back(3);
   infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));infilecatv.push_back(3);
 
@@ -76,7 +77,7 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v2+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(4);
 
   infilenamev.push_back(Form("%sWWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v3+AODSIM.root",filesPathMC.Data())); 			   infilecatv.push_back(4);
-  //infilenamev.push_back(Form("%sWWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 			   infilecatv.push_back(4);
+  infilenamev.push_back(Form("%sWWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 			   infilecatv.push_back(4);
   infilenamev.push_back(Form("%sWZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                           infilecatv.push_back(4);
   //infilenamev.push_back(Form("%sZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                         infilecatv.push_back(4);
   infilenamev.push_back(Form("%sTTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));	   infilecatv.push_back(4);
@@ -84,16 +85,15 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(4);
   infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(4);
   infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));           infilecatv.push_back(4);
+  infilenamev.push_back(Form("%stZq_nunu_4f_13TeV-amcatnlo-pythia8_TuneCUETP8M1+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 		   infilecatv.push_back(4);
+  infilenamev.push_back(Form("%stZq_ll_4f_13TeV-amcatnlo-pythia8_TuneCUETP8M1+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 		           infilecatv.push_back(4);
 
   infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(5);
 
-  if(nsel!=11){
   infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                  infilecatv.push_back(6);
-  } else {
-  infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                   infilecatv.push_back(6);
   infilenamev.push_back(Form("%sWGstarToLNuMuMu_012Jets_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 		           infilecatv.push_back(6);
   infilenamev.push_back(Form("%sWGstarToLNuEE_012Jets_13TeV-madgraph+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 		                   infilecatv.push_back(6);
-  }
+  //infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                   infilecatv.push_back(6);
 
   infilenamev.push_back(Form("%sGluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(7);
   infilenamev.push_back(Form("%sVBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));                  infilecatv.push_back(7);
@@ -107,8 +107,8 @@ void baseAnalysis(
   
   //infilenamev.clear();infilecatv.clear();
   //infilenamev.push_back(Form("%sTTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsPoisson50_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  		  infilecatv.push_back(3);
-  //infilenamev.push_back(Form("%sTTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76Premix-premixPU50_deterministic_76X_mcRun2_asymptotic_v12-v3+AODSIM.root",filesPathMC.Data()));	  infilecatv.push_back(3);
-  //infilenamev.push_back(Form("%sTTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76Premix-premixPU50_nondeterministic_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sTTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76Premix-premixPU50_deterministic_76X_mcRun2_asymptotic_v12-v3+AODSIM.root",filesPathMC.Data()));	  infilecatv.push_back(4);
+  //infilenamev.push_back(Form("%sTTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76Premix-premixPU50_nondeterministic_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(7);
 
   if(infilenamev.size() != infilecatv.size()) {assert(0); return;}
 
@@ -205,6 +205,7 @@ void baseAnalysis(
   double ptl2nd = 20;
   if     (nsel == 2)  {numberOfLeptons = 2; ptl2nd = 10;}
   else if(nsel == 4)  {numberOfLeptons = 3; ptl2nd = 10;}
+  else if(nsel == 6)  {numberOfLeptons = 2; ptl2nd = 10;}
   else if(nsel == 7)  {numberOfLeptons = 4; ptl2nd = 10;}
   else if(nsel == 11) {numberOfLeptons = 3; ptl2nd = 20;}
 
@@ -377,8 +378,10 @@ void baseAnalysis(
           double deltaRllAux = ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl0]])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl1]]));
           if(deltaRllAux < deltaRllMin) deltaRllMin = deltaRllAux;
 
-	  if((int)(*eventLeptons.pdgId)[idLep[nl0]] * (int)(*eventLeptons.pdgId)[idLep[nl1]] > 0) continue;
           TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[nl0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[nl1])) ) ));
+	  if(minMassll > dilepAux.M()) minMassll = dilepAux.M();
+
+	  if((int)(*eventLeptons.pdgId)[idLep[nl0]] * (int)(*eventLeptons.pdgId)[idLep[nl1]] > 0) continue;
 
 	  if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl1]]) &&
 	     TMath::Abs(dilepAux.M()-91.1876) < TMath::Abs(minMassZ-91.1876)) {
@@ -393,7 +396,6 @@ void baseAnalysis(
 	     else                                                         type3lWGS = 1;
 	  }
 
-	  if(minMassll > dilepAux.M()) minMassll = dilepAux.M();
         }
       }
       if(minMassll > 12 || (numberOfLeptons == 4 && minMassll > 4) || numberOfLeptons == 3) passFilter[5] = kTRUE;
@@ -435,8 +437,7 @@ void baseAnalysis(
       if(nsel == 0 || nsel == 6){ // WW selection (opposite-sign / same-sign)
         if(idJet.size() == 0) passFilter[6] = kTRUE;
 	passFilter[6] = kTRUE;
-	if(bDiscrMax < 0.605 && idSoft.size() == 0) 
-	passFilter[7] = kTRUE;
+	if(bDiscrMax < 0.605 && idSoft.size() == 0) passFilter[7] = kTRUE;
 	if(minPMET > 20) passFilter[8] = kTRUE;
 	if(dilep.Pt() > 30) 
 	passFilter[9] = kTRUE;
@@ -446,10 +447,10 @@ void baseAnalysis(
 	  if(dilep.Pt() <= 45) passFilter[9] = kFALSE;
 	}
         //passFilter[5] = kTRUE;
-        //passFilter[6] = kTRUE;
+        passFilter[6] = kTRUE;
         //passFilter[7] = kTRUE;
-        //passFilter[8] = kTRUE;
-        //passFilter[9] = kTRUE;
+        passFilter[8] = kTRUE;
+        passFilter[9] = kTRUE;
       }
       else if(nsel == 1 || nsel == 9){ // ttbar selection
         if     (idJet.size() == 0 && nsel == 1) passFilter[6] = kTRUE;
@@ -757,6 +758,13 @@ void baseAnalysis(
 	if(theRinoutBin[0] >= 0 && plotType >= 0 && nJetsBin >= 0) histo_rinout_met[plotType][nJetsBin][theInOut]->Fill(theRinoutBin[0],totalWeight*leptonPair);
 	if(theRinoutBin[1] >= 0 && plotType >= 0 && nJetsBin >= 0) histo_rinout_dym[plotType][nJetsBin][theInOut]->Fill(theRinoutBin[1],totalWeight*leptonPair);
       }
+
+      //if((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 400){
+      //  printf("AAA %d %d %d %d %d %f %f %f %f %f %f\n",(int)eventEvent.runNum,(int)eventEvent.eventNum,(int)idJet.size(),
+      //  (int)(*eventLeptons.pdgId)[idLep[0]],(int)(*eventLeptons.pdgId)[idLep[1]],(double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),minMassll,
+      //  ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta(),
+      //  ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta());
+      //}
 
       for(int thePlot=0; thePlot<allPlots; thePlot++){
 	double theVar = 0.0;
