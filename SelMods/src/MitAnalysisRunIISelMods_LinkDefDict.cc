@@ -1,6 +1,6 @@
 // Do NOT change. Changes will be lost next time file is generated
 
-#define R__DICTIONARY_FILENAME dIhomedIceballosdIcmsdIcmsswdI043dICMSSW_7_6_3dItmpdIslc6_amd64_gcc493dIMitAnalysisRunIISelMods_LinkDefDict
+#define R__DICTIONARY_FILENAME dIhomedIceballosdIcmsdIcmsswdI044dICMSSW_8_0_5_patch1dItmpdIslc6_amd64_gcc530dIMitAnalysisRunIISelMods_LinkDefDict
 
 /*******************************************************************/
 #include <stddef.h>
@@ -52,7 +52,7 @@ namespace mithep {
       {
          static ::ROOT::TGenericClassInfo 
             instance("mithep", 0 /*version*/, "MitAna/DataCont/interface/BaseCollection.h", 14,
-                     ::ROOT::DefineBehavior((void*)0,(void*)0),
+                     ::ROOT::Internal::DefineBehavior((void*)0,(void*)0),
                      &mithep_Dictionary, 0);
          return &instance;
       }
@@ -83,7 +83,7 @@ namespace ROOT {
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::mithep::LeptonExampleMod >(0);
       static ::ROOT::TGenericClassInfo 
          instance("mithep::LeptonExampleMod", ::mithep::LeptonExampleMod::Class_Version(), "MitAnalysisRunII/SelMods/interface/LeptonExampleMod.h", 25,
-                  typeid(::mithep::LeptonExampleMod), DefineBehavior(ptr, ptr),
+                  typeid(::mithep::LeptonExampleMod), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::mithep::LeptonExampleMod::Dictionary, isa_proxy, 4,
                   sizeof(::mithep::LeptonExampleMod) );
       instance.SetNew(&new_mithepcLcLLeptonExampleMod);
@@ -133,7 +133,7 @@ TClass *LeptonExampleMod::Dictionary()
 //______________________________________________________________________________
 TClass *LeptonExampleMod::Class()
 {
-   if (!fgIsA) { R__LOCKGUARD2(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::mithep::LeptonExampleMod*)0x0)->GetClass(); }
+   if (!fgIsA.load()) { R__LOCKGUARD2(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::mithep::LeptonExampleMod*)0x0)->GetClass(); }
    return fgIsA;
 }
 
@@ -180,13 +180,13 @@ namespace {
 0
     };
     static const char* includePaths[] = {
-"/home/ceballos/cms/cmssw/043/CMSSW_7_6_3/src",
-"/cvmfs/cms.cern.ch/slc6_amd64_gcc493/lcg/root/6.02.12-kpegke4/include",
-"/home/ceballos/cms/cmssw/043/CMSSW_7_6_3/src/",
+"/home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src",
+"/cvmfs/cms.cern.ch/slc6_amd64_gcc530/lcg/root/6.06.00-ikhhed3/include",
+"/home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/",
 0
     };
-    static const char* fwdDeclCode = 
-R"DICTFWDDCLS(
+    static const char* fwdDeclCode = R"DICTFWDDCLS(
+#line 1 "MitAnalysisRunIISelMods_LinkDefDict dictionary forward declarations' payload"
 #pragma clang diagnostic ignored "-Wkeyword-compat"
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
@@ -194,6 +194,7 @@ extern int __Cling_Autoloading_Map;
 namespace mithep{class __attribute__((annotate(R"ATTRDUMP(TAM example analysis module)ATTRDUMP"))) __attribute__((annotate("$clingAutoload$MitAnalysisRunII/SelMods/dict/MitAnalysisRunIISelModsLinkDef.h")))  LeptonExampleMod;}
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
+#line 1 "MitAnalysisRunIISelMods_LinkDefDict dictionary payload"
 
 #ifndef G__VECTOR_HAS_CLASS_ITERATOR
   #define G__VECTOR_HAS_CLASS_ITERATOR 1

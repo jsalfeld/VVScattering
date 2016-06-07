@@ -239,6 +239,7 @@ void wwAnalysis(
     if     (thePlot >=  0 && thePlot <=  0) {nBinPlot = 100; xminPlot =200.0;xmaxPlot = 600.0;}
     else if(thePlot >=  1 && thePlot <=  1) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 100.0;}
     else if(thePlot >=  2 && thePlot <=  2) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
+    else if(thePlot >=  3 && thePlot <=  3) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot =   3.5;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
@@ -746,7 +747,10 @@ void wwAnalysis(
       vector<bool> isGenDupl;
       vector<int>wBoson;
       vector<int>zBoson;
+      int numberQuarks[2] = {0,0};
       for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
+        if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 4 && ((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Pt() > 15) numberQuarks[0]++;
+        if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 5 && ((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Pt() > 15) numberQuarks[1]++;
         if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 24) {
 	  wBoson.push_back(ngen0);
 	}
@@ -904,6 +908,11 @@ void wwAnalysis(
           weiDecay[i+typePair*nSelTypes][theCategory] += totalWeight*totalWeight;
         }
       }
+
+      double theVar = 0.0;
+      bool makePlot = false;
+      if(passAllCuts[SIGSEL] && typeSel == 2) {makePlot = true;theVar = (double)(TMath::Min(numberQuarks[0],1)+2*TMath::Min(numberQuarks[1],1));}
+      if(makePlot) histo[3][theCategory]->Fill(theVar,totalWeight);
 
       if(1) {
 	double MVAVar = (double)typePair;
