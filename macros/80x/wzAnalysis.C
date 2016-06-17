@@ -44,7 +44,7 @@ void wzAnalysis(
   Int_t period = 1;
   TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_80x/";
   TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_80x/";
-  Double_t lumi = 1.7;
+  Double_t lumi = 1.8;
 
   //*******************************************************
   //Input Files
@@ -98,7 +98,7 @@ void wzAnalysis(
   infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(5);
   infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(5);
   infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));           infilecatv.push_back(5);
-  infilenamev.push_back(Form("%stZq_nunu_4f_13TeV-amcatnlo-pythia8_TuneCUETP8M1+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data())); 		   infilecatv.push_back(5);
+  //infilenamev.push_back(Form("%stZq_nunu_4f_13TeV-amcatnlo-pythia8_TuneCUETP8M1+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data())); 		   infilecatv.push_back(5);
   infilenamev.push_back(Form("%stZq_ll_4f_13TeV-amcatnlo-pythia8_TuneCUETP8M1+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data())); 		           infilecatv.push_back(5);
 
   if(applyWHSel){

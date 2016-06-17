@@ -888,8 +888,7 @@ if analysis.isRealData:
 
     else:
         badEventsFilterMod.SetFilter('CSCTightHaloFilter')
-        badEventsFilterMod.SetFilter('CHTrackResolutionFilter')
-        badEventsFilterMod.SetFilter('MuBadTrackFilter')
+        badEventsFilterMod.SetFilter('EcalDeadCellTriggerPrimitiveFilter')
         badEventsFilterMod.SetFilter('HBHENoiseIsoFilter')
 
     hltMod = mithep.HLTMod(
