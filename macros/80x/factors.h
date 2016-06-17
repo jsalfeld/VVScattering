@@ -206,8 +206,8 @@ bool passJetId(Float_t fMVACut[4][4], double mva, double pt, double eta){
 
 }
 
-double effhDScaleFactor(double pt, double eta, int nsel, TString type, TH2D *fhDMuMediumSF, TH2D *fhDMuIsoSF, TH2D *fhDElMediumSF, TH2D *fhDElTightSF, TH2D *fhDElMediumMVASF, TH2D *fhDElTightMVASF){
-  if(TMath::Abs(nsel) == 11) eta = abs(eta);
+double effhDScaleFactor(double pt, double eta, int nsel, TString type, TH2D *fhDMuMediumSF, TH2D *fhDElMediumSF, TH2D *fhDElTightSF){
+  eta = abs(eta);
   Int_t binXA = 0;
   Int_t binYA = 0;
   Int_t binXB = 0;
@@ -216,19 +216,19 @@ double effhDScaleFactor(double pt, double eta, int nsel, TString type, TH2D *fhD
   if     (eta>=+2.4) eta = +2.399;
   else if(eta<=-2.4) eta = -2.399;
 
-  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default" || type == "default_mva" || type == "medium_mva"))  {binXA = fhDMuMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDMuMediumSF->GetYaxis()->FindFixBin(pt);binXB = fhDMuIsoSF->GetXaxis()->FindFixBin(eta);binYB = fhDMuIsoSF->GetYaxis()->FindFixBin(pt);}
+  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default"))  {binXA = fhDMuMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDMuMediumSF->GetYaxis()->FindFixBin(pt);}
   else if(TMath::Abs(nsel) == 11 && type== "medium")			    {binXA = fhDElMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDElMediumSF->GetYaxis()->FindFixBin(pt);}
   else if(TMath::Abs(nsel) == 11 && type== "default")			    {binXA = fhDElTightSF ->GetXaxis()->FindFixBin(eta);binYA = fhDElTightSF ->GetYaxis()->FindFixBin(pt);}
-  else if(TMath::Abs(nsel) == 11 && type== "medium_mva")		    {binXA = fhDElMediumMVASF->GetXaxis()->FindFixBin(eta);binYA = fhDElMediumMVASF->GetYaxis()->FindFixBin(pt);}
-  else if(TMath::Abs(nsel) == 11 && type== "default_mva")		    {binXA = fhDElTightMVASF ->GetXaxis()->FindFixBin(eta);binYA = fhDElTightMVASF ->GetYaxis()->FindFixBin(pt);}
   else    printf("PROBLEM WITH BINS\n");
 
-  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default" || type == "default_mva" || type == "medium_mva")) return fhDMuMediumSF->GetBinContent(binXA, binYA)*fhDMuIsoSF->GetBinContent(binXB, binYB);
-  else if(TMath::Abs(nsel) == 11 && type== "medium")	  return fhDElMediumSF->GetBinContent(binXA, binYA);
-  else if(TMath::Abs(nsel) == 11 && type== "default")	  return fhDElTightSF ->GetBinContent(binXA, binYA);
-  else if(TMath::Abs(nsel) == 11 && type== "medium_mva")  return fhDElMediumMVASF->GetBinContent(binXA, binYA);
-  else if(TMath::Abs(nsel) == 11 && type== "default_mva") return fhDElTightMVASF ->GetBinContent(binXA, binYA);
-  return 0;
+  double result = 0.0;
+  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default")) result = fhDMuMediumSF->GetBinContent(binXA, binYA);
+  else if(TMath::Abs(nsel) == 11 && type== "medium")	                   result = fhDElMediumSF->GetBinContent(binXA, binYA);
+  else if(TMath::Abs(nsel) == 11 && type== "default")	                   result = fhDElTightSF ->GetBinContent(binXA, binYA);
+  
+  if(result <= 0) printf("Result <= 0! %f\n",result);
+  
+  return result;
 }
 
 double effScaleFactor(double pt, double eta, int nsel, int period, TString type){

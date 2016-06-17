@@ -20,5 +20,5 @@ then
   echo "PHO"
 else
   echo "LEPC"
-  root -l -q -b MitAnalysisRunII/macros/76x/makeSkimSample.C+\(\"/scratch/ceballos/ntuples_goodrun_80x/data.root\",\"/scratch/ceballos/ntuples_weightsDA_80x/${PREFIX}data.root\",\"data\",$1\)
+  root -l -q -b MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch/ceballos/ntuples_goodrun_80x/data.root\",\"/scratch/ceballos/ntuples_weightsDA_80x/${PREFIX}data.root\",\"data\",$1\)
 fi

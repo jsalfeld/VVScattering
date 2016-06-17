@@ -20,6 +20,7 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
+int whichSkim = 0;
 bool usePureMC = true; 
 double mcPrescale = 10.0;
 const bool useDYMVA = false;
@@ -34,7 +35,7 @@ void baseAnalysis(
 
   TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_80x/";
   TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_80x/";
-  Double_t lumi = 0.560;
+  Double_t lumi = 1.8;
 
   if(nsel == 2) usePureMC = true;
 
@@ -95,7 +96,7 @@ void baseAnalysis(
 
   infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));                   infilecatv.push_back(6);
   ////infilenamev.push_back(Form("%sWGstarToLNuMuMu_012Jets_13TeV-madgraph+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data())); 		           infilecatv.push_back(6);
-  infilenamev.push_back(Form("%sWGstarToLNuEE_012Jets_13TeV-madgraph+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2+AODSIM.root",filesPathMC.Data())); 		                   infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sWGstarToLNuEE_012Jets_13TeV-madgraph+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data())); 		                   infilecatv.push_back(6);
   //infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));                   infilecatv.push_back(6);
 
   infilenamev.push_back(Form("%sGluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(7);
@@ -129,28 +130,19 @@ void baseAnalysis(
   fhDPU->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
-  TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Medium_ele"));
-  TH2D *fhDElTightSF  = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Tight_ele"));
-  TH2D *fhDElMediumMVASF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_MediumMVA_ele"));
-  TH2D *fhDElTightMVASF  = (TH2D*)(fElSF->Get("unfactorized_scalefactors_TightMVA_ele"));
+  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x.root"));
+  TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
+  TH2D *fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
   assert(fhDElMediumSF);
   assert(fhDElTightSF);
-  assert(fhDElMediumMVASF);
-  assert(fhDElTightMVASF);
   fhDElMediumSF->SetDirectory(0);
-  fhDElTightSF ->SetDirectory(0);
-  fhDElMediumMVASF->SetDirectory(0);
-  fhDElTightMVASF ->SetDirectory(0);
+  fhDElTightSF->SetDirectory(0);
   delete fElSF;
 
-  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
-  TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Medium_mu"));
-  TH2D *fhDMuIsoSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Iso_mu"));
+  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x.root"));
+  TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("scalefactors_Medium_Muon"));
   assert(fhDMuMediumSF);
-  assert(fhDMuIsoSF);
   fhDMuMediumSF->SetDirectory(0);
-  fhDMuIsoSF->SetDirectory(0);
   delete fMuSF;
 
   double xmin = 0.0;
@@ -223,6 +215,7 @@ void baseAnalysis(
     TFile the_input_file(infilenamev[ifile]);
     TTree *the_input_tree = (TTree*)the_input_file.FindObjectAny("events");
     TTree *the_input_all  = (TTree*)the_input_file.FindObjectAny("all");
+    TTree *the_SelBit_tree= (TTree*)the_input_file.FindObjectAny("SelBit_tree");
 
     BareEvent eventEvent;
     eventEvent.setBranchAddresses(the_input_tree);
@@ -268,16 +261,19 @@ void baseAnalysis(
       printf("sampleNames(%d): %s\n",ifile,infilenamev[ifile].Data());
     }
 
+    unsigned int selBit_= 0;
+    the_SelBit_tree->SetBranchAddress("selBit", &selBit_);
     Int_t nPassTrigger[18] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
     Int_t nPassCuts[10] = {0,0,0,0,0,0,0,0,0,0};
     double theMCPrescale = mcPrescale;
     if(infilecatv[ifile] == 0) theMCPrescale = 1.0;
     for (int i=0; i<int(the_input_tree->GetEntries()/theMCPrescale); ++i) {
-    //for (int i=0; i<10000; ++i) {
-      the_input_tree->GetEntry(i);
-
+      the_SelBit_tree->GetEntry(i);
       if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
+      if((selBit_ & 0x1<<whichSkim) == 0) continue;
+
+      the_input_tree->GetEntry(i);
 
       Bool_t passFilter[10] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       if(eventLeptons.p4->GetEntriesFast() >= 2 &&
@@ -469,6 +465,7 @@ void baseAnalysis(
         else if(idJet.size() == 1 && nsel == 9) passFilter[6] = kTRUE;
 	passFilter[6] = kTRUE;
 	if(!(bDiscrMax < 0.605 && idSoft.size() == 0)) passFilter[7] = kTRUE;
+	passFilter[7] = kTRUE;
 	if(minPMET > 20) passFilter[8] = kTRUE;
 	if(dilep.Pt() > 30) passFilter[9] = kTRUE;
 	if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])){
@@ -670,7 +667,7 @@ void baseAnalysis(
         for(unsigned int nl=0; nl<idLep.size(); nl++){
           effSF = effSF * effhDScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),
 	        ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),
-		typeLepSel.Data(),fhDMuMediumSF,fhDMuIsoSF,fhDElMediumSF,fhDElTightSF,fhDElMediumMVASF,fhDElTightMVASF);
+		typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF);
         }
       }
 
@@ -711,9 +708,8 @@ void baseAnalysis(
       }
       double mcWeight = eventMonteCarlo.mcWeight;
       if(infilecatv[ifile] == 0) mcWeight = 1.0;
-      double totalWeight = mcWeight*theLumi*puWeight*theMCPrescale;
-      //double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*trigEff;
-      //printf("AAA %f %f %f %f %f %f %f\n",eventMonteCarlo.mcWeight,theLumi,puWeight,effSF,fakeSF,theMCPrescale,trigEff);
+      double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*trigEff;
+      //printf("totalWeight: %f * %f * %f * %f * %f * %f * %f = %f\n",mcWeight,theLumi,puWeight,effSF,fakeSF,theMCPrescale,trigEff,totalWeight);
       
       if(infilecatv[ifile] == 2 && zBoson.size() == 1) {
         totalWeight = totalWeight * zpt_correction(((TLorentzVector*)(*eventMonteCarlo.p4)[zBoson[0]])->Pt(), 0);

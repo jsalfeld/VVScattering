@@ -16,8 +16,9 @@
 #include "NeroProducer/Core/interface/BareTrigger.hpp"
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 
-#include "MitAnalysisRunII/macros/76x/factors.h"
+#include "MitAnalysisRunII/macros/80x/factors.h"
 
+int whichSkim = 1;
 double mcPrescale = 10.0;
 
 void QCDAnalysis(
@@ -28,9 +29,9 @@ void QCDAnalysis(
  ){
 
   Int_t period = 1;
-  TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_80x/qcd_";
-  TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_80x/qcd_";
-  Double_t lumi = 2.318;
+  TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_80x/";
+  TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_80x/";
+  Double_t lumi = 1.8;
 
   Double_t prescale[5];
 
@@ -49,8 +50,8 @@ void QCDAnalysis(
   if     (period==0){
   }
   else if(period==1){
-  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00828;prescale[2]=0.00499;prescale[3]=0.00716;prescale[4]=0.00887;}
-  else if(typeSel == 13) {prescale[0]=0.00245;prescale[1]=0.06880;prescale[2]=0.09568;prescale[3]=0.09479;prescale[4]=0.09383;}
+  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00196;prescale[2]=0.00753;prescale[3]=0.00888;prescale[4]=0.00967;}
+  else if(typeSel == 13) {prescale[0]=0.00344;prescale[1]=0.02014;prescale[2]=0.02596;prescale[3]=0.02662;prescale[4]=0.02685;}
 
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x.root";
   infilenamev.push_back(Form("%sdata.root",filesPathDA.Data()));											      infilecatv.push_back(0);
@@ -116,28 +117,19 @@ void QCDAnalysis(
   fhDPU->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
-  TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Medium_ele"));
-  TH2D *fhDElTightSF  = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Tight_ele"));
-  TH2D *fhDElMediumMVASF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_MediumMVA_ele"));
-  TH2D *fhDElTightMVASF  = (TH2D*)(fElSF->Get("unfactorized_scalefactors_TightMVA_ele"));
+  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x.root"));
+  TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
+  TH2D *fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
   assert(fhDElMediumSF);
   assert(fhDElTightSF);
-  assert(fhDElMediumMVASF);
-  assert(fhDElTightMVASF);
   fhDElMediumSF->SetDirectory(0);
-  fhDElTightSF ->SetDirectory(0);
-  fhDElMediumMVASF->SetDirectory(0);
-  fhDElTightMVASF ->SetDirectory(0);
+  fhDElTightSF->SetDirectory(0);
   delete fElSF;
 
-  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
-  TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Medium_mu"));
-  TH2D *fhDMuIsoSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Iso_mu"));
+  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x.root"));
+  TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("scalefactors_Medium_Muon"));
   assert(fhDMuMediumSF);
-  assert(fhDMuIsoSF);
   fhDMuMediumSF->SetDirectory(0);
-  fhDMuIsoSF->SetDirectory(0);
   delete fMuSF;
 
   double xmin = 0.0;
@@ -170,6 +162,7 @@ void QCDAnalysis(
     TFile the_input_file(infilenamev[ifile]);
     TTree *the_input_tree = (TTree*)the_input_file.FindObjectAny("events");
     //TTree *the_input_all  = (TTree*)the_input_file.FindObjectAny("all");
+    TTree *the_SelBit_tree= (TTree*)the_input_file.FindObjectAny("SelBit_tree");
 
     BareMonteCarlo eventMonteCarlo;
     eventMonteCarlo.setBranchAddresses(the_input_tree);
@@ -209,12 +202,15 @@ void QCDAnalysis(
       printf("sampleNames(%d): %s\n",ifile,infilenamev[ifile].Data());
     }
 
-    Int_t nPassTrigger[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
-
+    unsigned int selBit_= 0;
+    the_SelBit_tree->SetBranchAddress("selBit", &selBit_);
     Int_t nPassCuts[10] = {0,0,0,0,0,0,0,0,0,0};
     double theMCPrescale = mcPrescale;
     if(infilecatv[ifile] == 0) theMCPrescale = 1.0;
     for (int i=0; i<int(the_input_tree->GetEntries()/theMCPrescale); ++i) {
+      the_SelBit_tree->GetEntry(i);
+      if((selBit_ & 0x1<<whichSkim) == 0) continue;
+
       the_input_tree->GetEntry(i);
       if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
 
@@ -352,7 +348,7 @@ void QCDAnalysis(
         for(unsigned int nl=0; nl<idLep.size(); nl++){
           effSF = effSF * effhDScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),
 	        ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),
-		typeLepSel.Data(),fhDMuMediumSF,fhDMuIsoSF,fhDElMediumSF,fhDElTightSF,fhDElMediumMVASF,fhDElTightMVASF);
+		typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF);
         }
       }
       
@@ -393,8 +389,7 @@ void QCDAnalysis(
       double thePrescale = 1.0;
       if(infilecatv[ifile] != 0 && applyPrescale == 1) thePrescale = prescale[iPt];
 
-      //double totalWeight = mcWeight*theLumi*puWeight*effSF*thePrescale*theMCPrescale;
-      double totalWeight = mcWeight*theLumi*puWeight*thePrescale*theMCPrescale;
+      double totalWeight = mcWeight*theLumi*puWeight*effSF*thePrescale*theMCPrescale;
 
       if(infilecatv[ifile] == 0) {
                             denFRDA[iPt][iEta] = denFRDA[iPt][iEta] + totalWeight;
