@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export JSON=Cert_271036-274421_13TeV_PromptReco_Collisions16_JSON.txt;
+export JSON=Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt;
 export MAIN=$CMSSW_BASE/src;
 cd $MAIN;
 
@@ -18,5 +18,8 @@ $MAIN/MitAnalysisRunII/bin/makeJson.py -m $MAIN/MitAnalysisRunII/json/80x/$JSON 
 
 echo "sel"
 $MAIN/MitAnalysisRunII/bin/makeJson.py -m $MAIN/MitAnalysisRunII/json/80x/$JSON -o lumis_r2016b_sel.txt /scratch5/ceballos/ntuples_noweights_80x/SingleElectron+Run2016B-PromptReco-v2+AOD.root;
+
+echo "pho"
+$MAIN/MitAnalysisRunII/bin/makeJson.py -m $MAIN/MitAnalysisRunII/json/80x/$JSON -o lumis_r2016b_pho.txt /scratch5/ceballos/ntuples_noweights_80x/SinglePhoton+Run2016B-PromptReco-v2+AOD.root;
 
 cd -;

@@ -46,6 +46,7 @@ void makeOneSkimSample(
   
   bool isFilterOn[6] = {true,true,true,true,true,true};
   if(filterType == 2) {isFilterOn[0] = false; isFilterOn[1] = false;}
+  if(filterType == 3) {isFilterOn[0] = false; isFilterOn[1] = false; isFilterOn[3] = false;}
 
   TFile *the_input_file = TFile::Open(input_file.Data());
   TTree *the_input_tree = (TTree*)the_input_file->FindObjectAny("events");
@@ -347,13 +348,16 @@ void makeOneSkimSample(
          ((int)(*eventPhotons.selBits)[npho] & BarePhotons::PhoTight)== BarePhotons::PhoTight){idPho.push_back(npho);}
     }
     bool passTrigger = kFALSE;
-    for (int nt = 0; nt < (int)numtokens; nt++) {
-      if((strcmp(tokens[nt],"HLT_Photon50_R9Id90_HE10_IsoM_v*") == 0 ||
-   	  strcmp(tokens[nt],"HLT_Photon75_R9Id90_HE10_IsoM_v*") == 0 ||
-   	  strcmp(tokens[nt],"HLT_Photon90_R9Id90_HE10_IsoM_v*") == 0 ||
-   	  strcmp(tokens[nt],"HLT_Photon120_R9Id90_HE10_IsoM_v*") == 0) &&
-          (*eventTrigger.triggerFired)[nt] == 1) passTrigger = kTRUE;
-    }
+    if(processName.CompareTo("data") == 0) {
+      for (int nt = 0; nt < (int)numtokens; nt++) {
+        if((strcmp(tokens[nt],"HLT_Photon50_R9Id90_HE10_IsoM_v*") == 0 ||
+   	    strcmp(tokens[nt],"HLT_Photon75_R9Id90_HE10_IsoM_v*") == 0 ||
+   	    strcmp(tokens[nt],"HLT_Photon90_R9Id90_HE10_IsoM_v*") == 0 ||
+   	    strcmp(tokens[nt],"HLT_Photon120_R9Id90_HE10_IsoM_v*") == 0 ||
+   	    strcmp(tokens[nt],"HLT_Photon165_R9Id90_HE10_IsoM_v*") == 0) &&
+            (*eventTrigger.triggerFired)[nt] == 1) passTrigger = kTRUE;
+      }
+    } else {passTrigger = kTRUE;}
     if(passTrigger == kTRUE &&
        idPho.size() >= 1) passFilter[5] = kTRUE;
     }

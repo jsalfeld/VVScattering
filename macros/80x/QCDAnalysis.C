@@ -31,7 +31,7 @@ void QCDAnalysis(
   Int_t period = 1;
   TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_80x/";
   TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_80x/";
-  Double_t lumi = 1.8;
+  Double_t lumi = 2.6;
 
   Double_t prescale[5];
 
@@ -50,8 +50,8 @@ void QCDAnalysis(
   if     (period==0){
   }
   else if(period==1){
-  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00196;prescale[2]=0.00753;prescale[3]=0.00888;prescale[4]=0.00967;}
-  else if(typeSel == 13) {prescale[0]=0.00344;prescale[1]=0.02014;prescale[2]=0.02596;prescale[3]=0.02662;prescale[4]=0.02685;}
+  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00216;prescale[2]=0.00552;prescale[3]=0.00690;prescale[4]=0.00813;}
+  else if(typeSel == 13) {prescale[0]=0.00338;prescale[1]=0.01740;prescale[2]=0.02210;prescale[3]=0.02284;prescale[4]=0.02308;}
 
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x.root";
   infilenamev.push_back(Form("%sdata.root",filesPathDA.Data()));											      infilecatv.push_back(0);

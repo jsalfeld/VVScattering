@@ -338,6 +338,16 @@ baselinePhotons = mithep.PhotonIdMod('BaselinePhotons',
     EtaMax = 2.5
 )
 
+photonSkimId = mithep.PhotonIdMod('PhotonSkimId',
+    IsFilterMode = False,
+    InputName = baselinePhotons.GetOutputName(),
+    OutputName = 'PhotonSkimId',
+    IdType = mithep.PhotonTools.kSpring15Loose,
+    IsoType = mithep.PhotonTools.kSpring15LooseIso,
+    PtMin = 55.,
+    ApplyCSafeElectronVeto = False # veto applied in the filler code
+)
+
 photonLooseId = mithep.PhotonIdMod('PhotonLooseId',
     IsFilterMode = False,
     InputName = baselinePhotons.GetOutputName(),
@@ -566,13 +576,14 @@ metSkim.SetCategoryActive(mithep.MonoXSkimMod.kPhoton, True)
 
 electronBaselineId.SetMinOutput(1)
 muonBaselineId.SetMinOutput(1)
+photonSkimId.SetMinOutput(1)
 
 def OR(expr1, expr2):
     global mithep
     return mithep.BooleanMod.Expression(expr1, expr2, mithep.BooleanMod.Expression.kOR)
 
 skim = mithep.BooleanMod('Skim',
-    Expression = OR(metSkim, OR(electronBaselineId, muonBaselineId))
+    Expression = OR(metSkim, OR(photonSkimId, OR(electronBaselineId, muonBaselineId)))
 )
 
 ###############
@@ -756,33 +767,41 @@ triggers = [
   ('Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', ['hltMu17TrkIsoVVLEle12CaloIdLTrackIdLIsoVLElectronlegTrackIsoFilter']),
   ('Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', ['hltMu23TrkIsoVVLEle12CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered23']),
   ('Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL', ['hltMu23TrkIsoVVLEle12CaloIdLTrackIdLIsoVLElectronlegTrackIsoFilter']),
-  ('Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL', ['hltMu23TrkIsoVVLEle8CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered23']),
-  ('Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL', ['hltMu23TrkIsoVVLEle8CaloIdLTrackIdLIsoVLElectronlegTrackIsoFilter']),
+  #('Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL', ['hltMu23TrkIsoVVLEle8CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered23']),
+  #('Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL', ['hltMu23TrkIsoVVLEle8CaloIdLTrackIdLIsoVLElectronlegTrackIsoFilter']),
   ('Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL', ['hltMu8TrkIsoVVLEle17CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered8']),
   ('Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL', ['hltMu8TrkIsoVVLEle17CaloIdLTrackIdLIsoVLElectronlegTrackIsoFilter']),
   ('Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL', ['hltMu8TrkIsoVVLEle23CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered8']),
   ('Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL', ['hltMu8TrkIsoVVLEle23CaloIdLTrackIdLIsoVLElectronlegTrackIsoFilter']),
   ('Mu17_TrkIsoVVL_Mu8_TrkIsoVVL', ['hltDiMuonGlb17Glb8RelTrkIsoFiltered0p4']),
   ('Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL', ['hltDiMuonGlb17Trk8RelTrkIsoFiltered0p4']),
-  ('Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ', ['hltDiMuonGlb17Glb8RelTrkIsoFiltered0p4DzFiltered0p2']),
-  ('Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ', ['hltDiMuonGlb17Trk8RelTrkIsoFiltered0p4DzFiltered0p2']),
+  #('Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ', ['hltDiMuonGlb17Glb8RelTrkIsoFiltered0p4DzFiltered0p2']),
+  #('Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ', ['hltDiMuonGlb17Trk8RelTrkIsoFiltered0p4DzFiltered0p2']),
   ('IsoMu20', ['hltL3crIsoL1sMu18L1f0L2f10QL3f20QL3trkIsoFiltered0p09']),
-  ('IsoTkMu20', ['hltL3fL1sMu18L1f0Tkf20QL3trkIsoFiltered0p09']),
+  ('IsoMu22', ['hltL3crIsoL1sMu20L1f0L2f10QL3f22QL3trkIsoFiltered0p09']),
   ('IsoMu24', ['hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09']),
+  ('IsoTkMu20', ['hltL3fL1sMu18L1f0Tkf20QL3trkIsoFiltered0p09']),
+  ('IsoTkMu22', ['hltL3fL1sMu20L1f0Tkf22QL3trkIsoFiltered0p09']),
   ('IsoTkMu24', ['hltL3fL1sMu22L1f0Tkf24QL3trkIsoFiltered0p09']),
   ('Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', ['hltEle17Ele12CaloIdLTrackIdLIsoVLDZFilter']),
   ('Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', ['hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter']),
-  ('Ele25_WPTight_Gsf', ['hltEle25WPTightGsfTrackIsoFilter']),
+  ('Ele25_eta2p1_WPTight_Gsf', ['hltEle25erWPTightGsfTrackIsoFilter']),
   ('Ele27_eta2p1_WPLoose_Gsf', ['hltEle27erWPLooseGsfTrackIsoFilter']),
   ('Ele27_WPTight_Gsf', ['hltEle27WPTightGsfTrackIsoFilter']),
+  ('Ele35_WPLoose_Gsf', ['hltEle35WPLooseGsfTrackIsoFilter']),
   ('Mu8_TrkIsoVVL', ['hltL3fL1sMu5L1f0L2f5L3Filtered8TkIsoFiltered0p4']),
   ('Mu17_TrkIsoVVL', ['hltL3fL1sMu1lqL1f0L2f10L3Filtered17TkIsoFiltered0p4']),
-  ('Ele12_CaloIdL_TrackIdL_IsoVL', ['hltEle12CaloIdLTrackIdLIsoVLTrackIsoFilter']),
-  ('Ele17_CaloIdL_TrackIdL_IsoVL', ['hltEle17CaloIdLTrackIdLIsoVLTrackIsoFilter']),
-  ('Ele23_CaloIdL_TrackIdL_IsoVL', ['hltEle23CaloIdLTrackIdLIsoVLTrackIsoFilter']),
+  #('Ele12_CaloIdL_TrackIdL_IsoVL', ['hltEle12CaloIdLTrackIdLIsoVLTrackIsoFilter']),
+  #('Ele17_CaloIdL_TrackIdL_IsoVL', ['hltEle17CaloIdLTrackIdLIsoVLTrackIsoFilter']),
+  #('Ele23_CaloIdL_TrackIdL_IsoVL', ['hltEle23CaloIdLTrackIdLIsoVLTrackIsoFilter']),
   ('Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30', ['hltEle12PFJet30EleCleaned']),
   ('Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30', ['hltEle17PFJet30EleCleaned']),
-  ('Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30', ['hltEle23PFJet30EleCleaned'])
+  ('Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30', ['hltEle23PFJet30EleCleaned']),
+  ('Photon50_R9Id90_HE10_IsoM', ['hltEG50R9Id90HE10IsoMTrackIsoFilter']),
+  ('Photon75_R9Id90_HE10_IsoM', ['hltEG75R9Id90HE10IsoMTrackIsoFilter']),
+  ('Photon90_R9Id90_HE10_IsoM', ['hltEG90R9Id90HE10IsoMTrackIsoFilter']),
+  ('Photon120_R9Id90_HE10_IsoM', ['hltEG120R9Id90HE10IsoMTrackIsoFilter']),
+  ('Photon165_R9Id90_HE10_IsoM', ['hltEG165R9Id90HE10IsoMTrackIsoFilter'])
 ]
 
 for path, filters in triggers:
@@ -813,7 +832,7 @@ preskimSequence = Chain([
     metCorrection
 ])
 
-filterMods = metSkim + muonBaselineId + electronBaselineId
+filterMods = metSkim + muonBaselineId + electronBaselineId + photonSkimId
 
 postskimSequence = Chain([
     skim,

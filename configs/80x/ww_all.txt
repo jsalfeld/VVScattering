@@ -1,16 +1,5 @@
 book dataset skim bx pdfrwgt json
 
-#t2mit/filefi/044  MuonEG+Run2016B-PromptReco-v1+AOD - 25ns - -
-#t2mit/filefi/044  MuonEG+Run2016B-PromptReco-v2+AOD - 25ns - -
-#t2mit/filefi/044  DoubleMuon+Run2016B-PromptReco-v1+AOD - 25ns - -
-#t2mit/filefi/044  DoubleMuon+Run2016B-PromptReco-v2+AOD - 25ns - -
-#t2mit/filefi/044  DoubleEG+Run2016B-PromptReco-v1+AOD - 25ns - -
-#t2mit/filefi/044  DoubleEG+Run2016B-PromptReco-v2+AOD - 25ns - -
-#t2mit/filefi/044  SingleMuon+Run2016B-PromptReco-v1+AOD - 25ns - -
-#t2mit/filefi/044  SingleMuon+Run2016B-PromptReco-v2+AOD - 25ns - -
-#t2mit/filefi/044  SingleElectron+Run2016B-PromptReco-v1+AOD - 25ns - -
-#t2mit/filefi/044  SingleElectron+Run2016B-PromptReco-v2+AOD - 25ns - -
-
 t2mit/filefi/044  DarkMatter_MonoZToLL_A_Mx-1000_Mv-1000_gDMgQ-1_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v2+RAWAODSIM - 25ns mg5_74 ~
 t2mit/filefi/044  DarkMatter_MonoZToLL_A_Mx-1000_Mv-10_gDMgQ-1_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v3+RAWAODSIM - 25ns mg5_74 ~
 t2mit/filefi/044  DarkMatter_MonoZToLL_A_Mx-1000_Mv-1995_gDMgQ-1_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v2+RAWAODSIM - 25ns mg5_74 ~
@@ -83,7 +72,10 @@ t2mit/filefi/044 TTbarDMJets_pseudoscalar_Mchi-1_Mphi-100_TuneCUETP8M1_13TeV-mad
 #####t2mit/filefi/044  GJets_DR-0p4_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns mg5_74 ~
 #####t2mit/filefi/044  GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns mg5_74 ~
 #####t2mit/filefi/044  GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns mg5_74 ~
-#####t2mit/filefi/044  ZNuNuGJets_MonoPhoton_PtG-40to130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns mg5_74 ~
+t2mit/filefi/044  ZNuNuGJets_MonoPhoton_PtG-40to130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns mg5_74 ~
+t2mit/filefi/044  WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM - 25ns mg5_74 ~
+t2mit/filefi/044  ZLLGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM - 25ns mg5_74 ~
+t2mit/filefi/044  ZNuNuGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM - 25ns mg5_74 ~
 t2mit/filefi/044  WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns mg5_74 ~
 t2mit/filefi/044  WpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM	  - 25ns mg5_74 ~
 t2mit/filefi/044  WpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM	  - 25ns mg5_74 ~

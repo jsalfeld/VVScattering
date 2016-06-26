@@ -1,24 +1,21 @@
 #!/bin/sh
 
-export PREFIX="";
-if [ $1 == 1 ]
-then
-  export PREFIX="qcd_";
-elif [ $1 == 2 ]
-then
-  export PREFIX="met_";
-elif [ $1 == 3 ]
-then
-  export PREFIX="wln_";
-elif [ $1 == 4 ]
-then
-  export PREFIX="pho_";
-fi
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/MuonEG+Run2016B-PromptReco-v2+AOD.root\",\"/scratch/ceballos/ntuples_goodrun_80x/temp/MuonEG+Run2016B-PromptReco-v2+AOD.root\",\"data\"\)
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/DoubleMuon+Run2016B-PromptReco-v2+AOD.root\",\"/scratch/ceballos/ntuples_goodrun_80x/temp/DoubleMuon+Run2016B-PromptReco-v2+AOD.root\",\"data\"\)
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/SingleMuon+Run2016B-PromptReco-v2+AOD.root\",\"/scratch/ceballos/ntuples_goodrun_80x/temp/SingleMuon+Run2016B-PromptReco-v2+AOD.root\",\"data\"\)
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/DoubleEG+Run2016B-PromptReco-v2+AOD.root\",\"/scratch/ceballos/ntuples_goodrun_80x/temp/DoubleEG+Run2016B-PromptReco-v2+AOD.root\",\"data\"\)
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/SingleElectron+Run2016B-PromptReco-v2+AOD.root\",\"/scratch/ceballos/ntuples_goodrun_80x/temp/SingleElectron+Run2016B-PromptReco-v2+AOD.root\",\"data\"\)
 
-if [ $1 == 4 ]
-then
-  echo "PHO"
-else
-  echo "LEPC"
-  root -l -q -b MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch/ceballos/ntuples_goodrun_80x/data.root\",\"/scratch/ceballos/ntuples_weightsDA_80x/${PREFIX}data.root\",\"data\",$1\)
-fi
+hadd -f /scratch/ceballos/ntuples_goodrun_80x/temp/data.root /scratch/ceballos/ntuples_goodrun_80x/temp/*AOD.root;
+
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeGoodRunSample.C+\(\"/scratch/ceballos/ntuples_goodrun_80x/temp/data.root\",\"/scratch/ceballos/ntuples_goodrun_80x/data.root\",\"/home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/json/80x/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt\"\)
+
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch/ceballos/ntuples_goodrun_80x/data.root\",\"/scratch/ceballos/ntuples_weightsDA_80x/data.root\",\"data\"\)
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch/ceballos/ntuples_goodrun_80x/data.root\",\"/scratch/ceballos/ntuples_weightsDA_80x/met_data.root\",\"data\",2\)
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch/ceballos/ntuples_goodrun_80x/SinglePhoton+Run2016B-PromptReco-v2+AOD.root\",\"/scratch/ceballos/ntuples_weightsDA_80x/SinglePhoton+Run2016B-PromptReco-v2+AOD.root\",\"data\",0\)
+
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeGoodRunSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/MuonEG+Run2016B-PromptReco-v2+AOD.root\",\"/scratch/ceballos/ntuples_goodrun_80x/MuonEG+Run2016B-PromptReco-v2+AOD.root\",\"/home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/json/80x/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt\"\)
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeGoodRunSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/DoubleMuon+Run2016B-PromptReco-v2+AOD.root\",\"/scratch/ceballos/ntuples_goodrun_80x/DoubleMuon+Run2016B-PromptReco-v2+AOD.root\",\"/home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/json/80x/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt\"\)
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeGoodRunSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/SingleMuon+Run2016B-PromptReco-v2+AOD.root\",\"/scratch/ceballos/ntuples_goodrun_80x/SingleMuon+Run2016B-PromptReco-v2+AOD.root\",\"/home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/json/80x/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt\"\)
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeGoodRunSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/DoubleEG+Run2016B-PromptReco-v2+AOD.root\",\"/scratch/ceballos/ntuples_goodrun_80x/DoubleEG+Run2016B-PromptReco-v2+AOD.root\",\"/home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/json/80x/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt\"\)
+root -l -q -b /home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/macros/80x/makeGoodRunSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/SingleElectron+Run2016B-PromptReco-v2+AOD.root\",\"/scratch/ceballos/ntuples_goodrun_80x/SingleElectron+Run2016B-PromptReco-v2+AOD.root\",\"/home/ceballos/cms/cmssw/044/CMSSW_8_0_5_patch1/src/MitAnalysisRunII/json/80x/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt\"\)

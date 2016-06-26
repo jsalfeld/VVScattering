@@ -25,7 +25,7 @@ bool usePureMC = true;
 double mcPrescale = 10.0;
 const bool useDYMVA = false;
 const bool doTriggerStudy = true;
-const TString typeLepSel = "default";
+const TString typeLepSel = "medium";
 
 void baseAnalysis(
  Int_t nsel = 4,
@@ -35,7 +35,7 @@ void baseAnalysis(
 
   TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_80x/";
   TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_80x/";
-  Double_t lumi = 1.8;
+  Double_t lumi = 2.6;
 
   if(nsel == 2) usePureMC = true;
 
@@ -263,7 +263,7 @@ void baseAnalysis(
 
     unsigned int selBit_= 0;
     the_SelBit_tree->SetBranchAddress("selBit", &selBit_);
-    Int_t nPassTrigger[18] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    Int_t nPassTrigger[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
     Int_t nPassCuts[10] = {0,0,0,0,0,0,0,0,0,0};
     double theMCPrescale = mcPrescale;
@@ -293,13 +293,16 @@ void baseAnalysis(
              (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*")	      == 0) ||
              (strcmp(tokens[nt],"HLT_IsoMu20_v*") 				      == 0) ||
              (strcmp(tokens[nt],"HLT_IsoTkMu20_v*") 				      == 0) ||
+             (strcmp(tokens[nt],"HLT_IsoMu22_v*") 				      == 0) ||
+             (strcmp(tokens[nt],"HLT_IsoTkMu22_v*") 				      == 0) ||
              (strcmp(tokens[nt],"HLT_IsoMu24_v*")				      == 0) ||
              (strcmp(tokens[nt],"HLT_IsoTkMu24_v*")				      == 0) ||
              (strcmp(tokens[nt],"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")	      == 0) ||
              (strcmp(tokens[nt],"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")	      == 0) ||
-             (strcmp(tokens[nt],"HLT_Ele22_eta2p1_WPLoose_Gsf_v*")                    == 0) ||
-             (strcmp(tokens[nt],"HLT_Ele23_WPLoose_Gsf_v*")			      == 0) ||
-             (strcmp(tokens[nt],"HLT_Ele27_WPLoose_Gsf_v*")			      == 0)
+             (strcmp(tokens[nt],"HLT_Ele25_eta2p1_WPTight_Gsf_v*")                    == 0) ||
+             (strcmp(tokens[nt],"HLT_Ele27_eta2p1_WPLoose_Gsf_v*")                    == 0) ||
+             (strcmp(tokens[nt],"HLT_Ele27_WPTight_Gsf_v*")			      == 0) ||
+             (strcmp(tokens[nt],"HLT_Ele35_WPLoose_Gsf_v*")			      == 0)
              ) passFilter[1] = kTRUE;
           if(doTriggerStudy){
             if(strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v*")  == 0) nPassTrigger[ 0]++;
@@ -313,13 +316,16 @@ void baseAnalysis(
             if(strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*")	       == 0) nPassTrigger[ 8]++;
             if(strcmp(tokens[nt],"HLT_IsoMu20_v*")				       == 0) nPassTrigger[ 9]++;
             if(strcmp(tokens[nt],"HLT_IsoTkMu20_v*")				       == 0) nPassTrigger[10]++;
-            if(strcmp(tokens[nt],"HLT_IsoMu24_v*")				       == 0) nPassTrigger[11]++;
-            if(strcmp(tokens[nt],"HLT_IsoTkMu24_v*")				       == 0) nPassTrigger[12]++;
-            if(strcmp(tokens[nt],"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")       == 0) nPassTrigger[13]++;
-            if(strcmp(tokens[nt],"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")       == 0) nPassTrigger[14]++;
-            if(strcmp(tokens[nt],"HLT_Ele22_eta2p1_WPLoose_Gsf_v*")		       == 0) nPassTrigger[15]++;
-            if(strcmp(tokens[nt],"HLT_Ele23_WPLoose_Gsf_v*")			       == 0) nPassTrigger[16]++;
-            if(strcmp(tokens[nt],"HLT_Ele27_WPLoose_Gsf_v*")			       == 0) nPassTrigger[17]++;
+            if(strcmp(tokens[nt],"HLT_IsoMu22_v*")				       == 0) nPassTrigger[11]++;
+            if(strcmp(tokens[nt],"HLT_IsoTkMu22_v*")				       == 0) nPassTrigger[12]++;
+            if(strcmp(tokens[nt],"HLT_IsoMu24_v*")				       == 0) nPassTrigger[13]++;
+            if(strcmp(tokens[nt],"HLT_IsoTkMu24_v*")				       == 0) nPassTrigger[14]++;
+            if(strcmp(tokens[nt],"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")       == 0) nPassTrigger[15]++;
+            if(strcmp(tokens[nt],"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")       == 0) nPassTrigger[16]++;
+            if(strcmp(tokens[nt],"HLT_Ele25_eta2p1_WPTight_Gsf_v*")		       == 0) nPassTrigger[17]++;
+            if(strcmp(tokens[nt],"HLT_Ele27_eta2p1_WPLoose_Gsf_v*")		       == 0) nPassTrigger[18]++;
+            if(strcmp(tokens[nt],"HLT_Ele27_WPTight_Gsf_v*")	   		       == 0) nPassTrigger[19]++;
+            if(strcmp(tokens[nt],"HLT_Ele35_WPLoose_Gsf_v*")	   		       == 0) nPassTrigger[20]++;
           }
 	}
       } else { passFilter[1] = kTRUE;}
@@ -665,9 +671,12 @@ void baseAnalysis(
       double effSF = 1.0;
       if(infilecatv[ifile] != 0){
         for(unsigned int nl=0; nl<idLep.size(); nl++){
+          //effSF = effSF * effScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),
+	  //        TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),
+          //        period,typeLepSel.Data());
           effSF = effSF * effhDScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),
 	        ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),
-		typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF);
+	  	typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF);
         }
       }
 
@@ -711,9 +720,9 @@ void baseAnalysis(
       double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*trigEff;
       //printf("totalWeight: %f * %f * %f * %f * %f * %f * %f = %f\n",mcWeight,theLumi,puWeight,effSF,fakeSF,theMCPrescale,trigEff,totalWeight);
       
-      if(infilecatv[ifile] == 2 && zBoson.size() == 1) {
-        totalWeight = totalWeight * zpt_correction(((TLorentzVector*)(*eventMonteCarlo.p4)[zBoson[0]])->Pt(), 0);
-      }
+      //if(infilecatv[ifile] == 2 && zBoson.size() == 1) {
+      //  totalWeight = totalWeight * zpt_correction(((TLorentzVector*)(*eventMonteCarlo.p4)[zBoson[0]])->Pt(), 0);
+      //}
 
       if(totalWeight == 0) continue;
       // end event weighting
@@ -845,7 +854,7 @@ void baseAnalysis(
     if(doTriggerStudy){
       printf("trigger_cuts: ");
       for(unsigned int nc=0; nc<sizeof(nPassTrigger)/sizeof(*nPassTrigger); nc++){
-        printf("%4.1f ",100*(double)nPassTrigger[nc]/the_input_tree->GetEntries());
+        printf("%5.2f ",100*(double)nPassTrigger[nc]/the_input_tree->GetEntries());
       }
       printf("\n");
     }
