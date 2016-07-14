@@ -7,20 +7,27 @@ import os
 ####################################
 
 mitdata = os.environ['MIT_DATA']
+doFilter = True 
 
-global bx
 try:
     bx = analysis.custom['bx']
 except KeyError:
     bx = '25ns'
 
+whichTrigger = 'none'
+try:
+    whichTrigger  = analysis.custom['trigger']
+except KeyError:
+    whichTrigger = "-"
+
 def switchBX(case25, case50):
+    global bx
     return case25 if bx == '25ns' else case50
 
-jecVersion = switchBX('Spring16_25nsV1', 'Summer15_50nsV5')
+jecVersion = switchBX('Spring16_25nsV6', 'Summer15_50nsV5')
 
 if analysis.isRealData:
-    jecPattern = mitdata + '/JEC/' + jecVersion + '/' + jecVersion + '_MC_{level}_{jettype}.txt'
+    jecPattern = mitdata + '/JEC/' + jecVersion + '/' + jecVersion + '_DATA_{level}_{jettype}.txt'
     jecLevels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
 
 else:
@@ -33,9 +40,6 @@ else:
 
 from MitPhysics.Mods.GoodPVFilterMod import goodPVFilterMod
 from MitPhysics.Mods.SeparatePileUpMod import separatePileUpMod
-from MitPhysics.Mods.PuppiMod import puppiMod
-from MitPhysics.Mods.PuppiPFJetMod import puppiPFJetMod
-from MitPhysics.Mods.PuppiFatJetMod import puppiFatJetMod
 
 ################################
 ### JET/MET ID & CORRECTIONS ###
@@ -48,7 +52,7 @@ jetCorrection = mithep.JetCorrectionMod('JetCorrection',
 )
 
 puppiJetCorrection = mithep.JetCorrectionMod('PuppiJetCorrection',
-    InputName = puppiPFJetMod.GetOutputName(),
+    InputName = 'AKt4PuppiJets',
     CorrectedJetsName = 'CorrectedPuppiJets',
     RhoAlgo = mithep.PileupEnergyDensity.kFixedGridFastjetAll
 )
@@ -77,16 +81,10 @@ metCorrectionJESDown = metCorrection.clone('MetCorrectionJESDown',
     JESUncertaintySigma = -1.
 )
 
-puppiMet = mithep.MetMod('PuppiMet',
-    InputName = puppiMod.GetOutputName(),
-    OutputName = 'PuppiMet',
-    OutputType = mithep.kPFMet
-)
-
 puppiMetCorrection = metCorrection.clone('PuppiMetCorrection',
-    InputName = puppiMet.GetOutputName(),
+    InputName = 'PuppiMet',
     OutputName = 'PuppiType1CorrectedMet',
-    JetsName = puppiPFJetMod.GetOutputName()
+    JetsName = 'AKt4PuppiJets',
 )
 
 ### JEC files must be added AFTER cloning ###
@@ -127,7 +125,7 @@ looseTaus = mithep.PFTauIdMod('PFTauId',
     PtMin = 18.,
     EtaMax = 2.3
 )
-looseTaus.AddDiscriminator(mithep.PFTau.iDecayModeFindingNewDMs)
+looseTaus.AddDiscriminator(mithep.PFTau.iDecayModeFinding)
 looseTaus.AddCutDiscriminator(mithep.PFTau.dByCombinedIsolationDeltaBetaCorrRaw3Hits, 5., False)
 
 # Electrons
@@ -413,13 +411,12 @@ ak8JetExtender = mithep.FatJetExtenderMod('AK8JetExtender',
     UseSoftDropLib = False,
     SoftDropR0 = 0.8,
     SoftDropZCut = 0.1,
-    QGTaggingOn = True,
+    QGTaggingOn = False,
     DoShowerDeconstruction = False,
     DoECF = False,
     DoQjets = False,
     BeVerbose = False
 )
-ak8JetExtender.SetSubJetTypeOn(mithep.XlSubJet.kSoftDrop)
 
 ca15JetCorrection = mithep.JetCorrectionMod('CA15JetCorrection',
     InputName = 'CA15FatJetsCHS',
@@ -435,46 +432,10 @@ goodCA15Jets = looseAK4Jets.clone('GoodCA15Jets',
     OutputName = 'GoodCA15Jets'
 )
 
-ca15JetExtender = mithep.FatJetExtenderMod('CA15JetExtender',
-    InputName = goodCA15Jets.GetOutputName(),
-    OutputName = 'XlCA15Jets',
-    ProcessNJets = 4,
-    ConeSize = 1.5,
-    PFCandsName = mithep.Names.gkPFCandidatesBrn,
-    VertexesName = goodPVFilterMod.GetOutputName(),
-    UseSoftDropLib = False,
-    SoftDropR0 = 1.5,
-    SoftDropZCut = 0.2,
-    QGTaggingOn = True,
-    DoShowerDeconstruction = False,
-    DoECF = False,
-    DoQjets = False,
-    BeVerbose = False
-)
-ca15JetExtender.SetSubJetTypeOn(mithep.XlSubJet.kSoftDrop)
-
 ### PUPPI ###
 
-puppiAK8Jets = puppiFatJetMod.clone('puppiAK8Jets',
-    InputName = puppiMod.GetOutputName(),
-    OutputName = 'AK8FatJetsPuppi',
-    R0 = 0.8,
-    JetAlgorithm = mithep.PuppiFatJetMod.kAntiKT,
-    DoMatching = True,
-    MatchingJetsName = 'AKt8FatJetsCHS'
-)
-
-puppiCA15Jets = puppiFatJetMod.clone('puppiCA15Jets',
-    InputName = puppiMod.GetOutputName(),
-    OutputName = 'CA15FatJetsPuppi',
-    R0 = 1.5,
-    JetAlgorithm = mithep.PuppiFatJetMod.kCambridgeAachen,
-    DoMatching = True,
-    MatchingJetsName = 'CA15FatJetsCHS'
-)
-
 puppiAK8CorrectionMod = mithep.JetCorrectionMod('puppiAK8Correction',
-    InputName = puppiAK8Jets.GetOutputName(),
+    InputName = 'AKt8FatJetsPuppi',
     CorrectedJetsName = 'CorrectedAK8PuppiJets',
     RhoAlgo = mithep.PileupEnergyDensity.kFixedGridFastjetAll
 )
@@ -487,28 +448,9 @@ goodAK8PuppiJets = mithep.JetIdMod('GoodAK8PuppiJets',
     OutputName = 'GoodAK8PuppiJets',
     MVATrainingSet = mithep.JetIDMVA.nMVATypes
 )
-ak8PuppiJetExtender = mithep.FatJetExtenderMod('puppiAK8Extender',
-    ConeSize = 0.8,
-    InputName = goodAK8PuppiJets.GetOutputName(),
-    OutputName = "XlAK8PuppiJets",
-    ProcessNJets = 4,
-    QGTaggerCHS = True,
-    QGTaggingOn = True,
-    PFCandsName = puppiMod.GetOutputName(),
-    VertexesName = goodPVFilterMod.GetOutputName(),
-    SoftDropR0 = 0.8,
-    SoftDropZCut = 0.1,
-    DoShowerDeconstruction = False,
-    BeVerbose = False,
-    DoECF = False,
-    DoQjets = False,
-    UseSoftDropLib = False,
-    DoCMSandHTT = False
-)
-ak8PuppiJetExtender.SetSubJetTypeOn(mithep.XlSubJet.kSoftDrop)
 
 puppiCA15CorrectionMod = mithep.JetCorrectionMod('puppiCA15Correction',
-    InputName = puppiCA15Jets.GetOutputName(),
+    InputName = 'CA15FatJetsPuppi',
     CorrectedJetsName = 'CorrectedCA15PuppiJets',
     RhoAlgo = mithep.PileupEnergyDensity.kFixedGridFastjetAll
 )
@@ -521,26 +463,6 @@ goodCA15PuppiJets = mithep.JetIdMod('GoodCA15PuppiJets',
     OutputName = 'GoodCA15PuppiJets',
     MVATrainingSet = mithep.JetIDMVA.nMVATypes
 )
-
-ca15PuppiJetExtender = mithep.FatJetExtenderMod('puppiCA15Extender',
-    ConeSize = 1.5,
-    InputName = goodCA15PuppiJets.GetOutputName(),
-    OutputName = "XlCA15PuppiJets",
-    ProcessNJets = 4,
-    QGTaggerCHS = True,
-    QGTaggingOn = True,
-    PFCandsName = puppiMod.GetOutputName(),
-    VertexesName = goodPVFilterMod.GetOutputName(),
-    SoftDropR0 = 1.5,
-    SoftDropZCut = 0.1,
-    DoShowerDeconstruction = False,
-    BeVerbose = False,
-    DoECF = False,
-    DoQjets = False,
-    UseSoftDropLib = False,
-    DoCMSandHTT = False
-)
-ca15PuppiJetExtender.SetSubJetTypeOn(mithep.XlSubJet.kSoftDrop)
 
 ####################
 ### EVENT FILTER ###
@@ -557,7 +479,7 @@ metSkim = mithep.MonoXSkimMod('MetSkim',
     GoodElectronsName = veryLooseElectrons.GetOutputName(),
     GoodMuonsName = veryLooseMuons.GetOutputName(),
     GoodPhotonsName = loosePhotons.GetOutputName(),
-    MinMetPt = 20000.
+    MinMetPt = (20000. if doFilter else 0.)
 )
 metSkim.SetCategoryActive(mithep.MonoXSkimMod.kMet, True)
 metSkim.SetCategoryActive(mithep.MonoXSkimMod.kDielectron, True)
@@ -613,7 +535,6 @@ neroMod.AddFiller(mithep.nero.VertexFiller(
 jetsFiller = mithep.nero.JetsFiller(mithep.nero.BaseFiller.kJets,
     JetsName = looseAK4Jets.GetOutputName(),
     JetIdCutWP = mithep.JetIDMVA.kLoose,
-    JetIdMVATrainingSet = mithep.JetIDMVA.k74CHS,
     JetIdMVARhoAlgo = mithep.PileupEnergyDensity.kFixedGridFastjetAll
 )
 
@@ -621,6 +542,7 @@ synchTo = '80Xv2'
 
 if synchTo == '76X':
     # to synch with 76X MINIAOD out-of-the-box values
+    jetsFiller.SetJetIdMVATrainingSet(mithep.JetIDMVA.k74CHS)
     jetsFiller.SetJetIdMVAWeightsFile(mitdata + '/JetId/TMVAClassificationCategory_BDTG.weights_jteta_0_2_newNames.xml', 0)
     jetsFiller.SetJetIdMVAWeightsFile(mitdata + '/JetId/TMVAClassificationCategory_BDTG.weights_jteta_2_2p5_newNames.xml', 1)
     jetsFiller.SetJetIdMVAWeightsFile(mitdata + '/JetId/TMVAClassificationCategory_BDTG.weights_jteta_2p5_3_newNames.xml', 2)
@@ -628,25 +550,24 @@ if synchTo == '76X':
     jetsFiller.SetJetIdCutsFile(mitdata + '/JetId/jetIDCuts_150807.dat')
     jetsFiller.SetJetIdMVAPullBug(True)
     jetsFiller.SetJetIdMVACovarianceBug(True)
-    jetsFiller.SetJetIdMVATrainingSet(mithep.JetIDMVA.k74CHS)
 elif synchTo == '80Xv1':
     # to synch with 80X MINIAODv1 or privately recomputed 76X using tag pileupJetId76X of https://github.com/jbrands/cmssw.git
+    jetsFiller.SetJetIdMVATrainingSet(mithep.JetIDMVA.k76CHS)
     jetsFiller.SetJetIdMVAWeightsFile(mitdata + '/JetId/pileupJetId_76x_Eta0to2p5_BDT.weights.xml', 0)
     jetsFiller.SetJetIdMVAWeightsFile(mitdata + '/JetId/pileupJetId_76x_Eta2p5to2p75_BDT.weights.xml', 1)
     jetsFiller.SetJetIdMVAWeightsFile(mitdata + '/JetId/pileupJetId_76x_Eta2p75to3_BDT.weights.xml', 2)
     jetsFiller.SetJetIdMVAWeightsFile(mitdata + '/JetId/pileupJetId_76x_Eta3to5_BDT.weights.xml', 3)
     jetsFiller.SetJetIdCutsFile(mitdata + '/JetId/jetIDCuts_160225.dat')
     jetsFiller.SetJetIdMVACovarianceBug(True)
-    jetsFiller.SetJetIdMVATrainingSet(mithep.JetIDMVA.k76CHS)
 elif synchTo == '80Xv2':
     # to synch with 80X MINIAODv2
+    jetsFiller.SetJetIdMVATrainingSet(mithep.JetIDMVA.k80CHS)
     jetsFiller.SetJetIdMVAWeightsFile(mitdata + '/JetId/pileupJetId_80X_Eta0to2p5_BDT.weights.xml', 0)
     jetsFiller.SetJetIdMVAWeightsFile(mitdata + '/JetId/pileupJetId_80X_Eta2p5to2p75_BDT.weights.xml', 1)
     jetsFiller.SetJetIdMVAWeightsFile(mitdata + '/JetId/pileupJetId_80X_Eta2p75to3_BDT.weights.xml', 2)
     jetsFiller.SetJetIdMVAWeightsFile(mitdata + '/JetId/pileupJetId_80X_Eta3to5_BDT.weights.xml', 3)
     jetsFiller.SetJetIdCutsFile(mitdata + '/JetId/jetIDCuts_160416.dat')
     jetsFiller.SetJetIdMVACovarianceBug(True)
-    jetsFiller.SetJetIdMVATrainingSet(mithep.JetIDMVA.k80CHS)
 
 neroMod.AddFiller(jetsFiller)
 
@@ -712,20 +633,21 @@ elif emva == mithep.ElectronIDMVA.kIDEGamma2015NonTrig25ns:
 neroMod.AddFiller(leptonsFiller)
 
 #neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kAK8Jets,
-#    FatJetsName = ak8JetExtender.GetOutputName()
+#    FatJetsName = ak8JetExtender.GetOutputName(),
+#    ExtendedOn = True
 #))
 
 #neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kCA15Jets,
-#    FatJetsName = ca15JetExtender.GetOutputName(),
+#    FatJetsName = goodCA15Jets.GetOutputName(),
 #    MJIdOn = True
 #))
 
 #neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kAK8PuppiJets,
-#    FatJetsName = ak8PuppiJetExtender.GetOutputName()
+#   FatJetsName = goodAK8PuppiJets.GetOutputName()
 #))
 
 #neroMod.AddFiller(mithep.nero.FatJetsFiller(mithep.nero.BaseFiller.kCA15PuppiJets,
-#    FatJetsName = ca15PuppiJetExtender.GetOutputName(),
+#    FatJetsName = goodCA15PuppiJets.GetOutputName(),
 #    MJIdOn = True
 #))
 
@@ -734,7 +656,7 @@ metFiller = mithep.nero.MetFiller(
     JESUpMetName = metCorrectionJESUp.GetOutputName(),
     JESDownMetName = metCorrectionJESDown.GetOutputName(),
     PuppiMetName = puppiMetCorrection.GetOutputName(),
-    PuppiRawMetName = puppiMet.GetOutputName(),
+    PuppiRawMetName = 'PuppiMet',
     RawMetName = 'PFMet',
     MuonsName = tightMuons.GetOutputName()
 )
@@ -783,7 +705,7 @@ triggers = [
   ('IsoTkMu20', ['hltL3fL1sMu18L1f0Tkf20QL3trkIsoFiltered0p09']),
   ('IsoTkMu22', ['hltL3fL1sMu20L1f0Tkf22QL3trkIsoFiltered0p09']),
   ('IsoTkMu24', ['hltL3fL1sMu22L1f0Tkf24QL3trkIsoFiltered0p09']),
-  ('Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', ['hltEle17Ele12CaloIdLTrackIdLIsoVLDZFilter']),
+  #('Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', ['hltEle17Ele12CaloIdLTrackIdLIsoVLDZFilter']),
   ('Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ', ['hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter']),
   ('Ele25_eta2p1_WPTight_Gsf', ['hltEle25erWPTightGsfTrackIsoFilter']),
   ('Ele27_eta2p1_WPLoose_Gsf', ['hltEle27erWPLooseGsfTrackIsoFilter']),
@@ -791,9 +713,7 @@ triggers = [
   ('Ele35_WPLoose_Gsf', ['hltEle35WPLooseGsfTrackIsoFilter']),
   ('Mu8_TrkIsoVVL', ['hltL3fL1sMu5L1f0L2f5L3Filtered8TkIsoFiltered0p4']),
   ('Mu17_TrkIsoVVL', ['hltL3fL1sMu1lqL1f0L2f10L3Filtered17TkIsoFiltered0p4']),
-  #('Ele12_CaloIdL_TrackIdL_IsoVL', ['hltEle12CaloIdLTrackIdLIsoVLTrackIsoFilter']),
-  #('Ele17_CaloIdL_TrackIdL_IsoVL', ['hltEle17CaloIdLTrackIdLIsoVLTrackIsoFilter']),
-  #('Ele23_CaloIdL_TrackIdL_IsoVL', ['hltEle23CaloIdLTrackIdLIsoVLTrackIsoFilter']),
+  ('Ele23_CaloIdL_TrackIdL_IsoVL', ['hltEle23CaloIdLTrackIdLIsoVLTrackIsoFilter']),
   ('Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30', ['hltEle12PFJet30EleCleaned']),
   ('Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30', ['hltEle17PFJet30EleCleaned']),
   ('Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30', ['hltEle23PFJet30EleCleaned']),
@@ -837,13 +757,10 @@ filterMods = metSkim + muonBaselineId + electronBaselineId + photonSkimId
 postskimSequence = Chain([
     skim,
     separatePileUpMod,
-    puppiMod,
-    puppiPFJetMod,
     jetCorrection,
     puppiJetCorrection,
     metCorrectionJESUp,
     metCorrectionJESDown,
-    puppiMet,
     puppiMetCorrection,
     looseAK4Jets,
     looseTaus,
@@ -874,17 +791,12 @@ postskimSequence = Chain([
     #ak8JetCorrection,
     #ca15JetCorrection,
     #goodAK8Jets,
-    #goodCA15Jets,
     #ak8JetExtender,
-    #ca15JetExtender,
-    #puppiAK8Jets,
-    #puppiCA15Jets,
+    #goodCA15Jets,
     #puppiAK8CorrectionMod,
     #puppiCA15CorrectionMod,
     #goodAK8PuppiJets,
     #goodCA15PuppiJets,
-    #ak8PuppiJetExtender,
-    #ca15PuppiJetExtender
 ])
 
 #############################
@@ -907,8 +819,15 @@ if analysis.isRealData:
 
     else:
         badEventsFilterMod.SetFilter('CSCTightHaloFilter')
-        badEventsFilterMod.SetFilter('EcalDeadCellTriggerPrimitiveFilter')
+        badEventsFilterMod.SetFilter('CHTrackResolutionFilter')
+        badEventsFilterMod.SetFilter('MuBadTrackFilter')
         badEventsFilterMod.SetFilter('HBHENoiseIsoFilter')
+
+        from MitPhysics.SelMods.BadPFTrackFilterMod import badPFTrackFilterMod
+        # uncomment below (and set tagging mode to true in badEventsFilterMod) if you want to save bits
+        #badPFTrackFilterMod.SetTaggingMode(True)
+        #badEventsFilterMod.AddFilter(badPFTrackFilterMod.GetOutputName(0), badPFTrackFilterMod.GetOutputName(), 0)
+        #badEventsFilterMod.AddFilter(badPFTrackFilterMod.GetOutputName(1), badPFTrackFilterMod.GetOutputName(), 1)
 
     hltMod = mithep.HLTMod(
         ExportTrigObjects = False
@@ -921,7 +840,7 @@ if analysis.isRealData:
             for p in path:
                 hltMod.AddTrigger(p)
 
-    initialFilterSequence = badEventsFilterMod * hltMod * initialFilterSequence
+    initialFilterSequence = badPFTrackFilterMod * badEventsFilterMod * hltMod * initialFilterSequence
 
 else:
     generator = mithep.GeneratorMod(

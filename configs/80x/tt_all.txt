@@ -1,6 +1,11 @@
 book dataset skim bx pdfrwgt json
 
-t2mit/filefi/044  ZNuNuGJets_MonoPhoton_PtG-40to130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns mg5_74 ~
-t2mit/filefi/044  WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM - 25ns mg5_74 ~
-t2mit/filefi/044  ZLLGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM - 25ns mg5_74 ~
-t2mit/filefi/044  ZNuNuGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM - 25ns mg5_74 ~
+t2mit/fullsm/044 scalarmonoz_med-25_dm-50_gq-0.25 - 25ns - ~
+t2mit/fullsm/044 scalarmonoz_med-100_dm-50_gq-0.25 - 25ns - ~
+t2mit/fullsm/044 scalarmonoz_med-300_dm-50_gq-0.25 - 25ns - ~
+t2mit/fullsm/044 scalarmonoz_med-600_dm-50_gq-0.25 - 25ns - ~
+t2mit/fullsm/044 scalarmonoz_med-1000_dm-50_gq-0.25 - 25ns - ~
+t2mit/fullsm/044 scalarmonoz_med-1300_dm-50_gq-0.25 - 25ns - ~
+t2mit/fullsm/044 scalarmonoz_med-1500_dm-50_gq-0.25 - 25ns - ~
+t2mit/fullsm/044 scalarmonoz_med-1800_dm-50_gq-0.25 - 25ns - ~
+t2mit/fullsm/044 scalarmonoz_med-2000_dm-50_gq-0.25 - 25ns - ~

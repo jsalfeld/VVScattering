@@ -15,6 +15,6 @@ then
   export PREFIX="pho_";
 fi
 
-./MitAnalysisRunII/macros/80x/skim_25ns_data.sh $PREFIX;
+./MitAnalysisRunII/macros/80x/skim_25ns_data.sh;
 ./MitAnalysisRunII/macros/80x/skim_25ns_mc.sh $PREFIX;
 ./MitAnalysisRunII/macros/80x/skim_25ns_dm.sh $PREFIX;

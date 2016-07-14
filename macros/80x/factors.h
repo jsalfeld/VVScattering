@@ -3,25 +3,25 @@ double effSF_e_25_medium[10] = {0.739427,0.690631,0.815957,0.822430,0.856509,0.8
 double effSF_e_25_tight[10]  = {0.742330,0.661762,0.812364,0.820798,0.851298,0.846768,0.888956,0.915187,0.965834,0.927740};
 
 double fake_rate_m_25_medium[5][5] = {
-0.389,0.283,0.260,0.252,0.180,
-0.405,0.305,0.281,0.261,0.222,
-0.448,0.352,0.328,0.295,0.274,
-0.486,0.402,0.389,0.370,0.328,
-0.506,0.439,0.411,0.393,0.343
+0.400,0.293,0.271,0.252,0.198,
+0.406,0.307,0.285,0.262,0.221,
+0.449,0.354,0.334,0.307,0.290,
+0.490,0.409,0.397,0.371,0.330,
+0.506,0.444,0.426,0.415,0.380
 };
 double fake_rate_e_25_medium[5][5] = {
-0.193,0.185,0.178,0.168,0.195,
-0.189,0.198,0.177,0.165,0.137,
-0.227,0.211,0.185,0.189,0.161,
-0.325,0.272,0.261,0.246,0.288,
-0.362,0.340,0.351,0.347,0.377
+0.205,0.184,0.178,0.167,0.198,
+0.199,0.193,0.178,0.164,0.143,
+0.217,0.212,0.186,0.195,0.168,
+0.331,0.268,0.262,0.255,0.288,
+0.359,0.340,0.348,0.351,0.381
 };
 double fake_rate_e_25_tight[5][5] = {
-0.122,0.105,0.089,0.070,0.106,
-0.098,0.108,0.092,0.076,0.040,
-0.149,0.119,0.099,0.098,0.073,
-0.226,0.179,0.164,0.131,0.131,
-0.224,0.194,0.184,0.163,0.176
+0.121,0.103,0.092,0.073,0.106,
+0.113,0.105,0.094,0.077,0.048,
+0.137,0.121,0.101,0.099,0.077,
+0.232,0.177,0.163,0.139,0.131,
+0.225,0.188,0.179,0.163,0.181
 };
 double fake_rate_e_25_medium_mva[5][5] = {
 0.684,0.587,0.552,0.519,0.453,
@@ -129,7 +129,7 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
   bool idCut = false;
   if     (TMath::Abs(pdgId) == 13) {
     isoCut = 0.15;
-    if     (type == "default" || type == "medium" || type == "default_mva" || type == "medium_mva") idCut = (selBits & BareLeptons::LepMediumIP) == BareLeptons::LepMediumIP;
+    if     (type == "default" || type == "medium" || type == "default_mva" || type == "medium_mva") idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP;
     else printf("Problem with selectIsoCut!\n");
 
     return (idCut && iso/pt < isoCut);
@@ -547,6 +547,67 @@ float kfactor_qqZZ_qcd_dPhi(float GENdPhiZZ, int finalState = 2)
     }
     if (k==0.0) return 1.1; // if something goes wrong return inclusive k-factor
     else return k;
+
+}
+
+float kfactor_qqZZ_qcd_Pt(float GENpTZZ, int finalState = 2)
+{
+
+    // finalState=1 : 4e/4mu/4tau
+    // finalState=2 : 2e2mu/2mutau/2e2tau
+
+    float k=0.0;
+
+    if (finalState==1) {
+        k+=0.64155491983*(abs(GENpTZZ)>0.0&&abs(GENpTZZ)<=5.0);
+        k+=1.09985240531*(abs(GENpTZZ)>5.0&&abs(GENpTZZ)<=10.0);
+        k+=1.29390628654*(abs(GENpTZZ)>10.0&&abs(GENpTZZ)<=15.0);
+        k+=1.37859998571*(abs(GENpTZZ)>15.0&&abs(GENpTZZ)<=20.0);
+        k+=1.42430263312*(abs(GENpTZZ)>20.0&&abs(GENpTZZ)<=25.0);
+        k+=1.45038493266*(abs(GENpTZZ)>25.0&&abs(GENpTZZ)<=30.0);
+        k+=1.47015377651*(abs(GENpTZZ)>30.0&&abs(GENpTZZ)<=35.0);
+        k+=1.48828685748*(abs(GENpTZZ)>35.0&&abs(GENpTZZ)<=40.0);
+        k+=1.50573440448*(abs(GENpTZZ)>40.0&&abs(GENpTZZ)<=45.0);
+        k+=1.50211655928*(abs(GENpTZZ)>45.0&&abs(GENpTZZ)<=50.0);
+        k+=1.50918720827*(abs(GENpTZZ)>50.0&&abs(GENpTZZ)<=55.0);
+        k+=1.52463089491*(abs(GENpTZZ)>55.0&&abs(GENpTZZ)<=60.0);
+        k+=1.52400838378*(abs(GENpTZZ)>60.0&&abs(GENpTZZ)<=65.0);
+        k+=1.52418067701*(abs(GENpTZZ)>65.0&&abs(GENpTZZ)<=70.0);
+        k+=1.55424382578*(abs(GENpTZZ)>70.0&&abs(GENpTZZ)<=75.0);
+        k+=1.52544284222*(abs(GENpTZZ)>75.0&&abs(GENpTZZ)<=80.0);
+        k+=1.57896384602*(abs(GENpTZZ)>80.0&&abs(GENpTZZ)<=85.0);
+        k+=1.53034682567*(abs(GENpTZZ)>85.0&&abs(GENpTZZ)<=90.0);
+        k+=1.56147329708*(abs(GENpTZZ)>90.0&&abs(GENpTZZ)<=95.0);
+        k+=1.54468169268*(abs(GENpTZZ)>95.0&&abs(GENpTZZ)<=100.0);
+        k+=1.57222952415*(abs(GENpTZZ)>100.0);
+    }
+
+    if (finalState==2) {
+        k+=0.743602533303*(abs(GENpTZZ)>0.0&&abs(GENpTZZ)<=5.0);
+        k+=1.14789453219*(abs(GENpTZZ)>5.0&&abs(GENpTZZ)<=10.0);
+        k+=1.33815867892*(abs(GENpTZZ)>10.0&&abs(GENpTZZ)<=15.0);
+        k+=1.41420044104*(abs(GENpTZZ)>15.0&&abs(GENpTZZ)<=20.0);
+        k+=1.45511318916*(abs(GENpTZZ)>20.0&&abs(GENpTZZ)<=25.0);
+        k+=1.47569225244*(abs(GENpTZZ)>25.0&&abs(GENpTZZ)<=30.0);
+        k+=1.49053003693*(abs(GENpTZZ)>30.0&&abs(GENpTZZ)<=35.0);
+        k+=1.50622827695*(abs(GENpTZZ)>35.0&&abs(GENpTZZ)<=40.0);
+        k+=1.50328889799*(abs(GENpTZZ)>40.0&&abs(GENpTZZ)<=45.0);
+        k+=1.52186945281*(abs(GENpTZZ)>45.0&&abs(GENpTZZ)<=50.0);
+        k+=1.52043468754*(abs(GENpTZZ)>50.0&&abs(GENpTZZ)<=55.0);
+        k+=1.53977869986*(abs(GENpTZZ)>55.0&&abs(GENpTZZ)<=60.0);
+        k+=1.53491994434*(abs(GENpTZZ)>60.0&&abs(GENpTZZ)<=65.0);
+        k+=1.51772882172*(abs(GENpTZZ)>65.0&&abs(GENpTZZ)<=70.0);
+        k+=1.54494489131*(abs(GENpTZZ)>70.0&&abs(GENpTZZ)<=75.0);
+        k+=1.57762411697*(abs(GENpTZZ)>75.0&&abs(GENpTZZ)<=80.0);
+        k+=1.55078339014*(abs(GENpTZZ)>80.0&&abs(GENpTZZ)<=85.0);
+        k+=1.57078191891*(abs(GENpTZZ)>85.0&&abs(GENpTZZ)<=90.0);
+        k+=1.56162666568*(abs(GENpTZZ)>90.0&&abs(GENpTZZ)<=95.0);
+        k+=1.54183774627*(abs(GENpTZZ)>95.0&&abs(GENpTZZ)<=100.0);
+        k+=1.58485762205*(abs(GENpTZZ)>100.0);
+    }
+
+    if (k==0.0) return 1.1;
+    else return k; // if something goes wrong return inclusive k-factor
 
 }
 
