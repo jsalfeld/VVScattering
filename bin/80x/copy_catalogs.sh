@@ -6,6 +6,12 @@ export CATALOGB=~ceballos/catalog/t2mit/filefi/044;
 rm -f list_copy_datasets;
 
 cat > list_copy_datasets <<EOF
+MuonEG+Run2016B-PromptReco-v2+AOD 
+DoubleMuon+Run2016B-PromptReco-v2+AOD 
+DoubleEG+Run2016B-PromptReco-v2+AOD 
+SingleMuon+Run2016B-PromptReco-v2+AOD 
+SingleElectron+Run2016B-PromptReco-v2+AOD 
+SinglePhoton+Run2016B-PromptReco-v2+AOD 
 MuonEG+Run2016C-PromptReco-v2+AOD 
 DoubleMuon+Run2016C-PromptReco-v2+AOD 
 DoubleEG+Run2016C-PromptReco-v2+AOD 

@@ -8,10 +8,10 @@ export MIT_PROD_HIST=$HOME/cms/hist;
 export MIT_DATA=/cvmfs/cvmfs.cmsaf.mit.edu/hidsk0001/cmsprod/cms/MitPhysics/data
 cd $CMSSW_BASE/src/MitAna/bin;
 
-./runOnDatasets.py --cfg=$CMSSW_BASE/src/MitAnalysisRunII/configs/80x/pp_all.txt \
+./runOnDatasets.py --cfg=$CMSSW_BASE/src/MitAnalysisRunII/configs/80x/aa_all.txt \
 --condor-template=$CMSSW_BASE/src/NeroProducer/Bambu/config/condor_template.jdl \
 --analysis=$CMSSW_BASE/src/MitAnalysisRunII/python/80x/bambuToNero.py;
 
-#--update --name=pp_all \
+#--update --name=aa_all \
 # --overwrite
 cd -;
