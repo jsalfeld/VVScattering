@@ -154,6 +154,7 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
     else isoCut=0.15;
     if     (type == "default" || type == "medium" || type == "default_mva" || type == "medium_mva") idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP;
     else if(type == "loose") idCut= (selBits & BareLeptons::LepLoose) == BareLeptons::LepLoose;
+    else if(type == "veto")  idCut= (selBits & BareLeptons::LepLoose) == BareLeptons::LepLoose;
     else printf("Problem with selectIsoCut!\n");
 
     return (idCut && iso/pt < isoCut);
