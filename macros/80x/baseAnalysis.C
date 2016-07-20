@@ -17,12 +17,13 @@
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
 #include "MitAnalysisRunII/macros/80x/factors.h"
+#include "MitAnalysisRunII/macros/80x/BTagCalibrationStandalone.cc"
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
 int whichSkim = 0;
 bool usePureMC = true; 
-double mcPrescale = 5.0;
+double mcPrescale = 1.0;
 const bool useDYMVA = false;
 const bool doTriggerStudy = true;
 const TString typeLepSel = "medium";
@@ -79,6 +80,7 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sGluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(4);
 
   infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(4);
+
   infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(4);
 
   infilenamev.push_back(Form("%sWWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data())); 			   infilecatv.push_back(4);
@@ -116,9 +118,26 @@ void baseAnalysis(
 
   if(infilenamev.size() != infilecatv.size()) {assert(0); return;}
 
+  double denBTagging[5][5][3],numBTagging[5][5][3],jetEpsBtag[5][5][3];
+  for(int i0=0; i0<5; i0++) {
+    for(int i1=0; i1<5; i1++) {
+      for(int i2=0; i2<3; i2++) {
+        denBTagging[i0][i1][i2] = 0.0;
+        numBTagging[i0][i1][i2] = 0.0;
+	if     (i2==BTagEntry::FLAV_B)    jetEpsBtag[i0][i1][i2] = jetEpsBtagB[i0][i1];
+	else if(i2==BTagEntry::FLAV_C)    jetEpsBtag[i0][i1][i2] = jetEpsBtagC[i0][i1];
+	else if(i2==BTagEntry::FLAV_UDSG) jetEpsBtag[i0][i1][i2] = jetEpsBtagL[i0][i1];
+      }
+    }
+  }
   Float_t fMVACut[4][4];
   InitializeJetIdCuts(fMVACut);
  
+  BTagCalibration2 *btagCalib = new BTagCalibration2("csvv2","MitAnalysisRunII/data/80x//CSVv2_4invfb.csv");
+  BTagCalibration2Reader btagReaderBC(btagCalib,BTagEntry::OP_MEDIUM,"comb","central");
+  BTagCalibration2Reader btagReaderL(btagCalib,BTagEntry::OP_MEDIUM,"incl","central");
+  //printf("%s\n",btagCalib->makeCSV().c_str());
+
   float dymva_= -999.;
   unsigned int nlep_= -1;
   unsigned int njets_= -1;
@@ -146,6 +165,14 @@ void baseAnalysis(
   fhDMuMediumSF->SetDirectory(0);
   delete fMuSF;
 
+  TH1D* histoBTAG[4][4];
+  for(int theType=0; theType<4; theType++){
+    histoBTAG[theType][0] = new TH1D(Form("histoBTAG_%d_0",theType), Form("histoBTAG_%d_0",theType), 100, 0, 200);
+    histoBTAG[theType][1] = new TH1D(Form("histoBTAG_%d_1",theType), Form("histoBTAG_%d_1",theType), 50, 0, 2.5);
+    histoBTAG[theType][2] = new TH1D(Form("histoBTAG_%d_2",theType), Form("histoBTAG_%d_2",theType), 7, -0.5,6.5);
+    histoBTAG[theType][3] = new TH1D(Form("histoBTAG_%d_3",theType), Form("histoBTAG_%d_3",theType), 4, -0.5,3.5);
+  }
+
   double xmin = 0.0;
   double xmax = 1.0;
   int nBinPlot      = 200;
@@ -157,12 +184,12 @@ void baseAnalysis(
 
   for(int thePlot=0; thePlot<allPlots; thePlot++){
     if     (thePlot >=  0 && thePlot <=  5) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
-    else if(thePlot ==  6 || thePlot == 11) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
+    else if(thePlot ==  6 || thePlot == 11|| thePlot == 12) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
     else if(thePlot >=  7 && thePlot <=  7) {nBinPlot =  40; xminPlot = 0.0; xmaxPlot =  40.0;}
     else if(thePlot >=  8 && thePlot <=  8) {nBinPlot =  40; xminPlot =-0.5; xmaxPlot =  39.5;}
     else if(thePlot >=  9 && thePlot <=  9) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
     else if(thePlot >= 10 && thePlot <= 10) {nBinPlot =  50; xminPlot =-0.5; xmaxPlot =  49.5;}
-    else if(thePlot >= 12 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 13 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 15 && thePlot <= 18) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
     else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
     else if(thePlot >= 20 && thePlot <= 20) {nBinPlot = 200; xminPlot =-1.0; xmaxPlot =   1.0;}
@@ -279,7 +306,7 @@ void baseAnalysis(
 
       Bool_t passFilter[10] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       if(eventLeptons.p4->GetEntriesFast() >= 2 &&
-     	 ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 20 && 
+     	 ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 25 && 
      	 ((TLorentzVector*)(*eventLeptons.p4)[1])->Pt() > 10) passFilter[0] = kTRUE;
       if(infilecatv[ifile] == 0) {
 	for (int nt = 0; nt <(int)numtokens; nt++) {
@@ -416,13 +443,25 @@ void baseAnalysis(
       }
       if(minMassll > 12 || (numberOfLeptons == 4 && minMassll > 4) || numberOfLeptons == 3) passFilter[5] = kTRUE;
 
+      vector<int> idB,idC;
+      for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
+        if     (TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 5 && ((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Pt() > 15) idB.push_back(ngen0);
+        else if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 4 && ((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Pt() > 15) idC.push_back(ngen0);
+      }
+
+      int fileType = -1;
+      if     (infilenamev[ifile].Contains("DYJetsToLL_M-50_TuneCUETP8M1_13TeV") == kTRUE) fileType = 0;
+      else if(infilenamev[ifile].Contains("WWTo2L2Nu_13TeV-powheg") == kTRUE)		  fileType = 1;
+      else if(infilenamev[ifile].Contains("ZZTo2L2Nu_13TeV_powheg") == kTRUE)		  fileType = 2;
+      else if(infilenamev[ifile].Contains("WZTo3LNu_TuneCUETP8M1_13TeV-powheg") == kTRUE) fileType = 3;
       vector<int> idJet;
       bool isBtag = kFALSE;
       double bDiscrMax = 0.0;
       double dPhiJetMET = -1.0;
       double dPhiJetDiLep = -1.0;
+      double total_bjet_prob[2] = {1,1,};
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
-        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 10) continue;
+        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 20) continue;
         bool passId = passJetId(fMVACut, (float)(*eventJets.puId)[nj], ((TLorentzVector*)(*eventJets.p4)[nj])->Pt(), TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()));
         //if(passId == false) continue;        
 
@@ -435,13 +474,64 @@ void baseAnalysis(
         if(dPhiJetMET   == -1) dPhiJetMET   = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])))*180./TMath::Pi();
         if(dPhiJetDiLep == -1) dPhiJetDiLep = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventJets.p4)[nj])))*180./TMath::Pi();
 
-	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 10 && 
+	if(infilecatv[ifile] != 0){
+          BTagEntry::JetFlavor jetFlavor = BTagEntry::FLAV_UDSG;
+	  for(unsigned int ng=0; ng<idB.size(); ng++) {
+	    if (((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[idB[ng]])) < 0.4) {jetFlavor = BTagEntry::FLAV_B; break;}
+	  }
+	  if(jetFlavor == BTagEntry::FLAV_UDSG){
+	    for(unsigned int ng=0; ng<idC.size(); ng++) {
+	      if (((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[idC[ng]])) < 0.4) {jetFlavor = BTagEntry::FLAV_C; break;}
+	    }
+          }
+
+          int nJPt = 0;
+	  if     (((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) nJPt = 0;
+	  else if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 40) nJPt = 1;
+	  else if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 60) nJPt = 2;
+	  else if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 80) nJPt = 3;
+          else                                                       nJPt = 4;
+          int nJEta = 0;
+	  if     (TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 0.5) nJEta = 0;
+	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 1.0) nJEta = 1;
+	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 1.5) nJEta = 2;
+	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 2.0) nJEta = 3;
+          else                                                                     nJEta = 4;
+          denBTagging[nJPt][nJEta][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= 0.8) numBTagging[nJPt][nJEta][jetFlavor]++;
+
+          double bjet_SF = 1;
+	  if(jetFlavor == BTagEntry::FLAV_UDSG) bjet_SF = btagReaderL.eval (jetFlavor,TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),((TLorentzVector*)(*eventJets.p4)[nj])->Pt());
+	  else                                  bjet_SF = btagReaderBC.eval(jetFlavor,TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),((TLorentzVector*)(*eventJets.p4)[nj])->Pt());
+          if(bjet_SF == 0) bjet_SF = 1;
+
+	  if((float)(*eventJets.bDiscr)[nj] >= 0.8){
+	    total_bjet_prob[0] = total_bjet_prob[0] * jetEpsBtag[nJPt][nJEta][jetFlavor];
+	    total_bjet_prob[1] = total_bjet_prob[1] * jetEpsBtag[nJPt][nJEta][jetFlavor] * bjet_SF;
+	  } else {
+	    total_bjet_prob[0] = total_bjet_prob[0] * (1.0 - jetEpsBtag[nJPt][nJEta][jetFlavor]);
+	    total_bjet_prob[1] = total_bjet_prob[1] * (1.0 - jetEpsBtag[nJPt][nJEta][jetFlavor] * bjet_SF);
+	  }
+	  if(fileType != -1 && TMath::Abs(dilep.M()-91.1876) <= 15.0 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 25 && 
+	                                                                ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20){
+	    histoBTAG[fileType][0]->Fill(TMath::Min(((TLorentzVector*)(*eventJets.p4)[nj])->Pt(),199.999),1.0);
+	    if((float)(*eventJets.bDiscr)[nj] >= 0.8) histoBTAG[fileType][1]->Fill(TMath::Min(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),2.499),1.0);
+	  }
+        }
+
+	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 20 && 
 	   (float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
 
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) continue;
         
 	idJet.push_back(nj);
       }
+      if(fileType != -1 && TMath::Abs(dilep.M()-91.1876) <= 15.0 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 25 && 
+	                                                            ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20){
+        histoBTAG[fileType][2]->Fill(TMath::Min((double)idJet.size(),6.4999),1.0);
+        histoBTAG[fileType][3]->Fill(TMath::Min((double)idC.size(),1.0)+2*TMath::Min((double)idB.size(),1.0),1.0);
+      }
+
       double dPhiDiLepMET = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])))*180./TMath::Pi();
       double ptFrac = TMath::Abs(dilep.Pt()-((TLorentzVector*)(*eventMet.p4)[0])->Pt())/dilep.Pt();
 
@@ -800,7 +890,7 @@ void baseAnalysis(
 	else if(thePlot ==  9) {makePlot = true;theVar = TMath::Min(bDiscrMax,0.999);}
 	else if(thePlot == 10) {makePlot = true;theVar = TMath::Min((double)(numberQuarks[0]+10*numberQuarks[1]),49.499);}
 	else if(thePlot == 11 && bDiscrMax < 0.80) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-	else if(thePlot == 12) {makePlot = true;theVar = TMath::Min(mass3l,199.999);}
+	else if(thePlot == 12 && bDiscrMax < 0.80) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 13) {makePlot = true;theVar = TMath::Min(mtLN,199.999);}
 	else if(thePlot == 14) {makePlot = true;theVar = TMath::Min(minMET,199.999);}
 	else if(thePlot == 15) {makePlot = true;theVar = dPhiJetMET;}
@@ -842,7 +932,8 @@ void baseAnalysis(
 	else if(thePlot == 51) {makePlot = true;theVar = type3l;}
 	else if(thePlot == 52) {makePlot = true;theVar = type3lWGS;}
 	else if(thePlot == 53) {makePlot = true;theVar = TMath::Min(deltaRllMinWGS,3.999);}
-	if(makePlot == true) histo[thePlot][theCategory]->Fill(theVar,totalWeight);
+	if     (makePlot == true && thePlot != 12) histo[thePlot][theCategory]->Fill(theVar,totalWeight);
+	else if(makePlot == true)                  histo[thePlot][theCategory]->Fill(theVar,totalWeight*total_bjet_prob[1]/total_bjet_prob[0]);
       }
     }
     printf("eff_cuts(%f+/-%f): ",sumEventsProcess[ifile],sqrt(sumEventsEProcess[ifile]));
@@ -885,6 +976,16 @@ void baseAnalysis(
     }
   }
 
+  char output[200];
+  sprintf(output,"histo_btag_study.root");	
+  TFile* outFilePlotsBTAG = new TFile(output,"recreate");
+  outFilePlotsBTAG->cd();
+  for(int theType=0; theType<4; theType++){
+    for(int thePlot=0; thePlot<4; thePlot++){
+      histoBTAG[theType][thePlot]->Write();
+    }
+  }
+  outFilePlotsBTAG->Close();
 
   double sumEvents = 0;
   for(int np=1; np<histBins; np++) sumEvents += histo[0][np]->GetSumOfWeights();
@@ -892,11 +993,21 @@ void baseAnalysis(
   for(int np=1; np<histBins; np++) printf(" %.3f",histo[0][np]->GetSumOfWeights());
   printf(" = %.3f\n",sumEvents);
   for(int thePlot=0; thePlot<allPlots; thePlot++){
-    char output[200];
     sprintf(output,"histo_nice_%d_%d_%d.root",thePlot,nsel,typeSel);	  
     TFile* outFilePlotsNote = new TFile(output,"recreate");
     outFilePlotsNote->cd();
     for(int np=0; np<histBins; np++) histo[thePlot][np]->Write();
     outFilePlotsNote->Close();
   }
+  for(int iF=0; iF<3; iF++){
+    printf("double jetEpsBtag[%d] = \n",iF);
+    for(int iEta=0; iEta<5; iEta++){
+      for(int iPt=0; iPt<5; iPt++){
+        printf("%5.4f",numBTagging[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        if(iPt!=4||iEta!=4) printf(",");
+        if(iPt==4) printf("\n");
+      }
+    }
+  }
+  delete btagCalib;
 }
