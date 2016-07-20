@@ -128,18 +128,24 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
   double isoCut = 0.;
   bool idCut = false;
   if     (TMath::Abs(pdgId) == 13) {
-    isoCut = 0.15;
+    if (type=="loose") isoCut = 0.25;
+    else isoCut=0.15;
     if     (type == "default" || type == "medium" || type == "default_mva" || type == "medium_mva") idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP;
+    else if(type == "loose") idCut= (selBits & BareLeptons::LepLoose) == BareLeptons::LepLoose;
     else printf("Problem with selectIsoCut!\n");
 
     return (idCut && iso/pt < isoCut);
   }
-  else if(TMath::Abs(pdgId) == 11 && (type == "default" || type == "medium")) {
+  else if(TMath::Abs(pdgId) == 11 && (type == "default" || type == "medium" || type == "veto" || type == "loose")) {
     if     (type == "medium")  isoCut = (isEB ? 0.0766 : 0.0678);
     else if(type == "default") isoCut = (isEB ? 0.0354 : 0.0646);
+    else if(type == "loose")   isoCut = (isEB ? 0.0893 : 0.121 ); 
+    else if(type == "veto")    isoCut = (isEB ? 0.126  : 0.144 ); 
 
     if     (type == "medium")  idCut = (selBits & BareLeptons::LepMedium) == BareLeptons::LepMedium;
     else if(type == "default") idCut = (selBits & BareLeptons::LepTight)  == BareLeptons::LepTight;
+    else if(type == "loose"  ) idCut = (selBits & BareLeptons::LepLoose)  == BareLeptons::LepLoose;
+    else if(type == "veto"   ) idCut = (selBits & BareLeptons::LepVeto)   == BareLeptons::LepVeto;
 
     return (idCut && iso/pt < isoCut);
   }
