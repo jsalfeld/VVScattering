@@ -150,7 +150,7 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
   double isoCut = 0.;
   bool idCut = false;
   if     (TMath::Abs(pdgId) == 13) {
-    if (type=="loose") isoCut = 0.25;
+    if (type=="loose" || type=="veto") isoCut = 0.25;
     else isoCut=0.15;
     if     (type == "default" || type == "medium" || type == "default_mva" || type == "medium_mva") idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP;
     else if(type == "loose") idCut= (selBits & BareLeptons::LepLoose) == BareLeptons::LepLoose;
