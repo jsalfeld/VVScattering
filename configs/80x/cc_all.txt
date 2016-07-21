@@ -1,6 +1,8 @@
 book dataset skim bx pdfrwgt json
 
-t2mit/filefi/044  DoubleEG+Run2016C-PromptReco-v2+AOD - 25ns - -
-t2mit/filefi/044  SingleMuon+Run2016C-PromptReco-v2+AOD - 25ns - -
-t2mit/filefi/044  SingleElectron+Run2016C-PromptReco-v2+AOD - 25ns - -
-t2mit/filefi/044  SinglePhoton+Run2016C-PromptReco-v2+AOD - 25ns - -
+t2mit/filefi/045  MuonEG+Run2016D-PromptReco-v2+AOD - 25ns - -
+t2mit/filefi/045  DoubleMuon+Run2016D-PromptReco-v2+AOD - 25ns - -
+t2mit/filefi/045  DoubleEG+Run2016D-PromptReco-v2+AOD - 25ns - -
+t2mit/filefi/045  SingleMuon+Run2016D-PromptReco-v2+AOD - 25ns - -
+t2mit/filefi/045  SingleElectron+Run2016D-PromptReco-v2+AOD - 25ns - -
+t2mit/filefi/045  SinglePhoton+Run2016D-PromptReco-v2+AOD - 25ns - -

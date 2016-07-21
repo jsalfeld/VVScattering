@@ -1,0 +1,61 @@
+#/!/bin/sh
+
+rm -f list_bad_files;
+
+cat > list_bad_files <<EOF
+ D6B7D120-B31B-E611-8568-02163E0118C9.root DoubleMuon+Run2016B-PromptReco-v2+AOD filefi/044
+ E418E80A-741D-E611-B967-02163E011C09.root DoubleMuon+Run2016B-PromptReco-v2+AOD filefi/044
+ 069EACA4-D439-E611-8F01-02163E0134B8.root DoubleEG+Run2016B-PromptReco-v2+AOD filefi/044
+ 5ACDE2D0-C61B-E611-8C1D-02163E014660.root DoubleEG+Run2016B-PromptReco-v2+AOD filefi/044
+ 66F5F0C3-B91B-E611-97C0-02163E012263.root DoubleEG+Run2016B-PromptReco-v2+AOD filefi/044
+ 702AC460-FD1E-E611-88E9-02163E0141C1.root DoubleEG+Run2016B-PromptReco-v2+AOD filefi/044
+ 900D274B-B020-E611-80FF-02163E011991.root DoubleEG+Run2016B-PromptReco-v2+AOD filefi/044
+ A02D7250-B220-E611-8BE9-02163E011D5F.root DoubleEG+Run2016B-PromptReco-v2+AOD filefi/044
+ B21D7AAE-6839-E611-8851-02163E011F98.root SingleElectron+Run2016B-PromptReco-v2+AOD filefi/044
+ F0BDA018-F439-E611-AEFD-02163E011A7F.root SingleElectron+Run2016B-PromptReco-v2+AOD filefi/044
+ 0CDD7B58-973B-E611-89AE-02163E0141B9.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 16704F16-0941-E611-836F-02163E011918.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 1E0B7A90-A43F-E611-8C76-02163E0137C8.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 1E7BF9F1-E93F-E611-9F8C-02163E01387D.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 220F081E-A03E-E611-A009-02163E012569.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 327D7638-813D-E611-A349-02163E01410A.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 343F88C6-DE3F-E611-A9E4-02163E013819.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 3C34C0A3-6E3E-E611-80CD-02163E01299A.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 46F87C6A-1B40-E611-9CBA-02163E014168.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 4EA86033-943F-E611-AF06-02163E0146AF.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 52ED9AF2-0C3E-E611-A85F-02163E0136FB.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 56778C64-1E40-E611-A53C-02163E011F95.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 5E831A0D-0D3E-E611-8583-02163E013500.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 5E9C41DD-8C3F-E611-A009-02163E011CA2.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 5ED53B6F-D33D-E611-BC09-02163E0134C9.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 76E68C35-E63F-E611-8A58-02163E01410D.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 783037D7-823D-E611-B118-02163E0135ED.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 8A7EED7E-883D-E611-8728-02163E014279.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ AAD203D5-8F3C-E611-9CFA-02163E011D24.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ BA70D341-3C3C-E611-9C9E-02163E01380F.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ BE421744-CC3F-E611-B054-02163E013836.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ CCA20F1B-6A3C-E611-BDC6-02163E0120B0.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ CE3B89A5-6E3E-E611-AF0E-02163E0141FF.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ D21AEDFB-F640-E611-94B6-02163E01344A.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ E0566AEA-E23F-E611-B64E-02163E011A27.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ EC053588-0040-E611-ACD7-02163E0143F2.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ EC0E52DD-1041-E611-814F-02163E014546.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ F2ABECB1-723B-E611-BFA6-02163E014755.root MuonEG+Run2016C-PromptReco-v2+AOD filefi/044
+ 7C196206-6744-E611-83F5-02163E011D13.root DoubleMuon+Run2016C-PromptReco-v2+AOD filefi/044
+ 5A34D519-5144-E611-AAC2-02163E013911.root SingleMuon+Run2016C-PromptReco-v2+AOD filefi/044
+ 84224C5F-7942-E611-9105-02163E0144F6.root SingleMuon+Run2016C-PromptReco-v2+AOD filefi/044
+ C8CD6564-5044-E611-83CF-02163E01455C.root SingleMuon+Run2016C-PromptReco-v2+AOD filefi/044
+ D63D6519-5044-E611-AD9B-02163E014344.root SingleMuon+Run2016C-PromptReco-v2+AOD filefi/044
+ F25CFE7A-B044-E611-9DB4-02163E013495.root SingleMuon+Run2016C-PromptReco-v2+AOD filefi/044
+ E0A47AFA-FD42-E611-B40D-02163E01446C.root SingleElectron+Run2016C-PromptReco-v2+AOD filefi/044
+ CAA9E717-314B-E611-AAF7-02163E01445A.root DoubleEG+Run2016D-PromptReco-v2+AOD filefi/045
+ B400391D-7245-E611-9052-02163E014682.root SingleMuon+Run2016D-PromptReco-v2+AOD filefi/045
+ 6A18BF3A-1347-E611-91FC-02163E014236.root SingleElectron+Run2016D-PromptReco-v2+AOD filefi/045
+ 8EDE2BDE-1748-E611-859B-02163E0137A7.root SingleElectron+Run2016D-PromptReco-v2+AOD filefi/045
+ EAEC05E2-6449-E611-BA34-02163E01371B.root SinglePhoton+Run2016D-PromptReco-v2+AOD filefi/045
+EOF
+
+awk '{print"grep -vwE "$1" ~/catalog/t2mit/"$3"/"$2"/Files       > ooo;wc ooo ~/catalog/t2mit/"$3"/"$2"/Files;      mv ooo ~/catalog/t2mit/"$3"/"$2"/Files;      "}' list_bad_files  > zzz
+awk '{print"grep -vwE "$1" ~/catalog/t2mit/"$3"/"$2"/RawFiles.00 > ooo;wc ooo ~/catalog/t2mit/"$3"/"$2"/RawFiles.00;mv ooo ~/catalog/t2mit/"$3"/"$2"/RawFiles.00;"}' list_bad_files >> zzz
+chmod a+x zzz;./zzz;rm -f zzz;
+rm -f list_bad_files;

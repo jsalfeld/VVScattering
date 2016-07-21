@@ -15,6 +15,8 @@ then
   export PREFIX="pho_";
 fi
 
+root -l -q -b MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/vectormonoz-beamspot_med-300_dm-50_gq-0.25.root\",\"/scratch5/ceballos/ntuples_weightsMC_80x/${PREFIX}vectormonoz-beamspot_med-300_dm-50_gq-0.25.root\",\"dm\"\)
+
 root -l -q -b MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/pseudoscalarmonoz_med-10_dm-50.root\",\"/scratch5/ceballos/ntuples_weightsMC_80x/${PREFIX}pseudoscalarmonoz_med-10_dm-50.root\",\"dm\"\)
 root -l -q -b MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/pseudoscalarmonoz_med-110_dm-50.root\",\"/scratch5/ceballos/ntuples_weightsMC_80x/${PREFIX}pseudoscalarmonoz_med-110_dm-50.root\",\"dm\"\)
 root -l -q -b MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\(\"/scratch5/ceballos/ntuples_noweights_80x/pseudoscalarmonoz_med-160_dm-50.root\",\"/scratch5/ceballos/ntuples_weightsMC_80x/${PREFIX}pseudoscalarmonoz_med-160_dm-50.root\",\"dm\"\)

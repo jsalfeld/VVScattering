@@ -51,6 +51,7 @@ void baseAnalysis(
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x.root";
 
   infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data()));															 infilecatv.push_back(0);
+/*
   infilenamev.push_back(Form("%sdata_Run2016C.root",filesPathDA.Data()));															 infilecatv.push_back(0);
 
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data())); 					   infilecatv.push_back(1);
@@ -108,6 +109,7 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM.root",filesPathMC.Data()));                            infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM.root",filesPathMC.Data())); 		   infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3_ext1-v1+RAWAODSIM.root",filesPathMC.Data()));  infilecatv.push_back(7);
+*/
   }
   else {assert(0);}
   
@@ -145,10 +147,13 @@ void baseAnalysis(
   LeptonScaleLookup trigLookup(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
 
   TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
-  TH1D *fhDPU = (TH1D*)(fPUFile->Get("puWeights"));
-  assert(fhDPU);
-  fhDPU->SetDirectory(0);
+  TH1D *fhDPU = (TH1D*)(fPUFile->Get("puWeights")); assert(fhDPU); fhDPU->SetDirectory(0);
   delete fPUFile;
+
+  TFile *fTrackReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/trackReco_SF.root"));
+  TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackReco_SF->Get("mutrksfptg10")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
+  //TH1D *fhDmutrksfptl10 = (TH1D*)(fTrackReco_SF->Get("mutrksfptl10")); assert(fhDmutrksfptl10); fhDmutrksfptl10->SetDirectory(0);
+  delete fTrackReco_SF;
 
   TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
@@ -306,7 +311,7 @@ void baseAnalysis(
 
       Bool_t passFilter[10] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       if(eventLeptons.p4->GetEntriesFast() >= 2 &&
-     	 ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 25 && 
+     	 ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 20 && 
      	 ((TLorentzVector*)(*eventLeptons.p4)[1])->Pt() > 10) passFilter[0] = kTRUE;
       if(infilecatv[ifile] == 0) {
 	for (int nt = 0; nt <(int)numtokens; nt++) {
@@ -581,7 +586,8 @@ void baseAnalysis(
 	else                                                                                                                                            passFilter[5] = kTRUE;              
       }
       else if(nsel == 3) { // Z selection
-        passFilter[6] = kTRUE;
+        //passFilter[6] = kTRUE;
+        passFilter[6] = ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 25;
         passFilter[7] = kTRUE;
         passFilter[8] = kTRUE;
         passFilter[9] = kTRUE;
@@ -678,6 +684,7 @@ void baseAnalysis(
       //printf("9 %d %f %f\n",(int)eventEvent.eventNum,mass3l,deltaRllMin);
       if(passFilter[9] == kTRUE) nPassCuts[9]++;
       if(passFilter[9] == kFALSE) continue;
+      printf("DATA %d %d\n",(int)eventEvent.runNum,(int)eventEvent.eventNum);
       double deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
       double mtW = TMath::Sqrt(2.0*dilep.Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
 
@@ -768,7 +775,7 @@ void baseAnalysis(
           //        period,typeLepSel.Data());
           effSF = effSF * effhDScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),
 	        ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),
-	  	typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF);
+	  	typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF,fhDmutrksfptg10);
         }
       }
 
