@@ -13,7 +13,7 @@ export OUTPUTDADIR="/scratch/ceballos/ntuples_weightsDA_80x";
 export OUTPUTMCDIR="/scratch5/ceballos/ntuples_weightsMC_80x";
 export ANADIR=$CMSSW_BASE/src;
 
-ls $INPUTDIR|grep -v AODSIM|grep AOD.root|awk '{printf("root -l -q -b %s/MitAnalysisRunII/macros/80x/makeGoodRunSample.C+\\(\\\"%s/%s\\\",\\\"%s/%s\\\",\\\"%s/MitAnalysisRunII/json/80x/Cert_271036-276384_13TeV_PromptReco_Collisions16_JSON.txt\\\"\\)\n",ENVIRON["ANADIR"],ENVIRON["INPUTDIR"],$1,ENVIRON["GOODRUNDIR"],$1,ENVIRON["ANADIR"])}' > kkk2;
+ls $INPUTDIR|grep -v AODSIM|grep AOD.root|awk '{printf("root -l -q -b %s/MitAnalysisRunII/macros/80x/makeGoodRunSample.C+\\(\\\"%s/%s\\\",\\\"%s/%s\\\",\\\"%s/MitAnalysisRunII/json/80x/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt\\\"\\)\n",ENVIRON["ANADIR"],ENVIRON["INPUTDIR"],$1,ENVIRON["GOODRUNDIR"],$1,ENVIRON["ANADIR"])}' > kkk2;
 chmod a+x kkk2;./kkk2;rm -f kkk2;
 
 #ls $INPUTDIR|grep -v AODSIM|grep AOD|awk '{printf("root -l -q -b %s/MitAnalysisRunII/macros/80x/makeOneSkimSample.C+\\(\\\"%s/%s\\\",\\\"%s/${PREFIX}%s\\\",\\\"data\\\"\\)\n",ENVIRON["ANADIR"],ENVIRON["GOODRUNDIR"],$1,ENVIRON["OUTPUTDADIR"],$1,ENVIRON["ANADIR"])}' > kkk4;

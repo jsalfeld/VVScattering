@@ -684,7 +684,7 @@ void baseAnalysis(
       //printf("9 %d %f %f\n",(int)eventEvent.eventNum,mass3l,deltaRllMin);
       if(passFilter[9] == kTRUE) nPassCuts[9]++;
       if(passFilter[9] == kFALSE) continue;
-      printf("DATA %d %d\n",(int)eventEvent.runNum,(int)eventEvent.eventNum);
+      printf("DATA %d %d %llu\n",eventEvent.runNum,eventEvent.lumiNum,eventEvent.eventNum);
       double deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
       double mtW = TMath::Sqrt(2.0*dilep.Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
 

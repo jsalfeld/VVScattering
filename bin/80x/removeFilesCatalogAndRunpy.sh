@@ -52,6 +52,14 @@ B60E16A9-7D48-E611-A420-02163E0136D0.root SingleElectron+Run2016D-PromptReco-v2+
 BEA92E70-7D48-E611-B430-02163E013784.root SingleElectron+Run2016D-PromptReco-v2+AOD filefi/045
 C04C424F-0B4B-E611-8937-02163E0133A8.root SingleElectron+Run2016D-PromptReco-v2+AOD filefi/045
 C07D5E31-1E4A-E611-8C64-02163E014316.root SingleElectron+Run2016D-PromptReco-v2+AOD filefi/045
+D43448FC-254A-E611-B2B5-02163E014563.root SingleElectron+Run2016D-PromptReco-v2+AOD filefi/045
+5EB942CF-5A48-E611-9D5E-02163E014758.root SingleElectron+Run2016D-PromptReco-v2+AOD filefi/045
+3CC0318F-2D46-E611-8026-02163E014313.root SingleElectron+Run2016D-PromptReco-v2+AOD filefi/045
+80C03960-2E46-E611-840D-02163E01198C.root SingleElectron+Run2016D-PromptReco-v2+AOD filefi/045
+3CA6DF21-6745-E611-8169-02163E01429E.root DoubleMuon+Run2016D-PromptReco-v2+AOD filefi/045
+A24447F9-944C-E611-AA4C-02163E01191C.root SinglePhoton+Run2016D-PromptReco-v2+AOD filefi/045
+3C82F60D-054B-E611-93AF-FA163E9DE6FE.root SingleMuon+Run2016D-PromptReco-v2+AOD filefi/045
+3C312584-344A-E611-B1A5-02163E011D6A.root SingleElectron+Run2016D-PromptReco-v2+AOD filefi/045
 EOF
 
 grep Run2016 list_bad_files > list_bad_files_aux; mv list_bad_files_aux list_bad_files;

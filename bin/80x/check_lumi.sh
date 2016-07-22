@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export JSON=Cert_271036-276384_13TeV_PromptReco_Collisions16_JSON.txt;
+export JSON=Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt;
 export MAIN=$CMSSW_BASE/src;
 cd $MAIN;
 
