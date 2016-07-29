@@ -33,6 +33,8 @@
 //            - 4  ==> Z+MET
 //            - 5  ==> one photon, ptg>60
 
+// filterType == -1 ==> all events included in the skimmed ntuple
+
 void makeOneSkimSample(
  TString input_file     = "nero_old.root",
  TString outputFileName = "nero_new.root",
@@ -381,12 +383,13 @@ void makeOneSkimSample(
     if(passFilter[4] == kTRUE) Filter_pass[4]++;
     if(passFilter[5] == kTRUE) Filter_pass[5]++;
 
-    if(passFilter[0] == kFALSE &&
-       passFilter[1] == kFALSE &&
-       passFilter[2] == kFALSE &&
-       passFilter[3] == kFALSE &&
-       passFilter[4] == kFALSE &&
-       passFilter[5] == kFALSE) continue;
+    if((passFilter[0] == kFALSE &&
+        passFilter[1] == kFALSE &&
+        passFilter[2] == kFALSE &&
+        passFilter[3] == kFALSE &&
+        passFilter[4] == kFALSE &&
+        passFilter[5] == kFALSE) &&
+	filterType != -1) continue;
     N_pass++;
 
     the_SelBit_tree.Fill(); 

@@ -21,9 +21,10 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
+bool isMINIAOD = false;
 int whichSkim = 0;
 bool usePureMC = true; 
-double mcPrescale = 1.0;
+double mcPrescale = 100.0;
 const bool useDYMVA = false;
 const bool doTriggerStudy = true;
 const TString typeLepSel = "medium";
@@ -35,8 +36,9 @@ void baseAnalysis(
  ){
 
   TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_80x/";
+  if(isMINIAOD) filesPathDA = "/scratch5/dhsu/ntuples_goodrun_80x/";
   TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_80x/";
-  Double_t lumi = 5.6;
+  Double_t lumi = 10.3;
 
   if(nsel == 2) usePureMC = true;
 
@@ -47,12 +49,20 @@ void baseAnalysis(
   vector<Int_t> infilecatv;  
 
   TString puPath = "";
+  TString triggerSuffix = "*";
+  if(isMINIAOD) triggerSuffix = "";
   if(period==1){
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x.root";
 
-  infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data()));															 infilecatv.push_back(0);
-/*
-  infilenamev.push_back(Form("%sdata_Run2016C.root",filesPathDA.Data()));															 infilecatv.push_back(0);
+  if(isMINIAOD) {
+    infilenamev.push_back(Form("%sdata_Run2016B_skim.root",filesPathDA.Data())); infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016C_skim.root",filesPathDA.Data())); infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016D_skim.root",filesPathDA.Data())); infilecatv.push_back(0);
+  } else {
+    infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016C.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016D.root",filesPathDA.Data()));   infilecatv.push_back(0);
+  }
 
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data())); 					   infilecatv.push_back(1);
   infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));					 infilecatv.push_back(1);
@@ -109,7 +119,6 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM.root",filesPathMC.Data()));                            infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM.root",filesPathMC.Data())); 		   infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3_ext1-v1+RAWAODSIM.root",filesPathMC.Data()));  infilecatv.push_back(7);
-*/
   }
   else {assert(0);}
   
@@ -147,15 +156,16 @@ void baseAnalysis(
   LeptonScaleLookup trigLookup(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
 
   TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
-  TH1D *fhDPU = (TH1D*)(fPUFile->Get("puWeights")); assert(fhDPU); fhDPU->SetDirectory(0);
+  TH1D *fhDPU     = (TH1D*)(fPUFile->Get("puWeights"));     assert(fhDPU);    fhDPU    ->SetDirectory(0);
+  TH1D *fhDPUUp   = (TH1D*)(fPUFile->Get("puWeightsUp"));   assert(fhDPUUp);  fhDPUUp  ->SetDirectory(0);
+  TH1D *fhDPUDown = (TH1D*)(fPUFile->Get("puWeightsDown")); assert(fhDPUDown);fhDPUDown->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fTrackReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/trackReco_SF.root"));
-  TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackReco_SF->Get("mutrksfptg10")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
-  //TH1D *fhDmutrksfptl10 = (TH1D*)(fTrackReco_SF->Get("mutrksfptl10")); assert(fhDmutrksfptl10); fhDmutrksfptl10->SetDirectory(0);
-  delete fTrackReco_SF;
+  TFile *fTrackElectronReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_13p0ifb.root"));
+  TH2D *fhDeltrksf= (TH2D*)(fTrackElectronReco_SF->Get("scalefactors_Reco_Electron")); assert(fhDeltrksf); fhDeltrksf->SetDirectory(0);
+  delete fTrackElectronReco_SF;
 
-  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x.root"));
+  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_13p0ifb.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
   TH2D *fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
   assert(fhDElMediumSF);
@@ -164,11 +174,20 @@ void baseAnalysis(
   fhDElTightSF->SetDirectory(0);
   delete fElSF;
 
-  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x.root"));
-  TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("scalefactors_Tight_Muon"));
-  assert(fhDMuMediumSF);
-  fhDMuMediumSF->SetDirectory(0);
+  TFile *fTrackMuonReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/trackMuReco_SF.root"));
+  TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackMuonReco_SF->Get("mutrksfptg10")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
+  //TH1D *fhDmutrksfptl10 = (TH1D*)(fTrackMuonReco_SF->Get("mutrksfptl10")); assert(fhDmutrksfptl10); fhDmutrksfptl10->SetDirectory(0);
+  delete fTrackMuonReco_SF;
+
+  //TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x.root"));
+  //TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("scalefactors_Tight_Muon")); assert(fhDMuMediumSF); fhDMuMediumSF->SetDirectory(0);
+  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/80x/MuonID_Z_RunBCD_prompt80X_7p65.root"));
+  TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("MC_NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/abseta_pt_ratio")); assert(fhDMuMediumSF); fhDMuMediumSF->SetDirectory(0);
   delete fMuSF;
+
+  TFile *fMuIsoSF = TFile::Open(Form("MitAnalysisRunII/data/80x/MuonIso_Z_RunBCD_prompt80X_7p65.root"));
+  TH2D *fhDMuIsoSF = (TH2D*)(fMuIsoSF->Get("MC_NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/abseta_pt_ratio")); assert(fhDMuIsoSF); fhDMuIsoSF->SetDirectory(0);
+  delete fMuIsoSF;
 
   TH1D* histoBTAG[4][4];
   for(int theType=0; theType<4; theType++){
@@ -316,50 +335,50 @@ void baseAnalysis(
       if(infilecatv[ifile] == 0) {
 	for (int nt = 0; nt <(int)numtokens; nt++) {
           if((*eventTrigger.triggerFired)[nt] == 0) continue;
-          if((strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v*")  == 0) ||
-             (strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*")  == 0) ||
-             (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*") == 0) ||
-             (strcmp(tokens[nt],"HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*") == 0) ||
-             (strcmp(tokens[nt],"HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v*")  == 0) ||
-             (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v*") 	              == 0) ||
-             (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v*")	      == 0) ||
-             (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*") 	      == 0) ||
-             (strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*")	      == 0) ||
-             (strcmp(tokens[nt],"HLT_IsoMu20_v*") 				      == 0) ||
-             (strcmp(tokens[nt],"HLT_IsoTkMu20_v*") 				      == 0) ||
-             (strcmp(tokens[nt],"HLT_IsoMu22_v*") 				      == 0) ||
-             (strcmp(tokens[nt],"HLT_IsoTkMu22_v*") 				      == 0) ||
-             (strcmp(tokens[nt],"HLT_IsoMu24_v*")				      == 0) ||
-             (strcmp(tokens[nt],"HLT_IsoTkMu24_v*")				      == 0) ||
-             (strcmp(tokens[nt],"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")	      == 0) ||
-             (strcmp(tokens[nt],"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")	      == 0) ||
-             (strcmp(tokens[nt],"HLT_Ele25_eta2p1_WPTight_Gsf_v*")                    == 0) ||
-             (strcmp(tokens[nt],"HLT_Ele27_eta2p1_WPLoose_Gsf_v*")                    == 0) ||
-             (strcmp(tokens[nt],"HLT_Ele27_WPTight_Gsf_v*")			      == 0) ||
-             (strcmp(tokens[nt],"HLT_Ele35_WPLoose_Gsf_v*")			      == 0)
+          if((strcmp(tokens[nt],Form("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data())) == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data())) == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v%s",triggerSuffix.Data())) 	          == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v%s",triggerSuffix.Data()))	          == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v%s",triggerSuffix.Data())) 	          == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v%s",triggerSuffix.Data()))	          == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoMu20_v%s",triggerSuffix.Data())) 				          == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoTkMu20_v%s",triggerSuffix.Data())) 				  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoMu22_v%s",triggerSuffix.Data())) 				          == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoTkMu22_v%s",triggerSuffix.Data())) 				  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoMu24_v%s",triggerSuffix.Data()))				          == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoTkMu24_v%s",triggerSuffix.Data()))				          == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v%s",triggerSuffix.Data()))	  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v%s",triggerSuffix.Data()))	  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Ele25_eta2p1_WPTight_Gsf_v%s",triggerSuffix.Data()))                    == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Ele27_eta2p1_WPLoose_Gsf_v%s",triggerSuffix.Data()))                    == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Ele27_WPTight_Gsf_v%s",triggerSuffix.Data()))			          == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Ele35_WPLoose_Gsf_v%s",triggerSuffix.Data()))			          == 0)
              ) passFilter[1] = kTRUE;
           if(doTriggerStudy){
-            if(strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v*")  == 0) nPassTrigger[ 0]++;
-            if(strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v*")  == 0) nPassTrigger[ 1]++;
-            if(strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*") == 0) nPassTrigger[ 2]++;
-            if(strcmp(tokens[nt],"HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v*") == 0) nPassTrigger[ 3]++;
-            if(strcmp(tokens[nt],"HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v*")  == 0) nPassTrigger[ 4]++;
-            if(strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v*") 	       == 0) nPassTrigger[ 5]++;
-            if(strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v*")	       == 0) nPassTrigger[ 6]++;
-            if(strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*")	       == 0) nPassTrigger[ 7]++;
-            if(strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*")	       == 0) nPassTrigger[ 8]++;
-            if(strcmp(tokens[nt],"HLT_IsoMu20_v*")				       == 0) nPassTrigger[ 9]++;
-            if(strcmp(tokens[nt],"HLT_IsoTkMu20_v*")				       == 0) nPassTrigger[10]++;
-            if(strcmp(tokens[nt],"HLT_IsoMu22_v*")				       == 0) nPassTrigger[11]++;
-            if(strcmp(tokens[nt],"HLT_IsoTkMu22_v*")				       == 0) nPassTrigger[12]++;
-            if(strcmp(tokens[nt],"HLT_IsoMu24_v*")				       == 0) nPassTrigger[13]++;
-            if(strcmp(tokens[nt],"HLT_IsoTkMu24_v*")				       == 0) nPassTrigger[14]++;
-            if(strcmp(tokens[nt],"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")       == 0) nPassTrigger[15]++;
-            if(strcmp(tokens[nt],"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*")       == 0) nPassTrigger[16]++;
-            if(strcmp(tokens[nt],"HLT_Ele25_eta2p1_WPTight_Gsf_v*")		       == 0) nPassTrigger[17]++;
-            if(strcmp(tokens[nt],"HLT_Ele27_eta2p1_WPLoose_Gsf_v*")		       == 0) nPassTrigger[18]++;
-            if(strcmp(tokens[nt],"HLT_Ele27_WPTight_Gsf_v*")	   		       == 0) nPassTrigger[19]++;
-            if(strcmp(tokens[nt],"HLT_Ele35_WPLoose_Gsf_v*")	   		       == 0) nPassTrigger[20]++;
+            if(strcmp(tokens[nt],Form("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) nPassTrigger[ 0]++;
+            if(strcmp(tokens[nt],Form("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) nPassTrigger[ 1]++;
+            if(strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data())) == 0) nPassTrigger[ 2]++;
+            if(strcmp(tokens[nt],Form("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data())) == 0) nPassTrigger[ 3]++;
+            if(strcmp(tokens[nt],Form("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) nPassTrigger[ 4]++;
+            if(strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v%s",triggerSuffix.Data())) 	           == 0) nPassTrigger[ 5]++;
+            if(strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v%s",triggerSuffix.Data()))	           == 0) nPassTrigger[ 6]++;
+            if(strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v%s",triggerSuffix.Data()))	           == 0) nPassTrigger[ 7]++;
+            if(strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v%s",triggerSuffix.Data()))	   == 0) nPassTrigger[ 8]++;
+            if(strcmp(tokens[nt],Form("HLT_IsoMu20_v%s",triggerSuffix.Data()))				           == 0) nPassTrigger[ 9]++;
+            if(strcmp(tokens[nt],Form("HLT_IsoTkMu20_v%s",triggerSuffix.Data()))				   == 0) nPassTrigger[10]++;
+            if(strcmp(tokens[nt],Form("HLT_IsoMu22_v%s",triggerSuffix.Data()))				           == 0) nPassTrigger[11]++;
+            if(strcmp(tokens[nt],Form("HLT_IsoTkMu22_v%s",triggerSuffix.Data()))				   == 0) nPassTrigger[12]++;
+            if(strcmp(tokens[nt],Form("HLT_IsoMu24_v%s",triggerSuffix.Data()))				           == 0) nPassTrigger[13]++;
+            if(strcmp(tokens[nt],Form("HLT_IsoTkMu24_v%s",triggerSuffix.Data()))				   == 0) nPassTrigger[14]++;
+            if(strcmp(tokens[nt],Form("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v%s",triggerSuffix.Data()))       == 0) nPassTrigger[15]++;
+            if(strcmp(tokens[nt],Form("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v%s",triggerSuffix.Data()))       == 0) nPassTrigger[16]++;
+            if(strcmp(tokens[nt],Form("HLT_Ele25_eta2p1_WPTight_Gsf_v%s",triggerSuffix.Data()))		           == 0) nPassTrigger[17]++;
+            if(strcmp(tokens[nt],Form("HLT_Ele27_eta2p1_WPLoose_Gsf_v%s",triggerSuffix.Data()))		           == 0) nPassTrigger[18]++;
+            if(strcmp(tokens[nt],Form("HLT_Ele27_WPTight_Gsf_v%s",triggerSuffix.Data()))	   		   == 0) nPassTrigger[19]++;
+            if(strcmp(tokens[nt],Form("HLT_Ele35_WPLoose_Gsf_v%s",triggerSuffix.Data()))	   		   == 0) nPassTrigger[20]++;
           }
 	}
       } else { passFilter[1] = kTRUE;}
@@ -578,6 +597,7 @@ void baseAnalysis(
 	}
       }
       else if(nsel == 2 || nsel == 10){ // Z selection in mZ mass window, anti b-tagging against top events for e-mu
+        //passFilter[6] = ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 30;
         passFilter[6] = kTRUE;
 	if((bDiscrMax < 0.605 && idSoft.size() == 0) || TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])) passFilter[7] = kTRUE;
 	passFilter[8] = kTRUE;
@@ -586,8 +606,7 @@ void baseAnalysis(
 	else                                                                                                                                            passFilter[5] = kTRUE;              
       }
       else if(nsel == 3) { // Z selection
-        //passFilter[6] = kTRUE;
-        passFilter[6] = ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 25;
+        passFilter[6] = kTRUE;
         passFilter[7] = kTRUE;
         passFilter[8] = kTRUE;
         passFilter[9] = kTRUE;
@@ -684,7 +703,7 @@ void baseAnalysis(
       //printf("9 %d %f %f\n",(int)eventEvent.eventNum,mass3l,deltaRllMin);
       if(passFilter[9] == kTRUE) nPassCuts[9]++;
       if(passFilter[9] == kFALSE) continue;
-      printf("DATA %d %d %llu\n",eventEvent.runNum,eventEvent.lumiNum,eventEvent.eventNum);
+      //printf("DATA %d %d %llu\n",eventEvent.runNum,eventEvent.lumiNum,eventEvent.eventNum);
       double deltaPhiDileptonMet = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
       double mtW = TMath::Sqrt(2.0*dilep.Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
 
@@ -775,7 +794,7 @@ void baseAnalysis(
           //        period,typeLepSel.Data());
           effSF = effSF * effhDScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),
 	        ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),
-	  	typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF,fhDmutrksfptg10);
+	  	typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF,fhDmutrksfptg10,fhDeltrksf,eventVertex.npv,true,fhDMuIsoSF);
         }
       }
 
@@ -817,6 +836,7 @@ void baseAnalysis(
       double mcWeight = eventMonteCarlo.mcWeight;
       if(infilecatv[ifile] == 0) mcWeight = 1.0;
       double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*trigEff;
+      //double totalWeight = mcWeight*theLumi*theMCPrescale;
       //printf("totalWeight: %f * %f * %f * %f * %f * %f * %f = %f\n",mcWeight,theLumi,puWeight,effSF,fakeSF,theMCPrescale,trigEff,totalWeight);
       
       //if(infilecatv[ifile] == 2 && zBoson.size() == 1) {

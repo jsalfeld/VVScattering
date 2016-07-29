@@ -234,18 +234,32 @@ bool passJetId(Float_t fMVACut[4][4], double mva, double pt, double eta){
 
 }
 
-double effhDScaleFactor(double pt, double eta, int nsel, TString type, TH2D *fhDMuMediumSF, TH2D *fhDElMediumSF, TH2D *fhDElTightSF, TH1D *fhDTrkSF){
-  if(pt>=100) pt = +99.999;
+double effhDScaleFactor(double pt, double eta, int nsel, TString type, TH2D *fhDMuMediumSF, TH2D *fhDElMediumSF, TH2D *fhDElTightSF, 
+TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF){
+
+  if     (pt>=100 && TMath::Abs(nsel) == 13) pt =  +99.999;
+  else if(pt>=200 && TMath::Abs(nsel) == 11) pt = +199.999;
+
   if     (eta>=+2.4) eta = +2.399;
   else if(eta<=-2.4) eta = -2.399;
+
   double trkSF = 1.0;
   if(TMath::Abs(nsel) == 13){
-    Int_t binXT = fhDTrkSF->GetXaxis()->FindFixBin(eta);
-    trkSF = fhDTrkSF->GetBinContent(binXT);
-    if(trkSF <= 0) printf("trkSF <= 0! %f %d- %f %f\n",trkSF,binXT,pt,eta);
+    Int_t binXT = fhDMuTrkSF->GetXaxis()->FindFixBin(eta);
+    trkSF = fhDMuTrkSF->GetBinContent(binXT);
+    if(trkSF <= 0) printf("trkSF <= 0! %f %d - %f %f\n",trkSF,binXT,pt,eta);
   }
+  else if(TMath::Abs(nsel) == 11){
+    Int_t binXT = fhDElTrkSF->GetXaxis()->FindFixBin(eta);
+    Int_t binYT = fhDElTrkSF->GetYaxis()->FindFixBin(npv);
+    trkSF = fhDElTrkSF->GetBinContent(binXT,binYT);
+    if(trkSF <= 0) printf("trkSF <= 0! %f %d %d - %f %f %d\n",trkSF,binXT,binYT,pt,eta,npv);
+  }
+  if(trkSF <= 0) trkSF = 1.0;
 
-  eta = abs(eta);
+  if(TMath::Abs(nsel) == 13) eta = abs(eta);
+  if(TMath::Abs(nsel) == 13 && useMuIsoSF == true && pt <= 20) pt = 20.001;
+
   Int_t binXA = 0;
   Int_t binYA = 0;
   Int_t binXB = 0;
@@ -260,10 +274,19 @@ double effhDScaleFactor(double pt, double eta, int nsel, TString type, TH2D *fhD
   if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default")) result = fhDMuMediumSF->GetBinContent(binXA, binYA);
   else if(TMath::Abs(nsel) == 11 && type== "medium")	                   result = fhDElMediumSF->GetBinContent(binXA, binYA);
   else if(TMath::Abs(nsel) == 11 && type== "default")	                   result = fhDElTightSF ->GetBinContent(binXA, binYA);
-  
+
   if(result <= 0) printf("Result <= 0! %f %d %d %d - %f %f\n",result,nsel,binXA,binYA,pt,eta);
-  
-  return result*trkSF;
+  if(result <= 0) result = 1.0;
+
+  double isoSF = 1.0;
+  if(useMuIsoSF == true && TMath::Abs(nsel) == 13) {
+    binXB = fhDMuIsoSF->GetXaxis()->FindFixBin(eta);binYB = fhDMuIsoSF->GetYaxis()->FindFixBin(pt);
+    isoSF = fhDMuIsoSF->GetBinContent(binXB, binYB);
+    if(isoSF <= 0) printf("IsoSF <= 0! %f %d %d %d - %f %f\n",isoSF,nsel,binXA,binYA,pt,eta);
+    if(isoSF <= 0) isoSF = 1.0;
+  }
+
+  return result*trkSF*isoSF;
 }
 
 double effScaleFactor(double pt, double eta, int nsel, int period, TString type){

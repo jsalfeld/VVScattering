@@ -7,5 +7,9 @@ export MIT_PROD_HIST=$HOME/cms/hist;
 export MIT_DATA=/cvmfs/cvmfs.cmsaf.mit.edu/hidsk0001/cmsprod/cms/MitPhysics/data
 
 $CMSSW_BASE/src/MitAna/bin/analysis.py \
---nentries=$1 --book=t2mit/fullsm/044 --dataset=$2 $3 --custom bx=25ns \
+--nentries=$1 --book=t2mit/filefi/044 --dataset=$2 $3 --custom bx=25ns \
 --fileset=0000 --output=test.root $CMSSW_BASE/src/MitAnalysisRunII/python/80x/bambuToNero.py;
+
+#$CMSSW_BASE/src/MitAna/bin/analysis.py \
+#--nentries=$1 --book=t2mit/fullsm/044 --dataset=$2 $3 --custom bx=25ns \
+#--fileset=0000 --output=test.root $CMSSW_BASE/src/MitAnalysisRunII/python/80x/bambuToNero.py;
