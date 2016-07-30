@@ -49,3 +49,4 @@ awk '{print"grep -vwE "$1" ~ceballos/cms/condor/bb_all/t2mit/"$3"/"$2"/run.py > 
 awk '{print"grep -vwE "$1" ~ceballos/cms/condor/cc_all/t2mit/"$3"/"$2"/run.py > ooo;wc ooo ~ceballos/cms/condor/cc_all/t2mit/"$3"/"$2"/run.py;mv ooo ~ceballos/cms/condor/cc_all/t2mit/"$3"/"$2"/run.py;"}' list_bad_files_d >> zzz
 chmod a+x zzz;./zzz;rm -f zzz;
 rm -f list_bad_files*;
+rm -f ooo;
