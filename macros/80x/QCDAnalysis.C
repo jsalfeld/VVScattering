@@ -50,12 +50,13 @@ void QCDAnalysis(
   if     (period==0){
   }
   else if(period==1){
-  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00116;prescale[2]=0.00350;prescale[3]=0.00422;prescale[4]=0.00510;}
-  else if(typeSel == 13) {prescale[0]=0.00188;prescale[1]=0.02107;prescale[2]=0.02624;prescale[3]=0.02667;prescale[4]=0.02609;}
+  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00127;prescale[2]=0.00287;prescale[3]=0.00350;prescale[4]=0.00404;}
+  else if(typeSel == 13) {prescale[0]=0.00081;prescale[1]=0.01031;prescale[2]=0.01346;prescale[3]=0.01379;prescale[4]=0.01378;}
 
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x.root";
   infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data()));											      infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_Run2016C.root",filesPathDA.Data()));											      infilecatv.push_back(0);
+  infilenamev.push_back(Form("%sdata_Run2016D.root",filesPathDA.Data()));											      infilecatv.push_back(0);
 
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));                                            infilecatv.push_back(1);
   infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));					   infilecatv.push_back(1);

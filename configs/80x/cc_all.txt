@@ -5,4 +5,4 @@ t2mit/filefi/045  DoubleMuon+Run2016D-PromptReco-v2+AOD - 25ns - -
 t2mit/filefi/045  DoubleEG+Run2016D-PromptReco-v2+AOD - 25ns - -
 t2mit/filefi/045  SingleMuon+Run2016D-PromptReco-v2+AOD - 25ns - -
 t2mit/filefi/045  SingleElectron+Run2016D-PromptReco-v2+AOD - 25ns - -
-#t2mit/filefi/045  SinglePhoton+Run2016D-PromptReco-v2+AOD - 25ns - -
+t2mit/filefi/045  SinglePhoton+Run2016D-PromptReco-v2+AOD - 25ns - -

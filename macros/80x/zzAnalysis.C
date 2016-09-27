@@ -42,6 +42,7 @@ void zzAnalysis(
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x.root";
   infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data()));											      infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_Run2016C.root",filesPathDA.Data()));											      infilecatv.push_back(0);
+  infilenamev.push_back(Form("%sdata_Run2016D.root",filesPathDA.Data()));											      infilecatv.push_back(0);
 
   if(usePureMC == true){
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));                                            infilecatv.push_back(1);
@@ -141,7 +142,7 @@ void zzAnalysis(
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 14;
+  const int allPlots = 27;
   const int histBins = 7;
   TH1D* histo[allPlots][histBins];
   TString processName[histBins] = {"..Data", "....EM", "Zgamma", "....WZ", "...ZZ", "...VVV", ".Higgs"};
@@ -156,7 +157,14 @@ void zzAnalysis(
     else if(thePlot >=  7 && thePlot <=  7) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
     else if(thePlot >=  8 && thePlot <=  9) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
     else if(thePlot >= 10 && thePlot <= 10) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 400.0;}
-    else if(thePlot >= 11 && thePlot <= 13) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 11 && thePlot <= 16) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 17 && thePlot <= 17) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 400.0;}
+    else if(thePlot >= 18 && thePlot <= 18) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot =   3.5;}
+    else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot =   1.0;}
+    else if(thePlot >= 20 && thePlot <= 21) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 22 && thePlot <= 24) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
+    else if(thePlot >= 25 && thePlot <= 25) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
+    else if(thePlot >= 26 && thePlot <= 26) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot =   2.0;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
@@ -197,8 +205,8 @@ void zzAnalysis(
     BareTrigger eventTrigger;
     eventTrigger.setBranchAddresses(the_input_tree);
 
-    //BareVertex eventVertex;
-    //eventVertex.setBranchAddresses(the_input_tree);
+    BareVertex eventVertex;
+    eventVertex.setBranchAddresses(the_input_tree);
 
     BareMonteCarlo eventMonteCarlo;
     eventMonteCarlo.setBranchAddresses(the_input_tree);
@@ -227,7 +235,8 @@ void zzAnalysis(
 
       the_input_tree->GetEntry(i);
 
-      Bool_t passFilter[10] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
+      Bool_t passFilter[14] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,
+                               kFALSE,kFALSE,kFALSE,kFALSE};
       if(eventLeptons.p4->GetEntriesFast() >= 2 &&
      	 ((TLorentzVector*)(*eventLeptons.p4)[0])->Pt() > 20 && 
      	 ((TLorentzVector*)(*eventLeptons.p4)[1])->Pt() > 10) passFilter[0] = kTRUE;
@@ -275,8 +284,8 @@ void zzAnalysis(
 
       if(goodIsTight == idTight.size()) passFilter[3] = kTRUE;
       if(usePureMC ==  true && passFilter[3] == kFALSE) continue;
-      if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <= 20 ||
-         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <= 20 ||
+      if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <= 25 ||
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <= 25 ||
          ((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt() <= 10 ||
          ((TLorentzVector*)(*eventLeptons.p4)[idLep[3]])->Pt() <= 10) continue;
 
@@ -295,7 +304,7 @@ void zzAnalysis(
       if(passFilter[4] == kFALSE) continue;
 
       double minMassll = 999.0;
-      double minMassZ[2] = {999.0, 999.0};
+      double minMassZ[2] = {99999.0, 99999.0};
       double deltaRllMin = 999.0;
       int tagZ[4] = {-1,-1,-1,-1};
       for(unsigned nl0=0; nl0<idLep.size()-1; nl0++){
@@ -308,17 +317,35 @@ void zzAnalysis(
 
 	  if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl1]])){
 	    if(TMath::Abs(dilepAux.M()-91.1876) < TMath::Abs(minMassZ[0]-91.1876)) {
-	      minMassZ[1] = minMassZ[0];tagZ[2]=tagZ[0];tagZ[3]=tagZ[1];
 	      minMassZ[0] = dilepAux.M();tagZ[0]=nl0;tagZ[1]=nl1;
-	    }
-	    else if(TMath::Abs(dilepAux.M()-91.1876) < TMath::Abs(minMassZ[1]-91.1876)) {
-	      minMassZ[1] = dilepAux.M();tagZ[2]=nl0;tagZ[3]=nl1;
 	    }
 	  }
 
 	  if(minMassll > dilepAux.M()) minMassll = dilepAux.M();
         }
       }
+      
+      // Removing events with no Z candidate at all
+      if(tagZ[0] == -1) continue;
+      
+      for(unsigned nl=0; nl<idLep.size(); nl++){
+        if(tagZ[0] == (int)nl || tagZ[1] == (int)nl) continue;
+	if(tagZ[2] == -1) tagZ[2] = nl;
+	else              tagZ[3] = nl;
+      }
+
+      if(tagZ[0] == -1 || tagZ[1] == -1 || tagZ[2] == -1 || tagZ[3] == -1) printf("TAGZ PROBLEM!: %d %d %d %d\n",tagZ[0],tagZ[1],tagZ[2],tagZ[3]);
+
+      TLorentzVector dilepZ (( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[tagZ[0]])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[tagZ[1]])) ) ));
+      TLorentzVector dilepLL(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[tagZ[2]])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[tagZ[3]])) ) ));
+      minMassZ[1] = dilepLL.M();
+      double deltaPhiDileptonMet = TMath::Abs(dilepLL.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
+      double mtHWW = TMath::Sqrt(2.0*dilepLL.Pt()*((TLorentzVector*)(*eventMet.p4)[0])->Pt()*(1.0 - cos(deltaPhiDileptonMet)));
+
+      TLorentzVector dilepWW;
+      dilepWW.SetPx(((TLorentzVector*)(*eventMet.p4)[0])->Px()+dilepLL.Px());
+      dilepWW.SetPy(((TLorentzVector*)(*eventMet.p4)[0])->Py()+dilepLL.Py());
+      dilepWW.SetPz(0.0);
 
       vector<int> idJet;
       bool isBtag = kFALSE;
@@ -338,7 +365,7 @@ void zzAnalysis(
 
         if(dPhiJetMET   == -1) dPhiJetMET   = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])));
 
-	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 10 && 
+	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 15 && 
 	   (float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
 
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) continue;
@@ -346,31 +373,45 @@ void zzAnalysis(
 	idJet.push_back(nj);
       }
 
-      TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + 
-        			( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + 
-        			( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) ) + 
-        			( *(TLorentzVector*)(eventLeptons.p4->At(idLep[3])) ) ));
-      double mass4l = dilepAux.M();
+      TLorentzVector fourLep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + 
+        		       ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + 
+        		       ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) ) + 
+        		       ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[3])) ) ));
+      double mass4l = fourLep.M();
       int typeL[2] = {0,0};
       for(unsigned nl0=0; nl0<idLep.size(); nl0++){
         if     (TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]]) == 11) typeL[0]++;
         else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]]) == 13) typeL[1]++;
         else {printf("ZZ4lPROBLEM!\n");assert(0);return;}
       }
-      passFilter[5] = typeL[0] == 4 || typeL[1] == 4 || (typeL[0] == 2 && typeL[1] == 2);
-      passFilter[6] = minMassll > 4.0;
-      passFilter[7] = minMassZ[0] > 60 && minMassZ[0] < 120 && minMassZ[1] > 60 && minMassZ[1] < 120;
-      
+
       int type4l = 0;
       if     (typeL[0] == 4) type4l = 0;
       else if(typeL[1] == 4) type4l = 1;
       else if(typeL[0] == 2) type4l = 2;
       else		     type4l = 3;
 
+      passFilter[5]  = typeL[0] == 4 || typeL[1] == 4 || (typeL[0] == 2 && typeL[1] == 2);
+      passFilter[6]  = minMassll > 4.0;
+      passFilter[7]  = minMassZ[0] > 60 && minMassZ[0] < 120 && minMassZ[1] > 60 && minMassZ[1] < 120;
+      passFilter[8]  = minMassZ[0] > 76.1876 && minMassZ[0] < 106.1876;
+      passFilter[9]  = minMassZ[1] > 10 && minMassZ[1] < 65;
+      passFilter[10] = mass4l > 140.0 || type4l == 3;
+      passFilter[11] = (double)((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 20.;
+      passFilter[12] = bDiscrMax < 0.560 && idJet.size() <= 1;
+      passFilter[13] = fourLep.Pt() > 30 || type4l == 3;
+
       bool passNMinusOne[2] = {                 passFilter[6],
                                passFilter[5]                 };
       bool passAllCuts = passFilter[5] && passFilter[6];
       bool passZZSel = passFilter[5] && passFilter[6] && passFilter[7];
+      bool passZHWWSelNMinusOne[6] = {passFilter[6] &&                  passFilter[9] && passFilter[10] && passFilter[11] && passFilter[12] && passFilter[13],
+                                      passFilter[6] && passFilter[8] &&                  passFilter[10] && passFilter[11] && passFilter[12] && passFilter[13],
+				      passFilter[6] && passFilter[8] && passFilter[9]                   && passFilter[11] && passFilter[12] && passFilter[13],
+				      passFilter[6] && passFilter[8] && passFilter[9] && passFilter[10]                   && passFilter[12] && passFilter[13],
+				      passFilter[6] && passFilter[8] && passFilter[9] && passFilter[10] && passFilter[11]                   && passFilter[13],
+				      passFilter[6] && passFilter[8] && passFilter[9] && passFilter[10] && passFilter[11] && passFilter[12]};
+      bool passZHWWSel = passFilter[6] && passFilter[8] && passFilter[9] && passFilter[10] && passFilter[11] && passFilter[12] && passFilter[13];
 
       TLorentzVector theFakeMET[2];
       if(passAllCuts){
@@ -486,20 +527,33 @@ void zzAnalysis(
       for(int thePlot=0; thePlot<allPlots; thePlot++){
 	double theVar = 0.0;
 	bool makePlot = false;
-	if     (thePlot ==  0 && passAllCuts)      {makePlot = true;theVar = TMath::Min((double)mass4l,399.999);}
-	else if(thePlot ==  1 && passNMinusOne[0]) {makePlot = true;theVar = type4l;}
-	else if(thePlot ==  2 && passNMinusOne[1]) {makePlot = true;theVar = TMath::Min(minMassll,99.999);}
-	else if(thePlot ==  3 && passAllCuts)      {makePlot = true;theVar = TMath::Min(minMassZ[0],199.999);}
-	else if(thePlot ==  4 && passAllCuts)      {makePlot = true;theVar = TMath::Min(minMassZ[1],199.999);}
-	else if(thePlot ==  5 && passAllCuts)      {makePlot = true;theVar = TMath::Min(deltaRllMin,3.999);}
-	else if(thePlot ==  6 && passAllCuts)      {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-	else if(thePlot ==  7 && passAllCuts)      {makePlot = true;theVar = TMath::Min(bDiscrMax,0.999);}
-	else if(thePlot ==  8 && passAllCuts)      {makePlot = true;theVar = dPhiJetMET*180/TMath::Pi();}
-	else if(thePlot ==  9 && passAllCuts)      {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
-	else if(thePlot == 10 && passZZSel)        {makePlot = true;theVar = TMath::Min((double)mass4l,399.999);}
-	else if(thePlot == 11 && passZZSel)        {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
-	else if(thePlot == 12 && passZZSel)	   {makePlot = true;theVar = TMath::Min(TMath::Max(theFakeMET[0].Pt(),theFakeMET[1].Pt()),199.999);}
-	else if(thePlot == 13 && passZZSel)	   {makePlot = true;theVar = TMath::Min(TMath::Min(theFakeMET[0].Pt(),theFakeMET[1].Pt()),199.999);}
+	if     (thePlot ==  0 && passAllCuts)             {makePlot = true;theVar = TMath::Min((double)mass4l,399.999);}
+	else if(thePlot ==  1 && passNMinusOne[0])        {makePlot = true;theVar = type4l;}
+	else if(thePlot ==  2 && passNMinusOne[1])        {makePlot = true;theVar = TMath::Min(minMassll,99.999);}
+	else if(thePlot ==  3 && passAllCuts)             {makePlot = true;theVar = TMath::Min(minMassZ[0],199.999);}
+	else if(thePlot ==  4 && passAllCuts)             {makePlot = true;theVar = TMath::Min(minMassZ[1],199.999);}
+	else if(thePlot ==  5 && passAllCuts)             {makePlot = true;theVar = TMath::Min(deltaRllMin,3.999);}
+	else if(thePlot ==  6 && passAllCuts)             {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot ==  7 && passAllCuts)             {makePlot = true;theVar = TMath::Min(bDiscrMax,0.999);}
+	else if(thePlot ==  8 && passAllCuts)             {makePlot = true;theVar = dPhiJetMET*180/TMath::Pi();}
+	else if(thePlot ==  9 && passAllCuts)             {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
+	else if(thePlot == 10 && passZZSel)               {makePlot = true;theVar = TMath::Min((double)mass4l,399.999);}
+	else if(thePlot == 11 && passZZSel)               {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+	else if(thePlot == 12 && passZZSel)	          {makePlot = true;theVar = TMath::Min(TMath::Max(theFakeMET[0].Pt(),theFakeMET[1].Pt()),199.999);}
+	else if(thePlot == 13 && passZZSel)	          {makePlot = true;theVar = TMath::Min(TMath::Min(theFakeMET[0].Pt(),theFakeMET[1].Pt()),199.999);}
+	else if(thePlot == 14 && passZHWWSelNMinusOne[3]) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+	else if(thePlot == 15 && passZHWWSelNMinusOne[0]) {makePlot = true;theVar = TMath::Min(minMassZ[0],199.999);}
+	else if(thePlot == 16 && passZHWWSelNMinusOne[1]) {makePlot = true;theVar = TMath::Min(minMassZ[1],199.999);}
+	else if(thePlot == 17 && passZHWWSelNMinusOne[2]) {makePlot = true;theVar = TMath::Min((double)mass4l,399.999);}
+	else if(thePlot == 18 && passZHWWSel)             {makePlot = true;theVar = type4l;}
+	else if(thePlot == 19 && passZHWWSelNMinusOne[4]) {makePlot = true;theVar = TMath::Min(bDiscrMax,0.999);}
+	else if(thePlot == 20 && passZHWWSelNMinusOne[5]) {makePlot = true;theVar = TMath::Min(fourLep.Pt(),199.999);}
+	else if(thePlot == 21 && passZHWWSel)             {makePlot = true;theVar = TMath::Min(mtHWW,199.999);}
+	else if(thePlot == 22 && passZHWWSel)             {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[0]]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[1]]]))*180/TMath::Pi();}
+	else if(thePlot == 23 && passZHWWSel)             {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[2]]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[tagZ[3]]]))*180/TMath::Pi();}
+	else if(thePlot == 24 && passZHWWSel)             {makePlot = true;theVar = TMath::Abs(dilepZ.DeltaPhi(dilepWW))*180/TMath::Pi();}
+	else if(thePlot == 25 && passZHWWSelNMinusOne[4]) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 26 && passZHWWSel)             {makePlot = true;theVar = TMath::Min(dilepWW.Pt()/dilepZ.Pt(),1.999);}
 
 	if(makePlot) histo[thePlot][theCategory]->Fill(theVar,totalWeight);
       }
