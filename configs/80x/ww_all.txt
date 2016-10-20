@@ -207,6 +207,8 @@ t2mit/filefi/044  GluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8+RunIISpring16
 t2mit/filefi/044  GluGluToContinToZZTo4e_13TeV_MCFM701_pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns - ~
 t2mit/filefi/044  GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns - ~
 t2mit/filefi/044  GluGluToContinToZZTo4tau_13TeV_MCFM701_pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns - ~
+t2mit/filefi/044 ZZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2+AODSIM  - 25ns - ~
+t2mit/filefi/044 WZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM  - 25ns - ~
 
 t2mit/filefi/044  ZZJJTo4L_EWK_13TeV-madgraph-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM - 25ns - ~
 t2mit/filefi/044  WLLJJToLNu_M-60_EWK_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM - 25ns - ~
