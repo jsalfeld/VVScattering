@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export MIT_CATALOG=~ceballos/catalog;
+export MIT_CATALOG=~cmsprod/catalog;
 export MIT_PROD_LOGS=$HOME/cms/logs;
 export MIT_PROD_HIST=$HOME/cms/hist;
 #export MIT_DATA=$CMSSW_BASE/src/MitPhysics/data;

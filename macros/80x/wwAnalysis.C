@@ -866,7 +866,6 @@ void wwAnalysis(
       else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 11 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]) == 11) type2l = 3;
       else {printf("IMPOSSIBLE TYPE2L\n");}
       int nFakeCount = 0;
-      unsigned int typeFakeLepton[2] = {0,0};
       int theCategory = infilecatv[ifile];
       double fakeSF = 1.0;
       if(usePureMC == false){
@@ -877,6 +876,7 @@ void wwAnalysis(
           fakeSF = 0.0;
         }
         else if((infilecatv[ifile] == 0 || infilecatv[ifile] == 7 || goodIsGenLep == isGenLep.size()) && goodIsTight != idTight.size()){ // add W+jets from data or W+gamma from MC
+          unsigned int typeFakeLepton[2] = {0,0};
 	  for(unsigned int nl=0; nl<idLep.size(); nl++){
 	    if(idTight[nl] == 1) continue;
 	    if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 13) nFakeCount = nFakeCount + 1;
@@ -891,6 +891,7 @@ void wwAnalysis(
           else if(infilecatv[ifile] != 0 && goodIsTight == idTight.size()-1) fakeSF = -1.0 * fakeSF; // single fake, MC
           else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) fakeSF = -1.0 * fakeSF; // double fake, data
           else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) fakeSF =  1.0 * fakeSF; // single fake, data
+          if(typeFakeLepton[0] < typeFakeLepton[1]) theCategory = 10;
         }
         else if(infilecatv[ifile] != 0 && infilecatv[ifile] != 7 && goodIsGenLep != isGenLep.size()){ // remove MC dilepton fakes from ll events
           fakeSF = 0.0;
@@ -906,7 +907,6 @@ void wwAnalysis(
 	  assert(0);
 	}
       }
-      if(typeFakeLepton[0] < typeFakeLepton[1]) theCategory = 10;
       double mcWeight = eventMonteCarlo.mcWeight;
       if(infilecatv[ifile] == 0) mcWeight = 1.0;
       double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*trigEff*thePtwwWeight[0];

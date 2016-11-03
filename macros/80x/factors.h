@@ -265,15 +265,15 @@ TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF){
   Int_t binXB = 0;
   Int_t binYB = 0;
 
-  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default"))  {binXA = fhDMuMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDMuMediumSF->GetYaxis()->FindFixBin(pt);}
-  else if(TMath::Abs(nsel) == 11 && type== "medium")			    {binXA = fhDElMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDElMediumSF->GetYaxis()->FindFixBin(pt);}
-  else if(TMath::Abs(nsel) == 11 && type== "default")			    {binXA = fhDElTightSF ->GetXaxis()->FindFixBin(eta);binYA = fhDElTightSF ->GetYaxis()->FindFixBin(pt);}
+  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default" || type== "medium_mva" || type== "default_mva"))  {binXA = fhDMuMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDMuMediumSF->GetYaxis()->FindFixBin(pt);}
+  else if(TMath::Abs(nsel) == 11 && (type== "medium" || type== "medium_mva"))			                           {binXA = fhDElMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDElMediumSF->GetYaxis()->FindFixBin(pt);}
+  else if(TMath::Abs(nsel) == 11 && (type== "default"|| type== "default_mva"))			                           {binXA = fhDElTightSF ->GetXaxis()->FindFixBin(eta);binYA = fhDElTightSF ->GetYaxis()->FindFixBin(pt);}
   else    printf("PROBLEM WITH BINS\n");
 
   double result = 0.0;
-  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default")) result = fhDMuMediumSF->GetBinContent(binXA, binYA);
-  else if(TMath::Abs(nsel) == 11 && type== "medium")	                   result = fhDElMediumSF->GetBinContent(binXA, binYA);
-  else if(TMath::Abs(nsel) == 11 && type== "default")	                   result = fhDElTightSF ->GetBinContent(binXA, binYA);
+  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default" || type== "medium_mva" || type== "default_mva")) result = fhDMuMediumSF->GetBinContent(binXA, binYA);
+  else if(TMath::Abs(nsel) == 11 && (type== "medium" || type== "medium_mva"))	                                          result = fhDElMediumSF->GetBinContent(binXA, binYA);
+  else if(TMath::Abs(nsel) == 11 &&( type== "default"|| type== "default_mva"))	                                          result = fhDElTightSF ->GetBinContent(binXA, binYA);
 
   if(result <= 0) printf("Result <= 0! %f %d %d %d - %f %f\n",result,nsel,binXA,binYA,pt,eta);
   if(result <= 0) result = 1.0;
@@ -350,129 +350,6 @@ double fakeRateFactor(double pt, double eta, int nsel, int period, TString type)
   assert(0);
 
   return 0.0;
-}
-
-double weightTruePileupFall15_74X(double ntrue){
-
-  if(ntrue > 50) return 1.0;
-
-  double w[50] = {
-126.337,
-153.753,
-108.762,
-32.4929,
-17.9949,
-3.34053,
-1.97929,
-2.5719,
-3.42167,
-3.33126,
-3.00845,
-2.65362,
-2.08864,
-1.39939,
-0.792047,
-0.386897,
-0.18109,
-0.0990121,
-0.0705014,
-0.0587098,
-0.0525807,
-0.0503863,
-0.051229,
-0.0538919,
-0.0574271,
-0.0613761,
-0.0657269,
-0.0706353,
-0.0757276,
-0.078729,
-0.0744712,
-0.0591124,
-0.038286,
-0.02139,
-0.0111463,
-0.0057112,
-0.00295235,
-0.00155243,
-0.000828797,
-0.000446272,
-0.000240566,
-0.000129006,
-6.85054e-05,
-3.59166e-05,
-1.85598e-05,
-9.44456e-06,
-1.16979e-05,
-8.50725e-06,
-1.49492e-05,
-1
-  };
-
- return w[(int)floor(ntrue)];
-
-}
-
-
-double weightTruePileupFall15_74X_wisconsin(double ntrue){
-
-  if(ntrue > 50) return 1.0;
-
-  double w[50] = {
-58.1138048875,
-93.2612967205,
-98.6162081996,
-28.7104534509,
-15.4617381103,
- 2.7153649567,
- 1.4508190201,
- 1.7113554671,
- 2.3002683151,
- 2.4788907956,
- 2.5634937262,
- 2.6060767979,
- 2.3623139729,
- 1.8314456721,
- 1.1939779551,
- 0.6482593491,
- 0.3000319858,
- 0.1272652275,
- 0.0578769686,
- 0.0312937347,
- 0.0179469656,
- 0.0093677189,
- 0.0041699519,
- 0.0015958001,
- 0.0005656543,
- 0.0002159007,
- 0.0001028891,
- 0.0000618602,
- 0.0000433336,
- 0.0000324305,
- 0.0000233797,
- 0.0000145054,
- 0.0000073363,
- 0.0000031279,
- 0.0000011932,
- 0.0000004231,
- 0.0000001420,
- 0.0000000454,
- 0.0000000139,
- 0.0000000041,
- 0.0000000011,
- 0.0000000003,
- 0.0000000001,
- 0.0000000000,
- 0.0000000000,
- 0.0000000000,
- 0.0000000000,
- 0.0000000000,
- 0.0000000000,
- 0.0000000000
-};
-
- return w[(int)floor(ntrue)];
-
 }
 
 float kfactor_qqZZ_qcd_M(float GENmassZZ, int finalState = 2)

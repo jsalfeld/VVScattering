@@ -22,7 +22,7 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "MitAna/Utils/interface/SimpleTable.h"
 
-#include "MitAnalysisRunII/macros/76x/factors.h"
+#include "MitAnalysisRunII/macros/80x/factors.h"
 #include "WWAnalysis/resummation/WWpTreweight.h"
 
 // selection bits
@@ -32,6 +32,7 @@
 //            - 3  ==> e-mu + MET
 //            - 4  ==> Z+MET
 //            - 5  ==> one photon, ptg>60
+//            - 6  ==> same-sign
 
 // filterType == -1 ==> all events included in the skimmed ntuple
 
@@ -45,8 +46,9 @@ void makeOneSkimSample(
  ){
 
   bool fillPDFInfo = true;
-  
-  bool isFilterOn[6] = {true,true,true,true,true,true};
+  const int totalNumberSkims = 7;
+ 
+  bool isFilterOn[totalNumberSkims] = {true,true,true,true,true,true,true};
   if(filterType == 2) {isFilterOn[0] = false; isFilterOn[1] = false;}
   if(filterType == 3) {isFilterOn[0] = false; isFilterOn[1] = false; isFilterOn[3] = false;}
 
@@ -143,7 +145,7 @@ void makeOneSkimSample(
 
   UInt_t N_all  = the_input_all->GetEntries();
   UInt_t N_pass = 0;
-  UInt_t Filter_pass[6] = {0,0,0,0,0,0};
+  UInt_t Filter_pass[totalNumberSkims] = {0,0,0,0,0,0,0};
   Double_t sumAllEvents = 0;
   Double_t sumPassEvents = 0;
   Double_t sumPassEventsNoNNLO = 0;
@@ -191,7 +193,7 @@ void makeOneSkimSample(
       else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idLep.push_back(nlep);}
     }
 
-    Bool_t passFilter[6] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
+    Bool_t passFilter[totalNumberSkims] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
 
     // ptl>20/10 filter
     if(idOnlyLep.size() >= 2 &&
@@ -364,8 +366,15 @@ void makeOneSkimSample(
        idPho.size() >= 1) passFilter[5] = kTRUE;
     }
 
+    // same-sign filter
+    if(idOnlyLep.size() >= 2 &&
+       ((TLorentzVector*)(*eventLeptons.p4)[idOnlyLep[0]])->Pt() > 20 && 
+       ((TLorentzVector*)(*eventLeptons.p4)[idOnlyLep[1]])->Pt() > 20 &&
+       (int)(*eventLeptons.pdgId)[idOnlyLep[0]]/TMath::Abs((int)(*eventLeptons.pdgId)[idOnlyLep[0]]) ==
+       (int)(*eventLeptons.pdgId)[idOnlyLep[1]]/TMath::Abs((int)(*eventLeptons.pdgId)[idOnlyLep[1]])) passFilter[6] = kTRUE;
+
     // Make sure filter is off if we do not want to use it
-    for(int nf=0; nf<6; nf++) if(isFilterOn[nf] == kFALSE) passFilter[nf] = kFALSE;
+    for(int nf=0; nf<totalNumberSkims; nf++) if(isFilterOn[nf] == kFALSE) passFilter[nf] = kFALSE;
 
 
     selBit_ = 0;
@@ -375,6 +384,7 @@ void makeOneSkimSample(
     if(passFilter[3] == kTRUE) selBit_ |= 1UL<<3;
     if(passFilter[4] == kTRUE) selBit_ |= 1UL<<4;
     if(passFilter[5] == kTRUE) selBit_ |= 1UL<<5;
+    if(passFilter[6] == kTRUE) selBit_ |= 1UL<<6;
 
     if(passFilter[0] == kTRUE) Filter_pass[0]++;
     if(passFilter[1] == kTRUE) Filter_pass[1]++;
@@ -382,13 +392,15 @@ void makeOneSkimSample(
     if(passFilter[3] == kTRUE) Filter_pass[3]++;
     if(passFilter[4] == kTRUE) Filter_pass[4]++;
     if(passFilter[5] == kTRUE) Filter_pass[5]++;
+    if(passFilter[6] == kTRUE) Filter_pass[6]++;
 
     if((passFilter[0] == kFALSE &&
         passFilter[1] == kFALSE &&
         passFilter[2] == kFALSE &&
         passFilter[3] == kFALSE &&
         passFilter[4] == kFALSE &&
-        passFilter[5] == kFALSE) &&
+        passFilter[5] == kFALSE &&
+        passFilter[6] == kFALSE) &&
 	filterType != -1) continue;
     N_pass++;
 
@@ -439,7 +451,7 @@ void makeOneSkimSample(
 
     normalizedTree1->Fill(); 
   }
-  printf("Filters: %d %d %d %d %d %d\n",Filter_pass[0],Filter_pass[1],Filter_pass[2],Filter_pass[3],Filter_pass[4],Filter_pass[5]);
+  printf("Filters: %d %d %d %d %d %d %d\n",Filter_pass[0],Filter_pass[1],Filter_pass[2],Filter_pass[3],Filter_pass[4],Filter_pass[5],Filter_pass[6]);
   printf("N pass/all = %d / %d = %f | Sum pass/all = %f / %f = %f\n",N_pass,N_all,(double)N_pass/N_all,sumPassEvents,sumAllEvents,sumPassEvents/sumAllEvents);
   if(processName.CompareTo("wwlnln") == 0) printf("sumPassEventsNoNNLO: %f\n",sumPassEventsNoNNLO);
   normalizedTree0->Write();
