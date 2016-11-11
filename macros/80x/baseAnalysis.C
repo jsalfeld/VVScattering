@@ -21,13 +21,13 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
-bool isMINIAOD = true;
+bool isMINIAOD = false;
 int whichSkim = 0;
 bool usePureMC = true; 
 double mcPrescale = 1.0;
 const bool useDYMVA = false;
 const bool doTriggerStudy = true;
-const TString typeLepSel = "medium";
+const TString typeLepSel = "default";
 
 void baseAnalysis(
  Int_t nsel = 4,
@@ -38,9 +38,9 @@ void baseAnalysis(
   TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_80x/";
   if(isMINIAOD) filesPathDA = "/scratch5/dhsu/ntuples_goodrun_80x/";
   TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_80x/";
-  Double_t lumi = 20.0;
+  Double_t lumi = 12.9;
 
-  if(nsel == 2) usePureMC = true;
+  if(nsel == 2 || nsel == 5) usePureMC = true;
 
   //*******************************************************
   //Input Files
@@ -52,7 +52,7 @@ void baseAnalysis(
   TString triggerSuffix = "*";
   if(isMINIAOD) triggerSuffix = "";
   if(period==1){
-  puPath = "MitAnalysisRunII/data/80x/puWeights_80x_20p0ifb.root";
+  puPath = "MitAnalysisRunII/data/80x/puWeights_80x_13p0ifb_62_64_66.root";
 
   if(isMINIAOD) {
     infilenamev.push_back(Form("%sdata_Run2016B_skim.root",filesPathDA.Data())); infilecatv.push_back(0);
@@ -73,7 +73,7 @@ void baseAnalysis(
   //infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));      infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3_ext1-v1+AODSIM.root",filesPathMC.Data()));      infilecatv.push_back(2);
-
+/*
   infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3_ext1-v1+AODSIM.root",filesPathMC.Data()));					   infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sTT_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3_ext3-v1+AODSIM.root",filesPathMC.Data()));			   infilecatv.push_back(3);
 
@@ -121,6 +121,7 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM.root",filesPathMC.Data()));                            infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM.root",filesPathMC.Data())); 		   infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3_ext1-v1+RAWAODSIM.root",filesPathMC.Data()));  infilecatv.push_back(7);
+*/
   }
   else {assert(0);}
   
@@ -130,6 +131,22 @@ void baseAnalysis(
   //infilenamev.push_back(Form("%sTTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76Premix-premixPU50_nondeterministic_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));  infilecatv.push_back(7);
 
   if(infilenamev.size() != infilecatv.size()) {assert(0); return;}
+
+  const int ptBins = 2; const int etaBins = 5;
+  double evtZ[2][ptBins][etaBins][ptBins][etaBins][2],evtZE[2][ptBins][etaBins][ptBins][etaBins][2];
+  for (int ch=0; ch<2; ch++){
+    for (int pt0=0; pt0<ptBins; pt0++){
+      for (int eta0=0; eta0<etaBins; eta0++){
+        for (int pt1=0; pt1<ptBins; pt1++){
+          for (int eta1=0; eta1<etaBins; eta1++){
+            for (int nlep=0; nlep<2; nlep++){
+              evtZ[ch][pt0][eta0][pt1][eta1][nlep] = 0; evtZE[ch][pt0][eta0][pt1][eta1][nlep] = 0;
+            }
+          }
+        }
+      }
+    }
+  }
 
   double denBTagging[5][5][3],numBTagging[5][5][3],jetEpsBtag[5][5][3];
   for(int i0=0; i0<5; i0++) {
@@ -407,7 +424,7 @@ void baseAnalysis(
       if(goodIsTight == idTight.size()) passFilter[3] = kTRUE;
       if(usePureMC == false || passFilter[3] ==  kTRUE) nPassCuts[3]++;
       if(usePureMC ==  true && passFilter[3] == kFALSE) continue;
-      if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <= 20 ||
+      if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <= 25 ||
          ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <= ptl2nd) continue;
 
       if     (typeSel == 0 && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==13&&TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])==13) passFilter[4] = kTRUE;
@@ -427,7 +444,8 @@ void baseAnalysis(
       double minPMET = TMath::Min(((TLorentzVector*)(*eventMet.p4)[0])->Pt(),(double)eventMet.trackMet->Pt());
       if(dPhiLepMETMin < TMath::Pi()/2) minPMET = minPMET * sin(dPhiLepMETMin);
 
-      if     (numberOfLeptons == 2 && nsel == 6)            passFilter[4] = passFilter[4] * (signQ != 0);
+      if     (nsel == 5)                                    passFilter[4] = passFilter[4];
+      else if(numberOfLeptons == 2 && nsel == 6)            passFilter[4] = passFilter[4] * (signQ != 0);
       else if(numberOfLeptons == 2 || numberOfLeptons == 4) passFilter[4] = passFilter[4] * (signQ == 0);
       else if(numberOfLeptons == 3)                         passFilter[4] = passFilter[4] * (TMath::Abs(signQ) == 1);
       else {printf("PROBLEM numberOfLeptons\n");assert(0);return;}
@@ -631,13 +649,13 @@ void baseAnalysis(
 	  if(countJ[0] == 1 && countJ[1] == 0 && countJ[2] >= 1) passFilter[9] = kTRUE;
 	}
       }
-      else if(nsel == 5){ // Z(ll)H(inv)
-	if   (TMath::Abs(dilep.M()-91.1876)>15.0) passFilter[5] = kFALSE;
-	else                                      passFilter[5] = kTRUE;              
-        passFilter[6] = idJet.size() == 0;
-	passFilter[7] = ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 100.;
-	passFilter[8] = ptFrac < 0.5 && dPhiDiLepMET > 150.;
-	passFilter[9] = bDiscrMax < 0.605 && idSoft.size() == 0;
+      else if(nsel == 5){ // Z wrong charge study
+	if   (TMath::Abs(dilep.M()-91.1876)<10.0) passFilter[5] = kTRUE;
+	else                                      passFilter[5] = kFALSE;              
+        passFilter[6] = bDiscrMax < 0.800 && idSoft.size() == 0;
+	passFilter[7] = kTRUE;
+	passFilter[8] = kTRUE;
+	passFilter[9] = kTRUE;
       }
       else if(nsel == 7) { // ZZ4l selection
         TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + 
@@ -850,6 +868,37 @@ void baseAnalysis(
       if(infilecatv[ifile] == theCategory) sumEventsProcess [ifile] += totalWeight;
       if(infilecatv[ifile] == theCategory) sumEventsEProcess[ifile] += totalWeight*totalWeight;
 
+      if(nsel == 5){
+        int typeDat = 0;
+	if(infilecatv[ifile] == 2) typeDat = 1;
+	
+	double theZWeight = totalWeight;
+	if(infilecatv[ifile] != 0 && infilecatv[ifile] != 2) theZWeight = -1.0 * theZWeight;
+	
+	int iPt[2] = {-1, -1};
+	if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 2000) iPt[0] = 0;
+	else                                                                  iPt[0] = 1;
+	if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 2000) iPt[1] = 0;
+	else                                                                  iPt[1] = 1;
+
+	int iEta[2] = {-1, -1};
+	if     (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 0.5) iEta[0] = 0;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 1.0) iEta[0] = 1;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 1.5) iEta[0] = 2;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 2.0) iEta[0] = 3;
+	else                                                                              iEta[0] = 4;
+	if     (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 0.5) iEta[1] = 0;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 1.0) iEta[1] = 1;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 1.5) iEta[1] = 2;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 2.0) iEta[1] = 3;
+	else                                                                              iEta[1] = 4;
+        
+	if(signQ == 0)  evtZ[0][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeDat] =  evtZ[0][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeDat] + theZWeight;
+	else            evtZ[1][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeDat] =  evtZ[1][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeDat] + theZWeight;
+	if(signQ == 0) evtZE[0][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeDat] = evtZE[0][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeDat] + theZWeight*theZWeight;
+	else           evtZE[1][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeDat] = evtZE[1][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeDat] + theZWeight*theZWeight;
+      }
+
       TVector2 dilv(dilep.Px(), dilep.Py());
 
       TVector2 metv(((TLorentzVector*)(*eventMet.p4)[0])->Px(), ((TLorentzVector*)(*eventMet.p4)[0])->Py());
@@ -1002,6 +1051,24 @@ void baseAnalysis(
       histo_rinout_dym[0][1][1]->GetBinContent(i),histo_rinout_dym[0][1][0]->GetBinContent(i),histo_rinout_dym[0][1][1]->GetBinContent(i)/histo_rinout_dym[0][1][0]->GetBinContent(i),
       histo_rinout_dym[0][2][1]->GetBinContent(i),histo_rinout_dym[0][2][0]->GetBinContent(i),histo_rinout_dym[0][2][1]->GetBinContent(i)/histo_rinout_dym[0][2][0]->GetBinContent(i)
       );
+    }
+  }
+
+  if(nsel == 5){
+    printf("***Wrong Sign Study***\n");
+    for (int pt0=0; pt0<ptBins; pt0++){
+      for (int eta0=0; eta0<etaBins; eta0++){
+        for (int pt1=0; pt1<ptBins; pt1++){
+          for (int eta1=0; eta1<etaBins; eta1++){
+            printf("yield %1d %1d %1d %1d: (WS) %9.1f +/- %9.1f / %9.1f +/- %9.1f (RS) %9.1f +/- %9.1f / %9.1f +/- %9.1f ==> %7.5f +/- %7.5f / %7.5f +/- %7.5f\n",pt0,eta0,pt1,eta1,
+	    evtZ[1][pt0][eta0][pt1][eta1][0],sqrt(evtZE[1][pt0][eta0][pt1][eta1][0]), evtZ[1][pt0][eta0][pt1][eta1][1],sqrt(evtZE[1][pt0][eta0][pt1][eta1][1]),
+	    evtZ[0][pt0][eta0][pt1][eta1][0],sqrt(evtZE[0][pt0][eta0][pt1][eta1][0]), evtZ[0][pt0][eta0][pt1][eta1][1],sqrt(evtZE[0][pt0][eta0][pt1][eta1][1]),
+	    evtZ[1][pt0][eta0][pt1][eta1][0]/evtZ[0][pt0][eta0][pt1][eta1][0],evtZ[1][pt0][eta0][pt1][eta1][0]/evtZ[0][pt0][eta0][pt1][eta1][0]*sqrt(evtZE[1][pt0][eta0][pt1][eta1][0])/evtZ[1][pt0][eta0][pt1][eta1][0],
+	    evtZ[1][pt0][eta0][pt1][eta1][1]/evtZ[0][pt0][eta0][pt1][eta1][1],evtZ[1][pt0][eta0][pt1][eta1][1]/evtZ[0][pt0][eta0][pt1][eta1][1]*sqrt(evtZE[1][pt0][eta0][pt1][eta1][1])/evtZ[1][pt0][eta0][pt1][eta1][1]
+	          );
+          }
+        }
+      }
     }
   }
 

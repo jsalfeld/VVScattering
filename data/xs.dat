@@ -111,5 +111,9 @@ wpwp_qcd       0.01538
 wzjj_ewk_qcd   0.509
 wzjj_ewk       0.039
 wzjj_qcd       0.47
-zzjj           0.0004458
-wlljj_ewk      0.047
+
+zzjj              0.00974
+wlljj60_ewk       0.047
+wlljj60_ewk_qcd   0.526
+wlljj4_60_ewk_qcd 0.53397
+wlgjj             5.668

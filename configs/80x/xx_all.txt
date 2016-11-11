@@ -1,0 +1,7 @@
+book dataset skim bx pdfrwgt json
+
+t2mit/filefi/044 WGJJToLNu_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM  - 25ns - ~
+t2mit/filefi/044 WLLJJToLNu_M-4to60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_bwcutoff15_80X_mcRun2_asymptotic_v14-v1+AODSIM  - 25ns - ~
+t2mit/filefi/044 WLLJJToLNu_M-60_EWK_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM  - 25ns - ~
+t2mit/filefi/044 WLLJJToLNu_M-60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM - 25ns - ~
+t2mit/filefi/044 ZZJJTo4L_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM  - 25ns - ~
