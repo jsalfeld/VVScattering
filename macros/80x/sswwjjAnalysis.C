@@ -1798,7 +1798,7 @@ void sswwjjAnalysis(bool isBlinded = false
       newcardShape << Form("bin %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d\n",finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1);
       newcardShape << Form("process EWK QCD VV VVV WS WG DPS FakeM FakeE\n");
       newcardShape << Form("process 0 1 2 3 4 5 6 7 8\n");
-      newcardShape << Form("rate %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f\n",histo_EWK->GetBinContent(nb),TMath::Max(histo_QCD->GetBinContent(nb),0.0),TMath::Max(histo_VV->GetBinContent(nb),0.0),TMath::Max(histo_VVV->GetBinContent(nb),0.0),TMath::Max(histo_WS->GetBinContent(nb),0.0),TMath::Max(histo_WG->GetBinContent(nb),0.0),TMath::Max(histo_DPS->GetBinContent(nb),0.0),TMath::Max(histo_FakeM->GetBinContent(nb),0.0),TMath::Max(histo_FakeE->GetBinContent(nb),0.0));
+      newcardShape << Form("rate %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f %8.5f\n",TMath::Max(histo_EWK->GetBinContent(nb),0.0),TMath::Max(histo_QCD->GetBinContent(nb),0.0),TMath::Max(histo_VV->GetBinContent(nb),0.0),TMath::Max(histo_VVV->GetBinContent(nb),0.0),TMath::Max(histo_WS->GetBinContent(nb),0.0),TMath::Max(histo_WG->GetBinContent(nb),0.0),TMath::Max(histo_DPS->GetBinContent(nb),0.0),TMath::Max(histo_FakeM->GetBinContent(nb),0.0),TMath::Max(histo_FakeE->GetBinContent(nb),0.0));
       newcardShape << Form("lumi_%4s       lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -     -  \n",ECMsb.Data(),lumiE,lumiE,lumiE,lumiE,lumiE,lumiE,lumiE);  		  
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -     -  \n",effMName,systLepEffM[0],systLepEffM[1],systLepEffM[2],systLepEffM[3],systLepEffM[4],systLepEffM[5],systLepEffM[6]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -     -  \n",effEName,systLepEffE[0],systLepEffE[1],systLepEffE[2],systLepEffE[3],systLepEffE[4],systLepEffE[5],systLepEffE[6]);
@@ -1807,7 +1807,7 @@ void sswwjjAnalysis(bool isBlinded = false
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -     -  \n",puName,systPUUp[0],systPUUp[1],systPUUp[2],systPUUp[3],systPUUp[4],systPUUp[5],systPUUp[6]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -     -  \n",momMName,systLepResM[0],systLepResM[1],systLepResM[2],systLepResM[3],systLepResM[4],systLepResM[5],systLepResM[6]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -     -  \n",momEName,systLepResE[0],systLepResE[1],systLepResE[2],systLepResE[3],systLepResE[4],systLepResE[5],systLepResE[6]);
-      newcardShape << Form("QCDscale_EWK   lnN  %7.5f   -     -     -     -     -     -     -     -  \n",systQCDScale[0]);		
+      newcardShape << Form("QCDscale_EWK   lnN  %7.5f   -     -     -     -     -     -     -     -  \n",1.10);//systQCDScale[0]);		
       newcardShape << Form("QCDscale_VV    lnN    -   %7.5f %7.5f   -     -     -   %7.5f   -     -  \n",systQCDScale[1],systQCDScale[2],systQCDScale[6]);		
       newcardShape << Form("QCDscale_VVV   lnN    -     -     -   %7.5f   -     -     -     -     -  \n",systQCDScale[3]);		
       newcardShape << Form("QCDscale_VG    lnN    -     -     -     -   %7.5f   -     -     -     -  \n",systQCDScale[4]);		
