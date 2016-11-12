@@ -869,10 +869,10 @@ void sswwjjAnalysis(bool isBlinded = false
       }
 
       bool passSystCuts[nSystTypes] = {
-          passFilterSig[0] && passFilterSig[1] && idJetUp.size() >= 2   && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] 		      && dijetUp.M() > 500   && deltaEtaJJUp > 2.5,
-          passFilterSig[0] && passFilterSig[1] && idJetDown.size() >= 2 && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] 		      && dijetDown.M() > 500 && deltaEtaJJDown > 2.5,
-          passFilterSig[0] && passFilterSig[1] && passFilterSig[2]      && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && (double)(*eventMet.ptJESUP)[0]	 > 40 && passFilterSig[9]    && passFilterSig[10],
-          passFilterSig[0] && passFilterSig[1] && passFilterSig[2]      && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && (double)(*eventMet.ptJESDOWN)[0]  > 40 && passFilterSig[9]    && passFilterSig[10]
+          passFilterSig[0] && passFilterSig[1] && idJetUp.size() >= 2   && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] 		      && dijetUp.M() > 500   && deltaEtaJJUp > 2.5   && passFilterSig[11],
+          passFilterSig[0] && passFilterSig[1] && idJetDown.size() >= 2 && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] 		      && dijetDown.M() > 500 && deltaEtaJJDown > 2.5 && passFilterSig[11],
+          passFilterSig[0] && passFilterSig[1] && passFilterSig[2]      && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && (double)(*eventMet.ptJESUP)[0]	 > 40 && passFilterSig[9]    && passFilterSig[10]    && passFilterSig[11],
+          passFilterSig[0] && passFilterSig[1] && passFilterSig[2]      && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && (double)(*eventMet.ptJESDOWN)[0]  > 40 && passFilterSig[9]    && passFilterSig[10]    && passFilterSig[11]
       };
 
       // begin event weighting
