@@ -235,7 +235,7 @@ bool passJetId(Float_t fMVACut[4][4], double mva, double pt, double eta){
 }
 
 double effhDScaleFactor(double pt, double eta, int nsel, TString type, TH2D *fhDMuMediumSF, TH2D *fhDElMediumSF, TH2D *fhDElTightSF, 
-TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF){
+TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF, bool applyTrkSF = true){
 
   if     (pt>=100 && TMath::Abs(nsel) == 13) pt =  +99.999;
   else if(pt>=200 && TMath::Abs(nsel) == 11) pt = +199.999;
@@ -246,13 +246,13 @@ TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF){
   double trkSF = 1.0;
   if(TMath::Abs(nsel) == 13){
     Int_t binXT = fhDMuTrkSF->GetXaxis()->FindFixBin(eta);
-    trkSF = fhDMuTrkSF->GetBinContent(binXT);
+    if(applyTrkSF) trkSF = fhDMuTrkSF->GetBinContent(binXT);
     if(trkSF <= 0) printf("trkSF <= 0! %f %d - %f %f\n",trkSF,binXT,pt,eta);
   }
   else if(TMath::Abs(nsel) == 11){
     Int_t binXT = fhDElTrkSF->GetXaxis()->FindFixBin(eta);
     Int_t binYT = fhDElTrkSF->GetYaxis()->FindFixBin(npv);
-    trkSF = fhDElTrkSF->GetBinContent(binXT,binYT);
+    if(applyTrkSF) trkSF = fhDElTrkSF->GetBinContent(binXT,binYT);
     if(trkSF <= 0) printf("trkSF <= 0! %f %d %d - %f %f %d\n",trkSF,binXT,binYT,pt,eta,npv);
   }
   if(trkSF <= 0) trkSF = 1.0;

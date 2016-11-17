@@ -75,7 +75,6 @@ t2mit/filefi/044  ZNuNuGJets_MonoPhoton_PtG-40to130_TuneCUETP8M1_13TeV-madgraph+
 t2mit/filefi/044  WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM - 25ns mg5_74 ~
 t2mit/filefi/044  ZLLGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM - 25ns mg5_74 ~
 t2mit/filefi/044  ZNuNuGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph+RunIISpring16DR80-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1+RAWAODSIM - 25ns mg5_74 ~
-t2mit/filefi/044  WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns mg5_74 ~
 t2mit/filefi/044  WpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM	  - 25ns mg5_74 ~
 t2mit/filefi/044  WpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM	  - 25ns mg5_74 ~
 t2mit/filefi/044  WGstarToLNuMuMu_012Jets_13TeV-madgraph+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns mg5_74 ~
@@ -166,6 +165,7 @@ t2mit/filefi/044  GluGluToContinToZZTo4tau_13TeV_MCFM701_pythia8+RunIISpring16DR
 t2mit/filefi/044 ZZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2+AODSIM  - 25ns - ~
 t2mit/filefi/044 WZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM  - 25ns - ~
 
+#t2mit/filefi/044 WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2+AODSIM - 25ns mg5_74 ~
 #t2mit/filefi/044 WGJJToLNu_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM  - 25ns - ~
 #t2mit/filefi/044 WLLJJToLNu_M-4to60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_bwcutoff15_80X_mcRun2_asymptotic_v14-v1+AODSIM  - 25ns - ~
 #t2mit/filefi/044 WLLJJToLNu_M-60_EWK_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM  - 25ns - ~

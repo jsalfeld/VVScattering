@@ -59,6 +59,7 @@ void makeGoodRunSample(
   TFile *the_input_file = TFile::Open(input_file.Data());
   TTree *the_input_tree = (TTree*)the_input_file->FindObjectAny("events");
   TTree *the_input_all  = (TTree*)the_input_file->FindObjectAny("all");
+  TTree *the_SelBit_tree  = (TTree*)the_input_file->FindObjectAny("SelBit_tree");
 
   BareAll eventAll;
   eventAll.setBranchAddresses(the_input_tree);
@@ -76,6 +77,9 @@ void makeGoodRunSample(
   outputFile->cd();
   TTree *normalizedTree0 = the_input_all ->CloneTree(0);
   TTree *normalizedTree1 = the_input_tree->CloneTree(0);
+  TTree *selBitTree;
+  if(the_SelBit_tree) selBitTree = the_SelBit_tree->CloneTree(0);
+  else                printf("No selBitTree exists\n");
 
   //dubplicate check
   std::map<ULong64_t, std::set<ULong64_t> > DoubleChecker;
@@ -112,11 +116,13 @@ void makeGoodRunSample(
 
     N_good++;
     normalizedTree0->Fill(); 
-    normalizedTree1->Fill(); 
+    normalizedTree1->Fill();
+    if(the_SelBit_tree) selBitTree->Fill();
   }
   printf("N good/all = %llu / %llu = %f | duplicates: %llu\n",N_good,N_all-doubleCount,(double)N_good/(N_all-doubleCount),doubleCount);
   normalizedTree0->Write();
   normalizedTree1->Write();
+  if(the_SelBit_tree) selBitTree->Write();
   triggerNames->Write();
   outputFile->Close();
 }

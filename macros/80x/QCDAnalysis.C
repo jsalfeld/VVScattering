@@ -19,7 +19,9 @@
 #include "MitAnalysisRunII/macros/80x/factors.h"
 
 int whichSkim = 1;
-double mcPrescale = 10.0;
+double mcPrescale = 1.0;
+
+bool isMINIAOD = false;
 
 void QCDAnalysis(
  Int_t nsel = 0,
@@ -29,9 +31,11 @@ void QCDAnalysis(
  ){
 
   Int_t period = 1;
-  TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_80x/";
+  TString filesPathDA_old  = "/scratch/ceballos/ntuples_weightsDA_80x/";
+  TString filesPathDA  = "/data/t3home000/ceballos/ntuples_skim_80x/";
+  if(isMINIAOD) filesPathDA = "/scratch5/dhsu/ntuples_goodrun_80x/";
   TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_80x/";
-  Double_t lumi = 12.9;
+  Double_t lumi = 34;
 
   Double_t prescale[5];
 
@@ -46,6 +50,8 @@ void QCDAnalysis(
   vector<TString> infilenamev;  
   vector<Int_t> infilecatv;  
 
+  TString triggerSuffix = "*";
+  if(isMINIAOD) triggerSuffix = "";
   TString puPath = "";
   if     (period==0){
   }
@@ -53,10 +59,22 @@ void QCDAnalysis(
   if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00127;prescale[2]=0.00287;prescale[3]=0.00350;prescale[4]=0.00404;}
   else if(typeSel == 13) {prescale[0]=0.00081;prescale[1]=0.01031;prescale[2]=0.01346;prescale[3]=0.01379;prescale[4]=0.01378;}
 
-  puPath = "MitAnalysisRunII/data/80x/puWeights_80x.root";
-  infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data()));											      infilecatv.push_back(0);
-  infilenamev.push_back(Form("%sdata_Run2016C.root",filesPathDA.Data()));											      infilecatv.push_back(0);
-  infilenamev.push_back(Form("%sdata_Run2016D.root",filesPathDA.Data()));											      infilecatv.push_back(0);
+  puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
+  if(isMINIAOD) {
+    infilenamev.push_back(Form("%sdata_Run2016B_skim.root",filesPathDA.Data())); infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016C_skim.root",filesPathDA.Data())); infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016D_skim.root",filesPathDA.Data())); infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016E_skim.root",filesPathDA.Data())); infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016F_skim.root",filesPathDA.Data())); infilecatv.push_back(0);
+  } else {
+    infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA_old.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016C.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016D.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016E.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016F.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016G.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016H.root",filesPathDA.Data()));   infilecatv.push_back(0);
+  }
 
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));                                            infilecatv.push_back(1);
   infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));					   infilecatv.push_back(1);
@@ -236,13 +254,13 @@ void QCDAnalysis(
       if(infilecatv[ifile] == 0) {
 	for (int nt = 0; nt < (int)numtokens; nt++) {
 	  if(typeSel == 11 &&
-            (strcmp(tokens[nt],"HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*") == 0 ||
-             strcmp(tokens[nt],"HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30_v*") == 0 ||
-             strcmp(tokens[nt],"HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*") == 0 ) &&
+            (strcmp(tokens[nt],Form("HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v%s",triggerSuffix.Data())) == 0 ||
+             strcmp(tokens[nt],Form("HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30_v%s",triggerSuffix.Data())) == 0 ||
+             strcmp(tokens[nt],Form("HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v%s",triggerSuffix.Data())) == 0 ) &&
 	    (*eventTrigger.triggerFired)[nt] == 1) passTrigger = kTRUE;
 	  if(typeSel == 13 &&
-	    (strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_v*")  == 0 ||              
-	     strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_v*") == 0 ) &&           
+	    (strcmp(tokens[nt],Form("HLT_Mu8_TrkIsoVVL_v%s",triggerSuffix.Data()))  == 0 ||              
+	     strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_v%s",triggerSuffix.Data())) == 0 ) &&           
 	    (*eventTrigger.triggerFired)[nt] == 1) passTrigger = kTRUE;
 	}
       } else { passTrigger = kTRUE;}
@@ -363,7 +381,7 @@ void QCDAnalysis(
         for(unsigned int nl=0; nl<idLep.size(); nl++){
           effSF = effSF * effhDScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),
 	        ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),
-		typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF,fhDmutrksfptg10,fhDeltrksf,eventVertex.npv,true,fhDMuIsoSF);
+		typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF,fhDmutrksfptg10,fhDeltrksf,eventVertex.npv,true,fhDMuIsoSF,false);
         }
       }
       

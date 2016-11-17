@@ -22,6 +22,10 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
+double WSSF[5]  = {2.432603,2.722867,1.572425,1.062243,1.138792};
+double WSSFE[5] = {0.233172,0.122301,0.068361,0.026550,0.030766};
+void func_ws_sf(double eta, double pt, double theSF[2]);
+
 enum selType                     {SIGSEL=0, TOPSEL,   WZSEL,   DILSEL,   WW2J,   ZSEL, nSelTypes};
 TString selTypeName[nSelTypes]= {"SIGSEL", "TOPSEL", "WZSEL", "DILSEL", "WW2J", "ZSEL"};
 
@@ -36,7 +40,8 @@ bool usePureMC = false;
 int period = 1;
 const TString typeLepSel = "default";
 const bool usePUPPI = false;
-const bool useWZFromData = false;
+const bool useWZFromData = true;
+const bool useWSFromData = true;
 
 void sswwjjAnalysis(bool isBlinded = false
  ){
@@ -71,7 +76,7 @@ void sswwjjAnalysis(bool isBlinded = false
 
   //MC samples
   //signal: EWK + QCD
-  infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));                infilecatv.push_back(1);
+  infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2+AODSIM.root",filesPathMC.Data()));                infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));                    infilecatv.push_back(1);
 
   //QCD to be subtracted from signal
@@ -184,12 +189,6 @@ void sswwjjAnalysis(bool isBlinded = false
   TFile *fMuIsoSF = TFile::Open(Form("MitAnalysisRunII/data/80x/MuonIso_Z_RunBCD_prompt80X_7p65.root"));
   TH2D *fhDMuIsoSF = (TH2D*)(fMuIsoSF->Get("MC_NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/abseta_pt_ratio")); assert(fhDMuIsoSF); fhDMuIsoSF->SetDirectory(0);
   delete fMuIsoSF;
-
-  TFile *fWWPtRatio = TFile::Open(Form("MitAnalysisRunII/data/74x/MyRatioWWpTHistogramAll.root"));
-  TH1D *fhDWWPtRatio           = (TH1D*)(fWWPtRatio->Get("wwpt"));
-  assert(fhDWWPtRatio	       );
-  fhDWWPtRatio  	->SetDirectory(0);
-  delete fWWPtRatio;
 
   TString ECMsb  = "13TeV2016";
   const int nBinMVA =24; Float_t xbins[nBinMVA+1] = {500, 800, 1100, 1500, 2000,
@@ -491,6 +490,9 @@ void sswwjjAnalysis(bool isBlinded = false
   TH1D* histo_DPS_CMS_PUBoundingUp    	      = new TH1D( Form("histo_DPS_%sUp",puName)  , Form("histo_DPS_%sUp",puName)  , nBinMVA, xbins); histo_DPS_CMS_PUBoundingUp  ->Sumw2();
   TH1D* histo_DPS_CMS_PUBoundingDown  	      = new TH1D( Form("histo_DPS_%sDown",puName), Form("histo_DPS_%sDown",puName), nBinMVA, xbins); histo_DPS_CMS_PUBoundingDown->Sumw2();
 
+  TH1D* histo_WS_CMS_WSSFUp    	              = new TH1D( Form("histo_WS_CMS_WSSFUp")  , Form("histo_WS_CMS_WSSFUp")  , nBinMVA, xbins); histo_WS_CMS_WSSFUp  ->Sumw2();
+  TH1D* histo_WS_CMS_WSSFDown  	              = new TH1D( Form("histo_WS_CMS_WSSFDown"), Form("histo_WS_CMS_WSSFDown"), nBinMVA, xbins); histo_WS_CMS_WSSFDown->Sumw2();
+
   const int numberCuts = 12;
   TH1D* hDWWLL[7];
   hDWWLL[0] = new TH1D("hDWWLL0", "hDWWLL0", numberCuts, -0.5, numberCuts-0.5);
@@ -538,6 +540,7 @@ void sswwjjAnalysis(bool isBlinded = false
     eventVertex.setBranchAddresses(the_input_tree);
 
     BareMonteCarlo eventMonteCarlo;
+    eventMonteCarlo.SetExtend();
     eventMonteCarlo.setBranchAddresses(the_input_tree);
  
     TNamed *triggerNames = (TNamed*)the_input_file.FindObjectAny("triggerNames");
@@ -583,6 +586,7 @@ void sswwjjAnalysis(bool isBlinded = false
       //return;
     }
 
+    bool errorMsgQCDscale = false;
     unsigned int selBit_= 0;
     the_SelBit_tree->SetBranchAddress("selBit", &selBit_);
     hDWWLL[0]->Scale(0.0);hDWWLL[1]->Scale(0.0);hDWWLL[2]->Scale(0.0);hDWWLL[3]->Scale(0.0);hDWWLL[4]->Scale(0.0);hDWWLL[5]->Scale(0.0);hDWWLL[6]->Scale(0.0);
@@ -832,9 +836,9 @@ void sswwjjAnalysis(bool isBlinded = false
 	if(dijet.M() > 500){
           passFilterSig[9] = kTRUE;
           passFilterCR1[9] = kTRUE;
-          passFilterCR2[9] = kTRUE;
 	}
-	else if(dijet.M() > 100){
+	if(dijet.M() > 100){
+          passFilterCR2[9] = kTRUE;
           passFilterCR3[9] = kTRUE;
 	}
 
@@ -941,6 +945,7 @@ void sswwjjAnalysis(bool isBlinded = false
 	numberGoodGenLep[1]++;
       }
 
+      double total_WS_SF[2] = {1.0, 1.0};
       vector<int> isGenLep; unsigned int goodIsGenRSLep = 0; unsigned int goodIsGenWSLep = 0;
       for(unsigned nl=0; nl<idLep.size(); nl++){
         bool isGenRSLepton = false;
@@ -957,7 +962,7 @@ void sswwjjAnalysis(bool isBlinded = false
 	  }
 	}
 	if     (isGenRSLepton == true) {isGenLep.push_back(1); goodIsGenRSLep++;}
-	else if(isGenWSLepton == true) {isGenLep.push_back(2); goodIsGenWSLep++;}
+	else if(isGenWSLepton == true) {isGenLep.push_back(2); goodIsGenWSLep++;func_ws_sf(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta(),((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),total_WS_SF);}
 	else                           {isGenLep.push_back(0);}
       }
 
@@ -1028,6 +1033,11 @@ void sswwjjAnalysis(bool isBlinded = false
       if(infilecatv[ifile] == 0) mcWeight = 1.0;
       double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*trigEff;
 
+      // Wrong sign scale factor
+      if(theCategory == 6 && useWSFromData) {
+        totalWeight = totalWeight * total_WS_SF[0];
+      }
+
       if(theCategory == -1) {theCategory = 1; totalWeight = -1.0 * totalWeight;}
 
       if(totalWeight == 0) continue;
@@ -1074,6 +1084,22 @@ void sswwjjAnalysis(bool isBlinded = false
       double MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSel;
       double MVAVarJESSyst[2] = {TMath::Min(dijetUp.M(),1999.999)+2000.*typeSel,TMath::Min(dijetDown.M(),1999.999)+2000.*typeSel};
 
+      // check if QCD scale weights are anomalous high
+      double maxQCDscale = 1.0;
+      if(passAllCuts[SIGSEL] && theCategory != 0) {
+        maxQCDscale = TMath::Abs((double)eventMonteCarlo.r1f2);
+        if(TMath::Abs((double)eventMonteCarlo.r1f5) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r1f5);
+        if(TMath::Abs((double)eventMonteCarlo.r2f1) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r2f1);
+        if(TMath::Abs((double)eventMonteCarlo.r2f2) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r2f2);
+        if(TMath::Abs((double)eventMonteCarlo.r5f1) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r5f1);
+        if(TMath::Abs((double)eventMonteCarlo.r5f5) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r5f5);
+        if     (maxQCDscale < 2.0) maxQCDscale = 1.0;
+	else if(errorMsgQCDscale == false) {
+	  printf("Big maxQCDscale(%f): %f %f %f %f %f %f\n",maxQCDscale,eventMonteCarlo.r1f2/maxQCDscale,eventMonteCarlo.r1f5/maxQCDscale,eventMonteCarlo.r2f1/maxQCDscale,eventMonteCarlo.r2f2/maxQCDscale,eventMonteCarlo.r5f1/maxQCDscale,eventMonteCarlo.r5f5/maxQCDscale); 
+          errorMsgQCDscale = true;
+	}
+      }
+
       if     (theCategory == 0){
         if(passAllCuts[SIGSEL]) {
            histo_Data->Fill(MVAVar,totalWeight);
@@ -1082,12 +1108,12 @@ void sswwjjAnalysis(bool isBlinded = false
       else if(theCategory == 1){
         if(passAllCuts[SIGSEL]) {
            histo_EWK->Fill(MVAVar,totalWeight);
-           histo_EWK_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2/(double)eventMonteCarlo.r5f5));
-           histo_EWK_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5/(double)eventMonteCarlo.r5f5));
-           histo_EWK_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1/(double)eventMonteCarlo.r5f5));
-           histo_EWK_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2/(double)eventMonteCarlo.r5f5));
-           histo_EWK_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1/(double)eventMonteCarlo.r5f5));
-           histo_EWK_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5/(double)eventMonteCarlo.r5f5));
+           histo_EWK_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
+           histo_EWK_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
+           histo_EWK_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1)/maxQCDscale);
+           histo_EWK_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2)/maxQCDscale);
+           histo_EWK_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
+           histo_EWK_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_EWK_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
            else if(infilenamev[ifile].Contains("powheg") == true)
@@ -1117,12 +1143,12 @@ void sswwjjAnalysis(bool isBlinded = false
       else if(theCategory == 2){
         if(passAllCuts[SIGSEL]) {
            histo_QCD->Fill(MVAVar,totalWeight);
-           histo_QCD_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2/(double)eventMonteCarlo.r5f5));
-           histo_QCD_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5/(double)eventMonteCarlo.r5f5));
-           histo_QCD_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1/(double)eventMonteCarlo.r5f5));
-           histo_QCD_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2/(double)eventMonteCarlo.r5f5));
-           histo_QCD_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1/(double)eventMonteCarlo.r5f5));
-           histo_QCD_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5/(double)eventMonteCarlo.r5f5));
+           histo_QCD_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
+           histo_QCD_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
+           histo_QCD_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1)/maxQCDscale);
+           histo_QCD_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2)/maxQCDscale);
+           histo_QCD_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
+           histo_QCD_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_QCD_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
            else if(infilenamev[ifile].Contains("powheg") == true)
@@ -1152,12 +1178,12 @@ void sswwjjAnalysis(bool isBlinded = false
       else if(theCategory == 3){
         if(passAllCuts[SIGSEL]) {
            histo_WZ->Fill(MVAVar,totalWeight);
-           histo_WZ_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2/(double)eventMonteCarlo.r5f5));
-           histo_WZ_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5/(double)eventMonteCarlo.r5f5));
-           histo_WZ_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1/(double)eventMonteCarlo.r5f5));
-           histo_WZ_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2/(double)eventMonteCarlo.r5f5));
-           histo_WZ_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1/(double)eventMonteCarlo.r5f5));
-           histo_WZ_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5/(double)eventMonteCarlo.r5f5));
+           histo_WZ_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
+           histo_WZ_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
+           histo_WZ_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1)/maxQCDscale);
+           histo_WZ_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2)/maxQCDscale);
+           histo_WZ_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
+           histo_WZ_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_WZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
            else if(infilenamev[ifile].Contains("powheg") == true)
@@ -1187,12 +1213,12 @@ void sswwjjAnalysis(bool isBlinded = false
       else if(theCategory == 4){
         if(passAllCuts[SIGSEL]) {
            histo_ZZ->Fill(MVAVar,totalWeight);
-           histo_ZZ_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2/(double)eventMonteCarlo.r5f5));
-           histo_ZZ_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5/(double)eventMonteCarlo.r5f5));
-           histo_ZZ_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1/(double)eventMonteCarlo.r5f5));
-           histo_ZZ_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2/(double)eventMonteCarlo.r5f5));
-           histo_ZZ_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1/(double)eventMonteCarlo.r5f5));
-           histo_ZZ_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5/(double)eventMonteCarlo.r5f5));
+           histo_ZZ_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
+           histo_ZZ_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
+           histo_ZZ_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1)/maxQCDscale);
+           histo_ZZ_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2)/maxQCDscale);
+           histo_ZZ_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
+           histo_ZZ_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_ZZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
            else if(infilenamev[ifile].Contains("powheg") == true)
@@ -1222,12 +1248,12 @@ void sswwjjAnalysis(bool isBlinded = false
       else if(theCategory == 5){
         if(passAllCuts[SIGSEL]) {
            histo_VVV->Fill(MVAVar,totalWeight);
-           histo_VVV_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2/(double)eventMonteCarlo.r5f5));
-           histo_VVV_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5/(double)eventMonteCarlo.r5f5));
-           histo_VVV_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1/(double)eventMonteCarlo.r5f5));
-           histo_VVV_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2/(double)eventMonteCarlo.r5f5));
-           histo_VVV_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1/(double)eventMonteCarlo.r5f5));
-           histo_VVV_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5/(double)eventMonteCarlo.r5f5));
+           histo_VVV_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
+           histo_VVV_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
+           histo_VVV_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1)/maxQCDscale);
+           histo_VVV_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2)/maxQCDscale);
+           histo_VVV_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
+           histo_VVV_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_VVV_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
            else if(infilenamev[ifile].Contains("powheg") == true)
@@ -1256,13 +1282,15 @@ void sswwjjAnalysis(bool isBlinded = false
       }
       else if(theCategory == 6){
         if(passAllCuts[SIGSEL]) {
-           histo_WS->Fill(MVAVar,totalWeight);
-           histo_WS_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2/(double)eventMonteCarlo.r5f5));
-           histo_WS_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5/(double)eventMonteCarlo.r5f5));
-           histo_WS_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1/(double)eventMonteCarlo.r5f5));
-           histo_WS_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2/(double)eventMonteCarlo.r5f5));
-           histo_WS_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1/(double)eventMonteCarlo.r5f5));
-           histo_WS_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5/(double)eventMonteCarlo.r5f5));
+           histo_WS             ->Fill(MVAVar,totalWeight);
+           histo_WS_CMS_WSSFUp  ->Fill(MVAVar,totalWeight*total_WS_SF[1]);
+           histo_WS_CMS_WSSFDown->Fill(MVAVar,totalWeight/total_WS_SF[1]);
+           histo_WS_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
+           histo_WS_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
+           histo_WS_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1)/maxQCDscale);
+           histo_WS_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2)/maxQCDscale);
+           histo_WS_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
+           histo_WS_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_WS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
            else
@@ -1290,12 +1318,12 @@ void sswwjjAnalysis(bool isBlinded = false
       else if(theCategory == 7){
         if(passAllCuts[SIGSEL]) {
            histo_WG->Fill(MVAVar,totalWeight);
-           histo_WG_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2/(double)eventMonteCarlo.r5f5));
-           histo_WG_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5/(double)eventMonteCarlo.r5f5));
-           histo_WG_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1/(double)eventMonteCarlo.r5f5));
-           histo_WG_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2/(double)eventMonteCarlo.r5f5));
-           histo_WG_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1/(double)eventMonteCarlo.r5f5));
-           histo_WG_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5/(double)eventMonteCarlo.r5f5));
+           histo_WG_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
+           histo_WG_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
+           histo_WG_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1)/maxQCDscale);
+           histo_WG_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2)/maxQCDscale);
+           histo_WG_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
+           histo_WG_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_WG_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
            else if(infilenamev[ifile].Contains("powheg") == true)
@@ -1325,12 +1353,12 @@ void sswwjjAnalysis(bool isBlinded = false
       else if(theCategory == 8){
         if(passAllCuts[SIGSEL]) {
            histo_DPS->Fill(MVAVar,totalWeight);
-           histo_DPS_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2/(double)eventMonteCarlo.r5f5));
-           histo_DPS_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5/(double)eventMonteCarlo.r5f5));
-           histo_DPS_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1/(double)eventMonteCarlo.r5f5));
-           histo_DPS_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2/(double)eventMonteCarlo.r5f5));
-           histo_DPS_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1/(double)eventMonteCarlo.r5f5));
-           histo_DPS_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5/(double)eventMonteCarlo.r5f5));
+           histo_DPS_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
+           histo_DPS_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
+           histo_DPS_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1)/maxQCDscale);
+           histo_DPS_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2)/maxQCDscale);
+           histo_DPS_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
+           histo_DPS_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_DPS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
            else if(infilenamev[ifile].Contains("powheg") == true)
@@ -1631,6 +1659,9 @@ void sswwjjAnalysis(bool isBlinded = false
       for(int i=1; i<=histo_WG ->GetNbinsX(); i++) {if(histo_WG ->GetBinContent(i)>0)printf("%5.1f ",histo_WG_CMS_PUBoundingDown  ->GetBinContent(i)/histo_WG ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
       for(int i=1; i<=histo_DPS->GetNbinsX(); i++) {if(histo_DPS->GetBinContent(i)>0)printf("%5.1f ",histo_DPS_CMS_PUBoundingUp   ->GetBinContent(i)/histo_DPS->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
       for(int i=1; i<=histo_DPS->GetNbinsX(); i++) {if(histo_DPS->GetBinContent(i)>0)printf("%5.1f ",histo_DPS_CMS_PUBoundingDown ->GetBinContent(i)/histo_DPS->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      printf("uncertainties WSSF\n");
+      for(int i=1; i<=histo_WS ->GetNbinsX(); i++) {if(histo_WS ->GetBinContent(i)>0)printf("%5.1f ",histo_WS_CMS_WSSFUp          ->GetBinContent(i)/histo_WS ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      for(int i=1; i<=histo_WS ->GetNbinsX(); i++) {if(histo_WS ->GetBinContent(i)>0)printf("%5.1f ",histo_WS_CMS_WSSFDown        ->GetBinContent(i)/histo_WS ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
     } 
 
     histo_Data ->Write();
@@ -1750,6 +1781,9 @@ void sswwjjAnalysis(bool isBlinded = false
     histo_WG_CMS_PUBoundingDown ->Write();
     histo_DPS_CMS_PUBoundingUp  ->Write();
     histo_DPS_CMS_PUBoundingDown->Write();
+
+    histo_WS_CMS_WSSFUp         ->Write();
+    histo_WS_CMS_WSSFDown       ->Write();
 
     outFileLimits->Close();
 
@@ -1927,6 +1961,11 @@ void sswwjjAnalysis(bool isBlinded = false
       for(int npu=0; npu<8; npu++) if(systPUDown[npu] > 1.02) systPUDown[npu] = 1.02;
       for(int npu=0; npu<8; npu++) if(systPUDown[npu] < 0.98) systPUDown[npu] = 0.98;   
 
+      double systWSSFUp  [1] = {1.0};
+      double systWSSFDown[1] = {1.0};
+      if(histo_WS ->GetBinContent(nb) > 0 && histo_WS_CMS_WSSFUp         ->GetBinContent(nb) > 0) systWSSFUp  [0] = histo_WS_CMS_WSSFUp	      ->GetBinContent(nb)/histo_WS ->GetBinContent(nb);
+      if(histo_WS ->GetBinContent(nb) > 0 && histo_WS_CMS_WSSFDown       ->GetBinContent(nb) > 0) systWSSFDown[0] = histo_WS_CMS_WSSFDown     ->GetBinContent(nb)/histo_WS ->GetBinContent(nb);
+
       double lumiEWZ = lumiE;
       double syst_mistagWZ = syst_mistag;
       if(useWZFromData){
@@ -1969,9 +2008,9 @@ void sswwjjAnalysis(bool isBlinded = false
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f   -  %7.5f %7.5f    -     -  \n",mistagName,syst_mistag,syst_mistag,syst_mistagWZ,syst_mistag,syst_mistag,syst_mistag,syst_mistag);
       newcardShape << Form("CMS_FakeM      lnN    -     -     -     -     -     -    -     -    %7.5f   -  \n",1.30);
       newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -      -   %7.5f\n",1.30);
-      newcardShape << Form("WS_Norm        lnN    -     -     -     -     -   %7.5f  -     -      -     -  \n",1.10);		
+      newcardShape << Form("WS_Norm        lnN    -     -     -     -     -   %7.5f  -     -      -     -  \n",systWSSFUp[0]);		
       if(useWZFromData){
-      newcardShape << Form("CMS_WZ_Norm    lnN    -     -   %7.5f   -     -     -    -     -      -     -  \n",sf_WZ[1]/sf_WZ[0]);
+      newcardShape << Form("CMS_WZ_Norm    lnN    -     -   %7.5f   -     -     -    -     -      -     -  \n",1.0+sf_WZ[1]/sf_WZ[0]);
       }
       if(histo_EWK  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_EWKStatBounding2016_%s_Bin%d    lnN %7.5f   -     -     -     -     -     -     -     -     - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_EWK  ->GetBinError(nb)/histo_EWK  ->GetBinContent(nb));
       if(histo_QCD  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_QCDStatBounding2016_%s_Bin%d    lnN   -   %7.5f   -     -     -     -     -     -     -     - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_QCD  ->GetBinError(nb)/histo_QCD  ->GetBinContent(nb));
@@ -1985,4 +2024,15 @@ void sswwjjAnalysis(bool isBlinded = false
       if(histo_FakeE->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_FakeEStatBounding2016_%s_Bin%d  lnN   -     -     -     -     -     -     -     -    -   %7.5f\n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_FakeE->GetBinError(nb)/histo_FakeE->GetBinContent(nb));
    }
   }
+}
+
+void func_ws_sf(double eta, double pt, double SF[2]){
+  int iEta = -1;
+  if	 (TMath::Abs(eta) < 0.5) iEta = 0;
+  else if(TMath::Abs(eta) < 1.0) iEta = 1;
+  else if(TMath::Abs(eta) < 1.5) iEta = 2;
+  else if(TMath::Abs(eta) < 2.0) iEta = 3;
+  else                           iEta = 4;
+  SF[0] = SF[0] * WSSF[iEta];
+  SF[1] = SF[1] * (1.0 + WSSFE[iEta]);
 }
