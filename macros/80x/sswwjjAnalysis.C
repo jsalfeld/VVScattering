@@ -22,12 +22,12 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
-double WSSF[5]  = {2.432603,2.722867,1.572425,1.062243,1.138792};
-double WSSFE[5] = {0.233172,0.122301,0.068361,0.026550,0.030766};
+double WSSF[5]  = {1.394244,1.631822,1.309515,0.982477,1.154195};
+double WSSFE[5] = {0.329836,0.244144,0.094034,0.031496,0.034398};
 void func_ws_sf(double eta, double pt, double theSF[2]);
 
-enum selType                     {SIGSEL=0, TOPSEL,   WZSEL,   DILSEL,   WW2J,   ZSEL, nSelTypes};
-TString selTypeName[nSelTypes]= {"SIGSEL", "TOPSEL", "WZSEL", "DILSEL", "WW2J", "ZSEL"};
+enum selType                     {SIGSEL=0, TOPSEL,   WZSEL,   DILSEL,   WW2J,  nSelTypes};
+TString selTypeName[nSelTypes]= {"SIGSEL", "TOPSEL", "WZSEL", "DILSEL", "WW2J",};
 
 enum systType                     {JESUP=0, JESDOWN,  METUP,  METDOWN, nSystTypes};
 TString systTypeName[nSystTypes]= {"JESUP","JESDOWN","METUP","METDOWN"};
@@ -46,10 +46,11 @@ const bool useWSFromData = true;
 void sswwjjAnalysis(bool isBlinded = false
  ){
 
-  TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_80x/met_";
+  TString filesPathDA_old = "/scratch/ceballos/ntuples_weightsDA_80x/met_";
+  TString filesPathDA = "/data/t3home000/ceballos/ntuples_skim_80x/met_";
   if(isMINIAOD) filesPathDA = "/scratch5/dhsu/ntuples_goodrun_80x/met_";
   TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_80x/met_";
-  Double_t lumi = 12.9;
+  Double_t lumi = 35;
 
   //*******************************************************
   //Input Files
@@ -61,7 +62,7 @@ void sswwjjAnalysis(bool isBlinded = false
   TString triggerSuffix = "*";
   if(isMINIAOD) triggerSuffix = "";
   if      (period==1){
-  puPath = "MitAnalysisRunII/data/80x/puWeights_80x_13p0ifb_62_64_66.root";
+  puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
 
   //data samples
   if(isMINIAOD) {
@@ -69,15 +70,21 @@ void sswwjjAnalysis(bool isBlinded = false
     infilenamev.push_back(Form("%sdata_Run2016C_skim.root",filesPathDA.Data())); infilecatv.push_back(0);
     infilenamev.push_back(Form("%sdata_Run2016D_skim.root",filesPathDA.Data())); infilecatv.push_back(0);
   } else {
-    infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA_old.Data()));   infilecatv.push_back(0);
     infilenamev.push_back(Form("%sdata_Run2016C.root",filesPathDA.Data()));   infilecatv.push_back(0);
     infilenamev.push_back(Form("%sdata_Run2016D.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016E.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016F.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016G.root",filesPathDA.Data()));   infilecatv.push_back(0);
+    infilenamev.push_back(Form("%sdata_Run2016H.root",filesPathDA.Data()));   infilecatv.push_back(0);
   }
 
   //MC samples
   //signal: EWK + QCD
   infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2+AODSIM.root",filesPathMC.Data()));                infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));                    infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWpWpJJ_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));			infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWmWmJJ_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2+AODSIM.root",filesPathMC.Data()));			infilecatv.push_back(1);
 
   //QCD to be subtracted from signal
   infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));                    infilecatv.push_back(-1);
@@ -86,8 +93,8 @@ void sswwjjAnalysis(bool isBlinded = false
   infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));                    infilecatv.push_back(2);
 
   //WZ
-  //infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));                                infilecatv.push_back(3); 
-  //infilenamev.push_back(Form("%sWLLJJToLNu_M-60_EWK_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM.root",filesPathMC.Data()));                                infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM.root",filesPathMC.Data()));				   infilecatv.push_back(3); 
+  //infilenamev.push_back(Form("%sWLLJJToLNu_M-60_EWK_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM.root",filesPathMC.Data()));				   infilecatv.push_back(3);
   infilenamev.push_back(Form("%sWLLJJToLNu_M-60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM.root",filesPathMC.Data()));               infilecatv.push_back(3);
   infilenamev.push_back(Form("%sWLLJJToLNu_M-4to60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_bwcutoff15_80X_mcRun2_asymptotic_v14-v1+AODSIM.root",filesPathMC.Data())); infilecatv.push_back(3);
 
@@ -219,7 +226,7 @@ void sswwjjAnalysis(bool isBlinded = false
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 22;
+  const int allPlots = 24;
   const int histBins = 11;
   TH1D* histo[7][allPlots][histBins];
   TString processName[histBins] = {".Data", "EWKWW", "QCDWW", "...WZ", "...ZZ", "..VVV", "...WS", "...WG", "..DPS", "FakeM", "FakeE"};
@@ -240,8 +247,9 @@ void sswwjjAnalysis(bool isBlinded = false
       else if(thePlot >= 13 && thePlot <= 14) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
       else if(thePlot >= 15 && thePlot <= 16) {nBinPlot = 100; xminPlot =-5.0; xmaxPlot = 5.0;}
       else if(thePlot >= 17 && thePlot <= 17) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200;}
-      else if(thePlot >= 18 && thePlot <= 18) {nBinPlot =  40; xminPlot =-0.5; xmaxPlot = 39.5;}
+      else if(thePlot >= 18 && thePlot <= 18) {nBinPlot =  40; xminPlot = 0.0; xmaxPlot = 20;}
       else if(thePlot >= 19 && thePlot <= 20) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 1.0;}
+      else if(thePlot >= 21 && thePlot <= 22) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200;}
       TH1D* histos;
       if(thePlot != allPlots-1) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
       else                      histos = new TH1D("histos", "histos", nBinMVA, xbins);
@@ -609,33 +617,42 @@ void sswwjjAnalysis(bool isBlinded = false
       Bool_t passControlRegionTop  = kFALSE;
       Bool_t passControlRegionWZ   = kFALSE;
       Bool_t passControlRegionDi   = kFALSE;
-      Bool_t passControlRegionZ    = kFALSE;
       Bool_t passControlRegionSS2j = kFALSE;
 
       if(infilecatv[ifile] == 0) {
         for (int nt = 0; nt <(int)numtokens; nt++) {
           if((*eventTrigger.triggerFired)[nt] == 0) continue;
-          if((strcmp(tokens[nt],Form("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data())) == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data())) == 0) ||
+          if((strcmp(tokens[nt],Form("HLT_Ele25_eta2p1_WPTight_Gsf_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Ele27_eta2p1_WPLoose_Gsf_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Ele27_WPTight_Gsf_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Ele30_WPTight_Gsf_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Ele35_WPLoose_Gsf_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoMu20_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoMu22_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoMu24_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoMu27_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoTkMu20_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoTkMu22_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoTkMu24_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_IsoTkMu27_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu45_eta2p1_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu50_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_DoubleEle24_22_eta2p1_WPLoose_Gsf_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ_v%s",triggerSuffix.Data()))  == 0) ||
              (strcmp(tokens[nt],Form("HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v%s",triggerSuffix.Data())) 	          == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v%s",triggerSuffix.Data()))	          == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v%s",triggerSuffix.Data())) 	          == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v%s",triggerSuffix.Data()))	          == 0) ||
-             (strcmp(tokens[nt],Form("HLT_IsoMu20_v%s",triggerSuffix.Data())) 				          == 0) ||
-             (strcmp(tokens[nt],Form("HLT_IsoTkMu20_v%s",triggerSuffix.Data())) 				  == 0) ||
-             (strcmp(tokens[nt],Form("HLT_IsoMu22_v%s",triggerSuffix.Data())) 				          == 0) ||
-             (strcmp(tokens[nt],Form("HLT_IsoTkMu22_v%s",triggerSuffix.Data())) 				  == 0) ||
-             (strcmp(tokens[nt],Form("HLT_IsoMu24_v%s",triggerSuffix.Data()))				          == 0) ||
-             (strcmp(tokens[nt],Form("HLT_IsoTkMu24_v%s",triggerSuffix.Data()))				          == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v%s",triggerSuffix.Data()))	  == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v%s",triggerSuffix.Data()))	  == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Ele25_eta2p1_WPTight_Gsf_v%s",triggerSuffix.Data()))                    == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Ele27_eta2p1_WPLoose_Gsf_v%s",triggerSuffix.Data()))                    == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Ele27_WPTight_Gsf_v%s",triggerSuffix.Data()))			          == 0) ||
-             (strcmp(tokens[nt],Form("HLT_Ele35_WPLoose_Gsf_v%s",triggerSuffix.Data()))			          == 0)
+             (strcmp(tokens[nt],Form("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ _v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v%s",triggerSuffix.Data()))  == 0) ||
+             (strcmp(tokens[nt],Form("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v%s",triggerSuffix.Data()))  == 0)
            ) passPresel = kTRUE;
         }
       } else { passPresel = kTRUE;}
@@ -661,10 +678,10 @@ void sswwjjAnalysis(bool isBlinded = false
       if(passPresel == kFALSE) continue; // two or three leptons in the event
 
       if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 25 && 
-         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 25) passPresel = passPresel && kTRUE;
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20) passPresel = passPresel && kTRUE;
       else                                                           passPresel = passPresel && kFALSE;
 
-      if(passPresel == kFALSE) continue; // ptl1/l2 > 25
+      if(passPresel == kFALSE) continue; // ptl1/l2 > 25/20
 
       // typeSel = 0(m+m+), 1(e+e+), 2(e+m+/m+e+) 3(m-m-), 4(e-e-), 5(e-m-/m-e-)
       // typePair = 0(mm), 1(ee), 2(em)
@@ -691,7 +708,7 @@ void sswwjjAnalysis(bool isBlinded = false
       if(idTight.size() == 3 )  					       passFilterCR2[0] = kTRUE; 
 
       //lepton pT cut
-      if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 25 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 25){
+      if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 25 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20){
 	passFilterSig[1] = kTRUE;
 	passFilterCR1[1] = kTRUE;
 	passFilterCR3[1] = kTRUE;
@@ -732,7 +749,7 @@ void sswwjjAnalysis(bool isBlinded = false
            TMath::Abs(((TLorentzVector*)(*eventTaus.p4)[ntau])->Eta()) >= 2.3) continue;
         bool isElMu = false;
         for(unsigned nl=0; nl<idLep.size(); nl++){
-          if(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventTaus.p4)[ntau])) < 0.1) {
+          if(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventTaus.p4)[ntau])) < 0.3) {
             isElMu = true;
             break;
           }
@@ -748,19 +765,21 @@ void sswwjjAnalysis(bool isBlinded = false
       //b-tag selection
       if(bDiscrMax < 0.700 && idSoft.size() == 0){
 	passFilterSig[3] = kTRUE;
-        passFilterCR2[3] = kTRUE;
         passFilterCR3[3] = kTRUE;
       } else{
         passFilterCR1[3] = kTRUE;
+      }
+      if(bDiscrMax < 0.935 && idSoft.size() == 0){
+        passFilterCR2[3] = kTRUE;
       }
 
       //tau veto
       if(numberGoodTaus == 0){
 	passFilterSig[4] = kTRUE;
         passFilterCR1[4] = kTRUE;
-        passFilterCR2[4] = kTRUE;
         passFilterCR3[4] = kTRUE;
       }
+      passFilterCR2[4] = kTRUE;
 
       //Mll cut
       TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) ));
@@ -772,7 +791,7 @@ void sswwjjAnalysis(bool isBlinded = false
       passFilterCR2[5] = kTRUE;
 
 
-      double minMassZ = 999.0;
+      double minMassLooseZ = 999.0;
       for(unsigned nl0=0; nl0<idLep.size(); nl0++){
         for(unsigned nl1=0; nl1<idLepLoose.size(); nl1++){
 
@@ -780,35 +799,42 @@ void sswwjjAnalysis(bool isBlinded = false
           TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[nl0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLepLoose[nl1])) ) ));
 
 	  if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLepLoose[nl1]]) &&
-	     TMath::Abs(dilepAux.M()-91.1876) < TMath::Abs(minMassZ-91.1876)) {
-	     minMassZ = dilepAux.M();
+	     TMath::Abs(dilepAux.M()-91.1876) < TMath::Abs(minMassLooseZ-91.1876)) {
+	     minMassLooseZ = dilepAux.M();
 	  }
         }
       }
 
       // Loose Z veto
-      if(TMath::Abs(minMassZ-91.1876) > 15){
+      if(TMath::Abs(minMassLooseZ-91.1876) > 15){
 	passFilterSig[6] = kTRUE;
         passFilterCR1[6] = kTRUE;
         passFilterCR3[6] = kTRUE;     
       }
-       passFilterCR2[6] = kTRUE;
+      passFilterCR2[6] = kTRUE;
       
       //Z veto
       if(((typeSel == 1 || typeSel == 4) && (TMath::Abs(dilep.M()-91.1876) > 15.0)) || !(typeSel == 1 || typeSel == 4)){
 	passFilterSig[7] = kTRUE;
 	passFilterCR1[7] = kTRUE;
       }
+
+      double minMassZ = 999.0;
       if(idTight.size() == 3){
-	for(int i1=0; i1<3; i1++) {
-	  for(int i2=i1+1; i2<3; i2++) {
-	    if((int)(*eventLeptons.pdgId)[idLep[i1]]/TMath::Abs((int)(*eventLeptons.pdgId)[idLep[i1]]) + (int)(*eventLeptons.pdgId)[idLep[i2]]/TMath::Abs((int)(*eventLeptons.pdgId)[idLep[i2]])==0){
-	      TLorentzVector dilepCR2(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[i1])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[i2])) ) ));
-	      if((TMath::Abs(dilepCR2.M()-91.1876) < 15.0)) passFilterCR2[7] = kTRUE;
+	for(unsigned nl0=0; nl0<idLep.size()-1; nl0++){
+          for(unsigned nl1=nl0+1; nl1<idLep.size(); nl1++){
+
+	    if((int)(*eventLeptons.pdgId)[idLep[nl0]] + (int)(*eventLeptons.pdgId)[idLep[nl1]] != 0) continue; // OSSF pairs only
+            TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[nl0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[nl1])) ) ));
+
+	    if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl1]]) &&
+	       TMath::Abs(dilepAux.M()-91.1876) < TMath::Abs(minMassZ-91.1876)) {
+	       minMassZ = dilepAux.M();
 	    }
-	  }
+          }
 	}
       }
+      if(TMath::Abs(minMassZ-91.1876) < 15.0) passFilterCR2[7] = kTRUE;
       passFilterCR3[7] = kTRUE;
 
       //acess met info
@@ -836,9 +862,9 @@ void sswwjjAnalysis(bool isBlinded = false
 	if(dijet.M() > 500){
           passFilterSig[9] = kTRUE;
           passFilterCR1[9] = kTRUE;
+          passFilterCR2[9] = kTRUE;
 	}
 	if(dijet.M() > 100){
-          passFilterCR2[9] = kTRUE;
           passFilterCR3[9] = kTRUE;
 	}
 
@@ -853,12 +879,11 @@ void sswwjjAnalysis(bool isBlinded = false
 	
 	theLeptonZ[0] = TMath::Min(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()-(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()+((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta())/2.)/deltaEtaJJ,0.999);
 	theLeptonZ[1] = TMath::Min(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()-(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()+((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta())/2.)/deltaEtaJJ,0.999);
-      
+
         passFilterSig[11] = TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.7;
         passFilterCR1[11] = TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.7;
-        passFilterCR2[11] = TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.7;
+        passFilterCR2[11] = kTRUE;
         passFilterCR3[11] = TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.7;
-        
       }
 
       //                      #lep, sign, flavor  lep pT cut          #jets with pT>30    btag-veto           tau veto            mll cut             loose Z veto        Z veto              met cut             mjj cut             deltaetajj cut       zeppenfeld cut
@@ -866,8 +891,7 @@ void sswwjjAnalysis(bool isBlinded = false
       passControlRegionTop  = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2] && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8] && passFilterCR1[9] && passFilterCR1[10] && passFilterCR1[11];
       passControlRegionWZ   = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8] && passFilterCR2[9] && passFilterCR2[10] && passFilterCR2[11];
       passControlRegionDi   = passFilterCR3[0] && passFilterCR3[1] && passFilterCR3[2] && passFilterCR3[3] && passFilterCR3[4] && passFilterCR3[5] && passFilterCR3[6] && passFilterCR3[7] && passFilterCR3[8] && passFilterCR3[9] && passFilterCR3[10] && passFilterCR3[11];
-      passControlRegionSS2j = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8]                                          && passFilterSig[11];
-      passControlRegionZ    = passFilterSig[0] && passFilterSig[1] &&                     passFilterSig[3] && passFilterSig[4] &&                     passFilterSig[6];
+      passControlRegionSS2j = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8];
 
       bool passNMinusOne[8] = {
         passFilterSig[0] && passFilterSig[1] && passFilterSig[2] &&                     passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] && passFilterSig[9] && passFilterSig[10] && passFilterSig[11], // btag veto
@@ -886,7 +910,7 @@ void sswwjjAnalysis(bool isBlinded = false
 	if(totalSel == kTRUE) sumEvol[typeSel]++;
       }
 
-      bool passAllCuts[nSelTypes] = {passSignalRegion,passControlRegionTop,passControlRegionWZ,passControlRegionDi,passControlRegionSS2j,passControlRegionZ};                 
+      bool passAllCuts[nSelTypes] = {passSignalRegion,passControlRegionTop,passControlRegionWZ,passControlRegionDi,passControlRegionSS2j};                 
 
       TLorentzVector dijetUp,dijetDown;
       double deltaEtaJJUp = 0; double deltaEtaJJDown = 0;
@@ -985,7 +1009,7 @@ void sswwjjAnalysis(bool isBlinded = false
         for(unsigned int nl=0; nl<idLep.size(); nl++){
           effSF = effSF * effhDScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),
 	        ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),
-	  	typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF,fhDmutrksfptg10,fhDeltrksf,eventVertex.npv,true,fhDMuIsoSF);
+	  	typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF,fhDmutrksfptg10,fhDeltrksf,eventVertex.npv,true,fhDMuIsoSF,false);
         }
       }
 
@@ -1027,7 +1051,7 @@ void sswwjjAnalysis(bool isBlinded = false
 	}
       }
 
-      if(theCategory == 0 && isBlinded == true && passSignalRegion) continue;
+      if(isBlinded == true && passFilterSig[0] == kTRUE && passFilterSig[9] == kTRUE) continue;
 
       double mcWeight = eventMonteCarlo.mcWeight;
       if(infilecatv[ifile] == 0) mcWeight = 1.0;
@@ -1062,7 +1086,7 @@ void sswwjjAnalysis(bool isBlinded = false
         else if(thePlot ==  4 && passNMinusOne[2])     {makePlot = true;theVar = TMath::Min(dilep.M(),399.999);}
         else if(thePlot ==  5 && passSignalRegion)     {makePlot = true;theVar = TMath::Min((double)eventVertex.npv,39.499);}
 	else if(thePlot ==  6 && passNMinusOne[1])     {makePlot = true;theVar = TMath::Min((double)numberGoodTaus,3.499);}
-	else if(thePlot ==  7 && passNMinusOne[3])     {makePlot = true;theVar = TMath::Min(TMath::Abs(minMassZ-91.1876),39.999);}
+	else if(thePlot ==  7 && passNMinusOne[3])     {makePlot = true;theVar = TMath::Min(TMath::Abs(minMassLooseZ-91.1876),39.999);}
 	else if(thePlot ==  8 && passSignalRegion)     {makePlot = true;theVar = (double)(numberGoodGenLep[1]+10*numberGoodGenLep[0]);}
 	else if(thePlot ==  9 && passNMinusOne[0])     {makePlot = true;theVar = TMath::Min(TMath::Max(bDiscrMax,0.001),0.999);}
 	else if(thePlot == 10 && passNMinusOne[0])     {makePlot = true;theVar = TMath::Min((double)idSoft.size(),3.499);}
@@ -1072,11 +1096,13 @@ void sswwjjAnalysis(bool isBlinded = false
         else if(thePlot == 14 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
         else if(thePlot == 15 && passControlRegionSS2j){makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta();}
         else if(thePlot == 16 && passControlRegionSS2j){makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta();}
-        else if(thePlot == 17 && passControlRegionZ)   {makePlot = true;theVar = TMath::Min(dilep.M(),199.999);}
-	else if(thePlot == 18 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(TMath::Abs(minMassZ-91.1876),39.999);}
+        else if(thePlot == 17 && passControlRegionSS2j){makePlot = true;theVar = TMath::Min(dilep.M(),199.999);}
+	else if(thePlot == 18 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(TMath::Abs(minMassZ-91.1876),19.999);}
         else if(thePlot == 19 && passNMinusOne[7])     {makePlot = true;theVar = TMath::Min(theLeptonZ[0],theLeptonZ[1]);}
         else if(thePlot == 20 && passNMinusOne[7])     {makePlot = true;theVar = TMath::Max(theLeptonZ[0],theLeptonZ[1]);}
-         if(makePlot) histo[typeSel][thePlot][theCategory]->Fill(theVar,totalWeight);
+        else if(thePlot == 21 && passSignalRegion)     {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
+        else if(thePlot == 22 && passSignalRegion)     {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
+        if(makePlot) histo[typeSel][thePlot][theCategory]->Fill(theVar,totalWeight);
         if(makePlot) histo[6][thePlot][theCategory]->Fill(theVar,totalWeight);
       }
 
@@ -1086,7 +1112,7 @@ void sswwjjAnalysis(bool isBlinded = false
 
       // check if QCD scale weights are anomalous high
       double maxQCDscale = 1.0;
-      if(passAllCuts[SIGSEL] && theCategory != 0) {
+      if(passAllCuts[SIGSEL] && infilecatv[ifile] != 0) {
         maxQCDscale = TMath::Abs((double)eventMonteCarlo.r1f2);
         if(TMath::Abs((double)eventMonteCarlo.r1f5) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r1f5);
         if(TMath::Abs((double)eventMonteCarlo.r2f1) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r2f1);
@@ -1116,8 +1142,6 @@ void sswwjjAnalysis(bool isBlinded = false
            histo_EWK_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_EWK_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
-           else if(infilenamev[ifile].Contains("powheg") == true)
-           for(int npdf=0; npdf<102; npdf++) histo_EWK_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+0]));
            else
            for(int npdf=0; npdf<102; npdf++) histo_EWK_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_EWK_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);

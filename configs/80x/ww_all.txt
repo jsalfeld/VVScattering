@@ -171,3 +171,5 @@ t2mit/filefi/044 WZ_TuneCUETP8M1_13TeV-pythia8+RunIISpring16DR80-PUSpring16_80X_
 #t2mit/filefi/044 WLLJJToLNu_M-60_EWK_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM  - 25ns - ~
 #t2mit/filefi/044 WLLJJToLNu_M-60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM - 25ns - ~
 #t2mit/filefi/044 ZZJJTo4L_13TeV-madgraph-pythia8+RunIISpring16DR80-premix_withHLT_80X_mcRun2_asymptotic_v14-v1+AODSIM  - 25ns - ~
+#t2mit/filefi/044 WpWpJJ_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1+AODSIM - 25ns pwhg_74 ~
+#t2mit/filefi/044 WmWmJJ_13TeV-powheg-pythia8_TuneCUETP8M1+RunIISpring16DR80-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2+AODSIM - 25ns pwhg_74 ~

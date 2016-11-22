@@ -14,7 +14,7 @@ dynunu         3811.0
 zll50          2008.4*3
 zll20          3205.6*3
 zll1050        2008.4*3*3.78
-ww_dps         1.64*1.5
+ww_dps         1.62000
 ww             118.7
 wwlnln         (118.7-3.974)*0.1086*0.1086*9
 ggwwlnln       3.974*0.1086*0.1086*9*1.4
@@ -105,15 +105,17 @@ gjets200_400   2300
 gjets400_600   277.4
 gjets600       93.38
 
-wpwp_ewk_qcd   0.05190
-wpwp_ewk       0.02715
-wpwp_qcd       0.02611
-wzjj_ewk_qcd   0.509
-wzjj_ewk       0.039
-wzjj_qcd       0.47
+wpwp_ewk_qcd   0.054540
+wpwp_ewk       0.025260
+wpwp_qcd       0.024740
+wpwp_ewk_pwg   0.020930
+wmwm_ewk_pwg   0.007868
+wzjj_ewk_qcd   0.489100
+wzjj_ewk       0.039000
+wzjj_qcd       0.458500
 
 zzjj              0.00974
-wlljj60_ewk       0.047
-wlljj60_ewk_qcd   0.526
-wlljj4_60_ewk_qcd 0.53397
-wlgjj             5.668
+wlljj60_ewk_qcd   0.52950
+wlljj60_ewk       0.04634
+wlljj4_60_ewk_qcd 0.40860
+wlgjj             5.66200
