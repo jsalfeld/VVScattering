@@ -7,9 +7,9 @@
 #include <TH2D.h>
 #include <TMath.h>
 
-#include "DYMVA_WWxsec_2015/dymva_0jet_BDT.class.C"
-#include "DYMVA_WWxsec_2015/dymva_1jet_BDT.class.C"
-#include "DYMVA_WWxsec_2015/dymva_jets_BDT.class.C"
+//#include "DYMVA_WWxsec_2015/dymva_0jet_BDT.class.C"
+//#include "DYMVA_WWxsec_2015/dymva_1jet_BDT.class.C"
+//#include "DYMVA_WWxsec_2015/dymva_jets_BDT.class.C"
 
 #include "NeroProducer/Core/interface/BareAll.hpp"
 #include "NeroProducer/Core/interface/BareEvent.hpp"
@@ -67,9 +67,9 @@ void makeOneSkimSample(
   for (unsigned int i=0;i<10;++i) theInputVars_0j.push_back(inputVars_0j[i]);
   for (unsigned int i=0;i<13;++i) theInputVars_1j.push_back(inputVars_1j[i]);
   for (unsigned int i=0;i<17;++i) theInputVars_2j.push_back(inputVars_2j[i]);
-  dymva_0j::ReadBDT rbdtDy_0j = dymva_0j::ReadBDT(theInputVars_0j);
-  dymva_1j::ReadBDT rbdtDy_1j = dymva_1j::ReadBDT(theInputVars_1j);
-  dymva_2j::ReadBDT rbdtDy_2j = dymva_2j::ReadBDT(theInputVars_2j);
+  //dymva_0j::ReadBDT rbdtDy_0j = dymva_0j::ReadBDT(theInputVars_0j);
+  //dymva_1j::ReadBDT rbdtDy_1j = dymva_1j::ReadBDT(theInputVars_1j);
+  //dymva_2j::ReadBDT rbdtDy_2j = dymva_2j::ReadBDT(theInputVars_2j);
 
   Float_t fMVACut[4][4];
   InitializeJetIdCuts(fMVACut);
@@ -185,6 +185,7 @@ void makeOneSkimSample(
 	 if(TMath::Abs((int)(*eventLeptons.pdgId)[nlep]) == 13) nTypeLep[1]++;}
     }
 
+    /*
     vector<int> idLep;
     for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
       if(selectIdIsoCut("default",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
@@ -192,6 +193,7 @@ void makeOneSkimSample(
         											     {idLep.push_back(nlep);}
       else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idLep.push_back(nlep);}
     }
+    */
 
     Bool_t passFilter[totalNumberSkims] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
 
@@ -247,6 +249,7 @@ void makeOneSkimSample(
        ((TLorentzVector*)(*eventLeptons.p4)[idOnlyLep[1]])->Pt() > 10 && 
        maxDilepPt> 55 && ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 40) passFilter[4] = kTRUE;
 
+    /*
     dymva_= -999.;
     nlep_= 0;
     njets_= 0;
@@ -341,6 +344,7 @@ void makeOneSkimSample(
       njets_ = idJet.size();
       // End DYMVA implementation
     } // only events with tight lepton definition
+    */
 
     // photon filter
     {
