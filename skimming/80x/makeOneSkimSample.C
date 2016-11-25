@@ -33,6 +33,7 @@
 //            - 4  ==> Z+MET
 //            - 5  ==> one photon, ptg>60
 //            - 6  ==> same-sign
+//            - 7  ==> e+mu + met>30 + mjj>500 + detajj>2.5
 
 // filterType == -1 ==> all events included in the skimmed ntuple
 
@@ -46,9 +47,9 @@ void makeOneSkimSample(
  ){
 
   bool fillPDFInfo = true;
-  const int totalNumberSkims = 7;
+  const int totalNumberSkims = 8;
  
-  bool isFilterOn[totalNumberSkims] = {true,true,true,true,true,true,true};
+  bool isFilterOn[totalNumberSkims] = {true,true,true,true,true,true,true,true};
   if(filterType == 2) {isFilterOn[0] = false; isFilterOn[1] = false;}
   if(filterType == 3) {isFilterOn[0] = false; isFilterOn[1] = false; isFilterOn[3] = false;}
 
@@ -145,7 +146,7 @@ void makeOneSkimSample(
 
   UInt_t N_all  = the_input_all->GetEntries();
   UInt_t N_pass = 0;
-  UInt_t Filter_pass[totalNumberSkims] = {0,0,0,0,0,0,0};
+  UInt_t Filter_pass[totalNumberSkims] = {0,0,0,0,0,0,0,0};
   Double_t sumAllEvents = 0;
   Double_t sumPassEvents = 0;
   Double_t sumPassEventsNoNNLO = 0;
@@ -195,7 +196,7 @@ void makeOneSkimSample(
     }
     */
 
-    Bool_t passFilter[totalNumberSkims] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
+    Bool_t passFilter[totalNumberSkims] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
 
     // ptl>20/10 filter
     if(idOnlyLep.size() >= 2 &&
@@ -378,9 +379,26 @@ void makeOneSkimSample(
        (int)(*eventLeptons.pdgId)[idOnlyLep[0]]/TMath::Abs((int)(*eventLeptons.pdgId)[idOnlyLep[0]]) ==
        (int)(*eventLeptons.pdgId)[idOnlyLep[1]]/TMath::Abs((int)(*eventLeptons.pdgId)[idOnlyLep[1]])) passFilter[6] = kTRUE;
 
+    // e+mu + met>30 + mjj>500 + detajj>2.5 filter
+    if(idOnlyLep.size() >= 2 && nTypeLep[0] > 0 && nTypeLep[1] > 0 &&
+       ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 30 &&
+       ((TLorentzVector*)(*eventLeptons.p4)[idOnlyLep[0]])->Pt() > 25 && 
+       ((TLorentzVector*)(*eventLeptons.p4)[idOnlyLep[1]])->Pt() > 20) {
+      bool passVBF = false;
+      for(int njA=0; njA<eventJets.p4->GetEntriesFast(); njA++){
+	if(((TLorentzVector*)(*eventJets.p4)[njA])->Pt() < 30) continue;
+	for(int njB=njA+1; njB<eventJets.p4->GetEntriesFast(); njB++){
+          if(((TLorentzVector*)(*eventJets.p4)[njB])->Pt() < 30) continue;
+          TLorentzVector dijet = ( *(TLorentzVector*)(*eventJets.p4)[njA] ) + ( *(TLorentzVector*)(*eventJets.p4)[njB] );
+          double deltaEtaJJ = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[njA])->Eta()-((TLorentzVector*)(*eventJets.p4)[njB])->Eta());
+          if(dijet.M() > 500 && deltaEtaJJ > 2.5) {passVBF = true; break;}
+	}
+      }
+      if(passVBF) passFilter[7] = kTRUE;
+    }
+
     // Make sure filter is off if we do not want to use it
     for(int nf=0; nf<totalNumberSkims; nf++) if(isFilterOn[nf] == kFALSE) passFilter[nf] = kFALSE;
-
 
     selBit_ = 0;
     if(passFilter[0] == kTRUE) selBit_ |= 1UL<<0;
@@ -390,6 +408,7 @@ void makeOneSkimSample(
     if(passFilter[4] == kTRUE) selBit_ |= 1UL<<4;
     if(passFilter[5] == kTRUE) selBit_ |= 1UL<<5;
     if(passFilter[6] == kTRUE) selBit_ |= 1UL<<6;
+    if(passFilter[7] == kTRUE) selBit_ |= 1UL<<7;
 
     if(passFilter[0] == kTRUE) Filter_pass[0]++;
     if(passFilter[1] == kTRUE) Filter_pass[1]++;
@@ -398,6 +417,7 @@ void makeOneSkimSample(
     if(passFilter[4] == kTRUE) Filter_pass[4]++;
     if(passFilter[5] == kTRUE) Filter_pass[5]++;
     if(passFilter[6] == kTRUE) Filter_pass[6]++;
+    if(passFilter[7] == kTRUE) Filter_pass[7]++;
 
     if((passFilter[0] == kFALSE &&
         passFilter[1] == kFALSE &&
@@ -405,7 +425,8 @@ void makeOneSkimSample(
         passFilter[3] == kFALSE &&
         passFilter[4] == kFALSE &&
         passFilter[5] == kFALSE &&
-        passFilter[6] == kFALSE) &&
+        passFilter[6] == kFALSE &&
+        passFilter[7] == kFALSE) &&
 	filterType != -1) continue;
     N_pass++;
 
@@ -456,7 +477,8 @@ void makeOneSkimSample(
 
     normalizedTree1->Fill(); 
   }
-  printf("Filters: %d %d %d %d %d %d %d\n",Filter_pass[0],Filter_pass[1],Filter_pass[2],Filter_pass[3],Filter_pass[4],Filter_pass[5],Filter_pass[6]);
+  printf("Filters: %d %d %d %d %d %d %d %d\n",Filter_pass[0],Filter_pass[1],Filter_pass[2],Filter_pass[3],Filter_pass[4],Filter_pass[5],Filter_pass[6],Filter_pass[7]);
+  printf("Overall ratio: %f\n",(double)(Filter_pass[0]+Filter_pass[1]+Filter_pass[2]+Filter_pass[3]+Filter_pass[4]+Filter_pass[5]+Filter_pass[6]+Filter_pass[7])/(double)N_pass);
   printf("N pass/all = %d / %d = %f | Sum pass/all = %f / %f = %f\n",N_pass,N_all,(double)N_pass/N_all,sumPassEvents,sumAllEvents,sumPassEvents/sumAllEvents);
   if(processName.CompareTo("wwlnln") == 0) printf("sumPassEventsNoNNLO: %f\n",sumPassEventsNoNNLO);
   normalizedTree0->Write();
