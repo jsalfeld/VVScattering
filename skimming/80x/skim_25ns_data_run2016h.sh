@@ -8,9 +8,14 @@ export JSONFILE=MitAnalysisRunII/json/80x/Cert_271036-284044_13TeV_PromptReco_Co
 export theRND=file_Run2016H_$RANDOM;
 
 cat > $theRND.txt <<EOF
+DoubleEG+Run2016H-PromptReco-v1+AOD
 DoubleEG+Run2016H-PromptReco-v2+AOD
+DoubleEG+Run2016H-PromptReco-v3+AOD
+DoubleMuon+Run2016H-PromptReco-v1+AOD
 DoubleMuon+Run2016H-PromptReco-v2+AOD
+DoubleMuon+Run2016H-PromptReco-v3+AOD
 MuonEG+Run2016H-PromptReco-v2+AOD
+MuonEG+Run2016H-PromptReco-v3+AOD
 SingleElectron+Run2016H-PromptReco-v2+AOD
 SingleMuon+Run2016H-PromptReco-v2+AOD
 SinglePhoton+Run2016H-PromptReco-v2+AOD
@@ -46,10 +51,10 @@ if [ $ALEASTONEPD -eq 1 ]; then
   echo $msg
   $msg
 
-  root -l -q -b MitAnalysisRunII/skimming/80x/makeGoodRunSample.C+\(\"$SKIMTEMPDIR/data_Run2016G.root\",\"$GOODRUNDIR/data_Run2016G.root\",\"$JSONFILE\"\);  
-  mv $GOODRUNDIR/data_Run2016G.root $SKIMDIR/data_Run2016G.root;
+  root -l -q -b MitAnalysisRunII/skimming/80x/makeGoodRunSample.C+\(\"$SKIMTEMPDIR/data_Run2016H.root\",\"$GOODRUNDIR/data_Run2016H.root\",\"$JSONFILE\"\);  
+  mv $GOODRUNDIR/data_Run2016H.root $SKIMDIR/data_Run2016H.root;
 
-  root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$SKIMDIR/data_Run2016G.root\",\"$SKIMDIR/met_data_Run2016G.root\",\"data\",2\);
+  root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$SKIMDIR/data_Run2016H.root\",\"$SKIMDIR/met_data_Run2016H.root\",\"data\",2\);
   else
     echo "NO PD TO PROCESS"
 fi

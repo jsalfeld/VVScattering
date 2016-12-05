@@ -10,9 +10,13 @@ export theRND=file_Run2016B_$RANDOM;
 cat > $theRND.txt <<EOF
 DoubleEG+Run2016B-23Sep2016-v2+AOD
 DoubleMuon+Run2016B-23Sep2016-v1+AOD
+DoubleMuon+Run2016B-23Sep2016-v3+AOD
 MuonEG+Run2016B-23Sep2016-v2+AOD
+MuonEG+Run2016B-23Sep2016-v3+AOD
 SingleElectron+Run2016B-23Sep2016-v2+AOD
+SingleElectron+Run2016B-23Sep2016-v3+AOD
 SingleMuon+Run2016B-23Sep2016-v1+AOD
+SinglePhoton+Run2016B-23Sep2016-v1+AOD
 SinglePhoton+Run2016B-23Sep2016-v3+AOD
 EOF
 

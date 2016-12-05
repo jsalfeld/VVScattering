@@ -34,7 +34,8 @@ TString systTypeName[nSystTypes]= {"JESUP","JESDOWN","METUP","METDOWN"};
 
 bool verbose = true;
 bool isMINIAOD = false;
-int whichSkim = 6;
+int whichSkim1 = 6;
+int whichSkim2 = 7;
 double mcPrescale = 1.0;
 bool usePureMC = false;
 int period = 1;
@@ -603,7 +604,7 @@ void sswwjjAnalysis(bool isBlinded = false
     for (int i=0; i<int(the_input_tree->GetEntries()/theMCPrescale); ++i) {
       the_SelBit_tree->GetEntry(i);
       if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
-      if((selBit_ & 0x1<<whichSkim) == 0) continue;
+      if((selBit_ & 0x1<<whichSkim1) == 0 && (selBit_ & 0x1<<whichSkim2) == 0) continue;
 
       the_input_tree->GetEntry(i);
  

@@ -12,7 +12,6 @@ DoubleEG+Run2016F-23Sep2016-v1+AOD
 DoubleMuon+Run2016F-23Sep2016-v1+AOD
 MuonEG+Run2016F-23Sep2016-v1+AOD
 SingleElectron+Run2016F-23Sep2016-v1+AOD
-SingleMuon+Run2016F-23Sep2016-v1+AOD
 SinglePhoton+Run2016F-23Sep2016-v1+AOD
 EOF
 

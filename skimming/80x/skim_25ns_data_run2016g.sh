@@ -11,8 +11,6 @@ cat > $theRND.txt <<EOF
 DoubleEG+Run2016G-23Sep2016-v1+AOD
 DoubleMuon+Run2016G-23Sep2016-v1+AOD
 MuonEG+Run2016G-23Sep2016-v1+AOD
-SingleElectron+Run2016G-PromptReco-v1+AOD
-SingleMuon+Run2016G-PromptReco-v1+AOD
 SinglePhoton+Run2016G-23Sep2016-v1+AOD
 EOF
 
