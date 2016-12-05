@@ -207,14 +207,11 @@ void makeOneSkimSample(
     bool passTrigger = kFALSE;
     if(processName.CompareTo("data") == 0){
       for (int nt = 0; nt < (int)numtokens; nt++) {
-        if((strcmp(tokens[nt],"HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v*") == 0 ||
-    	    strcmp(tokens[nt],"HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30_v*") == 0 ||
-    	    strcmp(tokens[nt],"HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v*") == 0 ||
-    	    strcmp(tokens[nt],"HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v*") == 0 ||
-    	    strcmp(tokens[nt],"HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v*") == 0 ||
-    	    strcmp(tokens[nt],"HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v*") == 0 ||
-            strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_v*")  == 0 ||  	    
-            strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_v*") == 0) &&
+        if((strcmp(tokens[nt],"HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v") == 0 ||
+    	    strcmp(tokens[nt],"HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30_v") == 0 ||
+    	    strcmp(tokens[nt],"HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v") == 0 ||
+            strcmp(tokens[nt],"HLT_Mu8_TrkIsoVVL_v")  == 0 ||  	    
+            strcmp(tokens[nt],"HLT_Mu17_TrkIsoVVL_v") == 0) &&
             (*eventTrigger.triggerFired)[nt] == 1) passTrigger = kTRUE;
       }
     } else {passTrigger = kTRUE;}
@@ -359,12 +356,12 @@ void makeOneSkimSample(
     bool passTrigger = kFALSE;
     if(processName.CompareTo("data") == 0) {
       for (int nt = 0; nt < (int)numtokens; nt++) {
-        if((strcmp(tokens[nt],"HLT_Photon36_R9Id90_HE10_IsoM_v*") == 0 ||
-   	    strcmp(tokens[nt],"HLT_Photon50_R9Id90_HE10_IsoM_v*") == 0 ||
-   	    strcmp(tokens[nt],"HLT_Photon75_R9Id90_HE10_IsoM_v*") == 0 ||
-   	    strcmp(tokens[nt],"HLT_Photon90_R9Id90_HE10_IsoM_v*") == 0 ||
-   	    strcmp(tokens[nt],"HLT_Photon120_R9Id90_HE10_IsoM_v*") == 0 ||
-   	    strcmp(tokens[nt],"HLT_Photon165_R9Id90_HE10_IsoM_v*") == 0) &&
+        if((strcmp(tokens[nt],"HLT_Photon36_R9Id90_HE10_IsoM_v") == 0 ||
+   	    strcmp(tokens[nt],"HLT_Photon50_R9Id90_HE10_IsoM_v") == 0 ||
+   	    strcmp(tokens[nt],"HLT_Photon75_R9Id90_HE10_IsoM_v") == 0 ||
+   	    strcmp(tokens[nt],"HLT_Photon90_R9Id90_HE10_IsoM_v") == 0 ||
+   	    strcmp(tokens[nt],"HLT_Photon120_R9Id90_HE10_IsoM_v") == 0 ||
+   	    strcmp(tokens[nt],"HLT_Photon165_R9Id90_HE10_IsoM_v") == 0) &&
             (*eventTrigger.triggerFired)[nt] == 1) passTrigger = kTRUE;
       }
     } else {passTrigger = kTRUE;}

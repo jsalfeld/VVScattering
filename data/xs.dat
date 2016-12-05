@@ -96,6 +96,8 @@ wphtautau125   0.8400*0.0632
 wmhtautau125   0.5328*0.0632
 gghzz4l125     48.580*0.0264*0.101*0.101 
 vbfhzz4l125    3.7820*0.0264*0.101*0.101
+wphzz4l125     0.8400*0.0264*0.101*0.101
+wmhzz4l125     0.5328*0.0264*0.101*0.101
 tthnob125      0.5071*(1-0.577)
 vhnob125       (0.8839+0.8400+0.5328)*(1-0.577)
 
@@ -113,6 +115,10 @@ wmwm_ewk_pwg   0.007868
 wzjj_ewk_qcd   0.489100
 wzjj_ewk       0.039000
 wzjj_qcd       0.458500
+
+wpwmjj_ewk_qcd_notop 2.66300
+wpwmjj_ewk_notop     0.34520
+wpwmjj_qcd_notop     2.42300
 
 zzjj              0.00974
 wlljj60_ewk_qcd   0.52950
