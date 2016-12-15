@@ -3,25 +3,32 @@ double effSF_e_25_medium[10] = {0.739427,0.690631,0.815957,0.822430,0.856509,0.8
 double effSF_e_25_tight[10]  = {0.742330,0.661762,0.812364,0.820798,0.851298,0.846768,0.888956,0.915187,0.965834,0.927740};
 
 double fake_rate_m_25_medium[5][5] = {
-0.410,0.303,0.280,0.250,0.172,
-0.418,0.317,0.294,0.265,0.194,
-0.460,0.365,0.342,0.313,0.266,
-0.504,0.421,0.406,0.380,0.308,
-0.523,0.452,0.439,0.418,0.308
+0.328,0.272,0.259,0.228,0.176,
+0.343,0.286,0.270,0.254,0.228,
+0.384,0.334,0.318,0.295,0.260,
+0.428,0.387,0.378,0.364,0.309,
+0.456,0.423,0.417,0.409,0.332
 };
 double fake_rate_e_25_medium[5][5] = {
-0.199,0.187,0.179,0.162,0.169,
-0.198,0.195,0.180,0.167,0.152,
-0.237,0.217,0.189,0.180,0.160,
-0.317,0.267,0.264,0.266,0.287,
-0.321,0.309,0.321,0.326,0.349
+0.610,0.536,0.508,0.481,0.505,
+0.620,0.560,0.508,0.475,0.499,
+0.655,0.584,0.537,0.509,0.550,
+0.608,0.568,0.562,0.548,0.538,
+0.572,0.546,0.534,0.515,0.487
 };
 double fake_rate_e_25_tight[5][5] = {
-0.114,0.103,0.090,0.070,0.074,
-0.111,0.107,0.095,0.076,0.061,
-0.140,0.122,0.101,0.089,0.069,
-0.227,0.176,0.161,0.141,0.126,
-0.195,0.165,0.161,0.151,0.155
+0.484,0.404,0.363,0.309,0.312,
+0.470,0.436,0.364,0.323,0.299,
+0.493,0.454,0.393,0.349,0.378,
+0.448,0.386,0.376,0.339,0.318,
+0.364,0.336,0.315,0.293,0.269
+};
+double fake_rate_e_25_verytight[5][5] = {
+0.380,0.308,0.265,0.211,0.102,
+0.379,0.337,0.277,0.230,0.139,
+0.374,0.333,0.274,0.221,0.196,
+0.300,0.244,0.224,0.186,0.119,
+0.204,0.165,0.139,0.106,0.056
 };
 double fake_rate_e_25_medium_mva[5][5] = {
 0.684,0.587,0.552,0.519,0.453,
@@ -129,7 +136,7 @@ char **strsplit(const char* str, const char* delim, size_t* numtokens) {
 double nPUScaleFactor(TH1D *fhDPU, float npu){
   double mynpu = TMath::Min(npu,(float)50.999);
   Int_t npuxbin = fhDPU->GetXaxis()->FindBin(mynpu);
-  return fhDPU->GetBinContent(npuxbin);
+  return TMath::Min(fhDPU->GetBinContent(npuxbin),2.5);
 }
 
 double ratioFactor(TH1D *fhDVar, float var){
@@ -152,25 +159,21 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
   if     (TMath::Abs(pdgId) == 13) {
     if (type=="loose" || type=="veto") isoCut = 0.25;
     else isoCut=0.15;
-    if     (type == "default" || type == "medium" || type == "default_mva" || type == "medium_mva") idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP;
+    if     (type == "medium" || type == "default" || type == "verytight" || type == "default_mva" || type == "medium_mva") idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP;
     else if(type == "loose") idCut= (selBits & BareLeptons::LepLoose) == BareLeptons::LepLoose;
     else if(type == "veto")  idCut= (selBits & BareLeptons::LepLoose) == BareLeptons::LepLoose;
     else printf("Problem with selectIsoCut!\n");
 
     return (idCut && iso/pt < isoCut);
   }
-  else if(TMath::Abs(pdgId) == 11 && (type == "default" || type == "medium" || type == "veto" || type == "loose")) {
-    if     (type == "medium")  isoCut = (isEB ? 0.0766 : 0.0678);
-    else if(type == "default") isoCut = (isEB ? 0.0354 : 0.0646);
-    else if(type == "loose")   isoCut = (isEB ? 0.0893 : 0.121 ); 
-    else if(type == "veto")    isoCut = (isEB ? 0.126  : 0.144 ); 
+  else if(TMath::Abs(pdgId) == 11 && (type == "medium" || type == "default" || type == "verytight" || type == "veto" || type == "loose")) {
+    if     (type == "medium")    idCut =  (selBits & BareLeptons::LepMedium) == BareLeptons::LepMedium;
+    else if(type == "default")   idCut =  (selBits & BareLeptons::LepTight)  == BareLeptons::LepTight;
+    else if(type == "verytight") idCut = ((selBits & BareLeptons::LepTight)  == BareLeptons::LepTight) && ((selBits & BareLeptons::EleTripleCharge) == BareLeptons::EleTripleCharge) && ((selBits & BareLeptons::EleNoMissingHits) == BareLeptons::EleNoMissingHits);
+    else if(type == "loose"  )   idCut =  (selBits & BareLeptons::LepLoose)  == BareLeptons::LepLoose;
+    else if(type == "veto"   )   idCut =  (selBits & BareLeptons::LepVeto)   == BareLeptons::LepVeto;
 
-    if     (type == "medium")  idCut = (selBits & BareLeptons::LepMedium) == BareLeptons::LepMedium;
-    else if(type == "default") idCut = (selBits & BareLeptons::LepTight)  == BareLeptons::LepTight;
-    else if(type == "loose"  ) idCut = (selBits & BareLeptons::LepLoose)  == BareLeptons::LepLoose;
-    else if(type == "veto"   ) idCut = (selBits & BareLeptons::LepVeto)   == BareLeptons::LepVeto;
-
-    return (idCut && iso/pt < isoCut);
+    return (idCut);
   }
   else if(TMath::Abs(pdgId) == 11 && (type == "default_mva" || type == "medium_mva")) {
     idCut = (selBits & BareLeptons::LepFake) == BareLeptons::LepFake;
@@ -265,15 +268,15 @@ TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF, 
   Int_t binXB = 0;
   Int_t binYB = 0;
 
-  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default" || type== "medium_mva" || type== "default_mva"))  {binXA = fhDMuMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDMuMediumSF->GetYaxis()->FindFixBin(pt);}
+  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default"   || type== "verytight" || type== "medium_mva" || type== "default_mva"))  {binXA = fhDMuMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDMuMediumSF->GetYaxis()->FindFixBin(pt);}
   else if(TMath::Abs(nsel) == 11 && (type== "medium" || type== "medium_mva"))			                           {binXA = fhDElMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDElMediumSF->GetYaxis()->FindFixBin(pt);}
-  else if(TMath::Abs(nsel) == 11 && (type== "default"|| type== "default_mva"))			                           {binXA = fhDElTightSF ->GetXaxis()->FindFixBin(eta);binYA = fhDElTightSF ->GetYaxis()->FindFixBin(pt);}
+  else if(TMath::Abs(nsel) == 11 && (type== "default"|| type== "verytight" || type== "default_mva"))			   {binXA = fhDElTightSF ->GetXaxis()->FindFixBin(eta);binYA = fhDElTightSF ->GetYaxis()->FindFixBin(pt);}
   else    printf("PROBLEM WITH BINS\n");
 
   double result = 0.0;
-  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default" || type== "medium_mva" || type== "default_mva")) result = fhDMuMediumSF->GetBinContent(binXA, binYA);
+  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default"   || type== "verytight" || type== "medium_mva" || type== "default_mva")) result = fhDMuMediumSF->GetBinContent(binXA, binYA);
   else if(TMath::Abs(nsel) == 11 && (type== "medium" || type== "medium_mva"))	                                          result = fhDElMediumSF->GetBinContent(binXA, binYA);
-  else if(TMath::Abs(nsel) == 11 &&( type== "default"|| type== "default_mva"))	                                          result = fhDElTightSF ->GetBinContent(binXA, binYA);
+  else if(TMath::Abs(nsel) == 11 &&( type== "default"|| type== "verytight" || type== "default_mva"))	                  result = fhDElTightSF ->GetBinContent(binXA, binYA);
 
   if(result <= 0) printf("Result <= 0! %f %d %d %d - %f %f\n",result,nsel,binXA,binYA,pt,eta);
   if(result <= 0) result = 1.0;
@@ -325,7 +328,7 @@ double effScaleFactor(double pt, double eta, int nsel, int period, TString type)
 }
 
 double fakeRateFactor(double pt, double eta, int nsel, int period, TString type){
-  double addFactor = 0.75;
+  double addFactor = 1.0;
   int iPt = -1;
   if	 (pt < 15) iPt = 0;
   else if(pt < 20) iPt = 1;
@@ -340,11 +343,12 @@ double fakeRateFactor(double pt, double eta, int nsel, int period, TString type)
   else if(TMath::Abs(eta) < 2.0) iEta = 3;
   else  			 iEta = 4;
 
-  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default" || type== "medium_mva" || type== "default_mva")) return addFactor*fake_rate_m_25_medium    [iPt][iEta]/(1.0-fake_rate_m_25_medium    [iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")			                                                 return addFactor*fake_rate_e_25_medium    [iPt][iEta]/(1.0-fake_rate_e_25_medium    [iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default")			                                                 return addFactor*fake_rate_e_25_tight     [iPt][iEta]/(1.0-fake_rate_e_25_tight     [iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium_mva")		                                                 return addFactor*fake_rate_e_25_medium_mva[iPt][iEta]/(1.0-fake_rate_e_25_medium_mva[iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default_mva")		                                                 return addFactor*fake_rate_e_25_tight_mva [iPt][iEta]/(1.0-fake_rate_e_25_tight_mva [iPt][iEta]);
+  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default" || type== "verytight" || type== "medium_mva" || type== "default_mva")) return addFactor*fake_rate_m_25_medium    [iPt][iEta]/(1.0-fake_rate_m_25_medium    [iPt][iEta]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")			                                                                       return addFactor*fake_rate_e_25_medium    [iPt][iEta]/(1.0-fake_rate_e_25_medium    [iPt][iEta]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default")			                                                                       return addFactor*fake_rate_e_25_tight     [iPt][iEta]/(1.0-fake_rate_e_25_tight     [iPt][iEta]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "verytight")			                                                                       return addFactor*fake_rate_e_25_verytight [iPt][iEta]/(1.0-fake_rate_e_25_verytight [iPt][iEta]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium_mva")		                                                                       return addFactor*fake_rate_e_25_medium_mva[iPt][iEta]/(1.0-fake_rate_e_25_medium_mva[iPt][iEta]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default_mva")		                                                                       return addFactor*fake_rate_e_25_tight_mva [iPt][iEta]/(1.0-fake_rate_e_25_tight_mva [iPt][iEta]);
   else    printf("PROBLEM WITH FAKES\n");
 
   assert(0);

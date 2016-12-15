@@ -87,6 +87,7 @@ void makeGoodRunSample(
   
   for (int i=0; i<the_input_tree->GetEntries(); ++i) {
     the_input_tree->GetEntry(i);
+    the_SelBit_tree->GetEntry(i);
     if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
 
     //------------------------------

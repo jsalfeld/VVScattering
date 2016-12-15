@@ -4,10 +4,10 @@ export theRND=file_merging_$RANDOM;
 
 export SKIMDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/caf/user/ceballos/Nero/skim_80x;
 export MERGINGDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/caf/user/ceballos/Nero/merging_80x;
-if [ $# == 1 ] && [ $2 == 1 ]; then
-  export SKIMDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/Nero/skim_80x;
-  export MERGINGDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/Nero/merging_80x;
-elif [ $# == 1 ] && [ $2 == 1 ]; then
+if [ $# == 1 ] && [ $1 == 1 ]; then
+  export SKIMDIR=/afs/cern.ch/user/c/ceballos/eoslink2/cms/store/group/phys_higgs/ceballos/Nero/skim_80x;
+  export MERGINGDIR=/afs/cern.ch/user/c/ceballos/eoslink2/cms/store/group/phys_higgs/ceballos/Nero/merging_80x;
+elif [ $# == 1 ] && [ $1 == 1 ]; then
   export SKIMDIR=/data/t3home000/ceballos/Nero/skim_80x;
   export MERGINGDIR=/data/t3home000/ceballos/Nero/merging_80x;
 fi

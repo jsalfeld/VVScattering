@@ -6,20 +6,26 @@ export theRND=file_skim_$RANDOM;
 
 export INPUTDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/user/ceballos/Nero/v2.1;
 export SKIMDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/caf/user/ceballos/Nero/skim_80x;
+export TYPE="dm"
+
 if [ $# == 2 ] && [ $2 == 1 ]; then
   echo "AREA 1";
   export INPUTDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/Nero/v2.1;
   export SKIMDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/Nero/skim_80x;
+  export TYPE="dm"
 
 elif [ $# == 2 ] && [ $2 == 2 ]; then
   echo "AREA 2";
-  export INPUTDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/setup80x_ichep/Data/Nero/v2.0/$1;
-  export  SKIMDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/Nero/skim_80x/$1;
+  export INPUTDIR=/afs/cern.ch/user/c/ceballos/eoslink2/cms/store/group/phys_higgs/ceballos/setup80x_ichep/Data/Nero/v2.0/$1;
+  export  SKIMDIR=/afs/cern.ch/user/c/ceballos/eoslink2/cms/store/group/phys_higgs/ceballos/Nero/skim_80x/$1;
+  export TYPE="data"
 
 elif [ $# == 2 ] && [ $2 == 3 ]; then
   echo "AREA 3";
   export INPUTDIR=/mnt/hadoop/cms/store/user/dhsu/Nero/v1.3/$1;
   export SKIMDIR=/data/t3home000/ceballos/Nero/skim_80x/$1;
+  export TYPE="data"
+
 else
   echo "AREA 0";
 fi
@@ -31,7 +37,7 @@ for datasetName in `cat $theRND.txt`; do
   mkdir -p $SKIMDIR/$datasetName;
   ls $INPUTDIR/$datasetName|grep root > $SKIMDIR/$datasetName.txt;
   for fileName in `cat $SKIMDIR/$datasetName.txt`; do
-    root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/$datasetName/$fileName\",\"$SKIMDIR/$datasetName/$fileName\",\"dm\",0,0,0\);
+    root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/$datasetName/$fileName\",\"$SKIMDIR/$datasetName/$fileName\",\"${TYPE}\",0,0,0\);
   done
   rm -f $SKIMDIR/$datasetName.txt;
 done
