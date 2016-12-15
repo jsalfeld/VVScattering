@@ -77,13 +77,13 @@ void sswwjjAnalysis(bool isBlinded = false
 
   //MC samples
   //signal: EWK + QCD
-  //infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
+  infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(1);
-  infilenamev.push_back(Form("%sWpWpJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
-  infilenamev.push_back(Form("%sWmWmJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWpWpJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWmWmJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
 
   //QCD to be subtracted from signal
-  //infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(-1);
+  infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(-1);
 
   //QCD to be added to background
   infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(2);
@@ -1101,21 +1101,9 @@ void sswwjjAnalysis(bool isBlinded = false
       double MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSel;
       double MVAVarJESSyst[2] = {TMath::Min(dijetUp.M(),1999.999)+2000.*typeSel,TMath::Min(dijetDown.M(),1999.999)+2000.*typeSel};
 
-      // check if QCD scale weights are anomalous high
-      double maxQCDscale = 1.0;
-      if(passAllCuts[SIGSEL] && infilecatv[ifile] != 0) {
-        maxQCDscale = TMath::Abs((double)eventMonteCarlo.r1f2);
-        if(TMath::Abs((double)eventMonteCarlo.r1f5) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r1f5);
-        if(TMath::Abs((double)eventMonteCarlo.r2f1) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r2f1);
-        if(TMath::Abs((double)eventMonteCarlo.r2f2) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r2f2);
-        if(TMath::Abs((double)eventMonteCarlo.r5f1) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r5f1);
-        if(TMath::Abs((double)eventMonteCarlo.r5f5) > maxQCDscale) maxQCDscale = TMath::Abs((double)eventMonteCarlo.r5f5);
-        if     (maxQCDscale < 2.0) maxQCDscale = 1.0;
-	else if(errorMsgQCDscale == false) {
-	  printf("Big maxQCDscale(%f): %f %f %f %f %f %f\n",maxQCDscale,eventMonteCarlo.r1f2/maxQCDscale,eventMonteCarlo.r1f5/maxQCDscale,eventMonteCarlo.r2f1/maxQCDscale,eventMonteCarlo.r2f2/maxQCDscale,eventMonteCarlo.r5f1/maxQCDscale,eventMonteCarlo.r5f5/maxQCDscale); 
-          errorMsgQCDscale = true;
-	}
-      }
+      // Avoid QCD scale weights that are anomalous high
+      double maxQCDscale = (TMath::Abs((double)eventMonteCarlo.r1f2)+TMath::Abs((double)eventMonteCarlo.r1f5)+TMath::Abs((double)eventMonteCarlo.r2f1)+
+        		    TMath::Abs((double)eventMonteCarlo.r2f2)+TMath::Abs((double)eventMonteCarlo.r5f1)+TMath::Abs((double)eventMonteCarlo.r5f5))/6.0;
 
       if     (theCategory == 0){
         if(passAllCuts[SIGSEL]) {
@@ -2008,7 +1996,7 @@ void sswwjjAnalysis(bool isBlinded = false
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-  \n",effMName,systLepEffM[0],systLepEffM[1],systLepEffM[2],systLepEffM[3],systLepEffM[4],systLepEffM[5],systLepEffM[6],systLepEffM[7]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-  \n",effEName,systLepEffE[0],systLepEffE[1],systLepEffE[2],systLepEffE[3],systLepEffE[4],systLepEffE[5],systLepEffE[6],systLepEffE[7]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-  \n",metName,systMetUp[0],systMetUp[1],systMetUp[2],systMetUp[3],systMetUp[4],systMetUp[5],systMetUp[6],systMetUp[7]);
-      newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-  \n",jesName,systJesUp[0],systJesUp[1],systJesUp[2],systJesUp[3],systJesUp[4],systJesUp[5],systJesUp[6],systJesUp[7]);
+      newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-  \n",jesName,systJesDown[0],systJesDown[1],systJesDown[2],systJesDown[3],systJesDown[4],systJesDown[5],systJesDown[6],systJesDown[7]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-  \n",puName,systPUUp[0],systPUUp[1],systPUUp[2],systPUUp[3],systPUUp[4],systPUUp[5],systPUUp[6],systPUUp[7]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-  \n",momMName,systLepResM[0],systLepResM[1],systLepResM[2],systLepResM[3],systLepResM[4],systLepResM[5],systLepResM[6],systLepResM[7]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-  \n",momEName,systLepResE[0],systLepResE[1],systLepResE[2],systLepResE[3],systLepResE[4],systLepResE[5],systLepResE[6],systLepResE[7]);
