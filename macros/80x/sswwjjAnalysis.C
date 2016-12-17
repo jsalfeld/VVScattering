@@ -22,12 +22,14 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
-double WSSF[5]  = {1.0,1.0,1.0,1.0,1.0};
-double WSSFE[5] = {0.329836,0.244144,0.094034,0.031496,0.034398};
+double WSSF[5]  = {0.741273,1.201739,1.023171,0.990379,1.037401};
+double WSSFE[5] = {0.212239,0.127349,0.043695,0.022982,0.029306};
+double the_sf_ZLL = 0.70;
+
 void func_ws_sf(double eta, double pt, double theSF[2]);
 
-enum selType                     {SIGSEL=0, TOPSEL,   WZSEL,   DILSEL,   SS2J,   SSNJ,  nSelTypes};
-TString selTypeName[nSelTypes]= {"SIGSEL", "TOPSEL", "WZSEL", "DILSEL", "SS2J", "SSNJ"};
+enum selType                     {SIGSEL=0, TOPSEL,   WZSEL,   DILSEL,   SS2JSEL,   SSZLLSEL,  nSelTypes};
+TString selTypeName[nSelTypes]= {"SIGSEL", "TOPSEL", "WZSEL", "DILSEL", "SS2JSEL", "SSZLLSEL"};
 
 enum systType                     {JESUP=0, JESDOWN,  METUP,  METDOWN, nSystTypes};
 TString systTypeName[nSystTypes]= {"JESUP","JESDOWN","METUP","METDOWN"};
@@ -39,12 +41,12 @@ int whichSkim2 = 7;
 double mcPrescale = 1.0;
 bool usePureMC = false;
 int period = 1;
-const TString typeLepSel = "verytight";
+//const TString typeLepSel = "verytight";
 const bool usePUPPI = false;
 const bool useWZFromData = true;
 const bool useWSFromData = true;
 
-void sswwjjAnalysis(bool isBlinded = false
+void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
  ){
 
   TString filesPathDA = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/met_";
@@ -77,13 +79,13 @@ void sswwjjAnalysis(bool isBlinded = false
 
   //MC samples
   //signal: EWK + QCD
-  infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
-  //infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
+  infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWpWpJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWmWmJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
 
   //QCD to be subtracted from signal
-  infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(-1);
+  //infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(-1);
 
   //QCD to be added to background
   infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(2);
@@ -193,14 +195,18 @@ void sswwjjAnalysis(bool isBlinded = false
   delete fMuIsoSF;
 
   TString ECMsb  = "13TeV2016";
-  const int nBinMVA =24; Float_t xbins[nBinMVA+1] = {500, 800, 1100, 1500, 2000,
-                                                         2800, 3100, 3500, 4000,
-							 4800, 5100, 5500, 6000,
-							 6800, 7100, 7500, 8000,
-							 8800, 9100, 9500,10000,
-							10800,11100,11500,12000};
+  const int nBinMVA = 24; Float_t xbins[nBinMVA+1] = {500, 800, 1100, 1500, 2000,
+                                                          2800, 3100, 3500, 4000,
+							  4800, 5100, 5500, 6000,
+							  6800, 7100, 7500, 8000,
+							  8800, 9100, 9500,10000,
+							 10800,11100,11500,12000};
   TH1D* histoMVA = new TH1D("histoMVA", "histoMVA", nBinMVA, xbins);
   histoMVA->Sumw2();
+
+  const int nBinWZMVA = 4; Float_t xbinsWZ[nBinWZMVA+1] = {500, 800, 1100, 1500, 2000};
+  TH1D* histoWZMVA = new TH1D("histoWZMVA", "histoWZMVA", nBinWZMVA, xbinsWZ);
+  histoWZMVA->Sumw2();
 
   TH1D *histo_Data  = (TH1D*) histoMVA->Clone("histo_Data");
   TH1D *histo_EWK   = (TH1D*) histoMVA->Clone("histo_EWK"); 
@@ -221,7 +227,7 @@ void sswwjjAnalysis(bool isBlinded = false
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 25;
+  const int allPlots = 29;
   const int histBins = 11;
   TH1D* histo[7][allPlots][histBins];
   TString processName[histBins] = {".Data", "EWKWW", "QCDWW", "...WZ", "...ZZ", "..VVV", "...WS", "...WG", "..DPS", "FakeM", "FakeE"};
@@ -239,16 +245,18 @@ void sswwjjAnalysis(bool isBlinded = false
       else if(thePlot >=  9 && thePlot <=  9) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 1.0;}
       else if(thePlot >= 10 && thePlot <= 10) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot = 3.5;}
       else if(thePlot >= 11 && thePlot <= 12) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 2000;}
-      else if(thePlot >= 13 && thePlot <= 14) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
-      else if(thePlot >= 15 && thePlot <= 16) {nBinPlot = 100; xminPlot =-5.0; xmaxPlot = 5.0;}
-      else if(thePlot >= 17 && thePlot <= 17) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200;}
-      else if(thePlot >= 18 && thePlot <= 18) {nBinPlot =  40; xminPlot = 0.0; xmaxPlot = 20;}
-      else if(thePlot >= 19 && thePlot <= 20) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 1.0;}
-      else if(thePlot >= 21 && thePlot <= 22) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200;}
-      else if(thePlot >= 23 && thePlot <= 23) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot = 6.5;}
+      else if(thePlot >= 13 && thePlot <= 15) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
+      else if(thePlot >= 16 && thePlot <= 17) {nBinPlot = 100; xminPlot =-5.0; xmaxPlot = 5.0;}
+      else if(thePlot >= 18 && thePlot <= 18) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 400;}
+      else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 1.0;}
+      else if(thePlot >= 20 && thePlot <= 20) {nBinPlot =  40; xminPlot = 0.0; xmaxPlot = 20;}
+      else if(thePlot >= 21 && thePlot <= 22) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 1.0;}
+      else if(thePlot >= 23 && thePlot <= 24) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200;}
+      else if(thePlot >= 25 && thePlot <= 25) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot = 6.5;}
       TH1D* histos;
-      if(thePlot != allPlots-1) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
-      else                      histos = new TH1D("histos", "histos", nBinMVA, xbins);
+      if     (thePlot < allPlots-3) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
+      else if(thePlot < allPlots-1) histos = new TH1D("histos", "histos", nBinWZMVA, xbinsWZ);
+      else                          histos = new TH1D("histos", "histos", nBinMVA, xbins);
       histos->Sumw2();
       for(int i=0; i<histBins; i++) histo[nModel][thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
       histos->Reset();histos->Clear();
@@ -575,7 +583,7 @@ void sswwjjAnalysis(bool isBlinded = false
 	if(initPDFTag != -1) break;
       }
     }
-    if(infilecatv[ifile] != 0 && initPDFTag == -1 && infilenamev[ifile].Contains("powheg") == false) {
+    if(infilecatv[ifile] != 0 && initPDFTag == -1) {
       printf("PDFTAG PROBLEM\n");
       if(the_PDF_tree) {
         printf("PDFTree Entries: %d\n",(int)the_PDF_tree->GetEntries());
@@ -614,7 +622,7 @@ void sswwjjAnalysis(bool isBlinded = false
       Bool_t passControlRegionWZ   = kFALSE;
       Bool_t passControlRegionDi   = kFALSE;
       Bool_t passControlRegionSS2j = kFALSE;
-      Bool_t passControlRegionSS   = kFALSE;
+      Bool_t passControlRegionZLL  = kFALSE;
 
       if(infilecatv[ifile] == 0) {
         for (int nt = 0; nt <(int)numtokens; nt++) {
@@ -869,10 +877,10 @@ void sswwjjAnalysis(bool isBlinded = false
 	theLeptonZ[0] = TMath::Min(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()-(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()+((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta())/2.)/deltaEtaJJ,0.999);
 	theLeptonZ[1] = TMath::Min(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()-(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()+((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta())/2.)/deltaEtaJJ,0.999);
 
-        passFilterSig[11] = kTRUE; //TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.7;
-        passFilterCR1[11] = kTRUE; //TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.7;
-        passFilterCR2[11] = kTRUE;
-        passFilterCR3[11] = kTRUE; //TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.7;
+        passFilterSig[11] = TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.75;
+        passFilterCR1[11] = TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.75;
+        passFilterCR2[11] = 
+        passFilterCR3[11] = TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.75;
       }
 
       //                      #lep, sign, flavor  lep pT cut          #jets with pT>30    btag-veto           tau veto            mll cut             loose Z veto        Z veto              met cut             mjj cut             deltaetajj cut       zeppenfeld cut
@@ -880,8 +888,8 @@ void sswwjjAnalysis(bool isBlinded = false
       passControlRegionTop  = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2] && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8] && passFilterCR1[9] && passFilterCR1[10] && passFilterCR1[11];
       passControlRegionWZ   = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8] && passFilterCR2[9] && passFilterCR2[10] && passFilterCR2[11];
       passControlRegionDi   = passFilterCR3[0] && passFilterCR3[1] && passFilterCR3[2] && passFilterCR3[3] && passFilterCR3[4] && passFilterCR3[5] && passFilterCR3[6] && passFilterCR3[7] && passFilterCR3[8] && passFilterCR3[9] && passFilterCR3[10] && passFilterCR3[11];
-      passControlRegionSS2j = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8];
-      passControlRegionSS   = passFilterSig[0] && passFilterSig[1] &&                     passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8];
+      passControlRegionSS2j = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8] && passFilterCR3[9];
+      passControlRegionZLL  = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] &&                     passFilterSig[6] &&!passFilterSig[7] && passFilterSig[8] && passFilterCR3[9];
 
       bool passNMinusOne[8] = {
         passFilterSig[0] && passFilterSig[1] && passFilterSig[2] &&                     passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] && passFilterSig[9] && passFilterSig[10] && passFilterSig[11], // btag veto
@@ -900,7 +908,7 @@ void sswwjjAnalysis(bool isBlinded = false
 	if(totalSel == kTRUE) sumEvol[typeSel]++;
       }
 
-      bool passAllCuts[nSelTypes] = {passSignalRegion,passControlRegionTop,passControlRegionWZ,passControlRegionDi,passControlRegionSS2j,passControlRegionSS};                 
+      bool passAllCuts[nSelTypes] = {passSignalRegion,passControlRegionTop,passControlRegionWZ,passControlRegionDi,passControlRegionSS2j,passControlRegionZLL};                 
 
       TLorentzVector dijetUp,dijetDown;
       double deltaEtaJJUp = 0; double deltaEtaJJDown = 0;
@@ -1052,6 +1060,15 @@ void sswwjjAnalysis(bool isBlinded = false
         totalWeight = totalWeight * total_WS_SF[0];
       }
 
+      // Z->ll scale factor
+      if(infilenamev[ifile].Contains("DYJetsToLL") && goodIsTight == idTight.size()) {
+        totalWeight = totalWeight * the_sf_ZLL;
+      }
+      if(infilenamev[ifile].Contains("DYJetsToLL") && (typeSel == 0 || typeSel == 3) && signQ != 0) {
+        totalWeight = 0.0;
+        if(passSignalRegion && goodIsGenWSLep == 0) printf("mm event with no WS candidates\n");
+      }
+
       if(theCategory == -1) {theCategory = 1; totalWeight = -1.0 * totalWeight;}
 
       if(totalWeight == 0) continue;
@@ -1084,15 +1101,19 @@ void sswwjjAnalysis(bool isBlinded = false
         else if(thePlot == 12 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
         else if(thePlot == 13 && passControlRegionTop) {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
         else if(thePlot == 14 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
-        else if(thePlot == 15 && passControlRegionSS2j){makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta();}
-        else if(thePlot == 16 && passControlRegionSS2j){makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta();}
-        else if(thePlot == 17 && passControlRegionSS2j){makePlot = true;theVar = TMath::Min(dilep.M(),199.999);}
-	else if(thePlot == 18 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(TMath::Abs(minMassZ-91.1876),19.999);}
-        else if(thePlot == 19 && passNMinusOne[7])     {makePlot = true;theVar = TMath::Min(theLeptonZ[0],theLeptonZ[1]);}
-        else if(thePlot == 20 && passNMinusOne[7])     {makePlot = true;theVar = TMath::Max(theLeptonZ[0],theLeptonZ[1]);}
-        else if(thePlot == 21 && passSignalRegion)     {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
-        else if(thePlot == 22 && passSignalRegion)     {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
-        else if(thePlot == 23 && passControlRegionSS)  {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+        else if(thePlot == 15 && passControlRegionSS2j){makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
+        else if(thePlot == 16 && passControlRegionSS2j){makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta();}
+        else if(thePlot == 17 && passControlRegionSS2j){makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta();}
+        else if(thePlot == 18 && passControlRegionSS2j){makePlot = true;theVar = TMath::Min(dilep.M(),399.999);}
+        else if(thePlot == 19 && passControlRegionSS2j){makePlot = true;theVar = TMath::Max(theLeptonZ[0],theLeptonZ[1]);}
+	else if(thePlot == 20 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(TMath::Abs(minMassZ-91.1876),19.999);}
+        else if(thePlot == 21 && passNMinusOne[7])     {makePlot = true;theVar = TMath::Min(theLeptonZ[0],theLeptonZ[1]);}
+        else if(thePlot == 22 && passNMinusOne[7])     {makePlot = true;theVar = TMath::Max(theLeptonZ[0],theLeptonZ[1]);}
+        else if(thePlot == 23 && passSignalRegion)     {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
+        else if(thePlot == 24 && passSignalRegion)     {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
+        else if(thePlot == 25 && passControlRegionZLL) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+        else if(thePlot == 26 && passControlRegionTop) {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 27 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
         if(makePlot) histo[typeSel][thePlot][theCategory]->Fill(theVar,totalWeight);
         if(makePlot) histo[6][thePlot][theCategory]->Fill(theVar,totalWeight);
       }
@@ -1409,31 +1430,71 @@ void sswwjjAnalysis(bool isBlinded = false
   } // end of chain
 
   // WZ scale factor from data
-  double sf_WZ[2] = {1.0,1.0};
+  double sfE_WZ[nBinWZMVA] = {1.0,1.0,1.0,1.0};
   if(useWZFromData){ // 0 = data, 1=bg, 2=wz
+    printf("WZini:");
+    for(int np=1; np<=histo_WZ->GetNbinsX(); np++) {
+      printf(" %.2f +/- %.2f",histo_WZ->GetBinContent(np),histo_WZ->GetBinError(np));
+    }
+    printf("\n");
+    for(int nb=1; nb<=histo[6][allPlots-2][0]->GetNbinsX(); nb++) {
+      double sumEventsType[3] = {0,0,0}; double sumEventsTypeE[3] = {0,0,0};
+      for(int np=0; np<histBins; np++) {
+        if     (np==0){
+	  sumEventsType[0] = sumEventsType[0] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[0] = sumEventsTypeE[0] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
+        }
+        else if(np==3){
+	  sumEventsType[2] = sumEventsType[2] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[2] = sumEventsTypeE[2] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
+        }
+        else {
+	  sumEventsType[1] = sumEventsType[1] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[1] = sumEventsTypeE[1] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
+        }
+      }
+      double sf_WZ  = (sumEventsType[0]-sumEventsType[1])/sumEventsType[2];
+      double sf_WZE[3] = {sumEventsTypeE[0]/sumEventsType[2]/sumEventsType[2],
+                          sumEventsTypeE[1]/sumEventsType[2]/sumEventsType[2],
+                          sumEventsTypeE[2]/sumEventsType[2]/sumEventsType[2]*sf_WZ*sf_WZ};
+      sfE_WZ[nb-1] = sqrt(sf_WZE[0]+sf_WZE[1]+sf_WZE[2])/sf_WZ;
+      printf("(WZ study(%d)): data: %8.2f +/- %6.2f | bkg: %8.2f +/- %6.2f | wz: %8.2f +/- %6.2f -> sf = %4.2f +/- %4.2f (%4.2f/%4.2f/%4.2f)\n",nb-1,
+    	     sumEventsType[0],sqrt(sumEventsTypeE[0]),sumEventsType[1],sqrt(sumEventsTypeE[1]),sumEventsType[2],sqrt(sumEventsTypeE[2]),
+	     sf_WZ,sfE_WZ[nb-1]*sf_WZ,sqrt(sf_WZE[0]),sqrt(sf_WZE[1]),sqrt(sf_WZE[2]));
+      for(int nt=0; nt<6; nt++) {
+        histo_WZ->SetBinContent(nb+nBinWZMVA*nt,histo_WZ->GetBinContent(nb+nBinWZMVA*nt)*sf_WZ);
+        histo_WZ->SetBinError  (nb+nBinWZMVA*nt,histo_WZ->GetBinError  (nb+nBinWZMVA*nt)*sf_WZ);
+      }
+    }
+    printf("WZend:");
+    for(int np=1; np<=histo_WZ->GetNbinsX(); np++) {
+      printf(" %.2f +/- %.2f",histo_WZ->GetBinContent(np),histo_WZ->GetBinError(np));
+    }
+    printf("\n");
+  }
+
+  // Z->ll scale factor from data
+  { // 0 = data, 1=bg, 2=zll
+    double sf_ZLL[2] = {1.0,1.0};
     double sumEventsType[3] = {0,0,0}; double sumEventsTypeE[3] = {0,0,0};
     for(int np=0; np<histBins; np++) {
       for(int nModel=0; nModel<6; nModel++) {
         if     (np==0){
-	  sumEventsType[0] = sumEventsType[0] + bgdDecay[nModel][WZSEL][np]; sumEventsTypeE[0] = sumEventsTypeE[0] + weiDecay[nModel][WZSEL][np];
+	  sumEventsType[0] = sumEventsType[0] + bgdDecay[nModel][SSZLLSEL][np]; sumEventsTypeE[0] = sumEventsTypeE[0] + weiDecay[nModel][SSZLLSEL][np];
         }
-        else if(np==3){
-	  sumEventsType[2] = sumEventsType[2] + bgdDecay[nModel][WZSEL][np]; sumEventsTypeE[2] = sumEventsTypeE[2] + weiDecay[nModel][WZSEL][np];
+        else if(np==6){
+	  sumEventsType[2] = sumEventsType[2] + bgdDecay[nModel][SSZLLSEL][np]; sumEventsTypeE[2] = sumEventsTypeE[2] + weiDecay[nModel][SSZLLSEL][np];
         }
         else {
-	  sumEventsType[1] = sumEventsType[1] + bgdDecay[nModel][WZSEL][np]; sumEventsTypeE[1] = sumEventsTypeE[1] + weiDecay[nModel][WZSEL][np];
+	  sumEventsType[1] = sumEventsType[1] + bgdDecay[nModel][SSZLLSEL][np]; sumEventsTypeE[1] = sumEventsTypeE[1] + weiDecay[nModel][SSZLLSEL][np];
         }
       }
     }
-    sf_WZ[0]  = (sumEventsType[0]-sumEventsType[1])/sumEventsType[2];
-    double sf_WZE[3] = {sumEventsTypeE[0]/sumEventsType[2]/sumEventsType[2],
-                        sumEventsTypeE[1]/sumEventsType[2]/sumEventsType[2],
-			sumEventsTypeE[2]/sumEventsType[2]/sumEventsType[2]*sf_WZ[0]*sf_WZ[0]};
-    sf_WZ[1] = sqrt(sf_WZE[0]+sf_WZE[1]+sf_WZE[2]);
-    printf("(WZ study): data: %8.2f +/- %6.2f | bkg: %8.2f +/- %6.2f | wz: %8.2f +/- %6.2f -> sf = %4.2f +/- %4.2f (%4.2f/%4.2f/%4.2f)\n",
+    sf_ZLL[0] = (sumEventsType[0]-sumEventsType[1])/sumEventsType[2];
+    double sf_ZLLE[3] = {sumEventsTypeE[0]/sumEventsType[2]/sumEventsType[2],
+                         sumEventsTypeE[1]/sumEventsType[2]/sumEventsType[2],
+			 sumEventsTypeE[2]/sumEventsType[2]/sumEventsType[2]*sf_ZLL[0]*sf_ZLL[0]};
+    sf_ZLL[1] = sqrt(sf_ZLLE[0]+sf_ZLLE[1]+sf_ZLLE[2]);
+    printf("(ZLL study): data: %8.2f +/- %6.2f | bkg: %8.2f +/- %6.2f | zll: %8.2f +/- %6.2f -> sf = %4.2f +/- %4.2f (%4.2f/%4.2f/%4.2f)\n",
     	   sumEventsType[0],sqrt(sumEventsTypeE[0]),sumEventsType[1],sqrt(sumEventsTypeE[1]),sumEventsType[2],sqrt(sumEventsTypeE[2]),
-	   sf_WZ[0],sf_WZ[1],sqrt(sf_WZE[0]),sqrt(sf_WZE[1]),sqrt(sf_WZE[2]));
-    histo_WZ->Scale(sf_WZ[0]);
+	   sf_ZLL[0],sf_ZLL[1],sqrt(sf_ZLLE[0]),sqrt(sf_ZLLE[1]),sqrt(sf_ZLLE[2]));
   }
 
   histo[6][allPlots-1][0] ->Add(histo_Data);
@@ -2014,7 +2075,7 @@ void sswwjjAnalysis(bool isBlinded = false
       newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -      -   %7.5f\n",1.30);
       newcardShape << Form("WS_Norm        lnN    -     -     -     -     -   %7.5f  -     -      -     -  \n",systWSSFUp[0]);		
       if(useWZFromData){
-      newcardShape << Form("CMS_WZ_Norm    lnN    -     -   %7.5f   -     -     -    -     -      -     -  \n",1.0+sf_WZ[1]/sf_WZ[0]);
+      newcardShape << Form("CMS_WZ_Norm%d  lnN    -     -   %7.5f   -     -     -    -     -      -     -  \n",(nb-1)%4,1.0+sfE_WZ[(nb-1)%4]);
       }
       if(histo_EWK  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_EWKStatBounding2016_%s_Bin%d    lnN %7.5f   -     -     -     -     -     -     -     -     - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_EWK  ->GetBinError(nb)/histo_EWK  ->GetBinContent(nb));
       if(histo_QCD  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_QCDStatBounding2016_%s_Bin%d    lnN   -   %7.5f   -     -     -     -     -     -     -     - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_QCD  ->GetBinError(nb)/histo_QCD  ->GetBinContent(nb));
