@@ -47,7 +47,7 @@ config.Data.totalUnits = -1
 
 tag = check_output("git describe --tags | cut -d'-' -f 1 | tr -d '\n' ",shell=True)
 print "-> current tag is '"+tag + "'"
-config.Data.outLFNDirBase = '/store/group/phys_higgs/%s/Nero/%s/' % (getUsernameFromSiteDB(), tag)
+config.Data.outLFNDirBase = '/store/user/%s/Nero/%s/' % (getUsernameFromSiteDB(), tag)
 config.Data.publication = False
 config.Data.outputDatasetTag ='NeroNtuples'
 
@@ -89,7 +89,9 @@ if __name__ == '__main__':
     def setdata(value="True"):
         if value=='True':
             config.Data.splitting = 'LumiBased'
-            config.Data.lumiMask=None
+            #config.Data.lumiMask=None
+            url = "https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/ReReco"
+            config.Data.lumiMask = url + "/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"
             #url = "https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions15/13TeV/"
             #config.Data.lumiMask = url + "Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_Silver_v2.txt"
         else:
@@ -136,4 +138,8 @@ if __name__ == '__main__':
     config.General.requestName = "TTToSemiLeptonic_13TeV-powheg"
     config.Data.inputDataset = "/TTToSemiLeptonic_13TeV-powheg/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v2/MINIAODSIM"
     submit(config)
+
+    #config.General.requestName = "TT_TuneCUETP8M1_13TeV-powheg"
+    #config.Data.inputDataset = "/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext4-v1/MINIAODSIM"
+    #submit(config)
 
