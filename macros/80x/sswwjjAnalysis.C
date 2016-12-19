@@ -2062,7 +2062,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-  \n",momMName,systLepResM[0],systLepResM[1],systLepResM[2],systLepResM[3],systLepResM[4],systLepResM[5],systLepResM[6],systLepResM[7]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-  \n",momEName,systLepResE[0],systLepResE[1],systLepResE[2],systLepResE[3],systLepResE[4],systLepResE[5],systLepResE[6],systLepResE[7]);
       newcardShape << Form("CMS_WZ_l       lnN    -     -   %7.5f   -     -     -    -     -      -     -  \n",1.01);
-      newcardShape << Form("QCDscale_EWK   lnN  %7.5f   -     -     -     -     -     -     -     -     -  \n",1.10);//systQCDScale[0]);		
+      newcardShape << Form("QCDscale_EWK   lnN  %7.5f   -     -     -     -     -     -     -     -     -  \n",systQCDScale[0]);		
       newcardShape << Form("QCDscale_VV    lnN    -   %7.5f %7.5f %7.5f   -     -     -   %7.5f   -     -  \n",systQCDScale[1],systQCDScale[2],systQCDScale[3],systQCDScale[7]);		
       newcardShape << Form("QCDscale_VVV   lnN    -     -     -     -   %7.5f   -     -     -     -     -  \n",systQCDScale[4]);		
       newcardShape << Form("QCDscale_tt    lnN    -     -     -     -     -   %7.5f   -     -     -     -  \n",systQCDScale[5]);		
