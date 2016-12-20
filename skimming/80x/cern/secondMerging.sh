@@ -16,8 +16,13 @@ export ERA=$1;
 #root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$OUTPUTDIR/data_${ERA}.root\",\"$OUTPUTDIR/met_data_${ERA}.root\",\"data\",2\);
 
 root -l -q -b MitAnalysisRunII/skimming/80x/makeGoodRunSample.C+\(\"$MERGINGDIR/photon_${ERA}.root\",\"photon_${ERA}.root\",\"$JSONFILE\"\);
-root -l -q -b MitAnalysisRunII/skimming/80x/makeGoodRunSample.C+\(\"$MERGINGDIR/data_${ERA}.root\",\"data_${ERA}.root\",\"$JSONFILE\"\);
-xrdcp photon_${ERA}.root $OUTPUTDIR/photon_${ERA}_new.root;
-xrdcp data_${ERA}.root $OUTPUTDIR/data_${ERA}_new.root;
+xrdcp photon_${ERA}.root $OUTPUTDIR/photon_${ERA}.root;
 rm -f photon_${ERA}.root;
+
+root -l -q -b MitAnalysisRunII/skimming/80x/makeGoodRunSample.C+\(\"$MERGINGDIR/data_${ERA}.root\",\"data_${ERA}.root\",\"$JSONFILE\"\);
+xrdcp data_${ERA}.root $OUTPUTDIR/data_${ERA}.root;
 rm -f data_${ERA}.root;
+
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$OUTPUTDIR/data_${ERA}.root\",\"met_data_${ERA}.root\",\"data\",2\);
+xrdcp met_data_${ERA}.root $OUTPUTDIR/met_data_${ERA}.root;
+rm -f met_data_${ERA}.root;

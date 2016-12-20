@@ -1,6 +1,6 @@
 
-export INPUTDIR=/afs/cern.ch/user/c/ceballos/eoslink2/cms/store/group/phys_higgs/ceballos/setup80x_ichep/Data/Nero/v2.0/;
-export SKIMDIR=/afs/cern.ch/user/c/ceballos/eoslink2/cms/store/group/phys_higgs/ceballos/Nero/skim_80x;
+export INPUTDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/setup80x_ichep/Data/Nero/v2.0/;
+export SKIMDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/Nero/skim_80x;
 
 for PD in DoubleEG DoubleMuon MuonEG SingleMuon SingleElectron SinglePhoton;
 #for PD in SingleMuon;

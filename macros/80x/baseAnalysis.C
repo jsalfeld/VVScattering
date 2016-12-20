@@ -237,11 +237,13 @@ void baseAnalysis(
     else if(thePlot >= 28 && thePlot <= 28) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
     else if(thePlot >= 29 && thePlot <= 31) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 32 && thePlot <= 32) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >= 33 && thePlot <= 34) {nBinPlot = 100; xminPlot =-2.5; xmaxPlot =   2.5;}
-    else if(thePlot >= 35 && thePlot <= 35) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
-    else if(thePlot >= 36 && thePlot <= 36) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
-    else if(thePlot >= 37 && thePlot <= 40) {nBinPlot = 400; xminPlot = -50; xmaxPlot =  50.0;}
-    else if(thePlot >= 41 && thePlot <= 42) {nBinPlot = 200; xminPlot = -TMath::Pi(); xmaxPlot = TMath::Pi();}
+    else if(thePlot >= 33 && thePlot <= 35) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 36 && thePlot <= 36) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
+    else if(thePlot >= 37 && thePlot <= 38) {nBinPlot = 100; xminPlot =-2.5; xmaxPlot =   2.5;}
+    else if(thePlot >= 39 && thePlot <= 39) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 40 && thePlot <= 40) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
+    else if(thePlot >= 41 && thePlot <= 41) {nBinPlot = 200; xminPlot = -TMath::Pi(); xmaxPlot = TMath::Pi();}
+    else if(thePlot >= 42 && thePlot <= 42) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
     else if(thePlot >= 43 && thePlot <= 46) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
     else if(thePlot >= 47 && thePlot <= 50) {nBinPlot = 500; xminPlot = 0.0; xmaxPlot = 100.0;}
     else if(thePlot >= 51 && thePlot <= 52) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot =   3.5;}
@@ -412,16 +414,19 @@ void baseAnalysis(
       if(passFilter[0] == kFALSE) continue;
       if(passFilter[1] == kTRUE) nPassCuts[1]++;
       if(passFilter[1] == kFALSE) continue;
-      vector<int> idLep; vector<int> idTight; vector<int> idSoft; unsigned int goodIsTight = 0;
+      vector<int> idLep; vector<int> idTight; vector<int> idSoft; vector<int> idVeto; unsigned int goodIsTight = 0;
       for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
         if(selectIdIsoCut(typeLepSel.Data(),TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
 	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep],(double)(*eventLeptons.mva)[nlep]))
 	                                                                                               {idTight.push_back(1); idLep.push_back(nlep); goodIsTight++;}
         else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idTight.push_back(0); idLep.push_back(nlep);}
         else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepSoftIP)== BareLeptons::LepSoftIP){idSoft.push_back(nlep);}
+        else if(selectIdIsoCut("veto",TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
+	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep],(double)(*eventLeptons.mva)[nlep]))
+	                                                                                               {idVeto.push_back(nlep);}
       }
       if(idLep.size()!=idTight.size()) {assert(1); return;}
-      if(idLep.size()==numberOfLeptons) passFilter[2] = kTRUE;
+      if(idLep.size()==numberOfLeptons && idVeto.size() == 0) passFilter[2] = kTRUE;
       if(passFilter[2] == kTRUE) nPassCuts[2]++;
       if(passFilter[2] == kFALSE) continue;
 
@@ -973,7 +978,7 @@ void baseAnalysis(
 	else if(thePlot == 11 && bDiscrMax < 0.80) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 12 && bDiscrMax < 0.80) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 13) {makePlot = true;theVar = TMath::Min(mtLN,199.999);}
-	else if(thePlot == 14) {makePlot = true;theVar = TMath::Min(minMET,199.999);}
+	else if(thePlot == 14) {makePlot = true;theVar = TMath::Min((double)eventMet.CaloMet->Pt(),199.999);}
 	else if(thePlot == 15) {makePlot = true;theVar = dPhiJetMET;}
 	else if(thePlot == 16) {makePlot = true;theVar = dPhiJetDiLep;}
 	else if(thePlot == 17) {makePlot = true;theVar = dPhiDiLepMET;}
@@ -984,24 +989,24 @@ void baseAnalysis(
 	else if(thePlot == 22) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
 	else if(thePlot == 23 && idGenJet.size() >= 1) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[0]])->Pt(),199.999);}
 	else if(thePlot == 24 && idGenJet.size() >= 1 && ((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[0]])->Pt() > 30) {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet[0]])->Eta());}
-	else if(thePlot == 25 && idJet.size() == 0 && minPMET > 20 && dilep.Pt() > 45 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
-	else if(thePlot == 26 && idJet.size() == 0 && minPMET > 20 && dilep.Pt() > 45 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.trackMet->Pt(),199.999);}
-	else if(thePlot == 27 && idJet.size() == 0 && minPMET > 20 && dilep.Pt() > 45 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min(minMET,199.999);}
-	else if(thePlot == 28 && idJet.size() == 0 && minPMET > 20 && dilep.Pt() > 45 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
-	else if(thePlot == 29 && idJet.size() == 1 && minPMET > 20 && dilep.Pt() > 45 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
-	else if(thePlot == 30 && idJet.size() == 1 && minPMET > 20 && dilep.Pt() > 45 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.trackMet->Pt(),199.999);}
-	else if(thePlot == 31 && idJet.size() == 1 && minPMET > 20 && dilep.Pt() > 45 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min(minMET,199.999);}
-	else if(thePlot == 32 && idJet.size() == 1 && minPMET > 20 && dilep.Pt() > 45 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
-	else if(thePlot == 33) {makePlot = true;theVar = ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta();}
-	else if(thePlot == 34) {makePlot = true;theVar = ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta();}
-	else if(thePlot == 35 && dilep.Pt() > 100) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
-	else if(thePlot == 36 && dilep.Pt() > 100) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-	else if(thePlot == 37 && idJet.size() == 0) {makePlot = true;theVar = the_upara_met;}
-	else if(thePlot == 38 && idJet.size() == 0) {makePlot = true;theVar = the_uperp_met;}
-	else if(thePlot == 39 && idJet.size() == 0) {makePlot = true;theVar = the_upara_trkmet;}
-	else if(thePlot == 40 && idJet.size() == 0) {makePlot = true;theVar = the_uperp_trkmet;}
+	else if(thePlot == 25 && idJet.size() == 0 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+	else if(thePlot == 26 && idJet.size() == 0 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.trackMet->Pt(),199.999);}
+	else if(thePlot == 27 && idJet.size() == 0 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.CaloMet->Pt(),199.999);}
+	else if(thePlot == 28 && idJet.size() == 0 && bDiscrMax < 0.605 && idSoft.size() == 0 && ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 100) {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
+	else if(thePlot == 29 && idJet.size() == 1 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+	else if(thePlot == 30 && idJet.size() == 1 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.trackMet->Pt(),199.999);}
+	else if(thePlot == 31 && idJet.size() == 1 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.CaloMet->Pt(),199.999);}
+	else if(thePlot == 32 && idJet.size() == 1 && bDiscrMax < 0.605 && idSoft.size() == 0 && ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 100) {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
+	else if(thePlot == 33 && idJet.size() >= 2 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+	else if(thePlot == 34 && idJet.size() >= 2 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.trackMet->Pt(),199.999);}
+	else if(thePlot == 35 && idJet.size() >= 2 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.CaloMet->Pt(),199.999);}
+	else if(thePlot == 36 && idJet.size() >= 2 && bDiscrMax < 0.605 && idSoft.size() == 0 && ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 100) {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
+	else if(thePlot == 37) {makePlot = true;theVar = ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta();}
+	else if(thePlot == 38) {makePlot = true;theVar = ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta();}
+	else if(thePlot == 39 && dilep.Pt() > 100) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+	else if(thePlot == 40 && dilep.Pt() > 100) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 41) {makePlot = true;theVar = ((TLorentzVector*)(*eventMet.p4)[0])->Phi();}
-	else if(thePlot == 42) {makePlot = true;theVar = (double)eventMet.trackMet->Py();}
+	else if(thePlot == 42) {makePlot = true;theVar = TMath::Min((double)idSoft.size(),6.499);}
 	else if(thePlot == 43 && numberQuarks[1] == 0                    ) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 44 && numberQuarks[1] == 0 && bDiscrMax < 0.80) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 45 && numberQuarks[1]  > 0                    ) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
