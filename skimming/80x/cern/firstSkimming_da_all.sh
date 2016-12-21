@@ -6,3 +6,5 @@
 ./MitAnalysisRunII/skimming/80x/cern/firstSkimming_batch.sh cms/store/group/phys_higgs/ceballos/setup80x_ichep/Data/Nero/v2.0/SingleMuon     cms/store/group/phys_higgs/ceballos/Nero/skim_80x/SingleMuon     data
 ./MitAnalysisRunII/skimming/80x/cern/firstSkimming_batch.sh cms/store/group/phys_higgs/ceballos/setup80x_ichep/Data/Nero/v2.0/SingleElectron cms/store/group/phys_higgs/ceballos/Nero/skim_80x/SingleElectron data
 ./MitAnalysisRunII/skimming/80x/cern/firstSkimming_batch.sh cms/store/group/phys_higgs/ceballos/setup80x_ichep/Data/Nero/v2.0/SinglePhoton   cms/store/group/phys_higgs/ceballos/Nero/skim_80x/SinglePhoton   data
+./MitAnalysisRunII/skimming/80x/cern/firstSkimming_batch.sh cms/store/group/phys_higgs/ceballos/Nero/v2.1/TTTo2L2Nu_13TeV-powheg             cms/store/group/phys_higgs/ceballos/Nero/skim_80x/TTTo2L2Nu_13TeV-powheg   dm
+./MitAnalysisRunII/skimming/80x/cern/firstSkimming_batch.sh cms/store/group/phys_higgs/ceballos/Nero/v2.1/TTToSemiLeptonic_13TeV-powheg      cms/store/group/phys_higgs/ceballos/Nero/skim_80x/TTToSemiLeptonic_13TeV-powheg   dm

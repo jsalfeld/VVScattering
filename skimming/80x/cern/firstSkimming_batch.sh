@@ -32,9 +32,16 @@ for datasetName in `cat ${theRND}.txt`; do
   mkdir -p ~/eos/${SKIMDIR}/${datasetName};
   mkdir -p ${workDir}/${SKIMDIR}/${datasetName};
   ls ~/eos/${INPUTDIR}/${datasetName}|grep root > ~/eos/${SKIMDIR}/${datasetName}.txt;
+  counter=0;
   for fileName in `cat ~/eos/${SKIMDIR}/${datasetName}.txt`; do
+    counter=$((counter+1));
     bsub -q 1nh -o ${workDir}/${SKIMDIR}/${datasetName}/${fileName}.out -J ${SKIMDIR}_${datasetName}_${fileName} $CMSSW_BASE/src/MitAnalysisRunII/skimming/80x/cern/skim_batch.sh ${INPUTDIR} ${SKIMDIR} ${datasetName} $fileName $TYPE
     #$CMSSW_BASE/src/MitAnalysisRunII/skimming/80x/cern/skim_batch.sh ${INPUTDIR} ${SKIMDIR} ${datasetName} $fileName $TYPE
+    if [[ "$counter" -gt 100 ]]; then
+       counter=0;
+       echo "WAITING FOR 300secs"
+       sleep 300;
+    fi
   done
   rm -f ${SKIMDIR}/${datasetName}.txt;
 done
