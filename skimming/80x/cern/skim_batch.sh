@@ -27,6 +27,8 @@ export thePWD=$PWD;
 
 cd ~/releases/CMSSW_8_0_24_patch1/src/;
 
+echo 'Working folder: '${thePWD}
+
 #if [[ -e ~/eos/cms/store ]] &&  [[ -e $CMSSW_BASE/src ]]; then
 if [[ -e $CMSSW_BASE/src ]]; then
    ###root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"root://eoscms.cern.ch//eos/${INPUTDIR}/${datasetName}/${fileName}\",\"${thePWD}/${SKIMDIR}/${datasetName}/${fileName}\",\"${TYPE}\",0,0,0\);
@@ -35,6 +37,7 @@ if [[ -e $CMSSW_BASE/src ]]; then
    eos rm /eos/${SKIMDIR}/${datasetName}/${fileName};
    xrdcp ${thePWD}/eos/${SKIMDIR}/${datasetName}/${fileName} root://eoscms.cern.ch//eos/${SKIMDIR}/${datasetName}/${fileName};
    rm -f ${thePWD}/eos/${SKIMDIR}/${datasetName}/${fileName};
+   rm -f core.*;
 else
    echo "INITIALIZATION FAILED";
 fi
