@@ -51,7 +51,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
 
   TString filesPathDA = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/met_";
   TString filesPathMC  = "root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/output_80x/met_";
-  Double_t lumi = 36.5;
+  Double_t lumi = 36.8;
 
   //*******************************************************
   //Input Files
@@ -79,8 +79,8 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
 
   //MC samples
   //signal: EWK + QCD
-  //infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
-  infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(1);
+  infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWpWpJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWmWmJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
 
@@ -88,13 +88,13 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
   //infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(-1);
 
   //QCD to be added to background
-  infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(2);
+  //infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(2);
 
   //WZ
-  //infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8.root",filesPathMC.Data()));		     infilecatv.push_back(3); 
-  //infilenamev.push_back(Form("%sWLLJJToLNu_M-60_EWK_13TeV-madgraph-pythia8.root",filesPathMC.Data()));		     infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sWLLJJToLNu_M-60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));      infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sWLLJJToLNu_M-4to60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));   infilecatv.push_back(3);
+  infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8.root",filesPathMC.Data()));                       infilecatv.push_back(3); 
+  infilenamev.push_back(Form("%sWLLJJ_WToLNu_EWK_TuneCUETP8M1_13TeV_madgraph-madspin-pythia8.root",filesPathMC.Data()));     infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWLLJJToLNu_M-60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));      infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWLLJJToLNu_M-4to60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));   infilecatv.push_back(3);
 
   //ZZ
   //infilenamev.push_back(Form("%sZZTo4L_13TeV_powheg_pythia8.root",filesPathMC.Data()));				     infilecatv.push_back(4);
@@ -104,7 +104,8 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
   //infilenamev.push_back(Form("%sGluGluToContinToZZTo4e_13TeV_MCFM701_pythia8.root",filesPathMC.Data()));		     infilecatv.push_back(4);
   //infilenamev.push_back(Form("%sGluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8.root",filesPathMC.Data()));  	             infilecatv.push_back(4);
   //infilenamev.push_back(Form("%sGluGluToContinToZZTo4tau_13TeV_MCFM701_pythia8.root",filesPathMC.Data())); 	             infilecatv.push_back(4);
-  infilenamev.push_back(Form("%sZZJJTo4L_13TeV-madgraph-pythia8.root",filesPathMC.Data()));			             infilecatv.push_back(4);
+  infilenamev.push_back(Form("%sZZJJTo4L_EWK_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                              infilecatv.push_back(4);
+  infilenamev.push_back(Form("%sZZJJTo4L_QCD_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                              infilecatv.push_back(4);
 
   //VVV
   infilenamev.push_back(Form("%sWWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root",filesPathMC.Data()));			      infilecatv.push_back(5);
@@ -116,7 +117,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
   infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(5);
   infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root",filesPathMC.Data()));			      infilecatv.push_back(5);
   infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8.root",filesPathMC.Data()));           infilecatv.push_back(5);
-  infilenamev.push_back(Form("%stZq_ll_4f_13TeV-amcatnlo-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));  	              infilecatv.push_back(5);
+  infilenamev.push_back(Form("%stZq_ll_4f_13TeV-amcatnlo-pythia8.root",filesPathMC.Data()));                                  infilecatv.push_back(5);
 
   //Wrong sign
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg.root",filesPathMC.Data()));                                            infilecatv.push_back(6);
@@ -141,7 +142,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
   infilenamev.push_back(Form("%sWGJJToLNu_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));             infilecatv.push_back(7);
 
   //DPS
-  infilenamev.push_back(Form("%sWW_DoubleScattering_13TeV-pythia8.root",filesPathMC.Data()));                                 infilecatv.push_back(8);
+  infilenamev.push_back(Form("%sWWTo2L2Nu_DoubleScattering_13TeV-pythia8.root",filesPathMC.Data()));                          infilecatv.push_back(8);
 
   //Non-prompt leptons
   //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));                infilecatv.push_back(9)

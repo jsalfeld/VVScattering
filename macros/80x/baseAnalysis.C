@@ -28,6 +28,7 @@ int mcPrescale = 1.0;
 const bool useDYMVA = false;
 const bool doTriggerStudy = true;
 const Int_t period = 1;
+const bool useDYPT = false;
 
 void baseAnalysis(
  Int_t nsel = 4,
@@ -41,7 +42,7 @@ void baseAnalysis(
   //TString filesPathMC  = "/afs/cern.ch/user/c/ceballos/eoslink2/cms/store/caf/user/ceballos/Nero/output_80x/";
   if(isMINIAOD) filesPathDA = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/";
   TString filesPathMC  = "root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/output_80x/";
-  Double_t lumi = 36.5;
+  Double_t lumi = 36.8;
 
   if(nsel == 2 || nsel == 5) usePureMC = true;
 
@@ -71,8 +72,17 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg.root",filesPathMC.Data()));					infilecatv.push_back(1);
   infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV.root",filesPathMC.Data()));  				infilecatv.push_back(1);
 
+  if(useDYPT==false){
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));      infilecatv.push_back(2);
+  }
+  else {
+  infilenamev.push_back(Form("%sDYJetsToLL_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));   infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));  infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDYJetsToLL_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));  infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));  infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));  infilecatv.push_back(2);
+  }
 
   infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg.root",filesPathMC.Data()));					   infilecatv.push_back(3);
 
@@ -104,21 +114,21 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root",filesPathMC.Data()));	   infilecatv.push_back(4);
   infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root",filesPathMC.Data()));			   infilecatv.push_back(4);
   infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8.root",filesPathMC.Data()));        infilecatv.push_back(4);
-  infilenamev.push_back(Form("%stZq_ll_4f_13TeV-amcatnlo-pythia8_TuneCUETP8M1.root",filesPathMC.Data())); 		   infilecatv.push_back(4);
+  infilenamev.push_back(Form("%stZq_ll_4f_13TeV-amcatnlo-pythia8.root",filesPathMC.Data())); 		                   infilecatv.push_back(4);
 
   //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));	   infilecatv.push_back(5);
 
-  infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));                infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(6);
   ////infilenamev.push_back(Form("%sWGstarToLNuMuMu_012Jets_13TeV-madgraph.root",filesPathMC.Data())); 		           infilecatv.push_back(6);
   ////infilenamev.push_back(Form("%sWGstarToLNuEE_012Jets_13TeV-madgraph.root",filesPathMC.Data())); 		           infilecatv.push_back(6);
   //infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));              infilecatv.push_back(6);
 
   infilenamev.push_back(Form("%sGluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8.root",filesPathMC.Data()));		      infilecatv.push_back(7);
-  infilenamev.push_back(Form("%sVBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8.root",filesPathMC.Data()));                  infilecatv.push_back(7);
+  infilenamev.push_back(Form("%sVBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8.root",filesPathMC.Data()));              infilecatv.push_back(7);
   infilenamev.push_back(Form("%sGluGluHToTauTau_M125_13TeV_powheg_pythia8.root",filesPathMC.Data()));			      infilecatv.push_back(7);
   infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8.root",filesPathMC.Data()));                            infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8.root",filesPathMC.Data())); 	      infilecatv.push_back(7);
-  //infilenamev.push_back(Form("%sttHJetToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_mWCutfix.root",filesPathMC.Data()));  infilecatv.push_back(7);
+  //infilenamev.push_back(Form("%sttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8.root",filesPathMC.Data()));   infilecatv.push_back(7);
   }
   else {assert(0);}
   
@@ -221,7 +231,8 @@ void baseAnalysis(
   TH1D* histo[allPlots][histBins];
 
   for(int thePlot=0; thePlot<allPlots; thePlot++){
-    if     (thePlot >=  0 && thePlot <=  5) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
+    if     (thePlot >=  0 && thePlot <=  4) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >=  5 && thePlot <=  5) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 400.0;}
     else if(thePlot ==  6 || thePlot == 11|| thePlot == 12) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
     else if(thePlot >=  7 && thePlot <=  7) {nBinPlot =  40; xminPlot = 0.0; xmaxPlot =  40.0;}
     else if(thePlot >=  8 && thePlot <=  8) {nBinPlot =  40; xminPlot =-0.5; xmaxPlot =  39.5;}
@@ -462,7 +473,10 @@ void baseAnalysis(
       if(passFilter[4] == kTRUE) nPassCuts[4]++;
       if(passFilter[4] == kFALSE) continue;
 
-      TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) )); 
+      TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) ));
+
+      if(useDYPT==true && dilep.Pt() <= 60.) continue;
+
       double minMassll = 999.0;
       double minMassZ = 999.0;
       double mass3l = 0.0;
@@ -968,8 +982,8 @@ void baseAnalysis(
 	else if(thePlot ==  1) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
 	else if(thePlot ==  2) {makePlot = true;theVar = TMath::Min((double)eventMet.trackMet->Pt(),199.999);}
 	else if(thePlot ==  3) {makePlot = true;theVar = TMath::Min(minPMET,199.999);}
-	else if(thePlot ==  4) {makePlot = true;theVar = TMath::Min(dilep.Pt(),199.999);}
-	else if(thePlot ==  5) {makePlot = true;theVar = TMath::Min(mtW,199.999);}
+	else if(thePlot ==  4) {makePlot = true;theVar = TMath::Min(mtW,199.999);}
+	else if(thePlot ==  5) {makePlot = true;theVar = TMath::Min(dilep.Pt(),399.999);}
 	else if(thePlot ==  6) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot ==  7) {makePlot = true;theVar = TMath::Min((double)eventEvent.rho,39.999);}
 	else if(thePlot ==  8) {makePlot = true;theVar = TMath::Min((double)eventVertex.npv,39.499);}

@@ -9,12 +9,19 @@ znng130        0.1903*1.4
 zllg130        0.1487*1.4
 wlng130        0.6637*1.4
 
+dyll_pt050To250 357.200
+dyll_pt100To250 81.2000
+dyll_pt250To400 3.06200
+dyll_pt400To650 0.39050
+dyll_pt650ToInf 0.03613
+
 wln            20508.9*3
 dynunu         3811.0
 zll50          2008.4*3
 zll20          3205.6*3
 zll1050        2008.4*3*3.78
 ww_dps         1.62000
+wwlnln_dps     0.1729
 ww             118.7
 wwlnln         (118.7-3.974)*0.1086*0.1086*9
 ggwwlnln       3.974*0.1086*0.1086*9*1.4
@@ -41,7 +48,7 @@ ggzz4mu        0.001586*2.3
 ggzz4tau       0.001586*2.3
 ggzz2mu2nu     0.001720*2.3
 ggzz2e2nu      0.001720*2.3
-wlg            514.0*1.14
+wlg            489.0
 zllg           123.9*1.06
 tt             831.76
 tt2l           831.76*0.1086*0.1086*9
@@ -121,8 +128,14 @@ wpwmjj_ewk_qcd_notop 2.66300
 wpwmjj_ewk_notop     0.34520
 wpwmjj_qcd_notop     2.42300
 
-zzjj              0.00974
+zzjj_ewk          0.0004404
+zzjj_qcd          0.0093350
 wlljj60_ewk_qcd   0.52950
 wlljj60_ewk       0.04634
 wlljj4_60_ewk_qcd 0.40860
 wlgjj             5.66200
+wlljj_ewk         0.01785
+wz3l_0j           0.56900
+wz3l_1j           0.35600
+wz3l_2j           0.06660
+wz3l_3j           0.09482
