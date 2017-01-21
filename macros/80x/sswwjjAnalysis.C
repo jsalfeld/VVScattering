@@ -22,8 +22,8 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
-double WSSF[5]  = {0.741273,1.201739,1.023171,0.990379,1.037401};
-double WSSFE[5] = {0.212239,0.127349,0.043695,0.022982,0.029306};
+double WSSF[5]  = {2.281622,1.399836,0.877298,1.008452,1.118066};
+double WSSFE[5] = {0.567263,0.144307,0.040056,0.023172,0.031010};
 double the_sf_ZLL = 0.70;
 
 void func_ws_sf(double eta, double pt, double theSF[2]);

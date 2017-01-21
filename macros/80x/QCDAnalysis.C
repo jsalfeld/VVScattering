@@ -57,8 +57,8 @@ void QCDAnalysis(
   if     (period==0){
   }
   else if(period==1){
-  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00054;prescale[2]=0.00160;prescale[3]=0.00216;prescale[4]=0.00239;}
-  else if(typeSel == 13) {prescale[0]=0.00036;prescale[1]=0.00541;prescale[2]=0.00701;prescale[3]=0.00713;prescale[4]=0.00704;}
+  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00051;prescale[2]=0.00154;prescale[3]=0.00210;prescale[4]=0.00232;}
+  else if(typeSel == 13) {prescale[0]=0.00035;prescale[1]=0.00497;prescale[2]=0.00676;prescale[3]=0.00686;prescale[4]=0.00680;}
 
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
 
