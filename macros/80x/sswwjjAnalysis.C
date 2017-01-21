@@ -1176,8 +1176,6 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
            histo_QCD_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_QCD_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
-           else if(infilenamev[ifile].Contains("powheg") == true)
-           for(int npdf=0; npdf<102; npdf++) histo_QCD_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+0]));
            else
            for(int npdf=0; npdf<102; npdf++) histo_QCD_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_QCD_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
@@ -1211,8 +1209,6 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
            histo_WZ_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_WZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
-           else if(infilenamev[ifile].Contains("powheg") == true)
-           for(int npdf=0; npdf<102; npdf++) histo_WZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+0]));
            else
            for(int npdf=0; npdf<102; npdf++) histo_WZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_WZ_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
@@ -1246,8 +1242,6 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
            histo_ZZ_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_ZZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
-           else if(infilenamev[ifile].Contains("powheg") == true)
-           for(int npdf=0; npdf<102; npdf++) histo_ZZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+0]));
            else
            for(int npdf=0; npdf<102; npdf++) histo_ZZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_ZZ_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
@@ -1281,8 +1275,6 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
            histo_VVV_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_VVV_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
-           else if(infilenamev[ifile].Contains("powheg") == true)
-           for(int npdf=0; npdf<102; npdf++) histo_VVV_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+0]));
            else
            for(int npdf=0; npdf<102; npdf++) histo_VVV_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_VVV_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
@@ -1351,8 +1343,6 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
            histo_WG_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_WG_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
-           else if(infilenamev[ifile].Contains("powheg") == true)
-           for(int npdf=0; npdf<102; npdf++) histo_WG_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+0]));
            else
            for(int npdf=0; npdf<102; npdf++) histo_WG_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
             if	  (typePair == 0) histo_WG_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
@@ -1386,8 +1376,6 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
            histo_DPS_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
            for(int npdf=0; npdf<102; npdf++) histo_DPS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
-           else if(infilenamev[ifile].Contains("powheg") == true)
-           for(int npdf=0; npdf<102; npdf++) histo_DPS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+0]));
            else
            for(int npdf=0; npdf<102; npdf++) histo_DPS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_DPS_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
