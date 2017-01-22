@@ -64,7 +64,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
   if(isMINIAOD) triggerSuffix = "";
   if      (period==1){
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
-
+/*
   //data samples
   if(isMINIAOD) {
     infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data())); infilecatv.push_back(0);
@@ -76,14 +76,14 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
     infilenamev.push_back(Form("%sdata_Run2016H.root",filesPathDA.Data())); infilecatv.push_back(0);
   } else {
   }
-
+*/
   //MC samples
   //signal: EWK + QCD
   infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWpWpJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWmWmJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
-
+/*
   //QCD to be subtracted from signal
   //infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(-1);
 
@@ -135,15 +135,15 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
 
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(6);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(6);
-
+*/
   //Wgamma
   //infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));		        infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));		        infilecatv.push_back(7);
   infilenamev.push_back(Form("%sWGJJToLNu_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));             infilecatv.push_back(7);
-
+/*
   //DPS
   infilenamev.push_back(Form("%sWWTo2L2Nu_DoubleScattering_13TeV-pythia8.root",filesPathMC.Data()));                          infilecatv.push_back(8);
-
+*/
   //Non-prompt leptons
   //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));                infilecatv.push_back(9)
   }
@@ -171,8 +171,8 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
 
   TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_13p0ifb.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
-  if(typeLepSel == "medium_mva") fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_MediumMVA_Electron"));
   TH2D *fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
+  if(typeLepSel == "medium_mva") fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_MediumMVA_Electron"));
   if(typeLepSel == "default_mva") fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_TightMVA_Electron"));
   assert(fhDElMediumSF);
   assert(fhDElTightSF);

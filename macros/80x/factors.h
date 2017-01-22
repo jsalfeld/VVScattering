@@ -31,18 +31,18 @@ double fake_rate_e_25_verytight[5][5] = {
 0.302,0.246,0.206,0.164,0.106
 };
 double fake_rate_e_25_medium_mva[5][5] = {
-0.684,0.587,0.552,0.519,0.453,
-0.517,0.465,0.430,0.408,0.369,
-0.307,0.291,0.290,0.275,0.291,
-0.329,0.321,0.354,0.372,0.378,
-0.351,0.319,0.317,0.322,0.318
+0.755,0.700,0.536,0.476,0.354,
+0.626,0.654,0.503,0.397,0.360,
+0.419,0.490,0.409,0.345,0.307,
+0.258,0.362,0.346,0.313,0.250,
+0.347,0.353,0.302,0.260,0.203
 };
 double fake_rate_e_25_tight_mva[5][5] = {
-0.519,0.451,0.425,0.380,0.321,
-0.386,0.332,0.306,0.296,0.245,
-0.173,0.177,0.172,0.162,0.164,
-0.204,0.216,0.235,0.240,0.223,
-0.224,0.193,0.183,0.183,0.177
+0.484,0.493,0.364,0.319,0.169,
+0.390,0.465,0.352,0.246,0.180,
+0.268,0.342,0.275,0.208,0.127,
+0.145,0.220,0.203,0.167,0.085,
+0.164,0.158,0.124,0.089,0.027
 };
 
 double jetEpsBtagB[5][5] = {
@@ -178,13 +178,14 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
   }
   else if(TMath::Abs(pdgId) == 11 && (type == "default_mva" || type == "medium_mva")) {
     idCut = (selBits & BareLeptons::LepFake) == BareLeptons::LepFake;
+    if(type == "default_mva") idCut = idCut && ((selBits & BareLeptons::EleTripleCharge) == BareLeptons::EleTripleCharge);
     double mvaCut = 3.0; 
-    if     (type == "medium_mva"  && TMath::Abs(eta) < 0.800) mvaCut = 0.972153;
-    else if(type == "medium_mva"  && TMath::Abs(eta) < 1.479) mvaCut = 0.922126;
-    else if(type == "medium_mva")                             mvaCut = 0.610764;
-    else if(type == "default_mva" && TMath::Abs(eta) < 0.800) mvaCut = 0.988153;
-    else if(type == "default_mva" && TMath::Abs(eta) < 1.479) mvaCut = 0.967910;
-    else if(type == "default_mva")                            mvaCut = 0.841729;
+    if     (type == "medium_mva"  && TMath::Abs(eta) < 0.800) mvaCut = 0.837;
+    else if(type == "medium_mva"  && TMath::Abs(eta) < 1.479) mvaCut = 0.715;
+    else if(type == "medium_mva")                             mvaCut = 0.357;
+    else if(type == "default_mva" && TMath::Abs(eta) < 0.800) mvaCut = 0.941;
+    else if(type == "default_mva" && TMath::Abs(eta) < 1.479) mvaCut = 0.899;
+    else if(type == "default_mva")                            mvaCut = 0.758;
     else printf("Problem with selectMVACut!\n");
 
     return (idCut && mva > mvaCut);

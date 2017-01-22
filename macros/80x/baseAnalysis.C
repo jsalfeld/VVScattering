@@ -192,6 +192,8 @@ void baseAnalysis(
   TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_13p0ifb.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
   TH2D *fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
+  if(typeLepSel == "medium_mva") fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_MediumMVA_Electron"));
+  if(typeLepSel == "default_mva") fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_TightMVA_Electron"));
   assert(fhDElMediumSF);
   assert(fhDElTightSF);
   fhDElMediumSF->SetDirectory(0);
@@ -226,7 +228,7 @@ void baseAnalysis(
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 67;
+  const int allPlots = 60;
   const int histBins = 8;
   TH1D* histo[allPlots][histBins];
 
@@ -259,6 +261,7 @@ void baseAnalysis(
     else if(thePlot >= 47 && thePlot <= 50) {nBinPlot = 500; xminPlot = 0.0; xmaxPlot = 100.0;}
     else if(thePlot >= 51 && thePlot <= 52) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot =   3.5;}
     else if(thePlot >= 53 && thePlot <= 53) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot =   4.0;}
+    else if(thePlot >= 54 && thePlot <= 59) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot =   1.0;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
@@ -1032,6 +1035,12 @@ void baseAnalysis(
 	else if(thePlot == 51) {makePlot = true;theVar = type3l;}
 	else if(thePlot == 52) {makePlot = true;theVar = type3lWGS;}
 	else if(thePlot == 53) {makePlot = true;theVar = TMath::Min(deltaRllMinWGS,3.999);}
+	else if(thePlot == 54 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) >= 0.0 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 0.8) {makePlot = true;theVar = TMath::Max(TMath::Min((double)(*eventLeptons.mva)[idLep[0]],0.999),0.001);}
+	else if(thePlot == 55 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) >= 0.8 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 1.5) {makePlot = true;theVar = TMath::Max(TMath::Min((double)(*eventLeptons.mva)[idLep[0]],0.999),0.001);}
+	else if(thePlot == 56 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) >= 1.5 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 2.5) {makePlot = true;theVar = TMath::Max(TMath::Min((double)(*eventLeptons.mva)[idLep[0]],0.999),0.001);}
+	else if(thePlot == 57 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) >= 0.0 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 0.8) {makePlot = true;theVar = TMath::Max(TMath::Min((double)(*eventLeptons.mva)[idLep[1]],0.999),0.001);}
+	else if(thePlot == 58 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) >= 0.8 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 1.5) {makePlot = true;theVar = TMath::Max(TMath::Min((double)(*eventLeptons.mva)[idLep[1]],0.999),0.001);}
+	else if(thePlot == 59 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) >= 1.5 && TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 2.5) {makePlot = true;theVar = TMath::Max(TMath::Min((double)(*eventLeptons.mva)[idLep[1]],0.999),0.001);}
 	if     (makePlot == true && thePlot != 12) histo[thePlot][theCategory]->Fill(theVar,totalWeight);
 	else if(makePlot == true)                  histo[thePlot][theCategory]->Fill(theVar,totalWeight*total_bjet_prob[1]/total_bjet_prob[0]);
       }
