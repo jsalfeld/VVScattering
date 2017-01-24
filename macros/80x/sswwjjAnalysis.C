@@ -64,7 +64,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
   if(isMINIAOD) triggerSuffix = "";
   if      (period==1){
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
-/*
+
   //data samples
   if(isMINIAOD) {
     infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data())); infilecatv.push_back(0);
@@ -76,14 +76,14 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
     infilenamev.push_back(Form("%sdata_Run2016H.root",filesPathDA.Data())); infilecatv.push_back(0);
   } else {
   }
-*/
+
   //MC samples
   //signal: EWK + QCD
   infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWpWpJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
   //infilenamev.push_back(Form("%sWmWmJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
-/*
+
   //QCD to be subtracted from signal
   //infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(-1);
 
@@ -135,15 +135,15 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
 
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(6);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(6);
-*/
+
   //Wgamma
   //infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));		        infilecatv.push_back(7);
   //infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));		        infilecatv.push_back(7);
   infilenamev.push_back(Form("%sWGJJToLNu_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));             infilecatv.push_back(7);
-/*
+
   //DPS
   infilenamev.push_back(Form("%sWWTo2L2Nu_DoubleScattering_13TeV-pythia8.root",filesPathMC.Data()));                          infilecatv.push_back(8);
-*/
+
   //Non-prompt leptons
   //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));                infilecatv.push_back(9)
   }
@@ -221,14 +221,14 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
   TH1D *histo_FakeM = (TH1D*) histoMVA->Clone("histo_FakeM");  
   TH1D *histo_FakeE = (TH1D*) histoMVA->Clone("histo_FakeE");  
 
-  double totalFakeDataCount[4][4];
-  for(int i=0; i<4; i++) for(int j=0; j<4; j++) totalFakeDataCount[i][j] = 0;
+  double totalFakeDataCount[6][5];
+  for(int i=0; i<6; i++) for(int j=0; j<5; j++) totalFakeDataCount[i][j] = 0;
   double xmin = 0.0;
   double xmax = 1.0;
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 29;
+  const int allPlots = 33;
   const int histBins = 11;
   TH1D* histo[7][allPlots][histBins];
   TString processName[histBins] = {".Data", "EWKWW", "QCDWW", "...WZ", "...ZZ", "..VVV", "...WS", "...WG", "..DPS", "FakeM", "FakeE"};
@@ -254,6 +254,8 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
       else if(thePlot >= 21 && thePlot <= 22) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 1.0;}
       else if(thePlot >= 23 && thePlot <= 24) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200;}
       else if(thePlot >= 25 && thePlot <= 25) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot = 6.5;}
+      else if(thePlot >= 26 && thePlot <= 27) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 2000;}
+      else if(thePlot >= 28 && thePlot <= 29) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
       TH1D* histos;
       if     (thePlot < allPlots-3) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
       else if(thePlot < allPlots-1) histos = new TH1D("histos", "histos", nBinWZMVA, xbinsWZ);
@@ -619,11 +621,13 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
       Bool_t passFilterCR3[numberCuts] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       Bool_t passPresel = kFALSE;
       Bool_t passSignalRegion = kFALSE;
-      Bool_t passControlRegionTop  = kFALSE;
-      Bool_t passControlRegionWZ   = kFALSE;
-      Bool_t passControlRegionDi   = kFALSE;
-      Bool_t passControlRegionSS2j = kFALSE;
-      Bool_t passControlRegionZLL  = kFALSE;
+      Bool_t passControlRegionTop      = kFALSE;
+      Bool_t passControlRegionWZ       = kFALSE;
+      Bool_t passControlRegionDi       = kFALSE;
+      Bool_t passControlRegionSS2j     = kFALSE;
+      Bool_t passControlRegionZLL      = kFALSE;
+      Bool_t passLooseControlRegionTop = kFALSE;
+      Bool_t passLooseControlRegionWZ  = kFALSE;
 
       if(infilecatv[ifile] == 0) {
         for (int nt = 0; nt <(int)numtokens; nt++) {
@@ -884,13 +888,15 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
         passFilterCR3[11] = TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.75;
       }
 
-      //                      #lep, sign, flavor  lep pT cut          #jets with pT>30    btag-veto           tau veto            mll cut             loose Z veto        Z veto              met cut             mjj cut             deltaetajj cut       zeppenfeld cut
-      passSignalRegion      = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] && passFilterSig[9] && passFilterSig[10] && passFilterSig[11];
-      passControlRegionTop  = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2] && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8] && passFilterCR1[9] && passFilterCR1[10] && passFilterCR1[11];
-      passControlRegionWZ   = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8] && passFilterCR2[9] && passFilterCR2[10] && passFilterCR2[11];
-      passControlRegionDi   = passFilterCR3[0] && passFilterCR3[1] && passFilterCR3[2] && passFilterCR3[3] && passFilterCR3[4] && passFilterCR3[5] && passFilterCR3[6] && passFilterCR3[7] && passFilterCR3[8] && passFilterCR3[9] && passFilterCR3[10] && passFilterCR3[11];
-      passControlRegionSS2j = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8] && passFilterCR3[9];
-      passControlRegionZLL  = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] &&                     passFilterSig[6] &&!passFilterSig[7] && passFilterSig[8] && passFilterCR3[9];
+      //                           #lep, sign, flavor  lep pT cut          #jets with pT>30    btag-veto           tau veto            mll cut             loose Z veto        Z veto              met cut             mjj cut             deltaetajj cut       zeppenfeld cut
+      passSignalRegion           = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] && passFilterSig[9] && passFilterSig[10] && passFilterSig[11];
+      passControlRegionTop       = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2] && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8] && passFilterCR1[9] && passFilterCR1[10] && passFilterCR1[11];
+      passControlRegionWZ        = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8] && passFilterCR2[9] && passFilterCR2[10] && passFilterCR2[11];
+      passControlRegionDi        = passFilterCR3[0] && passFilterCR3[1] && passFilterCR3[2] && passFilterCR3[3] && passFilterCR3[4] && passFilterCR3[5] && passFilterCR3[6] && passFilterCR3[7] && passFilterCR3[8] && passFilterCR3[9] && passFilterCR3[10] && passFilterCR3[11];
+      passControlRegionSS2j      = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8] && passFilterCR3[9];
+      passControlRegionZLL       = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] &&                     passFilterSig[6] &&!passFilterSig[7] && passFilterSig[8] && passFilterCR3[9];
+      passLooseControlRegionTop  = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2] && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8]                     && passFilterCR1[10];
+      passLooseControlRegionWZ   = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8]                     && passFilterCR2[10];
 
       bool passNMinusOne[8] = {
         passFilterSig[0] && passFilterSig[1] && passFilterSig[2] &&                     passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] && passFilterSig[9] && passFilterSig[10] && passFilterSig[11], // btag veto
@@ -1013,6 +1019,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
       }
 
       int theCategory = infilecatv[ifile];
+      int nFakeCount = 0;
 
       // wrong sign
       if((theCategory == 3 || theCategory == 4 || theCategory == 5) && goodIsGenWSLep > 0) theCategory  = 6;
@@ -1026,8 +1033,8 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
               if(idTight[nl] == 1) continue;
               fakeSF = fakeSF * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data());
               theCategory = 9;
-	      if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 13) typeFakeLepton[0]++;
-	      else                                                        typeFakeLepton[1]++;
+	      if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 13) {typeFakeLepton[0]++; nFakeCount = nFakeCount + 1;}
+	      else                                                        {typeFakeLepton[1]++; nFakeCount = nFakeCount + 2;}
             }
             if     (infilecatv[ifile] != 0 && goodIsTight == idTight.size()-2) fakeSF =  1.0 * fakeSF; // double fake, MC
             else if(infilecatv[ifile] != 0 && goodIsTight == idTight.size()-1) fakeSF = -1.0 * fakeSF; // single fake, MC
@@ -1075,6 +1082,8 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
       if(totalWeight == 0) continue;
       // end event weighting
 
+      if(passSignalRegion && infilecatv[ifile] == 0) totalFakeDataCount[typeSel][nFakeCount] = totalFakeDataCount[typeSel][nFakeCount] + 1;
+
       for(int nl=0; nl <=sumEvol[typeSel]; nl++) if(fakeSF == 1) {hDWWLL[typeSel]->Fill((double)nl,totalWeight);hDWWLL[6]->Fill((double)nl,totalWeight);}
 
       for(unsigned int i=0; i<nSelTypes; i++) {
@@ -1087,34 +1096,40 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
       for(int thePlot=0; thePlot<allPlots; thePlot++){
         double theVar = 0.0;
         bool makePlot = false;
-        if     (thePlot ==  0 && passNMinusOne[5])     {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
-        else if(thePlot ==  1 && passNMinusOne[6])     {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
-        else if(thePlot ==  2 && passSignalRegion)     {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-        else if(thePlot ==  3 && passNMinusOne[4])     {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),399.999);}
-        else if(thePlot ==  4 && passNMinusOne[2])     {makePlot = true;theVar = TMath::Min(dilep.M(),399.999);}
-        else if(thePlot ==  5 && passSignalRegion)     {makePlot = true;theVar = TMath::Min((double)eventVertex.npv,39.499);}
-	else if(thePlot ==  6 && passNMinusOne[1])     {makePlot = true;theVar = TMath::Min((double)numberGoodTaus,3.499);}
-	else if(thePlot ==  7 && passNMinusOne[3])     {makePlot = true;theVar = TMath::Min(TMath::Abs(minMassLooseZ-91.1876),39.999);}
-	else if(thePlot ==  8 && passSignalRegion)     {makePlot = true;theVar = (double)(numberGoodGenLep[1]+10*numberGoodGenLep[0]);}
-	else if(thePlot ==  9 && passNMinusOne[0])     {makePlot = true;theVar = TMath::Min(TMath::Max(bDiscrMax,0.001),0.999);}
-	else if(thePlot == 10 && passNMinusOne[0])     {makePlot = true;theVar = TMath::Min((double)idSoft.size(),3.499);}
-        else if(thePlot == 11 && passControlRegionTop) {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
-        else if(thePlot == 12 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
-        else if(thePlot == 13 && passControlRegionTop) {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
-        else if(thePlot == 14 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
-        else if(thePlot == 15 && passControlRegionSS2j){makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
-        else if(thePlot == 16 && passControlRegionSS2j){makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta();}
-        else if(thePlot == 17 && passControlRegionSS2j){makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta();}
-        else if(thePlot == 18 && passControlRegionSS2j){makePlot = true;theVar = TMath::Min(dilep.M(),399.999);}
-        else if(thePlot == 19 && passControlRegionSS2j){makePlot = true;theVar = TMath::Max(theLeptonZ[0],theLeptonZ[1]);}
-	else if(thePlot == 20 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(TMath::Abs(minMassZ-91.1876),19.999);}
-        else if(thePlot == 21 && passNMinusOne[7])     {makePlot = true;theVar = TMath::Min(theLeptonZ[0],theLeptonZ[1]);}
-        else if(thePlot == 22 && passNMinusOne[7])     {makePlot = true;theVar = TMath::Max(theLeptonZ[0],theLeptonZ[1]);}
-        else if(thePlot == 23 && passSignalRegion)     {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
-        else if(thePlot == 24 && passSignalRegion)     {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
-        else if(thePlot == 25 && passControlRegionZLL) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-        else if(thePlot == 26 && passControlRegionTop) {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
-        else if(thePlot == 27 && passControlRegionWZ)  {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        if     (thePlot ==  0 && passNMinusOne[5])          {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot ==  1 && passNMinusOne[6])          {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
+        else if(thePlot ==  2 && passSignalRegion)          {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+        else if(thePlot ==  3 && passNMinusOne[4])          {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),399.999);}
+        else if(thePlot ==  4 && passNMinusOne[2])          {makePlot = true;theVar = TMath::Min(dilep.M(),399.999);}
+        else if(thePlot ==  5 && passSignalRegion)          {makePlot = true;theVar = TMath::Min((double)eventVertex.npv,39.499);}
+	else if(thePlot ==  6 && passNMinusOne[1])          {makePlot = true;theVar = TMath::Min((double)numberGoodTaus,3.499);}
+	else if(thePlot ==  7 && passNMinusOne[3])          {makePlot = true;theVar = TMath::Min(TMath::Abs(minMassLooseZ-91.1876),39.999);}
+	else if(thePlot ==  8 && passSignalRegion)          {makePlot = true;theVar = (double)(numberGoodGenLep[1]+10*numberGoodGenLep[0]);}
+	else if(thePlot ==  9 && passNMinusOne[0])          {makePlot = true;theVar = TMath::Min(TMath::Max(bDiscrMax,0.001),0.999);}
+	else if(thePlot == 10 && passNMinusOne[0])          {makePlot = true;theVar = TMath::Min((double)idSoft.size(),3.499);}
+        else if(thePlot == 11 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 12 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 13 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
+        else if(thePlot == 14 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
+        else if(thePlot == 15 && passControlRegionSS2j)     {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
+        else if(thePlot == 16 && passControlRegionSS2j)     {makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta();}
+        else if(thePlot == 17 && passControlRegionSS2j)     {makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta();}
+        else if(thePlot == 18 && passControlRegionSS2j)     {makePlot = true;theVar = TMath::Min(dilep.M(),399.999);}
+        else if(thePlot == 19 && passControlRegionSS2j)     {makePlot = true;theVar = TMath::Max(theLeptonZ[0],theLeptonZ[1]);}
+	else if(thePlot == 20 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(TMath::Abs(minMassZ-91.1876),19.999);}
+        else if(thePlot == 21 && passNMinusOne[7])          {makePlot = true;theVar = TMath::Min(theLeptonZ[0],theLeptonZ[1]);}
+        else if(thePlot == 22 && passNMinusOne[7])          {makePlot = true;theVar = TMath::Max(theLeptonZ[0],theLeptonZ[1]);}
+        else if(thePlot == 23 && passSignalRegion)          {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
+        else if(thePlot == 24 && passSignalRegion)          {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
+        else if(thePlot == 25 && passControlRegionZLL)      {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+        else if(thePlot == 26 && passLooseControlRegionTop) {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 27 && passLooseControlRegionWZ)  {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 28 && passLooseControlRegionTop) {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
+        else if(thePlot == 29 && passLooseControlRegionWZ)  {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
+
+        else if(thePlot == 30 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 31 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+
         if(makePlot) histo[typeSel][thePlot][theCategory]->Fill(theVar,totalWeight);
         if(makePlot) histo[6][thePlot][theCategory]->Fill(theVar,totalWeight);
       }
@@ -1417,6 +1432,13 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
     }
     the_input_file->Close();
   } // end of chain
+
+  printf("----------------------totalFakeDataCount--------------------------------\n");
+  for(int ni=0; ni<6; ni++) {
+    printf("(%d): ",ni);
+    for(int nj=0; nj<5; nj++) printf("%6.1f ",totalFakeDataCount[ni][nj]);
+    printf("\n");
+  }
 
   // WZ scale factor from data
   double sfE_WZ[nBinWZMVA] = {1.0,1.0,1.0,1.0};

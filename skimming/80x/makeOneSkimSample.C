@@ -128,6 +128,7 @@ void makeOneSkimSample(
 
   TFile *outputFile = new TFile(outputFileName.Data(), "RECREATE");
   outputFile->cd();
+  outputFile->SaveSelf(kTRUE);
   TTree *normalizedTree0   = the_input_all ->CloneTree(0);
   TTree *normalizedTree1   = the_input_tree->CloneTree(0);
   TTree *theClone_PDF_tree;

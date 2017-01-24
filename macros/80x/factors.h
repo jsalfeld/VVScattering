@@ -31,11 +31,11 @@ double fake_rate_e_25_verytight[5][5] = {
 0.302,0.246,0.206,0.164,0.106
 };
 double fake_rate_e_25_medium_mva[5][5] = {
-0.755,0.700,0.536,0.476,0.354,
-0.626,0.654,0.503,0.397,0.360,
-0.419,0.490,0.409,0.345,0.307,
-0.258,0.362,0.346,0.313,0.250,
-0.347,0.353,0.302,0.260,0.203
+0.749,0.690,0.524,0.469,0.317,
+0.611,0.644,0.492,0.384,0.331,
+0.408,0.477,0.394,0.322,0.263,
+0.239,0.329,0.301,0.267,0.183,
+0.269,0.249,0.196,0.158,0.079
 };
 double fake_rate_e_25_tight_mva[5][5] = {
 0.484,0.493,0.364,0.319,0.169,
@@ -178,7 +178,7 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
   }
   else if(TMath::Abs(pdgId) == 11 && (type == "default_mva" || type == "medium_mva")) {
     idCut = (selBits & BareLeptons::LepFake) == BareLeptons::LepFake;
-    if(type == "default_mva") idCut = idCut && ((selBits & BareLeptons::EleTripleCharge) == BareLeptons::EleTripleCharge);
+    idCut = idCut && ((selBits & BareLeptons::EleTripleCharge) == BareLeptons::EleTripleCharge);
     double mvaCut = 3.0; 
     if     (type == "medium_mva"  && TMath::Abs(eta) < 0.800) mvaCut = 0.837;
     else if(type == "medium_mva"  && TMath::Abs(eta) < 1.479) mvaCut = 0.715;

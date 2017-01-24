@@ -236,8 +236,8 @@ void wwAnalysis(
   TH1D *histo_WjetsE = (TH1D*) histoMVA->Clone("histo_WjetsE");	 
   TH1D *histo_Higgs  = (TH1D*) histoMVA->Clone("histo_Higgs");	 
 
-  double totalFakeDataCount[4][4];
-  for(int i=0; i<4; i++) for(int j=0; j<4; j++) totalFakeDataCount[i][j] = 0;
+  double totalFakeDataCount[4][5];
+  for(int i=0; i<4; i++) for(int j=0; j<5; j++) totalFakeDataCount[i][j] = 0;
   double xmin = 0.0;
   double xmax = 1.0;
   int nBinPlot      = 200;
@@ -1238,7 +1238,7 @@ void wwAnalysis(
   printf("----------------------totalFakeDataCount--------------------------------\n");
   for(int ni=0; ni<4; ni++) {
     printf("(%d): ",ni);
-    for(int nj=0; nj<4; nj++) printf("%6.1f ",totalFakeDataCount[ni][nj]);
+    for(int nj=0; nj<5; nj++) printf("%6.1f ",totalFakeDataCount[ni][nj]);
     printf("\n");
   }
   printf("                    em                     ee/mm                     ll\n");
