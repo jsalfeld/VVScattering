@@ -46,7 +46,7 @@ const bool usePUPPI = false;
 const bool useWZFromData = true;
 const bool useWSFromData = true;
 
-void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
+void sswwjjAnalysis(bool useTopRegion = false, TString typeLepSel = "verytight", bool isBlinded = false
  ){
 
   TString filesPathDA = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/met_";
@@ -79,16 +79,16 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
 
   //MC samples
   //signal: EWK + QCD
-  infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
-  //infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(1);
-  //infilenamev.push_back(Form("%sWpWpJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
-  //infilenamev.push_back(Form("%sWmWmJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
+  infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWpWpJJ_13TeV-powheg-pythia8.root",filesPathMC.Data()));			             infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWmWmJJ_13TeV-powheg-pythia8.root",filesPathMC.Data()));			             infilecatv.push_back(1);
 
   //QCD to be subtracted from signal
   //infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(-1);
 
   //QCD to be added to background
-  //infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(2);
 
   //WZ
   infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8.root",filesPathMC.Data()));                       infilecatv.push_back(3); 
@@ -276,6 +276,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
   sprintf(effEName,"CMS_eff2016_e");sprintf(momEName,"CMS_scale2016_e");
   sprintf(metName,"CMS_scale_met");sprintf(jesName,"CMS_scale_j");sprintf(puName,"CMS_pu");sprintf(btagName,"CMS_eff_b_b2016");sprintf(mistagName,"CMS_eff_b_mistag2016");
   sprintf(finalStateName,"wwss");
+  if(useTopRegion) sprintf(finalStateName,"top");
 
   TH1D* histo_EWK_CMS_MVAEWKStatBoundingUp       = new TH1D( Form("histo_EWK_CMS_wwss%s_MVAEWKStatBounding_%sUp"  ,finalStateName,ECMsb.Data()), Form("histo_EWK_CMS_wwss%s_MVAEWKStatBounding_%sUp"  ,finalStateName,ECMsb.Data()), nBinMVA, xbins); histo_EWK_CMS_MVAEWKStatBoundingUp  ->Sumw2();
   TH1D* histo_EWK_CMS_MVAEWKStatBoundingDown     = new TH1D( Form("histo_EWK_CMS_wwss%s_MVAEWKStatBounding_%sDown",finalStateName,ECMsb.Data()), Form("histo_EWK_CMS_wwss%s_MVAEWKStatBounding_%sDown",finalStateName,ECMsb.Data()), nBinMVA, xbins); histo_EWK_CMS_MVAEWKStatBoundingDown->Sumw2();
@@ -935,6 +936,14 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
           passFilterSig[0] && passFilterSig[1] && passFilterSig[2]      && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesDown])->Pt() > 40 && passFilterSig[9]    && passFilterSig[10]    && passFilterSig[11]
       };
 
+      if(useTopRegion == true){
+        passSystCuts[JESUP]   = passFilterCR1[0] && passFilterCR1[1] && idJetUp.size() >= 2   && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8]							 && dijetUp.M() > 500   && deltaEtaJJUp > 2.5   && passFilterCR1[11];
+        passSystCuts[JESDOWN] = passFilterCR1[0] && passFilterCR1[1] && idJetDown.size() >= 2 && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8]							 && dijetDown.M() > 500 && deltaEtaJJDown > 2.5 && passFilterCR1[11];
+        passSystCuts[METUP]   = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2]      && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesUp])->Pt()   > 40 && passFilterCR1[9]    && passFilterCR1[10]    && passFilterCR1[11];
+        passSystCuts[METDOWN] = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2]      && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesDown])->Pt() > 40 && passFilterCR1[9]    && passFilterCR1[10]    && passFilterCR1[11];
+      }
+
+
       // begin event weighting
       vector<bool> isGenDupl;
       vector<int>wBoson;
@@ -1143,12 +1152,12 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
         		    TMath::Abs((double)eventMonteCarlo.r2f2)+TMath::Abs((double)eventMonteCarlo.r5f1)+TMath::Abs((double)eventMonteCarlo.r5f5))/6.0;
 
       if     (theCategory == 0){
-        if(passAllCuts[SIGSEL]) {
+        if((passAllCuts[SIGSEL] && useTopRegion == false) || (passAllCuts[TOPSEL] && useTopRegion == true)) {
            histo_Data->Fill(MVAVar,totalWeight);
         }
       }
       else if(theCategory == 1){
-        if(passAllCuts[SIGSEL]) {
+        if((passAllCuts[SIGSEL] && useTopRegion == false) || (passAllCuts[TOPSEL] && useTopRegion == true)) {
            histo_EWK->Fill(MVAVar,totalWeight);
            histo_EWK_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
            histo_EWK_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
@@ -1181,7 +1190,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
         if(passSystCuts[METDOWN])histo_EWK_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
       }
       else if(theCategory == 2){
-        if(passAllCuts[SIGSEL]) {
+        if((passAllCuts[SIGSEL] && useTopRegion == false) || (passAllCuts[TOPSEL] && useTopRegion == true)) {
            histo_QCD->Fill(MVAVar,totalWeight);
            histo_QCD_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
            histo_QCD_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
@@ -1214,7 +1223,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
         if(passSystCuts[METDOWN])histo_QCD_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
       }
       else if(theCategory == 3){
-        if(passAllCuts[SIGSEL]) {
+        if((passAllCuts[SIGSEL] && useTopRegion == false) || (passAllCuts[TOPSEL] && useTopRegion == true)) {
            histo_WZ->Fill(MVAVar,totalWeight);
            histo_WZ_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
            histo_WZ_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
@@ -1247,7 +1256,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
         if(passSystCuts[METDOWN])histo_WZ_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
       }
       else if(theCategory == 4){
-        if(passAllCuts[SIGSEL]) {
+        if((passAllCuts[SIGSEL] && useTopRegion == false) || (passAllCuts[TOPSEL] && useTopRegion == true)) {
            histo_ZZ->Fill(MVAVar,totalWeight);
            histo_ZZ_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
            histo_ZZ_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
@@ -1280,7 +1289,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
         if(passSystCuts[METDOWN])histo_ZZ_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
       }
       else if(theCategory == 5){
-        if(passAllCuts[SIGSEL]) {
+        if((passAllCuts[SIGSEL] && useTopRegion == false) || (passAllCuts[TOPSEL] && useTopRegion == true)) {
            histo_VVV->Fill(MVAVar,totalWeight);
            histo_VVV_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
            histo_VVV_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
@@ -1313,7 +1322,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
         if(passSystCuts[METDOWN])histo_VVV_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
       }
       else if(theCategory == 6){
-        if(passAllCuts[SIGSEL]) {
+        if((passAllCuts[SIGSEL] && useTopRegion == false) || (passAllCuts[TOPSEL] && useTopRegion == true)) {
            histo_WS             ->Fill(MVAVar,totalWeight);
            histo_WS_CMS_WSSFUp  ->Fill(MVAVar,totalWeight*total_WS_SF[1]);
            histo_WS_CMS_WSSFDown->Fill(MVAVar,totalWeight/total_WS_SF[1]);
@@ -1348,7 +1357,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
         if(passSystCuts[METDOWN])histo_WS_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
       }
       else if(theCategory == 7){
-        if(passAllCuts[SIGSEL]) {
+        if((passAllCuts[SIGSEL] && useTopRegion == false) || (passAllCuts[TOPSEL] && useTopRegion == true)) {
            histo_WG->Fill(MVAVar,totalWeight);
            histo_WG_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
            histo_WG_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
@@ -1381,7 +1390,7 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
         if(passSystCuts[METDOWN])histo_WG_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
       }
       else if(theCategory == 8){
-        if(passAllCuts[SIGSEL]) {
+        if((passAllCuts[SIGSEL] && useTopRegion == false) || (passAllCuts[TOPSEL] && useTopRegion == true)) {
            histo_DPS->Fill(MVAVar,totalWeight);
            histo_DPS_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
            histo_DPS_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
@@ -1414,12 +1423,12 @@ void sswwjjAnalysis(TString typeLepSel = "verytight", bool isBlinded = false
         if(passSystCuts[METDOWN])histo_DPS_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
       }
       else if(theCategory == 9){
-        if(passAllCuts[SIGSEL]) {
+        if((passAllCuts[SIGSEL] && useTopRegion == false) || (passAllCuts[TOPSEL] && useTopRegion == true)) {
            histo_FakeM->Fill(MVAVar,totalWeight);
         }
       }
       else if(theCategory == 10){
-        if(passAllCuts[SIGSEL]) {
+        if((passAllCuts[SIGSEL] && useTopRegion == false) || (passAllCuts[TOPSEL] && useTopRegion == true)) {
            histo_FakeE->Fill(MVAVar,totalWeight);
         }
       }

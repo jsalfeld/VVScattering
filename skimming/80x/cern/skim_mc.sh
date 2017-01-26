@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export INPUTDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/caf/user/ceballos/Nero/merging_80x;
-export OUTPUTDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/caf/user/ceballos/Nero/output_80x;
+export OUTPUTDIR=/afs/cern.ch/user/c/ceballos/Condor_proc/test;
 
 #ls $INPUTDIR|grep MINIAODSIM|awk '{printf(" root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\\(\\\"$INPUTDIR/%s\\\",\\\"$OUTPUTDIR/${PREFIX}%s\\\",\\\"data\\\",$1\\)\n",$1,$1)}'
 
@@ -87,8 +87,8 @@ root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/Wm
 ###root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WLLJJToLNu_M-4to60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WLLJJToLNu_M-4to60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root\",\"wlljj4_60_ewk_qcd\",$1\)
 ###root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WLLJJToLNu_M-60_EWK_13TeV-madgraph-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WLLJJToLNu_M-60_EWK_13TeV-madgraph-pythia8.root\",\"wlljj60_ewk\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root\",\"wpwp_ewk_qcd\",$1\)
-###root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root\",\"wpwp_ewk\",$1\)
-###root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root\",\"wpwp_qcd\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root\",\"wpwp_ewk\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root\",\"wpwp_qcd\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WGJJToLNu_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WGJJToLNu_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root\",\"wlgjj\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WWJJToLNuLNu_EWK_QCD_noTop_13TeV-madgraph-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WWJJToLNuLNu_EWK_QCD_noTop_13TeV-madgraph-pythia8.root\",\"wpwmjj_ewk_qcd_notop\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WWJJToLNuLNu_EWK_noTop_13TeV-madgraph-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WWJJToLNuLNu_EWK_noTop_13TeV-madgraph-pythia8.root\",\"wpwmjj_ewk_notop\",$1\)

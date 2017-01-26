@@ -67,6 +67,23 @@ double jetEpsBtagL[5][5] = {
 0.0048,0.0110,0.0131,0.0131,0.0155
 };
 
+double weightEWKWZCorr(float mass){
+  double value = 1.0;
+  if     (mass<100) value = 1.006;
+  else if(mass<160) value = 1.006;
+  else if(mass<180) value = 0.998;
+  else if(mass<200) value = 0.993;
+  else if(mass<220) value = 0.993;
+  else if(mass<250) value = 0.993;
+  else if(mass<300) value = 0.992;
+  else if(mass<350) value = 0.990;
+  else if(mass<430) value = 0.988;
+  else if(mass<500) value = 0.984;
+  else if(mass<600) value = 0.980;
+  else              value = 0.975;
+  return value;
+}
+
 double weightEWKCorr(float pt, int type){
   double parWZ08[2] = { 2.85714,-0.05714};
   double parZZ08[2] = {-4.57143,-0.06857};
