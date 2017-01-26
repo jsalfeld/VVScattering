@@ -273,9 +273,13 @@ TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF, 
   }
   else if(TMath::Abs(nsel) == 11){
     Int_t binXT = fhDElTrkSF->GetXaxis()->FindFixBin(eta);
-    Int_t binYT = fhDElTrkSF->GetYaxis()->FindFixBin(npv);
+    Int_t binYT = fhDElTrkSF->GetYaxis()->FindFixBin(200.0);
     if(applyTrkSF) trkSF = fhDElTrkSF->GetBinContent(binXT,binYT);
     if(trkSF <= 0) printf("trkSF <= 0! %f %d %d - %f %f %d\n",trkSF,binXT,binYT,pt,eta,npv);
+    //Int_t binXT = fhDElTrkSF->GetXaxis()->FindFixBin(eta);
+    //Int_t binYT = fhDElTrkSF->GetYaxis()->FindFixBin(npv);
+    //if(applyTrkSF) trkSF = fhDElTrkSF->GetBinContent(binXT,binYT);
+    //if(trkSF <= 0) printf("trkSF <= 0! %f %d %d - %f %f %d\n",trkSF,binXT,binYT,pt,eta,npv);
   }
   if(trkSF <= 0) trkSF = 1.0;
 
