@@ -6,4 +6,4 @@ for datasetName in `cat list_of_datasets.txt`; do
    grep ${datasetName} list_of_datasets.txt|awk '{split($1,a,"/");printf("grep %s log_xs\n",a[2]);}' > kkkxs_1;
    chmod a+x kkkxs_1; ./kkkxs_1| awk '{print$2,$3,$1}'|awk -f compute_average.awk;
 done
-rm -f kkkxs_1;
+rm -f kkkxs_1 log_xs;
