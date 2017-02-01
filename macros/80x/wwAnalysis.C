@@ -934,7 +934,7 @@ void wwAnalysis(
       if(infilecatv[ifile] == 3) totalWeight = totalWeight * topNorm[TMath::Min((int)nJetsType,2)];
 
       // z pt correction
-      if(infilecatv[ifile] == 4 && zBoson.size() == 1) totalWeight = totalWeight * zpt_correction(((TLorentzVector*)(*eventMonteCarlo.p4)[zBoson[0]])->Pt(), 0);
+      //if(infilecatv[ifile] == 4 && zBoson.size() == 1) totalWeight = totalWeight * zpt_correction(((TLorentzVector*)(*eventMonteCarlo.p4)[zBoson[0]])->Pt(), 0);
 
       // wg* veto applied in wg events
       if(infilecatv[ifile] == 7 && applyGStarVeto == true && genLep >= 3) totalWeight = 0;
