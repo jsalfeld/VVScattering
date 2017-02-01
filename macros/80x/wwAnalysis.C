@@ -24,8 +24,8 @@
 
 #include "WWAnalysis/resummation/WWpTreweight.h"
 
-enum selType                     { SIGSEL, nSelTypes};
-TString selTypeName[nSelTypes]= { "SIGSEL"};
+enum selType                     { SIGSEL,   SSSEL,   TOPSEL,   DYSEL, nSelTypes};
+TString selTypeName[nSelTypes]= { "SIGSEL", "SSSEL", "TOPSEL", "DYSEL"};
 
 enum systType                     {JESUP=0, JESDOWN,  METUP,  METDOWN, nSystTypes};
 TString systTypeName[nSystTypes]= {"JESUP","JESDOWN","METUP","METDOWN"};
@@ -242,7 +242,7 @@ void wwAnalysis(
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 10;
+  const int allPlots = 20;
   const int histBins = 12;
   TH1D* histo[allPlots][histBins];
   TString processName[histBins] = {".Data", ".qqWW", ".ggWW", "..Top", "...DY", "...VV", "..VVV", "...WG", "..WGS", "WjetsM", "WjetsE", "Higgs"};
@@ -251,7 +251,19 @@ void wwAnalysis(
     if     (thePlot >=  0 && thePlot <=  2) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >=  3 && thePlot <=  3) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
     else if(thePlot >=  4 && thePlot <=  4) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
-    else if(thePlot >=  5 && thePlot <=  5) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot =   3.5;}
+
+    else if(thePlot >=  5 && thePlot <=  7) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >=  8 && thePlot <=  8) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
+    else if(thePlot >=  9 && thePlot <=  9) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
+
+    else if(thePlot >= 10 && thePlot <= 12) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 13 && thePlot <= 13) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
+    else if(thePlot >= 14 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
+
+    else if(thePlot >= 15 && thePlot <= 17) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 18 && thePlot <= 18) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
+    else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
+
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
@@ -705,6 +717,7 @@ void wwAnalysis(
       }
       if(dPhiLepMETMin < TMath::Pi()/2) {minPMET[0] = minPMET[0] * sin(dPhiLepMETMin);minPMET[1] = minPMET[1] * sin(dPhiLepMETMin);minPMET[2] = minPMET[2] * sin(dPhiLepMETMin);}
 
+      bool goodSameSign = passFilter[0] && signQ != 0;
       passFilter[0] = passFilter[0] * (signQ == 0);
 
       TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) )); 
@@ -764,7 +777,12 @@ void wwAnalysis(
         totalSel = totalSel && passFilter[isel];
 	if(totalSel == kTRUE) sumEvol[typeSel]++;
       }
-      bool passAllCuts[1] = {totalSel};
+
+      bool passSameSignRegion = goodSameSign  && passFilter[1] && passFilter[2] && passFilter[3] && passFilter[4] && passFilter[5] &&  passFilter[6] &&   passFilter[7] &&  passFilter[8]  && passFilter[9];
+      bool passTopRegion      = passFilter[0] && passFilter[1] && passFilter[2] && passFilter[3] && passFilter[4] && passFilter[5] &&  passFilter[6] && (!passFilter[7] || !passFilter[8]) && passFilter[9];
+      bool passDYRegion       = passFilter[0] && passFilter[1] && passFilter[2] && passFilter[3] && passFilter[4] && passFilter[5] && !passFilter[6] &&   passFilter[7] &&  passFilter[8]  && passFilter[9];
+
+      bool passAllCuts[nSelTypes] = {totalSel, passSameSignRegion, passTopRegion, passDYRegion};
 
       bool passSystCuts[nSystTypes] = {
         passFilter[0] && passFilter[1] && passFilter[2] && passFilter[3] && passFilter[4] && passFilter[5]                                           && passFilter[6] && passFilter[7] && passFilter[8] && idJetUp.size()   == nJetsType,
@@ -927,7 +945,7 @@ void wwAnalysis(
       if(totalWeight == 0) continue;
       // end event weighting
 
-      if(passAllCuts[0] && infilecatv[ifile] == 0) totalFakeDataCount[type2l][nFakeCount] = totalFakeDataCount[type2l][nFakeCount] + 1;
+      if(passAllCuts[SIGSEL] && infilecatv[ifile] == 0) totalFakeDataCount[type2l][nFakeCount] = totalFakeDataCount[type2l][nFakeCount] + 1;
 
       for(int nl=0; nl <=sumEvol[typeSel]; nl++) if(fakeSF == 1) hDWWLL[typeSel]->Fill((double)nl,totalWeight);
 
@@ -946,7 +964,21 @@ void wwAnalysis(
         else if(thePlot ==  2 && passAllCuts[SIGSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
         else if(thePlot ==  3 && passAllCuts[SIGSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
         else if(thePlot ==  4 && passAllCuts[SIGSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
-        else if(thePlot ==  5 && passAllCuts[SIGSEL] && typeSel == 2) {makePlot = true;theVar = (double)(TMath::Min(numberQuarks[0],1)+2*TMath::Min(numberQuarks[1],1));}
+        else if(thePlot ==  5 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
+        else if(thePlot ==  6 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
+        else if(thePlot ==  7 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+        else if(thePlot ==  8 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
+        else if(thePlot ==  9 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
+        else if(thePlot == 10 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
+        else if(thePlot == 11 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
+        else if(thePlot == 12 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+        else if(thePlot == 13 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
+        else if(thePlot == 14 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
+        else if(thePlot == 15 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
+        else if(thePlot == 16 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
+        else if(thePlot == 17 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+        else if(thePlot == 18 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
+        else if(thePlot == 19 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
         if(makePlot) histo[thePlot][theCategory]->Fill(theVar,totalWeight);
       }
 
@@ -1540,39 +1572,39 @@ void wwAnalysis(
     // PDF study
     double systPDF[9];
     histo_Diff->Reset();
-    if(histo_qqWW->GetBinContent(nb) > 0) for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_qqWW_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_qqWW->GetBinContent(nb))/histo_qqWW->GetBinContent(nb));
+    if(histo_ggWW->GetBinContent(nb) > 0)for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_ggWW_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_ggWW->GetBinContent(nb))/histo_ggWW->GetBinContent(nb));
     systPDF[0] = 1.0+histo_Diff->GetRMS();
 
     histo_Diff->Reset();
-    if(histo_ggWW->GetBinContent(nb) > 0)for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_ggWW_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_ggWW->GetBinContent(nb))/histo_ggWW->GetBinContent(nb));
+    if(histo_ggWW->GetBinContent(nb) > 0)for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_ggWW_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_ggWW->GetBinContent(nb))/histo_ggWW->GetBinContent(nb));
     systPDF[1] = 1.0+histo_Diff->GetRMS();
 
     histo_Diff->Reset();
-    if(histo_Top->GetBinContent(nb) > 0)for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_Top_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_Top->GetBinContent(nb))/histo_Top->GetBinContent(nb));
+    if(histo_Top->GetBinContent(nb) > 0)for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_Top_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_Top->GetBinContent(nb))/histo_Top->GetBinContent(nb));
     systPDF[2] = 1.0+histo_Diff->GetRMS();
 
     histo_Diff->Reset();
-    if(histo_DY->GetBinContent(nb) > 0)for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_DY_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_DY->GetBinContent(nb))/histo_DY->GetBinContent(nb));
+    if(histo_DY->GetBinContent(nb) > 0)for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_DY_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_DY->GetBinContent(nb))/histo_DY->GetBinContent(nb));
     systPDF[3] = 1.0+histo_Diff->GetRMS();
 
     histo_Diff->Reset();
-    if(histo_VV->GetBinContent(nb) > 0)for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_VV_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_VV->GetBinContent(nb))/histo_VV->GetBinContent(nb));
+    if(histo_VV->GetBinContent(nb) > 0)for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_VV_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_VV->GetBinContent(nb))/histo_VV->GetBinContent(nb));
     systPDF[4] = 1.0+histo_Diff->GetRMS();
 
     histo_Diff->Reset();
-    if(histo_VVV->GetBinContent(nb) > 0)for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_VVV_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_VVV->GetBinContent(nb))/histo_VVV->GetBinContent(nb));
+    if(histo_VVV->GetBinContent(nb) > 0)for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_VVV_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_VVV->GetBinContent(nb))/histo_VVV->GetBinContent(nb));
     systPDF[5] = 1.0+histo_Diff->GetRMS();
 
     histo_Diff->Reset();
-    if(histo_WG->GetBinContent(nb) > 0)for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_WG_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WG->GetBinContent(nb))/histo_WG->GetBinContent(nb));
+    if(histo_WG->GetBinContent(nb) > 0)for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_WG_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WG->GetBinContent(nb))/histo_WG->GetBinContent(nb));
     systPDF[6] = 1.0+histo_Diff->GetRMS();
 
     histo_Diff->Reset();
-    if(histo_WGS->GetBinContent(nb) > 0)for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_WGS_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WGS->GetBinContent(nb))/histo_WGS->GetBinContent(nb));
+    if(histo_WGS->GetBinContent(nb) > 0)for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_WGS_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WGS->GetBinContent(nb))/histo_WGS->GetBinContent(nb));
     systPDF[7] = 1.0+histo_Diff->GetRMS();
 
     histo_Diff->Reset();
-    if(histo_Higgs->GetBinContent(nb) > 0)for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_Higgs_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_Higgs->GetBinContent(nb))/histo_Higgs->GetBinContent(nb));
+    if(histo_Higgs->GetBinContent(nb) > 0)for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_Higgs_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_Higgs->GetBinContent(nb))/histo_Higgs->GetBinContent(nb));
     systPDF[8] = 1.0+histo_Diff->GetRMS();
 
     printf("PDF(%d): %f %f %f %f %f %f %f %f %f\n",nb,systPDF[0],systPDF[1],systPDF[2],systPDF[3],systPDF[4],systPDF[5],systPDF[6],systPDF[7],systPDF[8]);

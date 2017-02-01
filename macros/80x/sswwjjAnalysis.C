@@ -1941,35 +1941,35 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
       // PDF study
       double systPDF[8];
       histo_Diff->Reset();
-      for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_EWK_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_EWK->GetBinContent(nb))/histo_EWK->GetBinContent(nb));
+      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_EWK_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_EWK->GetBinContent(nb))/histo_EWK->GetBinContent(nb));
       systPDF[0] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_QCD_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_QCD->GetBinContent(nb))/histo_QCD->GetBinContent(nb));
+      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_QCD_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_QCD->GetBinContent(nb))/histo_QCD->GetBinContent(nb));
       systPDF[1] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_WZ_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WZ->GetBinContent(nb))/histo_WZ->GetBinContent(nb));
+      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_WZ_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WZ->GetBinContent(nb))/histo_WZ->GetBinContent(nb));
       systPDF[2] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_ZZ_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_ZZ->GetBinContent(nb))/histo_ZZ->GetBinContent(nb));
+      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_ZZ_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_ZZ->GetBinContent(nb))/histo_ZZ->GetBinContent(nb));
       systPDF[3] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_VVV_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_VVV->GetBinContent(nb))/histo_VVV->GetBinContent(nb));
+      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_VVV_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_VVV->GetBinContent(nb))/histo_VVV->GetBinContent(nb));
       systPDF[4] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_WS_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WS->GetBinContent(nb))/histo_WS->GetBinContent(nb));
+      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_WS_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WS->GetBinContent(nb))/histo_WS->GetBinContent(nb));
       systPDF[5] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_WG_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WG->GetBinContent(nb))/histo_WG->GetBinContent(nb));
+      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_WG_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WG->GetBinContent(nb))/histo_WG->GetBinContent(nb));
       systPDF[6] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=1; npdf<102; npdf++) histo_Diff->Fill((histo_DPS_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_DPS->GetBinContent(nb))/histo_DPS->GetBinContent(nb));
+      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_DPS_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_DPS->GetBinContent(nb))/histo_DPS->GetBinContent(nb));
       systPDF[7] = 1.0+histo_Diff->GetRMS();
    
       if(verbose) printf("PDF(%d): %f %f %f %f %f %f %f %f\n",nb,systPDF[0],systPDF[1],systPDF[2],systPDF[3],systPDF[4],systPDF[5],systPDF[6],systPDF[7]);
