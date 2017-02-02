@@ -253,7 +253,7 @@ void QCDAnalysis(
 
       Bool_t passFilter = kFALSE;
       Bool_t passTrigger = kFALSE;
-      if(infilecatv[ifile] == 0) {
+      if(infilecatv[ifile] != 999) {
 	for (int nt = 0; nt < (int)numtokens; nt++) {
 	  if(typeSel == 11 &&
             (strcmp(tokens[nt],Form("HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v%s",triggerSuffix.Data())) == 0 ||

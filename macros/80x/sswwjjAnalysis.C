@@ -641,7 +641,7 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
       Bool_t passLooseControlRegionTop = kFALSE;
       Bool_t passLooseControlRegionWZ  = kFALSE;
 
-      if(infilecatv[ifile] == 0) {
+      if(infilecatv[ifile] != 999) {
         for (int nt = 0; nt <(int)numtokens; nt++) {
           if((*eventTrigger.triggerFired)[nt] == 0) continue;
           if((strcmp(tokens[nt],Form("HLT_Ele25_eta2p1_WPTight_Gsf_v%s",triggerSuffix.Data()))  == 0) ||

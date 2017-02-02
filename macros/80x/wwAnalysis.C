@@ -627,7 +627,7 @@ void wwAnalysis(
       int sumEvol[3] = {-1, -1, -1};
       Bool_t passFilter[numberCuts] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       Bool_t passPresel = kFALSE;
-      if(infilecatv[ifile] == 0) {
+      if(infilecatv[ifile] != 999) {
         for (int nt = 0; nt <(int)numtokens; nt++) {
           if((*eventTrigger.triggerFired)[nt] == 0) continue;
           if((strcmp(tokens[nt],Form("HLT_Ele25_eta2p1_WPTight_Gsf_v%s",triggerSuffix.Data()))  == 0) ||
