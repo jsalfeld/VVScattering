@@ -19,12 +19,14 @@
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
 #include "MitAnalysisRunII/macros/80x/factors.h"
+#include "MitAnalysisRunII/macros/80x/BTagCalibrationStandalone.cc"
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
 double WSSF[5]  = {1.269917,1.221954,0.919848,1.004682,1.097358};
 double WSSFE[5] = {0.390835,0.165349,0.053473,0.029349,0.038609};
 double the_sf_ZLL = 0.90;
+const double bTagCuts[3] = {0.5426,0.8484,0.9535};
 
 void func_ws_sf(double eta, double pt, double theSF[2]);
 
@@ -99,7 +101,8 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
   infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(2);
 
   //WZ
-  infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8.root",filesPathMC.Data()));                       infilecatv.push_back(3); 
+  //infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8.root",filesPathMC.Data()));                       infilecatv.push_back(3); 
+  infilenamev.push_back(Form("%sWZTo3LNu_mllmin01_13TeV-powheg-pythia8.root",filesPathMC.Data()));                           infilecatv.push_back(3); 
   infilenamev.push_back(Form("%sWLLJJ_WToLNu_EWK_TuneCUETP8M1_13TeV_madgraph-madspin-pythia8.root",filesPathMC.Data()));     infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sWLLJJToLNu_M-60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));      infilecatv.push_back(3);
   //infilenamev.push_back(Form("%sWLLJJToLNu_M-4to60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));   infilecatv.push_back(3);
@@ -162,8 +165,30 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
 
   if(infilenamev.size() != infilecatv.size()) {assert(0); return;}
   
+  double denBTagging[5][5][3],jetEpsBtagLOOSE[5][5][3],jetEpsBtagTIGHT[5][5][3];
+  double numBTaggingLOOSE[5][5][3],numBTaggingMEDIUM[5][5][3],numBTaggingTIGHT[5][5][3];
+  for(int i0=0; i0<5; i0++) {
+    for(int i1=0; i1<5; i1++) {
+      for(int i2=0; i2<3; i2++) {
+        denBTagging[i0][i1][i2] = 0.0;
+        numBTaggingLOOSE[i0][i1][i2] = 0.0;numBTaggingMEDIUM[i0][i1][i2] = 0.0;numBTaggingTIGHT[i0][i1][i2] = 0.0;
+	if     (i2==BTagEntry::FLAV_B)    jetEpsBtagLOOSE[i0][i1][i2] = jetEpsBtagBLOOSE[i0][i1];
+	else if(i2==BTagEntry::FLAV_C)    jetEpsBtagLOOSE[i0][i1][i2] = jetEpsBtagCLOOSE[i0][i1];
+	else if(i2==BTagEntry::FLAV_UDSG) jetEpsBtagLOOSE[i0][i1][i2] = jetEpsBtagLLOOSE[i0][i1];
+	if     (i2==BTagEntry::FLAV_B)    jetEpsBtagTIGHT[i0][i1][i2] = jetEpsBtagBTIGHT[i0][i1];
+	else if(i2==BTagEntry::FLAV_C)    jetEpsBtagTIGHT[i0][i1][i2] = jetEpsBtagCTIGHT[i0][i1];
+	else if(i2==BTagEntry::FLAV_UDSG) jetEpsBtagTIGHT[i0][i1][i2] = jetEpsBtagLTIGHT[i0][i1];
+      }
+    }
+  }
   Float_t fMVACut[4][4];
   InitializeJetIdCuts(fMVACut);
+
+  BTagCalibration2 *btagCalib = new BTagCalibration2("csvv2","MitAnalysisRunII/data/80x/CSVv2_Moriond17_B_H.csv");
+  BTagCalibration2Reader btagReaderBCLOOSE(btagCalib,BTagEntry::OP_LOOSE,"comb","central");
+  BTagCalibration2Reader btagReaderLLOOSE(btagCalib,BTagEntry::OP_LOOSE,"incl","central");
+  BTagCalibration2Reader btagReaderBCTIGHT(btagCalib,BTagEntry::OP_TIGHT,"comb","central");
+  BTagCalibration2Reader btagReaderLTIGHT(btagCalib,BTagEntry::OP_TIGHT,"incl","central");
 
   LeptonScaleLookup trigLookup(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
 
@@ -238,7 +263,7 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 33;
+  const int allPlots = 34;
   const int histBins = 11;
   TH1D* histo[7][allPlots][histBins];
   TString processName[histBins] = {".Data", "EWKWW", "QCDWW", "...WZ", "...ZZ", "..VVV", "...WS", "...WG", "..DPS", "FakeM", "FakeE"};
@@ -266,6 +291,7 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
       else if(thePlot >= 25 && thePlot <= 25) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot = 6.5;}
       else if(thePlot >= 26 && thePlot <= 27) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 2000;}
       else if(thePlot >= 28 && thePlot <= 29) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
+      else if(thePlot >= 30 && thePlot <= 30) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot = 3.5;}
       TH1D* histos;
       if     (thePlot < allPlots-3) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
       else if(thePlot < allPlots-1) histos = new TH1D("histos", "histos", nBinWZMVA, xbinsWZ);
@@ -681,7 +707,8 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
 	                                                                                                   {idTight.push_back(1); idLep.push_back(nlep); goodIsTight++;}
         else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake )     {idTight.push_back(0); idLep.push_back(nlep);}
         else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepSoftIP)== BareLeptons::LepSoftIP)    {idSoft.push_back(nlep);}
-        else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepLoose)== BareLeptons::LepLoose)      {idLepLoose.push_back(nlep);}
+        else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepLoose)== BareLeptons::LepLoose && 
+                ((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt() > 10.0)                                  {idLepLoose.push_back(nlep);}
       }
 
       if(idLep.size()!=idTight.size()) {assert(1); return;}
@@ -729,17 +756,80 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
 	if(idTight.size() == 3 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt() > 10) passFilterCR2[1] = kTRUE;
       }
 
+      vector<int> idB,idC;
+      for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
+        if     (TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 5 && ((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Pt() > 15) idB.push_back(ngen0);
+        else if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 4 && ((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Pt() > 15) idC.push_back(ngen0);
+      }
+
       //access jet info
       vector<int> idJet,idJetUp,idJetDown;
       double bDiscrMax = 0.0;
+      double total_bjet_probLOOSE[2] = {1,1};
+      double total_bjet_probTIGHT[2] = {1,1};
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
-        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 15) continue;
+        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 20) continue;
 
         Bool_t isLepton = kFALSE;
         for(unsigned int nl=0; nl<idLep.size(); nl++){
           if(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])) < 0.4) isLepton = kTRUE;
 	}
 	if(isLepton == kTRUE) continue;
+
+	if(infilecatv[ifile] != 0){
+          BTagEntry::JetFlavor jetFlavor = BTagEntry::FLAV_UDSG;
+	  for(unsigned int ng=0; ng<idB.size(); ng++) {
+	    if (((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[idB[ng]])) < 0.4) {jetFlavor = BTagEntry::FLAV_B; break;}
+	  }
+	  if(jetFlavor == BTagEntry::FLAV_UDSG){
+	    for(unsigned int ng=0; ng<idC.size(); ng++) {
+	      if (((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[idC[ng]])) < 0.4) {jetFlavor = BTagEntry::FLAV_C; break;}
+	    }
+          }
+
+          int nJPt = 0;
+	  if     (((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 30) nJPt = 0;
+	  else if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 40) nJPt = 1;
+	  else if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 60) nJPt = 2;
+	  else if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 80) nJPt = 3;
+          else                                                       nJPt = 4;
+          int nJEta = 0;
+	  if     (TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 0.5) nJEta = 0;
+	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 1.0) nJEta = 1;
+	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 1.5) nJEta = 2;
+	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 2.0) nJEta = 3;
+          else                                                                     nJEta = 4;
+          denBTagging[nJPt][nJEta][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[0]) numBTaggingLOOSE[nJPt][nJEta][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[1]) numBTaggingMEDIUM[nJPt][nJEta][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[2]) numBTaggingTIGHT[nJPt][nJEta][jetFlavor]++;
+
+          double bjet_SFLOOSE = 1;
+	  if(jetFlavor == BTagEntry::FLAV_UDSG) bjet_SFLOOSE = btagReaderLLOOSE.eval (jetFlavor,TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),((TLorentzVector*)(*eventJets.p4)[nj])->Pt());
+	  else                                  bjet_SFLOOSE = btagReaderBCLOOSE.eval(jetFlavor,TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),((TLorentzVector*)(*eventJets.p4)[nj])->Pt());
+          if(bjet_SFLOOSE == 0) bjet_SFLOOSE = 1;
+
+	  if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[0]){
+	    total_bjet_probLOOSE[0] = total_bjet_probLOOSE[0] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor];
+	    total_bjet_probLOOSE[1] = total_bjet_probLOOSE[1] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSE;
+	  } else {
+	    total_bjet_probLOOSE[0] = total_bjet_probLOOSE[0] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor]);
+	    total_bjet_probLOOSE[1] = total_bjet_probLOOSE[1] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSE);
+	  }
+
+          double bjet_SFTIGHT = 1;
+	  if(jetFlavor == BTagEntry::FLAV_UDSG) bjet_SFTIGHT = btagReaderLTIGHT.eval (jetFlavor,TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),((TLorentzVector*)(*eventJets.p4)[nj])->Pt());
+	  else                                  bjet_SFTIGHT = btagReaderBCTIGHT.eval(jetFlavor,TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),((TLorentzVector*)(*eventJets.p4)[nj])->Pt());
+          if(bjet_SFTIGHT == 0) bjet_SFTIGHT = 1;
+
+	  if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[2]){
+	    total_bjet_probTIGHT[0] = total_bjet_probTIGHT[0] * jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor];
+	    total_bjet_probTIGHT[1] = total_bjet_probTIGHT[1] * jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor] * bjet_SFTIGHT;
+	  } else {
+	    total_bjet_probTIGHT[0] = total_bjet_probTIGHT[0] * (1.0 - jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor]);
+	    total_bjet_probTIGHT[1] = total_bjet_probTIGHT[1] * (1.0 - jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor] * bjet_SFTIGHT);
+	  }
+        }
 
 	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 20) { 
 	   if ((float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
@@ -748,6 +838,9 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt()*1.03 > 30) idJetUp.push_back(nj);
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt()*0.97 > 30) idJetDown.push_back(nj);
       }
+
+      //if(TMath::Abs(total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0]-1.0) > 0.05) printf("total_bjet_probLOOSE large correction: %f, bDiscrMax = %f\n",total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0],bDiscrMax);
+      //if(TMath::Abs(total_bjet_probTIGHT[1]/total_bjet_probTIGHT[0]-1.0) > 0.05) printf("total_bjet_probTIGHT large correction: %f, bDiscrMax = %f\n",total_bjet_probTIGHT[1]/total_bjet_probTIGHT[0],bDiscrMax);
 
       //#Jet with pT > 30 GeV
       if(idJet.size() >= 2){
@@ -776,14 +869,14 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
         }
       }
 
-      //b-tag selection
-      if(bDiscrMax < 0.700 && idSoft.size() == 0){
+      //b-tag selection (0.5426/0.8484/0.9535)
+      if(bDiscrMax < 0.5426 && idSoft.size() == 0){
 	passFilterSig[3] = kTRUE;
         passFilterCR3[3] = kTRUE;
       } else{
         passFilterCR1[3] = kTRUE;
       }
-      if(bDiscrMax < 0.935 && idSoft.size() == 0){
+      if(bDiscrMax < 0.9535 && idSoft.size() == 0){
         passFilterCR2[3] = kTRUE;
       }
 
@@ -797,7 +890,7 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
 
       //Mll cut
       TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) ));
-      if(dilep.M() > 50){
+      if(dilep.M() > 20){
 	passFilterSig[5] = kTRUE;
 	passFilterCR1[5] = kTRUE;
 	passFilterCR3[5] = kTRUE;
@@ -820,7 +913,7 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
       }
 
       // Loose Z veto
-      if(TMath::Abs(minMassLooseZ-91.1876) > 15){
+      if(TMath::Abs(minMassLooseZ-91.1876) > 15 && idLepLoose.size() == 0){
 	passFilterSig[6] = kTRUE;
         passFilterCR1[6] = kTRUE;
         passFilterCR3[6] = kTRUE;     
@@ -851,7 +944,7 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
       if(TMath::Abs(minMassZ-91.1876) < 15.0) passFilterCR2[7] = kTRUE;
       passFilterCR3[7] = kTRUE;
 
-      //acess met info
+      //access met info
       TLorentzVector theMET;
       if(usePUPPI){
         theMET.SetPx((double)eventMet.metPuppi->Px());
@@ -862,7 +955,9 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
       }
 
       //met cut
-      if(theMET.Pt() > 40){
+      double metCut = 20.;
+      if(typePair == 1) metCut = 40.;
+      if(theMET.Pt() > metCut){
         passFilterSig[8] = kTRUE;
         passFilterCR1[8] = kTRUE;
         passFilterCR2[8] = kTRUE;
@@ -1102,6 +1197,11 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
         if(passSignalRegion && goodIsGenWSLep == 0) printf("mm event with no WS candidates\n");
       }
 
+      // Btag scale factor
+      if     (idLep.size() == 2) totalWeight = totalWeight * total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0];
+      else if(idLep.size() == 3) totalWeight = totalWeight * total_bjet_probTIGHT[1]/total_bjet_probTIGHT[0];
+      else                       {printf("THIS IS NOT POSSIBLE!: %d\n,idLep.size());
+
       if(theCategory == -1) {theCategory = 1; totalWeight = -1.0 * totalWeight;}
 
       if(totalWeight == 0) continue;
@@ -1151,9 +1251,10 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
         else if(thePlot == 27 && passLooseControlRegionWZ)  {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
         else if(thePlot == 28 && passLooseControlRegionTop) {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
         else if(thePlot == 29 && passLooseControlRegionWZ)  {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
+        else if(thePlot == 30 && passNMinusOne[3])          {makePlot = true;theVar = TMath::Min((double)idLepLoose.size(),3.499);}
 
-        else if(thePlot == 30 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
-        else if(thePlot == 31 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 31 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 32 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
 
         if(makePlot) histo[typeSel][thePlot][theCategory]->Fill(theVar,totalWeight);
         if(makePlot) histo[6][thePlot][theCategory]->Fill(theVar,totalWeight);
@@ -1475,48 +1576,49 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
 
   // WZ scale factor from data
   double sfE_WZ[nBinWZMVA] = {1.0,1.0,1.0,1.0};
-  if(useWZFromData){ // 0 = data, 1=bg, 2=wz
-    printf("WZini:");
-    for(int np=1; np<=histo_WZ->GetNbinsX(); np++) {
-      printf(" %.2f +/- %.2f",histo_WZ->GetBinContent(np),histo_WZ->GetBinError(np));
-    }
-    printf("\n");
-    for(int nb=1; nb<=histo[6][allPlots-2][0]->GetNbinsX(); nb++) {
-      double sumEventsType[3] = {0,0,0}; double sumEventsTypeE[3] = {0,0,0};
-      for(int np=0; np<histBins; np++) {
-        if     (np==0){
-	  sumEventsType[0] = sumEventsType[0] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[0] = sumEventsTypeE[0] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
-        }
-        else if(np==3){
-	  sumEventsType[2] = sumEventsType[2] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[2] = sumEventsTypeE[2] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
-        }
-        else {
-	  sumEventsType[1] = sumEventsType[1] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[1] = sumEventsTypeE[1] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
-        }
+  printf("WZ SFs applied?: %d\n",useWZFromData);
+  printf("WZini:");
+  for(int np=1; np<=histo_WZ->GetNbinsX(); np++) {
+    printf(" %.2f +/- %.2f",histo_WZ->GetBinContent(np),histo_WZ->GetBinError(np));
+  }
+  printf("\n");
+  for(int nb=1; nb<=histo[6][allPlots-2][0]->GetNbinsX(); nb++) {
+    double sumEventsType[3] = {0,0,0}; double sumEventsTypeE[3] = {0,0,0};
+    for(int np=0; np<histBins; np++) {
+      if     (np==0){
+        sumEventsType[0] = sumEventsType[0] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[0] = sumEventsTypeE[0] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
       }
-      double sf_WZ  = (sumEventsType[0]-sumEventsType[1])/sumEventsType[2];
-      double sf_WZE[3] = {sumEventsTypeE[0]/sumEventsType[2]/sumEventsType[2],
-                          sumEventsTypeE[1]/sumEventsType[2]/sumEventsType[2],
-                          sumEventsTypeE[2]/sumEventsType[2]/sumEventsType[2]*sf_WZ*sf_WZ};
-      sfE_WZ[nb-1] = sqrt(sf_WZE[0]+sf_WZE[1]+sf_WZE[2])/sf_WZ;
-      printf("(WZ study(%d)): data: %8.2f +/- %6.2f | bkg: %8.2f +/- %6.2f | wz: %8.2f +/- %6.2f -> sf = %4.2f +/- %4.2f (%4.2f/%4.2f/%4.2f)\n",nb-1,
-    	     sumEventsType[0],sqrt(sumEventsTypeE[0]),sumEventsType[1],sqrt(sumEventsTypeE[1]),sumEventsType[2],sqrt(sumEventsTypeE[2]),
-	     sf_WZ,sfE_WZ[nb-1]*sf_WZ,sqrt(sf_WZE[0]),sqrt(sf_WZE[1]),sqrt(sf_WZE[2]));
+      else if(np==3){
+        sumEventsType[2] = sumEventsType[2] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[2] = sumEventsTypeE[2] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
+      }
+      else {
+        sumEventsType[1] = sumEventsType[1] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[1] = sumEventsTypeE[1] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
+      }
+    }
+    double sf_WZ  = (sumEventsType[0]-sumEventsType[1])/sumEventsType[2]; // 0 = data, 1=bg, 2=wz
+    double sf_WZE[3] = {sumEventsTypeE[0]/sumEventsType[2]/sumEventsType[2],
+  			sumEventsTypeE[1]/sumEventsType[2]/sumEventsType[2],
+  			sumEventsTypeE[2]/sumEventsType[2]/sumEventsType[2]*sf_WZ*sf_WZ};
+    sfE_WZ[nb-1] = sqrt(sf_WZE[0]+sf_WZE[1]+sf_WZE[2])/sf_WZ;
+    printf("(WZ study(%d)): data: %8.2f +/- %6.2f | bkg: %8.2f +/- %6.2f | wz: %8.2f +/- %6.2f -> sf = %4.2f +/- %4.2f (%4.2f/%4.2f/%4.2f)\n",nb-1,
+  	   sumEventsType[0],sqrt(sumEventsTypeE[0]),sumEventsType[1],sqrt(sumEventsTypeE[1]),sumEventsType[2],sqrt(sumEventsTypeE[2]),
+           sf_WZ,sfE_WZ[nb-1]*sf_WZ,sqrt(sf_WZE[0]),sqrt(sf_WZE[1]),sqrt(sf_WZE[2]));
+    if(useWZFromData){
       for(int nt=0; nt<6; nt++) {
-        histo_WZ                       ->SetBinContent(nb+nBinWZMVA*nt,histo_WZ 		      ->GetBinContent(nb+nBinWZMVA*nt)*sf_WZ);
-        histo_WZ                       ->SetBinError  (nb+nBinWZMVA*nt,histo_WZ 		      ->GetBinError  (nb+nBinWZMVA*nt)*sf_WZ);
+        histo_WZ  		       ->SetBinContent(nb+nBinWZMVA*nt,histo_WZ			      ->GetBinContent(nb+nBinWZMVA*nt)*sf_WZ);
+        histo_WZ  		       ->SetBinError  (nb+nBinWZMVA*nt,histo_WZ			      ->GetBinError  (nb+nBinWZMVA*nt)*sf_WZ);
         histo_WZ_CMS_MVAJESBoundingUp  ->SetBinContent(nb+nBinWZMVA*nt,histo_WZ_CMS_MVAJESBoundingUp  ->GetBinContent(nb+nBinWZMVA*nt)*sf_WZ);
         histo_WZ_CMS_MVAJESBoundingDown->SetBinError  (nb+nBinWZMVA*nt,histo_WZ_CMS_MVAJESBoundingDown->GetBinError  (nb+nBinWZMVA*nt)*sf_WZ);
         histo_WZ_CMS_MVAMETBoundingUp  ->SetBinContent(nb+nBinWZMVA*nt,histo_WZ_CMS_MVAMETBoundingUp  ->GetBinContent(nb+nBinWZMVA*nt)*sf_WZ);
         histo_WZ_CMS_MVAMETBoundingDown->SetBinError  (nb+nBinWZMVA*nt,histo_WZ_CMS_MVAMETBoundingDown->GetBinError  (nb+nBinWZMVA*nt)*sf_WZ);
       }
     }
-    printf("WZend:");
-    for(int np=1; np<=histo_WZ->GetNbinsX(); np++) {
-      printf(" %.2f +/- %.2f",histo_WZ->GetBinContent(np),histo_WZ->GetBinError(np));
-    }
-    printf("\n");
   }
+  printf("WZend:");
+  for(int np=1; np<=histo_WZ->GetNbinsX(); np++) {
+    printf(" %.2f +/- %.2f",histo_WZ->GetBinContent(np),histo_WZ->GetBinError(np));
+  }
+  printf("\n");
 
   // Z->ll scale factor from data
   { // 0 = data, 1=bg, 2=zll
@@ -2150,8 +2252,39 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
       if(histo_DPS  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_DPSStatBounding2016_%s_Bin%d    lnN   -     -     -     -     -     -     -   %7.5f   -     - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_DPS  ->GetBinError(nb)/histo_DPS  ->GetBinContent(nb));
       if(histo_FakeM->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_FakeMStatBounding2016_%s_Bin%d  lnN   -     -     -     -     -     -     -     -   %7.5f   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_FakeM->GetBinError(nb)/histo_FakeM->GetBinContent(nb));
       if(histo_FakeE->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_FakeEStatBounding2016_%s_Bin%d  lnN   -     -     -     -     -     -     -     -    -   %7.5f\n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_FakeE->GetBinError(nb)/histo_FakeE->GetBinContent(nb));
-   }
+    }
   }
+  for(int iF=0; iF<3; iF++){
+    printf("double jetEpsBtagLOOSE[%d] = \n",iF);
+    for(int iEta=0; iEta<5; iEta++){
+      for(int iPt=0; iPt<5; iPt++){
+        printf("%5.4f",numBTaggingLOOSE[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        if(iPt!=4||iEta!=4) printf(",");
+        if(iPt==4) printf("\n");
+      }
+    }
+  }
+  for(int iF=0; iF<3; iF++){
+    printf("double jetEpsBtagMEDIUM[%d] = \n",iF);
+    for(int iEta=0; iEta<5; iEta++){
+      for(int iPt=0; iPt<5; iPt++){
+        printf("%5.4f",numBTaggingMEDIUM[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        if(iPt!=4||iEta!=4) printf(",");
+        if(iPt==4) printf("\n");
+      }
+    }
+  }
+  for(int iF=0; iF<3; iF++){
+    printf("double jetEpsBtagTIGHT[%d] = \n",iF);
+    for(int iEta=0; iEta<5; iEta++){
+      for(int iPt=0; iPt<5; iPt++){
+        printf("%5.4f",numBTaggingTIGHT[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        if(iPt!=4||iEta!=4) printf(",");
+        if(iPt==4) printf("\n");
+      }
+    }
+  }
+  delete btagCalib;
 }
 
 void func_ws_sf(double eta, double pt, double SF[2]){
