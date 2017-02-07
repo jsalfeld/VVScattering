@@ -28,7 +28,7 @@ int mcPrescale = 1.0;
 const bool useDYMVA = false;
 const bool doTriggerStudy = true;
 const Int_t period = 1;
-const double bTagCut = 0.8484; // 0.5426/0.8484/0.9535
+const double bTagCuts[3] = {0.5426,0.8484,0.9535};
 
 void baseAnalysis(
  Int_t nsel = 4,
@@ -154,22 +154,23 @@ void baseAnalysis(
     }
   }
 
-  double denBTagging[5][5][3],numBTagging[5][5][3],jetEpsBtag[5][5][3];
+  double denBTagging[5][5][3],jetEpsBtag[5][5][3];
+  double numBTaggingLOOSE[5][5][3],numBTaggingMEDIUM[5][5][3],numBTaggingTIGHT[5][5][3];
   for(int i0=0; i0<5; i0++) {
     for(int i1=0; i1<5; i1++) {
       for(int i2=0; i2<3; i2++) {
         denBTagging[i0][i1][i2] = 0.0;
-        numBTagging[i0][i1][i2] = 0.0;
-	if     (i2==BTagEntry::FLAV_B)    jetEpsBtag[i0][i1][i2] = jetEpsBtagB[i0][i1];
-	else if(i2==BTagEntry::FLAV_C)    jetEpsBtag[i0][i1][i2] = jetEpsBtagC[i0][i1];
-	else if(i2==BTagEntry::FLAV_UDSG) jetEpsBtag[i0][i1][i2] = jetEpsBtagL[i0][i1];
+        numBTaggingLOOSE[i0][i1][i2] = 0.0;numBTaggingMEDIUM[i0][i1][i2] = 0.0;numBTaggingTIGHT[i0][i1][i2] = 0.0;
+	if     (i2==BTagEntry::FLAV_B)    jetEpsBtag[i0][i1][i2] = jetEpsBtagBMEDIUM[i0][i1];
+	else if(i2==BTagEntry::FLAV_C)    jetEpsBtag[i0][i1][i2] = jetEpsBtagCMEDIUM[i0][i1];
+	else if(i2==BTagEntry::FLAV_UDSG) jetEpsBtag[i0][i1][i2] = jetEpsBtagLMEDIUM[i0][i1];
       }
     }
   }
   Float_t fMVACut[4][4];
   InitializeJetIdCuts(fMVACut);
  
-  BTagCalibration2 *btagCalib = new BTagCalibration2("csvv2","MitAnalysisRunII/data/80x/CSVv2Moriond17_2017_1_26_BtoH.csv");
+  BTagCalibration2 *btagCalib = new BTagCalibration2("csvv2","MitAnalysisRunII/data/80x/CSVv2_Moriond17_B_H.csv");
   BTagCalibration2Reader btagReaderBC(btagCalib,BTagEntry::OP_MEDIUM,"comb","central");
   BTagCalibration2Reader btagReaderL(btagCalib,BTagEntry::OP_MEDIUM,"incl","central");
   //printf("%s\n",btagCalib->makeCSV().c_str());
@@ -537,7 +538,7 @@ void baseAnalysis(
       double bDiscrMax = 0.0;
       double dPhiJetMET = -1.0;
       double dPhiJetDiLep = -1.0;
-      double total_bjet_prob[2] = {1,1,};
+      double total_bjet_prob[2] = {1,1};
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 20) continue;
         bool passId = passJetId(fMVACut, (float)(*eventJets.puId)[nj], ((TLorentzVector*)(*eventJets.p4)[nj])->Pt(), TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()));
@@ -576,14 +577,16 @@ void baseAnalysis(
 	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 2.0) nJEta = 3;
           else                                                                     nJEta = 4;
           denBTagging[nJPt][nJEta][jetFlavor]++;
-          if((float)(*eventJets.bDiscr)[nj] >= bTagCut) numBTagging[nJPt][nJEta][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[0]) numBTaggingLOOSE[nJPt][nJEta][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[1]) numBTaggingMEDIUM[nJPt][nJEta][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[2]) numBTaggingTIGHT[nJPt][nJEta][jetFlavor]++;
 
           double bjet_SF = 1;
 	  if(jetFlavor == BTagEntry::FLAV_UDSG) bjet_SF = btagReaderL.eval (jetFlavor,TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),((TLorentzVector*)(*eventJets.p4)[nj])->Pt());
 	  else                                  bjet_SF = btagReaderBC.eval(jetFlavor,TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),((TLorentzVector*)(*eventJets.p4)[nj])->Pt());
           if(bjet_SF == 0) bjet_SF = 1;
 
-	  if((float)(*eventJets.bDiscr)[nj] >= bTagCut){
+	  if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[1]){
 	    total_bjet_prob[0] = total_bjet_prob[0] * jetEpsBtag[nJPt][nJEta][jetFlavor];
 	    total_bjet_prob[1] = total_bjet_prob[1] * jetEpsBtag[nJPt][nJEta][jetFlavor] * bjet_SF;
 	  } else {
@@ -593,7 +596,7 @@ void baseAnalysis(
 	  if(fileType != -1 && TMath::Abs(dilep.M()-91.1876) <= 15.0 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 25 && 
 	                                                                ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 25){
 	    histoBTAG[fileType][0]->Fill(TMath::Min(((TLorentzVector*)(*eventJets.p4)[nj])->Pt(),199.999),1.0);
-	    if((float)(*eventJets.bDiscr)[nj] >= bTagCut) histoBTAG[fileType][1]->Fill(TMath::Min(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),2.499),1.0);
+	    if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[1]) histoBTAG[fileType][1]->Fill(TMath::Min(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),2.499),1.0);
 	  }
         }
 
@@ -673,9 +676,9 @@ void baseAnalysis(
 	  int countJ[3] = {0,0,0};
 	  passFilter[9] = kFALSE;
           for(unsigned int nj=0; nj<idJet.size(); nj++){
-	    if((*eventJets.bDiscr)[idJet[nj]] >  bTagCut && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Eta()) <  2.5) countJ[0]++;
-	    if((*eventJets.bDiscr)[idJet[nj]] <= bTagCut && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Eta()) <  2.5) countJ[1]++; 
-	    if(                                             TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Eta()) >= 2.5) countJ[2]++; 
+	    if((*eventJets.bDiscr)[idJet[nj]] >  bTagCuts[1] && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Eta()) <  2.5) countJ[0]++;
+	    if((*eventJets.bDiscr)[idJet[nj]] <= bTagCuts[1] && TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Eta()) <  2.5) countJ[1]++; 
+	    if(                                                 TMath::Abs(((TLorentzVector*)(*eventJets.p4)[idJet[nj]])->Eta()) >= 2.5) countJ[2]++; 
 	  }
 	  if(countJ[0] == 1 && countJ[1] == 0 && countJ[2] >= 1) passFilter[9] = kTRUE;
 	}
@@ -683,7 +686,7 @@ void baseAnalysis(
       else if(nsel == 5){ // Z wrong charge study
 	if   (TMath::Abs(dilep.M()-91.1876)<15.0) passFilter[5] = kTRUE;
 	else                                      passFilter[5] = kFALSE;              
-        passFilter[6] = bDiscrMax < bTagCut;
+        passFilter[6] = bDiscrMax < bTagCuts[1];
 	passFilter[7] = kTRUE;
 	passFilter[8] = idJet.size() >= specialCut;
 	passFilter[9] = kTRUE;
@@ -1002,9 +1005,9 @@ void baseAnalysis(
 	else if(thePlot ==  8) {makePlot = true;theVar = TMath::Min((double)eventVertex.npv,39.499);}
 	else if(thePlot ==  9) {makePlot = true;theVar = TMath::Min(bDiscrMax,0.999);}
 	else if(thePlot == 10) {makePlot = true;theVar = TMath::Min((double)(numberQuarks[0]+10*numberQuarks[1]),49.499);}
-	else if(thePlot == 11 && bDiscrMax < bTagCut) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-	else if(thePlot == 12 && bDiscrMax < bTagCut) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-	else if(thePlot == 13 && bDiscrMax < 0.5426)  {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 11 && bDiscrMax < bTagCuts[1]) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 12 && bDiscrMax < bTagCuts[1]) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 13 && bDiscrMax < bTagCuts[0]) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 14) {makePlot = true;theVar = TMath::Min((double)eventMet.CaloMet->Pt(),199.999);}
 	else if(thePlot == 15) {makePlot = true;theVar = dPhiJetMET;}
 	else if(thePlot == 16) {makePlot = true;theVar = dPhiJetDiLep;}
@@ -1034,10 +1037,10 @@ void baseAnalysis(
 	else if(thePlot == 40 && dilep.Pt() > 100) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 41) {makePlot = true;theVar = ((TLorentzVector*)(*eventMet.p4)[0])->Phi();}
 	else if(thePlot == 42) {makePlot = true;theVar = TMath::Min((double)idSoft.size(),6.499);}
-	else if(thePlot == 43 && numberQuarks[1] == 0                    ) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-	else if(thePlot == 44 && numberQuarks[1] == 0 && bDiscrMax < bTagCut) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-	else if(thePlot == 45 && numberQuarks[1]  > 0                       ) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-	else if(thePlot == 46 && numberQuarks[1]  > 0 && bDiscrMax < bTagCut) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 43 && numberQuarks[1] == 0                           ) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 44 && numberQuarks[1] == 0 && bDiscrMax < bTagCuts[1]) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 45 && numberQuarks[1]  > 0                           ) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
+	else if(thePlot == 46 && numberQuarks[1]  > 0 && bDiscrMax < bTagCuts[1]) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 47 && type3lWGS == 0) {makePlot = true;theVar = TMath::Min(minMassSF,99.999);}
 	else if(thePlot == 48 && type3lWGS == 1) {makePlot = true;theVar = TMath::Min(minMassSF,99.999);}
 	else if(thePlot == 49 && type3lWGS == 2) {makePlot = true;theVar = TMath::Min(minMassSF,99.999);}
@@ -1141,10 +1144,30 @@ void baseAnalysis(
     outFilePlotsNote->Close();
   }
   for(int iF=0; iF<3; iF++){
-    printf("double jetEpsBtag[%d] = \n",iF);
+    printf("double jetEpsBtagLOOSE[%d] = \n",iF);
     for(int iEta=0; iEta<5; iEta++){
       for(int iPt=0; iPt<5; iPt++){
-        printf("%5.4f",numBTagging[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        printf("%5.4f",numBTaggingLOOSE[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        if(iPt!=4||iEta!=4) printf(",");
+        if(iPt==4) printf("\n");
+      }
+    }
+  }
+  for(int iF=0; iF<3; iF++){
+    printf("double jetEpsBtagMEDIUM[%d] = \n",iF);
+    for(int iEta=0; iEta<5; iEta++){
+      for(int iPt=0; iPt<5; iPt++){
+        printf("%5.4f",numBTaggingMEDIUM[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        if(iPt!=4||iEta!=4) printf(",");
+        if(iPt==4) printf("\n");
+      }
+    }
+  }
+  for(int iF=0; iF<3; iF++){
+    printf("double jetEpsBtagTIGHT[%d] = \n",iF);
+    for(int iEta=0; iEta<5; iEta++){
+      for(int iPt=0; iPt<5; iPt++){
+        printf("%5.4f",numBTaggingTIGHT[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
         if(iPt!=4||iEta!=4) printf(",");
         if(iPt==4) printf("\n");
       }

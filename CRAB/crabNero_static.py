@@ -39,7 +39,7 @@ config.JobType.inputFiles=['jec','qg','jer']
 config.Data.inputDataset = '/HplusToTauNu-M500/amarini-amarini_PrivateMC_HPlusToTauNu_June2015-16aa19d591b8b49c55c4508e7a7c9233/USER'
 #config.Data.inputDBS = 'phys03'
 config.Data.inputDBS = 'global'
-config.Data.ignoreLocality = False
+config.Data.ignoreLocality = True
 
 config.Data.splitting = 'FileBased'
 config.Data.unitsPerJob = 10

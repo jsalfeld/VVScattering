@@ -39,7 +39,7 @@ config.JobType.inputFiles=['jec','qg','jer']
 config.Data.inputDataset = '/HplusToTauNu-M500/amarini-amarini_PrivateMC_HPlusToTauNu_June2015-16aa19d591b8b49c55c4508e7a7c9233/USER'
 #config.Data.inputDBS = 'phys03'
 config.Data.inputDBS = 'global'
-config.Data.ignoreLocality = False
+config.Data.ignoreLocality = True
 
 config.Data.splitting = 'FileBased'
 config.Data.unitsPerJob = 10
@@ -139,7 +139,11 @@ if __name__ == '__main__':
     config.Data.inputDataset = "/TTToSemiLeptonic_13TeV-powheg/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v2/MINIAODSIM"
     submit(config)
 
-    #config.General.requestName = "TT_TuneCUETP8M1_13TeV-powheg"
-    #config.Data.inputDataset = "/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext4-v1/MINIAODSIM"
-    #submit(config)
+    config.General.requestName = "TT_TuneCUETP8M2T4_13TeV-powheg-pythia8"
+    config.Data.inputDataset = "/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext4-v1/MINIAODSIM"
+    submit(config)
+
+    config.General.requestName = "TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_backup"
+    config.Data.inputDataset = "/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_backup_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM"
+    submit(config)
 

@@ -120,7 +120,6 @@ root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WZ
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8.root\",\"wz1l3n4\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8.root\",\"wz2q2l4\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8.root\",\"wz3ln4_powheg\",$1\)
-root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WZTo3LNu_mllmin01_13TeV-powheg-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WZTo3LNu_mllmin01_13TeV-powheg-pythia8.root\",\"wz3ln1_powheg\",$1\)
 
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZZTo2L2Nu_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZZTo2L2Nu_13TeV_powheg_pythia8.root\",\"zz2l2n4\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8.root\",\"zz2l2q4\",$1\)
@@ -128,4 +127,3 @@ root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZZ
 
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}TTTo2L2Nu_13TeV-powheg.root\",\"tt2l\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}TTToSemiLeptonic_13TeV-powheg.root\",\"ttqql\",$1\)
-root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}TT_TuneCUETP8M2T4_13TeV-powheg-pythia8.root\",\"tt\",$1\)
