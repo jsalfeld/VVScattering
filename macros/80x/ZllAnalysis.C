@@ -27,7 +27,7 @@ void ZllAnalysis(TString typeLepSel = "default"){
 
   TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_80x/";
   TString filesPathMC  = "/scratch5/ceballos/ntuples_weightsMC_80x/";
-  Double_t lumi = 12.9;
+  Double_t lumi = 35.9;
 
   //*******************************************************
   //Input Files

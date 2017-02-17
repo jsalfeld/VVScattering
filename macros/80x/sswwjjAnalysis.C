@@ -51,9 +51,10 @@ const bool useWZFromData = false;
 void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", bool isBlinded = false
  ){
 
-  TString filesPathDA = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/met_";
+  TString filesPathDA  = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/met_";
   TString filesPathMC  = "root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/output_80x/met_";
-  Double_t lumi = 36.8;
+  TString filesPathMC2 = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/mc/met_";
+  Double_t lumi = 35.9;
 
   if(typeLepSel == "medium_mva") {
     WSSF[0] = 0.762245; WSSFE[0] = 0.351553;
@@ -140,7 +141,7 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
   infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8.root",filesPathMC.Data()));			      infilecatv.push_back(6);
   infilenamev.push_back(Form("%sGluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8.root",filesPathMC.Data()));		      infilecatv.push_back(6);
   infilenamev.push_back(Form("%sGluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8.root",filesPathMC.Data()));		      infilecatv.push_back(6);
-  infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg.root",filesPathMC.Data()));			                      infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg.root",filesPathMC2.Data()));			                      infilecatv.push_back(6);
   infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));    infilecatv.push_back(6);
   infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));infilecatv.push_back(6);
 

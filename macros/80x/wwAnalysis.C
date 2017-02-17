@@ -55,9 +55,10 @@ void wwAnalysis(
  TString typeLepSel = "default"
  ){
 
-  TString filesPathDA = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/met_";
-  TString filesPathMC = "root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/output_80x/met_";
-  Double_t lumi = 36.8;
+  TString filesPathDA  = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/met_";
+  TString filesPathMC  = "root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/output_80x/met_";
+  TString filesPathMC2 = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/mc/met_";
+  Double_t lumi = 35.9;
 
   //*******************************************************
   //Input Files
@@ -87,7 +88,7 @@ void wwAnalysis(
   infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV.root",filesPathMC.Data()));					      infilecatv.push_back(2);
 
   infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg.root",filesPathMC.Data()));					      infilecatv.push_back(3);
-  infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));    infilecatv.push_back(3);
+  infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC2.Data()));   infilecatv.push_back(3);
   infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));infilecatv.push_back(3);
 
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));        infilecatv.push_back(4);
@@ -1829,13 +1830,10 @@ void wwAnalysis(
     else if(histo_WGS->GetBinContent(nb)> 0 && histo_WGS_CMS_MVAMETBoundingDown     ->GetBinContent(nb) > 0) systMet[7] = histo_WGS->GetBinContent(nb)/histo_WGS_CMS_MVAMETBoundingDown->GetBinContent(nb);
     if     (histo_Higgs->GetBinContent(nb)> 0 && histo_Higgs_CMS_MVAMETBoundingUp   ->GetBinContent(nb) > 0) systMet[8] = histo_Higgs_CMS_MVAMETBoundingUp->GetBinContent(nb)/histo_Higgs->GetBinContent(nb);
     else if(histo_Higgs->GetBinContent(nb)> 0 && histo_Higgs_CMS_MVAMETBoundingDown ->GetBinContent(nb) > 0) systMet[8] = histo_Higgs->GetBinContent(nb)/histo_Higgs_CMS_MVAMETBoundingDown->GetBinContent(nb);
-    for(int i=0; i<9; i++) if(systMetUp  [i] == 1) systMetUp  [i] = 0.998;
-    for(int i=0; i<9; i++) if(systMetDown[i] == 1) systMetDown[i] = 1.002;
-    for(int nmet=0; nmet<9; nmet++) if(systMetUp[nmet]   > 1.10) systMetUp[nmet]   = 1.10;
-    for(int nmet=0; nmet<9; nmet++) if(systMetUp[nmet]   < 0.90) systMetUp[nmet]   = 0.90;
-    for(int nmet=0; nmet<9; nmet++) if(systMetDown[nmet] > 1.10) systMetDown[nmet] = 1.10;
-    for(int nmet=0; nmet<9; nmet++) if(systMetDown[nmet] < 0.90) systMetDown[nmet] = 0.90;
-
+    for(int i=0; i<9; i++) if(systMet[i] == 1) systMet[i] = 0.998;
+    for(int nmet=0; nmet<9; nmet++) if(systMet[nmet] > 1.10) systMet[nmet] = 1.10;
+    for(int nmet=0; nmet<9; nmet++) if(systMet[nmet] < 0.90) systMet[nmet] = 0.90;
+ 
     double systJes[9] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
     if     (histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_MVAJESBoundingUp	    ->GetBinContent(nb) > 0) systJes[0] = histo_qqWW_CMS_MVAJESBoundingUp->GetBinContent(nb)/histo_qqWW->GetBinContent(nb);
     else if(histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_MVAJESBoundingDown   ->GetBinContent(nb) > 0) systJes[0] = histo_qqWW->GetBinContent(nb)/histo_qqWW_CMS_MVAJESBoundingDown->GetBinContent(nb);
@@ -1855,10 +1853,8 @@ void wwAnalysis(
     else if(histo_WGS->GetBinContent(nb)> 0 && histo_WGS_CMS_MVAJESBoundingDown     ->GetBinContent(nb) > 0) systJes[7] = histo_WGS->GetBinContent(nb)/histo_WGS_CMS_MVAJESBoundingDown->GetBinContent(nb);
     if     (histo_Higgs->GetBinContent(nb)> 0 && histo_Higgs_CMS_MVAJESBoundingUp   ->GetBinContent(nb) > 0) systJes[8] = histo_Higgs_CMS_MVAJESBoundingUp->GetBinContent(nb)/histo_Higgs->GetBinContent(nb);
     else if(histo_Higgs->GetBinContent(nb)> 0 && histo_Higgs_CMS_MVAJESBoundingDown ->GetBinContent(nb) > 0) systJes[8] = histo_Higgs->GetBinContent(nb)/histo_Higgs_CMS_MVAJESBoundingDown->GetBinContent(nb);
-    for(int njes=0; njes<9; njes++) if(systJesUp[njes]   > 1.10) systJesUp[njes]   = 1.10;
-    for(int njes=0; njes<9; njes++) if(systJesUp[njes]   < 0.90) systJesUp[njes]   = 0.90;
-    for(int njes=0; njes<9; njes++) if(systJesDown[njes] > 1.10) systJesDown[njes] = 1.10;
-    for(int njes=0; njes<9; njes++) if(systJesDown[njes] < 0.90) systJesDown[njes] = 0.90;
+    for(int njes=0; njes<9; njes++) if(systJes[njes] > 1.10) systJes[njes] = 1.10;
+    for(int njes=0; njes<9; njes++) if(systJes[njes] < 0.90) systJes[njes] = 0.90;
 
     double systBtag[9] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
     if     (histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_MVABTAGBoundingUp    ->GetBinContent(nb) > 0) systBtag[0] = histo_qqWW_CMS_MVABTAGBoundingUp->GetBinContent(nb)/histo_qqWW->GetBinContent(nb);
@@ -1879,11 +1875,9 @@ void wwAnalysis(
     else if(histo_WGS->GetBinContent(nb)> 0 && histo_WGS_CMS_MVABTAGBoundingDown    ->GetBinContent(nb) > 0) systBtag[7] = histo_WGS->GetBinContent(nb)/histo_WGS_CMS_MVABTAGBoundingDown->GetBinContent(nb);
     if     (histo_Higgs->GetBinContent(nb)> 0 && histo_Higgs_CMS_MVABTAGBoundingUp  ->GetBinContent(nb) > 0) systBtag[8] = histo_Higgs_CMS_MVABTAGBoundingUp->GetBinContent(nb)/histo_Higgs->GetBinContent(nb);
     else if(histo_Higgs->GetBinContent(nb)> 0 && histo_Higgs_CMS_MVABTAGBoundingDown->GetBinContent(nb) > 0) systBtag[8] = histo_Higgs->GetBinContent(nb)/histo_Higgs_CMS_MVABTAGBoundingDown->GetBinContent(nb);
-    for(int nbtag=0; nbtag<9; nbtag++) if(systBtagUp[nbtag]   > 1.10) systBtagUp[nbtag]   = 1.10;
-    for(int nbtag=0; nbtag<9; nbtag++) if(systBtagUp[nbtag]   < 0.90) systBtagUp[nbtag]   = 0.90;
-    for(int nbtag=0; nbtag<9; nbtag++) if(systBtagDown[nbtag] > 1.10) systBtagDown[nbtag] = 1.10;
-    for(int nbtag=0; nbtag<9; nbtag++) if(systBtagDown[nbtag] < 0.90) systBtagDown[nbtag] = 0.90;
-
+    for(int nbtag=0; nbtag<9; nbtag++) if(systBtag[nbtag] > 1.10) systBtag[nbtag] = 1.10;
+    for(int nbtag=0; nbtag<9; nbtag++) if(systBtag[nbtag] < 0.90) systBtag[nbtag] = 0.90;
+ 
     double systPU[9] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
     if     (histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_PUBoundingUp	    ->GetBinContent(nb) > 0) systPU[0] = histo_qqWW_CMS_PUBoundingUp->GetBinContent(nb)/histo_qqWW->GetBinContent(nb);
     else if(histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_PUBoundingDown       ->GetBinContent(nb) > 0) systPU[0] = histo_qqWW->GetBinContent(nb)/histo_qqWW_CMS_PUBoundingDown->GetBinContent(nb);

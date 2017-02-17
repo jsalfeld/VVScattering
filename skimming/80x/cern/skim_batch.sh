@@ -16,7 +16,7 @@ export thePWD=$PWD;
 #fi
 #if [[ ! -e $CMSSW_BASE/src ]]; then
    echo 'begin setting CMSSW'
-   cd ~/releases/CMSSW_8_0_24_patch1/src/;
+   cd ~/releases/CMSSW_8_0_26_patch1/src/;
    /cvmfs/cms.cern.ch/cmsset_default.sh;
    eval `scramv1 runtime -sh`
    echo 'end setting CMSSW'
@@ -25,11 +25,11 @@ export thePWD=$PWD;
 #   exit;
 #fi
 
-cd ~/releases/CMSSW_8_0_24_patch1/src/;
+cd ~/releases/CMSSW_8_0_26_patch1/src/;
 
 echo 'Working folder: '${thePWD}
 
-#if [[ -e ~/eos/cms/store ]] &&  [[ -e $CMSSW_BASE/src ]]; then
+#if [[ -e /eos/cms/store ]] &&  [[ -e $CMSSW_BASE/src ]]; then
 if [[ -e $CMSSW_BASE/src ]]; then
    ###root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"root://eoscms.cern.ch//eos/${INPUTDIR}/${datasetName}/${fileName}\",\"${thePWD}/${SKIMDIR}/${datasetName}/${fileName}\",\"${TYPE}\",0,0,0\);
    mkdir -p ${thePWD}/eos/${SKIMDIR}/${datasetName};

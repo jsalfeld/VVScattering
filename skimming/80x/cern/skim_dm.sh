@@ -1,7 +1,7 @@
 #!/bin/sh
 
-export INPUTDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/caf/user/ceballos/Nero/merging_80x;
-export OUTPUTDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/caf/user/ceballos/Nero/output_80x;
+export INPUTDIR=/eos/cms/store/group/phys_higgs/ceballos/Nero/merging_80x/dm;
+export OUTPUTDIR=/eos/cms/store/caf/user/ceballos/Nero/output_80x;
 
 #ls $INPUTDIR|grep -e DarkMatter -e ADDMonoZ -e Unpart -e Inv|awk '{printf("root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\\(\\\"$INPUTDIR/%s\\\",\\\"$OUTPUTDIR/${PREFIX}%s\\\",\\\"dm_em\\\",$1\\)\n",$1,$1)}'
 
@@ -272,10 +272,10 @@ root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToEE_HToInvisible_M300_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToEE_HToInvisible_M300_13TeV_powheg_pythia8.root\",\"zeehinv300\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToEE_HToInvisible_M400_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToEE_HToInvisible_M400_13TeV_powheg_pythia8.root\",\"zeehinv400\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToEE_HToInvisible_M500_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToEE_HToInvisible_M500_13TeV_powheg_pythia8.root\",\"zeehinv500\",$1\)
-###root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToEE_HToInvisible_M600_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToEE_HToInvisible_M600_13TeV_powheg_pythia8.root\",\"zeehinv600\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToEE_HToInvisible_M600_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToEE_HToInvisible_M600_13TeV_powheg_pythia8.root\",\"zeehinv600\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToEE_HToInvisible_M800_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToEE_HToInvisible_M800_13TeV_powheg_pythia8.root\",\"zeehinv800\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToEE_HToInvisible_M1000_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToEE_HToInvisible_M1000_13TeV_powheg_pythia8.root\",\"zeehinv1000\",$1\)
-###root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToMM_HToInvisible_M110_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToMM_HToInvisible_M110_13TeV_powheg_pythia8.root\",\"zmmhinv110\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToMM_HToInvisible_M110_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToMM_HToInvisible_M110_13TeV_powheg_pythia8.root\",\"zmmhinv110\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToMM_HToInvisible_M125_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToMM_HToInvisible_M125_13TeV_powheg_pythia8.root\",\"zmmhinv125\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToMM_HToInvisible_M150_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToMM_HToInvisible_M150_13TeV_powheg_pythia8.root\",\"zmmhinv150\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToMM_HToInvisible_M200_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToMM_HToInvisible_M200_13TeV_powheg_pythia8.root\",\"zmmhinv200\",$1\)

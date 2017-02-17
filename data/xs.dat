@@ -10,6 +10,15 @@ znng130        0.1903*1.4
 zllg130        0.1487*1.4
 wlng130        0.6637*1.4
 
+dy1050_1j       729.726349
+dy1050_2j       387.472359
+dy1050_3j        95.033555
+dy1050_4j        36.698502
+dy50_1j        1012.296845
+dy50_2j         334.717838
+dy50_3j         102.462800
+dy50_4j          54.481360
+
 dyll_pt050To100 357.200
 dyll_pt100To250 81.2000
 dyll_pt250To400 3.06200
@@ -118,11 +127,11 @@ gjets200_400   2300
 gjets400_600   277.4
 gjets600       93.38
 
-wpwp_ewk_qcd   0.054540
-wpwp_ewk       0.025260
-wpwp_qcd       0.024740
-wpwp_ewk_pwg   0.020930
-wmwm_ewk_pwg   0.007868
+wpwp_ewk_qcd   0.0538980
+wpwp_ewk       0.0269642
+wpwp_qcd       0.0261515
+wmwm_ewk_pwg   0.0078680
+wpwp_ewk_pwg   0.0209300
 wzjj_ewk_qcd   0.489100
 wzjj_ewk       0.039000
 wzjj_qcd       0.458500
@@ -131,14 +140,20 @@ wpwmjj_ewk_qcd_notop 2.66300
 wpwmjj_ewk_notop     0.34520
 wpwmjj_qcd_notop     2.42300
 
-zzjj_ewk          0.0004404
-zzjj_qcd          0.0093350
-wlljj60_ewk_qcd   0.52950
-wlljj60_ewk       0.04634
-wlljj4_60_ewk_qcd 0.40860
-wlgjj             5.66200
-wlljj_ewk         0.01785
-wz3l_0j           0.56900
-wz3l_1j           0.35600
-wz3l_2j           0.06660
-wz3l_3j           0.09482
+zzjj_ewk          0.0004452
+zzjj_qcd          0.0093081
+#wlljj60_ewk_qcd   0.52950
+#wlljj60_ewk       0.04634
+#wlljj4_60_ewk_qcd 0.40860
+wlgjj             5.6624279
+
+wlljj60_ewk       0.0176340
+wz3l_0j50         0.5770677
+wz3l_1j50         0.3445573
+wz3l_2j50         0.0768421
+wz3l_3j50         0.1112010
+wlljj4_60_ewk     0.0054845
+wz3l_0j4_50       2.3011202
+wz3l_1j4_50       0.5291347
+wz3l_2j4_50       0.0819576
+wz3l_3j4_50       0.0000000

@@ -38,12 +38,10 @@ void baseAnalysis(
  bool useDYPT = false
  ){
 
-  TString filesPathDA  = "/data/t3home000/ceballos/ntuples_skim_80x/";
-  //if(isMINIAOD) filesPathDA = "/afs/cern.ch/user/c/ceballos/eoslink2/cms/store/group/phys_higgs/ceballos/Nero/output_80x/";
-  //TString filesPathMC  = "/afs/cern.ch/user/c/ceballos/eoslink2/cms/store/caf/user/ceballos/Nero/output_80x/";
-  if(isMINIAOD) filesPathDA = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/";
+  TString filesPathDA  = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/";
   TString filesPathMC  = "root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/output_80x/";
-  Double_t lumi = 36.8;
+  TString filesPathMC2 = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/mc/";
+  Double_t lumi = 35.9;
 
   if(nsel == 2 || nsel == 5) usePureMC = true;
 
@@ -85,8 +83,7 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sDYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));  infilecatv.push_back(2);
   }
 
-  infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg.root",filesPathMC.Data()));					   infilecatv.push_back(3);
-
+  infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg.root",filesPathMC2.Data()));					      infilecatv.push_back(3);
   infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));    infilecatv.push_back(3);
   infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));infilecatv.push_back(3);
 

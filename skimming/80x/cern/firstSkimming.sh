@@ -4,20 +4,20 @@
 
 export theRND=file_skim_$RANDOM;
 
-export INPUTDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/user/ceballos/Nero/v2.1;
-export SKIMDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/caf/user/ceballos/Nero/skim_80x;
+export INPUTDIR=/eos/cms/store/user/ceballos/Nero/v2.1;
+export SKIMDIR=/eos/cms/store/caf/user/ceballos/Nero/skim_80x;
 export TYPE="dm"
 
 if [ $# == 2 ] && [ $2 == 1 ]; then
   echo "AREA 1";
-  export INPUTDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/Nero/v2.1;
-  export SKIMDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/Nero/skim_80x;
+  export INPUTDIR=/eos/cms/store/group/phys_higgs/ceballos/Nero/v2.1;
+  export SKIMDIR=/eos/cms/store/group/phys_higgs/ceballos/Nero/skim_80x;
   export TYPE="dm"
 
 elif [ $# == 2 ] && [ $2 == 2 ]; then
   echo "AREA 2";
-  export INPUTDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/setup80x_ichep/Data/Nero/v2.0/$1;
-  export  SKIMDIR=/afs/cern.ch/user/c/ceballos/eos/cms/store/group/phys_higgs/ceballos/Nero/skim_80x/$1;
+  export INPUTDIR=/eos/cms/store/group/phys_higgs/ceballos/setup80x_ichep/Data/Nero/v2.0/$1;
+  export  SKIMDIR=/eos/cms/store/group/phys_higgs/ceballos/Nero/skim_80x/$1;
   export TYPE="data"
 
 elif [ $# == 2 ] && [ $2 == 3 ]; then
