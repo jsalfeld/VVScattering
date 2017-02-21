@@ -23,8 +23,8 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
-double WSSF[5]  = {1.269917,1.221954,0.919848,1.004682,1.097358};
-double WSSFE[5] = {0.390835,0.165349,0.053473,0.029349,0.038609};
+double WSSF[5]  = {1.253783,1.239172,0.944641,0.997775,1.099893};
+double WSSFE[5] = {0.373235,0.163163,0.053062,0.029079,0.037923};
 double the_sf_ZLL = 0.90;
 const double bTagCuts[2] = {0.8484,0.9535}; // 0.5426/0.8484/0.9535 (check BTagCalibration2Reader!)
 
