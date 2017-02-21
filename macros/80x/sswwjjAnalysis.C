@@ -25,7 +25,7 @@
 
 double WSSF[5]  = {1.269917,1.221954,0.919848,1.004682,1.097358};
 double WSSFE[5] = {0.390835,0.165349,0.053473,0.029349,0.038609};
-double the_sf_ZLL = 0.80;
+double the_sf_ZLL = 0.90;
 const double bTagCuts[2] = {0.8484,0.9535}; // 0.5426/0.8484/0.9535 (check BTagCalibration2Reader!)
 
 void func_ws_sf(double eta, double pt, double theSF[2]);
@@ -102,11 +102,18 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
   infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(2);
 
   //WZ
-  infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8.root",filesPathMC.Data()));                       infilecatv.push_back(3); 
-  //infilenamev.push_back(Form("%sWZTo3LNu_mllmin01_13TeV-powheg-pythia8.root",filesPathMC.Data()));                           infilecatv.push_back(3); 
-  infilenamev.push_back(Form("%sWLLJJ_WToLNu_EWK_TuneCUETP8M1_13TeV_madgraph-madspin-pythia8.root",filesPathMC.Data()));     infilecatv.push_back(3);
-  //infilenamev.push_back(Form("%sWLLJJToLNu_M-60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));      infilecatv.push_back(3);
-  //infilenamev.push_back(Form("%sWLLJJToLNu_M-4to60_EWK_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));   infilecatv.push_back(3);
+  infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8.root",filesPathMC.Data()));                             infilecatv.push_back(3); 
+  //infilenamev.push_back(Form("%sWZTo3LNu_mllmin01_13TeV-powheg-pythia8.root",filesPathMC.Data()));                                 infilecatv.push_back(3); 
+  //infilenamev.push_back(Form("%sWZTo3LNu_0Jets_MLL-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	   infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWZTo3LNu_1Jets_MLL-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	   infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWZTo3LNu_2Jets_MLL-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	   infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWZTo3LNu_3Jets_MLL-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	   infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWZTo3LNu_0Jets_MLL-4To50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	   infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWZTo3LNu_1Jets_MLL-4To50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	   infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWZTo3LNu_2Jets_MLL-4To50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	   infilecatv.push_back(3);
+  //infilenamev.push_back(Form("%sWZTo3LNu_3Jets_MLL-4To50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));        infilecatv.push_back(3);
+  infilenamev.push_back(Form("%sWLLJJ_WToLNu_EWK_TuneCUETP8M1_13TeV_madgraph-madspin-pythia8.root",filesPathMC.Data()));           infilecatv.push_back(3);
+  infilenamev.push_back(Form("%sWLLJJ_WToLNu_MLL-4To60_EWK_TuneCUETP8M1_13TeV_madgraph-madspin-pythia8.root",filesPathMC.Data())); infilecatv.push_back(3);
 
   //ZZ
   //infilenamev.push_back(Form("%sZZTo4L_13TeV_powheg_pythia8.root",filesPathMC.Data()));				     infilecatv.push_back(4);
@@ -145,8 +152,16 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
   infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));    infilecatv.push_back(6);
   infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));infilecatv.push_back(6);
 
-  infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(6);
-  infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(6);
+  //infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));        infilecatv.push_back(6);
+  //infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));            infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sDY1JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));       infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sDY2JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));       infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sDY3JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));       infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sDY4JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));       infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sDY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sDY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sDY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(6);
+  infilenamev.push_back(Form("%sDY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(6);
 
   //Wgamma
   //infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));		        infilecatv.push_back(7);
@@ -157,7 +172,7 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
   infilenamev.push_back(Form("%sWWTo2L2Nu_DoubleScattering_13TeV-pythia8.root",filesPathMC.Data()));                          infilecatv.push_back(8);
 
   //Non-prompt leptons
-  //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));                infilecatv.push_back(9)
+  //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));                infilecatv.push_back(9)
   }
   else {assert(0); return;}
 
@@ -204,7 +219,7 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
   LeptonScaleLookup trigLookup(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
 
   TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
-  TH1D *fhDPU     = (TH1D*)(fPUFile->Get("puWeightsDown")); assert(fhDPU);    fhDPU    ->SetDirectory(0);
+  TH1D *fhDPU     = (TH1D*)(fPUFile->Get("puWeights"));     assert(fhDPU);    fhDPU    ->SetDirectory(0);
   TH1D *fhDPUUp   = (TH1D*)(fPUFile->Get("puWeightsUp"));   assert(fhDPUUp);  fhDPUUp  ->SetDirectory(0);
   TH1D *fhDPUDown = (TH1D*)(fPUFile->Get("puWeightsDown")); assert(fhDPUDown);fhDPUDown->SetDirectory(0);
   delete fPUFile;
@@ -432,15 +447,15 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
     histo_DPS_CMS_QCDScaleBounding[nb]        = new TH1D(Form("histo_DPS_QCDScale_f%d",nb),	 Form("histo_DPS_QCDScale_f%d",nb),nBinMVA, xbins);	 histo_DPS_CMS_QCDScaleBounding[nb]->Sumw2();
   }
 
-  TH1D* histo_EWK_CMS_PDFBounding[102];
-  TH1D* histo_QCD_CMS_PDFBounding[102];
-  TH1D* histo_WZ_CMS_PDFBounding [102];
-  TH1D* histo_ZZ_CMS_PDFBounding [102];
-  TH1D* histo_VVV_CMS_PDFBounding[102];
-  TH1D* histo_WS_CMS_PDFBounding [102];
-  TH1D* histo_WG_CMS_PDFBounding [102];
-  TH1D* histo_DPS_CMS_PDFBounding[102];
-  for(int nb=0; nb<102; nb++){
+  TH1D* histo_EWK_CMS_PDFBounding[100];
+  TH1D* histo_QCD_CMS_PDFBounding[100];
+  TH1D* histo_WZ_CMS_PDFBounding [100];
+  TH1D* histo_ZZ_CMS_PDFBounding [100];
+  TH1D* histo_VVV_CMS_PDFBounding[100];
+  TH1D* histo_WS_CMS_PDFBounding [100];
+  TH1D* histo_WG_CMS_PDFBounding [100];
+  TH1D* histo_DPS_CMS_PDFBounding[100];
+  for(int nb=0; nb<100; nb++){
     histo_EWK_CMS_PDFBounding[nb]        = new TH1D(Form("histo_EWK_PDF_f%d",nb),	 Form("histo_EWK_PDF_f%d",nb),nBinMVA, xbins);	 histo_EWK_CMS_PDFBounding[nb]->Sumw2();
     histo_QCD_CMS_PDFBounding[nb]        = new TH1D(Form("histo_QCD_PDF_f%d",nb),	 Form("histo_QCD_PDF_f%d",nb),nBinMVA, xbins);	 histo_QCD_CMS_PDFBounding[nb]->Sumw2();
     histo_WZ_CMS_PDFBounding [nb]        = new TH1D(Form("histo_WZ_PDF_f%d",nb),	 Form("histo_WZ_PDF_f%d",nb),nBinMVA, xbins);	 histo_WZ_CMS_PDFBounding [nb]->Sumw2();
@@ -596,7 +611,6 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
     TTree *the_input_tree = (TTree*)the_input_file->FindObjectAny("events");
     TTree *the_input_all  = (TTree*)the_input_file->FindObjectAny("all");
     TTree *the_SelBit_tree= (TTree*)the_input_file->FindObjectAny("SelBit_tree");
-    TTree *the_PDF_tree   = (TTree*)the_input_file->FindObjectAny("pdfReweight");
 
     BareEvent eventEvent;
     eventEvent.setBranchAddresses(the_input_tree);
@@ -629,7 +643,7 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
     char **tokens;
     size_t numtokens;
     tokens = strsplit(triggerNames->GetTitle(), ",", &numtokens);
-    if(infilecatv[ifile] == 0){
+    if(ifile == 0){
       for (int i = 0; i < (int)numtokens; i++) {
         printf("triggerNames(%2d): \"%s\"\n",(int)i,tokens[i]);
       }
@@ -637,42 +651,13 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
     else {
     }
     
-    char weightDef[256];
-    int initPDFTag = -1;
-    if(the_PDF_tree) {
-      the_PDF_tree->SetBranchAddress("weightDef", &weightDef);
-      for (int i=0; i<the_PDF_tree->GetEntries(); ++i) {
-        the_PDF_tree->GetEntry(i);
-        char **tokensPDF;
-        size_t numtokensPDF;
-        tokensPDF = strsplit(weightDef, " = ", &numtokensPDF);
-        for (int k = 0; k < (int)numtokensPDF; k++) if(strcmp(tokensPDF[k],"292201") == 0||
-	                                               strcmp(tokensPDF[k],"292001") == 0||
-						       strcmp(tokensPDF[k],"260001") == 0) {initPDFTag = i; break;}
-	if(initPDFTag != -1) break;
-      }
-    }
-    if(infilecatv[ifile] != 0 && initPDFTag == -1) {
-      printf("PDFTAG PROBLEM\n");
-      if(the_PDF_tree) {
-        printf("PDFTree Entries: %d\n",(int)the_PDF_tree->GetEntries());
-        for (int i=0; i<the_PDF_tree->GetEntries(); ++i) {
-          the_PDF_tree->GetEntry(i);
-	  //printf("PDF(%d): %s\n",i,weightDef);
-        }
-      }
-      else {
-        printf("PDFTree not available\n");
-      }
-      //return;
-    }
-
     bool errorMsgQCDscale = false;
     unsigned int selBit_= 0;
     the_SelBit_tree->SetBranchAddress("selBit", &selBit_);
     hDWWLL[0]->Scale(0.0);hDWWLL[1]->Scale(0.0);hDWWLL[2]->Scale(0.0);hDWWLL[3]->Scale(0.0);hDWWLL[4]->Scale(0.0);hDWWLL[5]->Scale(0.0);hDWWLL[6]->Scale(0.0);
     double theMCPrescale = mcPrescale;
     if(infilecatv[ifile] == 0) theMCPrescale = 1.0;
+    if(the_input_tree->GetEntries() != the_SelBit_tree->GetEntries()) {printf("BIG SKIMMING FAILURE\n"); return;}
     for (int i=0; i<int(the_input_tree->GetEntries()/theMCPrescale); ++i) {
       the_SelBit_tree->GetEntry(i);
       if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
@@ -680,6 +665,9 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
 
       the_input_tree->GetEntry(i);
  
+      int initPDFTag = 0;
+      if((*eventMonteCarlo.pdfRwgt).size() == 0) initPDFTag = -1;
+
       int sumEvol[6] = {-1, -1, -1, -1, -1, -1};
       Bool_t passFilterSig[numberCuts] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       Bool_t passFilterCR1[numberCuts] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
@@ -1247,13 +1235,13 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
       }
 
       // Z->ll scale factor
-      if     (infilenamev[ifile].Contains("DYJetsToLL") && goodIsTight == idTight.size()) {
+      if     (infilenamev[ifile].Contains("JetsToLL") && goodIsTight == idTight.size()) {
         totalWeight = totalWeight * the_sf_ZLL;
       }
-      else if(infilenamev[ifile].Contains("DYJetsToLL") && goodIsTight != idTight.size() && (passAllCuts[SIGSEL] || passAllCuts[TOPSEL] || passAllCuts[WZSEL])) {
+      else if(infilenamev[ifile].Contains("JetsToLL") && goodIsTight != idTight.size() && (passAllCuts[SIGSEL] || passAllCuts[TOPSEL] || passAllCuts[WZSEL])) {
         totalWeight = 0.0;
       }
-      if(infilenamev[ifile].Contains("DYJetsToLL") && (typeSel == 0 || typeSel == 3) && signQ != 0) {
+      if(infilenamev[ifile].Contains("JetsToLL") && (typeSel == 0 || typeSel == 3) && signQ != 0) {
         totalWeight = 0.0;
         if(passSignalRegion && goodIsGenWSLep == 0) printf("mm event with no WS candidates\n");
       }
@@ -1340,9 +1328,15 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
         MVAVar = TMath::Min(dijet.M(),1999.999); MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999); MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999);
       }
 
-      // Avoid QCD scale weights that are anomalous high
+      // Avoid QCD scale and PDF weights that are anomalous high
       double maxQCDscale = (TMath::Abs((double)eventMonteCarlo.r1f2)+TMath::Abs((double)eventMonteCarlo.r1f5)+TMath::Abs((double)eventMonteCarlo.r2f1)+
         		    TMath::Abs((double)eventMonteCarlo.r2f2)+TMath::Abs((double)eventMonteCarlo.r5f1)+TMath::Abs((double)eventMonteCarlo.r5f5))/6.0;
+      double PDFAvg = 0.0;
+      if(infilecatv[ifile] != 0 && ((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2))){
+        if(initPDFTag != -1)
+        for(int npdf=0; npdf<100; npdf++) PDFAvg = PDFAvg + TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]);
+        PDFAvg = PDFAvg/100.0;
+      }
 
       if     (theCategory == 0){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
@@ -1359,9 +1353,9 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
            histo_EWK_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
            histo_EWK_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
-           for(int npdf=0; npdf<102; npdf++) histo_EWK_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
+           for(int npdf=0; npdf<100; npdf++) histo_EWK_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag])/PDFAvg);
            else
-           for(int npdf=0; npdf<102; npdf++) histo_EWK_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
+           for(int npdf=0; npdf<100; npdf++) histo_EWK_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_EWK_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else if(typePair == 1) histo_EWK_CMS_MVALepEffEBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else                  {histo_EWK_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*0.50);
@@ -1394,9 +1388,9 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
            histo_QCD_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
            histo_QCD_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
-           for(int npdf=0; npdf<102; npdf++) histo_QCD_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
+           for(int npdf=0; npdf<100; npdf++) histo_QCD_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag])/PDFAvg);
            else
-           for(int npdf=0; npdf<102; npdf++) histo_QCD_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
+           for(int npdf=0; npdf<100; npdf++) histo_QCD_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_QCD_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else if(typePair == 1) histo_QCD_CMS_MVALepEffEBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else                  {histo_QCD_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*0.50);
@@ -1429,9 +1423,9 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
            histo_WZ_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
            histo_WZ_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
-           for(int npdf=0; npdf<102; npdf++) histo_WZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
+           for(int npdf=0; npdf<100; npdf++) histo_WZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag])/PDFAvg);
            else
-           for(int npdf=0; npdf<102; npdf++) histo_WZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
+           for(int npdf=0; npdf<100; npdf++) histo_WZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_WZ_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else if(typePair == 1) histo_WZ_CMS_MVALepEffEBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else                  {histo_WZ_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*0.50);
@@ -1464,9 +1458,9 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
            histo_ZZ_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
            histo_ZZ_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
-           for(int npdf=0; npdf<102; npdf++) histo_ZZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
+           for(int npdf=0; npdf<100; npdf++) histo_ZZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag])/PDFAvg);
            else
-           for(int npdf=0; npdf<102; npdf++) histo_ZZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
+           for(int npdf=0; npdf<100; npdf++) histo_ZZ_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_ZZ_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else if(typePair == 1) histo_ZZ_CMS_MVALepEffEBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else                  {histo_ZZ_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*0.50);
@@ -1499,9 +1493,9 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
            histo_VVV_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
            histo_VVV_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
-           for(int npdf=0; npdf<102; npdf++) histo_VVV_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
+           for(int npdf=0; npdf<100; npdf++) histo_VVV_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag])/PDFAvg);
            else
-           for(int npdf=0; npdf<102; npdf++) histo_VVV_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
+           for(int npdf=0; npdf<100; npdf++) histo_VVV_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_VVV_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else if(typePair == 1) histo_VVV_CMS_MVALepEffEBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else                  {histo_VVV_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*0.50);
@@ -1536,9 +1530,9 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
            histo_WS_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
            histo_WS_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
-           for(int npdf=0; npdf<102; npdf++) histo_WS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
+           for(int npdf=0; npdf<100; npdf++) histo_WS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag])/PDFAvg);
            else
-           for(int npdf=0; npdf<102; npdf++) histo_WS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
+           for(int npdf=0; npdf<100; npdf++) histo_WS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_WS_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else if(typePair == 1) histo_WS_CMS_MVALepEffEBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else                  {histo_WS_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*0.50);
@@ -1571,9 +1565,9 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
            histo_WG_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
            histo_WG_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
-           for(int npdf=0; npdf<102; npdf++) histo_WG_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
+           for(int npdf=0; npdf<100; npdf++) histo_WG_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag])/PDFAvg);
            else
-           for(int npdf=0; npdf<102; npdf++) histo_WG_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
+           for(int npdf=0; npdf<100; npdf++) histo_WG_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
             if	  (typePair == 0) histo_WG_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else if(typePair == 1) histo_WG_CMS_MVALepEffEBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else                  {histo_WG_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*0.50);
@@ -1605,10 +1599,7 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
            histo_DPS_CMS_QCDScaleBounding[3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2)/maxQCDscale);
            histo_DPS_CMS_QCDScaleBounding[4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
            histo_DPS_CMS_QCDScaleBounding[5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
-           if(initPDFTag != -1)
-           for(int npdf=0; npdf<102; npdf++) histo_DPS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag]));
-           else
-           for(int npdf=0; npdf<102; npdf++) histo_DPS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
+           for(int npdf=0; npdf<100; npdf++) histo_DPS_CMS_PDFBounding[npdf]->Fill(MVAVar,totalWeight);
            if	  (typePair == 0) histo_DPS_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else if(typePair == 1) histo_DPS_CMS_MVALepEffEBoundingAvg ->Fill(MVAVar,totalWeight*1.00);
            else                  {histo_DPS_CMS_MVALepEffMBoundingAvg ->Fill(MVAVar,totalWeight*0.50);
@@ -2159,35 +2150,35 @@ void sswwjjAnalysis(int theControlRegion = 0, TString typeLepSel = "verytight", 
       // PDF study
       double systPDF[8];
       histo_Diff->Reset();
-      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_EWK_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_EWK->GetBinContent(nb))/histo_EWK->GetBinContent(nb));
+      for(int npdf=0; npdf<100; npdf++) histo_Diff->Fill((histo_EWK_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_EWK->GetBinContent(nb))/histo_EWK->GetBinContent(nb));
       systPDF[0] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_QCD_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_QCD->GetBinContent(nb))/histo_QCD->GetBinContent(nb));
+      for(int npdf=0; npdf<100; npdf++) histo_Diff->Fill((histo_QCD_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_QCD->GetBinContent(nb))/histo_QCD->GetBinContent(nb));
       systPDF[1] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_WZ_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WZ->GetBinContent(nb))/histo_WZ->GetBinContent(nb));
+      for(int npdf=0; npdf<100; npdf++) histo_Diff->Fill((histo_WZ_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WZ->GetBinContent(nb))/histo_WZ->GetBinContent(nb));
       systPDF[2] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_ZZ_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_ZZ->GetBinContent(nb))/histo_ZZ->GetBinContent(nb));
+      for(int npdf=0; npdf<100; npdf++) histo_Diff->Fill((histo_ZZ_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_ZZ->GetBinContent(nb))/histo_ZZ->GetBinContent(nb));
       systPDF[3] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_VVV_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_VVV->GetBinContent(nb))/histo_VVV->GetBinContent(nb));
+      for(int npdf=0; npdf<100; npdf++) histo_Diff->Fill((histo_VVV_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_VVV->GetBinContent(nb))/histo_VVV->GetBinContent(nb));
       systPDF[4] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_WS_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WS->GetBinContent(nb))/histo_WS->GetBinContent(nb));
+      for(int npdf=0; npdf<100; npdf++) histo_Diff->Fill((histo_WS_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WS->GetBinContent(nb))/histo_WS->GetBinContent(nb));
       systPDF[5] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_WG_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WG->GetBinContent(nb))/histo_WG->GetBinContent(nb));
+      for(int npdf=0; npdf<100; npdf++) histo_Diff->Fill((histo_WG_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_WG->GetBinContent(nb))/histo_WG->GetBinContent(nb));
       systPDF[6] = 1.0+histo_Diff->GetRMS();
  
       histo_Diff->Reset();
-      for(int npdf=0; npdf<102; npdf++) histo_Diff->Fill((histo_DPS_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_DPS->GetBinContent(nb))/histo_DPS->GetBinContent(nb));
+      for(int npdf=0; npdf<100; npdf++) histo_Diff->Fill((histo_DPS_CMS_PDFBounding[npdf]->GetBinContent(nb)-histo_DPS->GetBinContent(nb))/histo_DPS->GetBinContent(nb));
       systPDF[7] = 1.0+histo_Diff->GetRMS();
    
       if(verbose) printf("PDF(%d): %f %f %f %f %f %f %f %f\n",nb,systPDF[0],systPDF[1],systPDF[2],systPDF[3],systPDF[4],systPDF[5],systPDF[6],systPDF[7]);

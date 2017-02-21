@@ -123,6 +123,3 @@ root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WZ
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZZTo2L2Nu_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZZTo2L2Nu_13TeV_powheg_pythia8.root\",\"zz2l2n4\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8.root\",\"zz2l2q4\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZZTo4L_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZZTo4L_13TeV_powheg_pythia8.root\",\"zz4l4\",$1\)
-
-#####root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}TTTo2L2Nu_13TeV-powheg.root\",\"tt2l\",$1\)
-#####root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}TTToSemiLeptonic_13TeV-powheg.root\",\"ttqql\",$1\)

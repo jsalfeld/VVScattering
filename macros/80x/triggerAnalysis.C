@@ -49,6 +49,13 @@ int typeAna = 0
     infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/merging_80x/onlymet/DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root");
   }
 
+  TString puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
+  TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
+  TH1D *fhDPU     = (TH1D*)(fPUFile->Get("puWeights"));     assert(fhDPU);    fhDPU    ->SetDirectory(0);
+  TH1D *fhDPUUp   = (TH1D*)(fPUFile->Get("puWeightsUp"));   assert(fhDPUUp);  fhDPUUp  ->SetDirectory(0);
+  TH1D *fhDPUDown = (TH1D*)(fPUFile->Get("puWeightsDown")); assert(fhDPUDown);fhDPUDown->SetDirectory(0);
+  delete fPUFile;
+
   // Initializations
   double nPassTrigger[3][25];
   for(int i=0; i<3; i++){
@@ -141,7 +148,8 @@ int typeAna = 0
          ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <= 10 ||
          dilep.M() <= 12) continue;
 
-      double totalWeight = 1.0;
+      double puWeight = 1.0; if(typeAna != 0) puWeight = nPUScaleFactor(fhDPU, (double)eventMonteCarlo.puTrueInt);
+      double totalWeight = puWeight;
 
       int typePair = -1;
       if     (TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==13&&TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])==13) {typePair = 0;}

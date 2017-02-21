@@ -55,8 +55,8 @@ void QCDAnalysis(
   if     (period==0){
   }
   else if(period==1){
-  if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00051;prescale[2]=0.00154;prescale[3]=0.00210;prescale[4]=0.00232;}
-  else if(typeSel == 13) {prescale[0]=0.00035;prescale[1]=0.00497;prescale[2]=0.00676;prescale[3]=0.00686;prescale[4]=0.00680;}
+  if     (typeSel == 11) {prescale[0]=0.00504;prescale[1]=0.00139;prescale[2]=0.00166;prescale[3]=0.00246;prescale[4]=0.00257;}
+  else if(typeSel == 13) {prescale[0]=0.00026;prescale[1]=0.00435;prescale[2]=0.00557;prescale[3]=0.00585;prescale[4]=0.00660;}
 
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
 
@@ -107,7 +107,7 @@ void QCDAnalysis(
   infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8.root",filesPathMC.Data()));           infilecatv.push_back(4);
   infilenamev.push_back(Form("%stZq_ll_4f_13TeV-amcatnlo-pythia8.root",filesPathMC.Data())); 		                      infilecatv.push_back(4);
 
-  infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));		      infilecatv.push_back(5);
+  infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));		      infilecatv.push_back(5);
 
   infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));                  infilecatv.push_back(6);
   //infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));                 infilecatv.push_back(6);
@@ -128,7 +128,7 @@ void QCDAnalysis(
   InitializeJetIdCuts(fMVACut);
 
   TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
-  TH1D *fhDPU     = (TH1D*)(fPUFile->Get("puWeightsDown")); assert(fhDPU);    fhDPU    ->SetDirectory(0);
+  TH1D *fhDPU     = (TH1D*)(fPUFile->Get("puWeights"));     assert(fhDPU);    fhDPU    ->SetDirectory(0);
   TH1D *fhDPUUp   = (TH1D*)(fPUFile->Get("puWeightsUp"));   assert(fhDPUUp);  fhDPUUp  ->SetDirectory(0);
   TH1D *fhDPUDown = (TH1D*)(fPUFile->Get("puWeightsDown")); assert(fhDPUDown);fhDPUDown->SetDirectory(0);
   delete fPUFile;
@@ -187,6 +187,8 @@ void QCDAnalysis(
     histos->Clear();
   }
 
+  if(typeSel != 11 && typeSel != 13) {assert(0); return;}
+
   //*******************************************************
   // Chain Loop
   //*******************************************************
@@ -227,7 +229,7 @@ void QCDAnalysis(
     char **tokens;
     size_t numtokens;
     tokens = strsplit(triggerNames->GetTitle(), ",", &numtokens);
-    if(infilecatv[ifile] == 0){
+    if(ifile == 0){
       for (int i = 0; i < (int)numtokens; i++) {
         printf("triggerNames(%2d): \"%s\"\n",(int)i,tokens[i]);
       }
@@ -240,14 +242,13 @@ void QCDAnalysis(
     Int_t nPassCuts[10] = {0,0,0,0,0,0,0,0,0,0};
     double theMCPrescale = mcPrescale;
     if(infilecatv[ifile] == 0) theMCPrescale = 1.0;
+    if(the_input_tree->GetEntries() != the_SelBit_tree->GetEntries()) {printf("BIG SKIMMING FAILURE\n"); return;}
     for (int i=0; i<int(the_input_tree->GetEntries()/theMCPrescale); ++i) {
       the_SelBit_tree->GetEntry(i);
       if(i%1000000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
       if((selBit_ & 0x1<<whichSkim) == 0) continue;
 
       the_input_tree->GetEntry(i);
-
-      if(typeSel != 11 && typeSel != 13) assert(0);
 
       Bool_t passFilter = kFALSE;
       Bool_t passTrigger = kFALSE;
@@ -312,8 +313,14 @@ void QCDAnalysis(
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 30)  idJet30.push_back(nj);
       }
 
+      bool passJetSel = kFALSE;
+      if((typeSel == 11 && idJet30.size() >= 1) || 
+         (typeSel == 13 && idJet20.size() >= 1)) passJetSel = kTRUE;
+
+      if(passJetSel == kTRUE) nPassCuts[2]++;
+      if(passJetSel == kFALSE) continue;
+
       if     (nsel == 0){ // Z->ll
-        if(idLep.size() == 2) nPassCuts[2]++;
 	if(idLep.size() == 2 &&
      	  ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 10 && 
      	  ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 10) nPassCuts[3]++;
@@ -330,12 +337,10 @@ void QCDAnalysis(
 	}
       }
       else if(nsel == 1){ // fake
-        if(idLep.size() == 1) nPassCuts[2]++;
 	if(idLep.size() == 1 &&
      	  ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 10) nPassCuts[3]++;
         if(idLep.size() == 1 &&
      	  ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 10 &&
-	  ((typeSel == 11 && idJet30.size() >= 1) ||(typeSel == 13 && idJet20.size() >= 1)) &&
 	  TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == typeSel &&
 	 (infilecatv[ifile] == 0 || isGenLep.size() == 1)) {
           dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) );
@@ -346,7 +351,6 @@ void QCDAnalysis(
 	}
       }
       else if(nsel == 2){ // W->ln
-        if(idLep.size() == 1 && idTight[0] == 1) nPassCuts[2]++;
 	if(idLep.size() == 1 && idTight[0] == 1 &&
      	  ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 10) nPassCuts[3]++;
         if(idLep.size() == 1 && idTight[0] == 1 &&
