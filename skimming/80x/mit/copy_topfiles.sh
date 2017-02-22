@@ -1,0 +1,2 @@
+gfal-copy --timeout 180000 --force /eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/mc/met_TTTo2L2Nu_13TeV-powheg.root srm://t3serv006.mit.edu:8443/srm/v2/server?SFN=/mnt/hadoop/scratch/ceballos/Nero/v2.2/output_80x/mc/met_TTTo2L2Nu_13TeV-powheg.root
+gfal-copy --timeout 180000 --force /eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/mc/met_TTToSemiLeptonic_13TeV-powheg.root srm://t3serv006.mit.edu:8443/srm/v2/server?SFN=/mnt/hadoop/scratch/ceballos/Nero/v2.2/output_80x/mc/met_TTToSemiLeptonic_13TeV-powheg.root
