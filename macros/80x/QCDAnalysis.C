@@ -153,9 +153,8 @@ void QCDAnalysis(
   fhDElTightSF->SetDirectory(0);
   delete fElSF;
 
-  TFile *fTrackMuonReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/trackMuReco_SF.root"));
-  TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackMuonReco_SF->Get("mutrksfptg10")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
-  //TH1D *fhDmutrksfptl10 = (TH1D*)(fTrackMuonReco_SF->Get("mutrksfptl10")); assert(fhDmutrksfptl10); fhDmutrksfptl10->SetDirectory(0);
+  TFile *fTrackMuonReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/Tracking_EfficienciesAndSF_BCDEFGH.root"));
+  TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackMuonReco_SF->Get("ratio_eff_eta3_dr030e030_corr")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
   delete fTrackMuonReco_SF;
 
   TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/80x/muon_scalefactors_37ifb.root"));
@@ -184,21 +183,21 @@ void QCDAnalysis(
     else if(thePlot >=  4 && thePlot <=  5) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
     else if(thePlot >=  6 && thePlot <=  6) {nBinPlot =  40; xminPlot = 0.0; xmaxPlot =  40.0;}
     else if(thePlot >=  7 && thePlot <=  7) {nBinPlot =  40; xminPlot =-0.5; xmaxPlot =  39.5;}
-    else if(thePlot >=  8 && thePlot <=  8) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot =  50.0;}
+    else if(thePlot >=  8 && thePlot <=  8) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >=  9 && thePlot <=  9) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot =   2.5;}
 
     else if(thePlot >= 10 && thePlot <= 13) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 14 && thePlot <= 15) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
     else if(thePlot >= 16 && thePlot <= 16) {nBinPlot =  40; xminPlot = 0.0; xmaxPlot =  40.0;}
     else if(thePlot >= 17 && thePlot <= 17) {nBinPlot =  40; xminPlot =-0.5; xmaxPlot =  39.5;}
-    else if(thePlot >= 18 && thePlot <= 18) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot =  50.0;}
+    else if(thePlot >= 18 && thePlot <= 18) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 19 && thePlot <= 19) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot =   2.5;}
 
     else if(thePlot >= 20 && thePlot <= 23) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 24 && thePlot <= 25) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
     else if(thePlot >= 26 && thePlot <= 26) {nBinPlot =  40; xminPlot = 0.0; xmaxPlot =  40.0;}
     else if(thePlot >= 27 && thePlot <= 27) {nBinPlot =  40; xminPlot =-0.5; xmaxPlot =  39.5;}
-    else if(thePlot >= 28 && thePlot <= 28) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot =  50.0;}
+    else if(thePlot >= 28 && thePlot <= 28) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 29 && thePlot <= 29) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot =   2.5;}
 
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
@@ -457,6 +456,28 @@ void QCDAnalysis(
       if(passSel[0] == kTRUE) {
         if(infilecatv[ifile] == 0) denSFDA[iPt] = denSFDA[iPt] + totalWeight;
         else                       denSFBG[iPt] = denSFBG[iPt] + totalWeight;
+        // Adding trailing pt weights
+	int iPt2 = -1;
+	if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 15){
+          iPt2 = 0;
+	}
+	else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 20){
+          iPt2 = 1;
+	}
+	else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 25){
+          iPt2 = 2;
+	}
+	else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 30){
+          iPt2 = 3;
+	}
+	else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 40){
+          iPt2 = 4;
+	}
+	else {
+          iPt2 = 5;
+	}
+        if(infilecatv[ifile] == 0) denSFDA[iPt2] = denSFDA[iPt2] + totalWeight;
+        else                       denSFBG[iPt2] = denSFBG[iPt2] + totalWeight;
       }
 
       if(passSel[1] == kTRUE) {
@@ -473,18 +494,18 @@ void QCDAnalysis(
       for(int thePlot=0; thePlot<allPlots; thePlot++){
         double theVar = 0.0;
         if     (thePlot ==  0 || thePlot == 10 || thePlot == 20) theVar = TMath::Min(dilep.M(),199.999);
-        else if(thePlot ==  1 || thePlot == 11 || thePlot == 21) theVar = TMath::Min((double)eventMet.metNoMu->Pt(),199.999);
+        else if(thePlot ==  1 || thePlot == 11 || thePlot == 21) theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);
         else if(thePlot ==  2 || thePlot == 12 || thePlot == 22) theVar = TMath::Min(dilep.Pt(),199.999);
         else if(thePlot ==  3 || thePlot == 13 || thePlot == 23) theVar = TMath::Min(mtW,199.999);
         else if(thePlot ==  4 || thePlot == 14 || thePlot == 24) theVar = TMath::Min((double)idJet20.size(),6.499);
         else if(thePlot ==  5 || thePlot == 15 || thePlot == 25) theVar = TMath::Min((double)idJet30.size(),6.499);
         else if(thePlot ==  6 || thePlot == 16 || thePlot == 26) theVar = TMath::Min((double)eventEvent.rho,39.999);
         else if(thePlot ==  7 || thePlot == 17 || thePlot == 27) theVar = TMath::Min((double)eventVertex.npv,39.499);
-        else if(thePlot ==  8 || thePlot == 18 || thePlot == 28) theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),49.999);
+        else if(thePlot ==  8 || thePlot == 18 || thePlot == 28) theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);
         else if(thePlot ==  9 || thePlot == 19 || thePlot == 29) theVar = TMath::Min(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()),2.499);
-        if     (thePlot%3==0 && passSel[0] == kTRUE) histo[thePlot][infilecatv[ifile]]->Fill(theVar,totalWeight);
-        else if(thePlot%3==1 && passSel[1] == kTRUE) histo[thePlot][infilecatv[ifile]]->Fill(theVar,totalWeight);
-        else if(thePlot%3==2 && passSel[2] == kTRUE) histo[thePlot][infilecatv[ifile]]->Fill(theVar,totalWeight);
+        if     (thePlot >=  0 && thePlot <=  9 && passSel[0] == kTRUE) histo[thePlot][infilecatv[ifile]]->Fill(theVar,totalWeight);
+        else if(thePlot >= 10 && thePlot <= 19 && passSel[1] == kTRUE) histo[thePlot][infilecatv[ifile]]->Fill(theVar,totalWeight);
+        else if(thePlot >= 20 && thePlot <= 29 && passSel[2] == kTRUE) histo[thePlot][infilecatv[ifile]]->Fill(theVar,totalWeight);
       }
     }
 
