@@ -44,7 +44,12 @@ void baseAnalysis(
   Double_t lumi = 35.9;
 
   if(nsel == 2 || nsel == 5) usePureMC = true;
-  if(useDYPT==true) whichSkim = 4;
+  if(useDYPT==true) {
+    whichSkim = 4;
+    filesPathDA  = filesPathDA  + "met_";
+    filesPathMC  = filesPathMC  + "met_";
+    filesPathMC2 = filesPathMC2 + "met_";
+  }
 
   //*******************************************************
   //Input Files
