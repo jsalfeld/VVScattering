@@ -35,12 +35,18 @@ void baseAnalysis(
  Int_t typeSel = 4,
  TString typeLepSel = "default",
  UInt_t specialCut = 0,
- bool useDYPT = false
+ bool useDYPT = false,
+ bool isMIT = false
  ){
 
   TString filesPathDA  = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/";
   TString filesPathMC  = "root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/output_80x/";
   TString filesPathMC2 = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/mc/";
+  if(isMIT){
+    filesPathDA   = "/mnt/hadoop/scratch/ceballos/Nero/v2.2/output_80x/data/";
+    filesPathMC	  = "/mnt/hadoop/scratch/ceballos/Nero/v2.2/output_80x/mc/";
+    filesPathMC2  = "/mnt/hadoop/scratch/ceballos/Nero/v2.2/output_80x/mc/";
+  }
   Double_t lumi = 35.9;
 
   if(nsel == 2 || nsel == 5) usePureMC = true;
