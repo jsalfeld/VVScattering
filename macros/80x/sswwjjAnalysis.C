@@ -50,6 +50,7 @@ const bool useWZFromData = false;
 
 void sswwjjAnalysis(int theControlRegion = 0, 
  TString typeLepSel = "verytight", 
+ int finalVar = 0, // 0 == mjj, 1 == mll
  bool isBlinded = false,
  bool isMIT = false
  ){
@@ -272,10 +273,22 @@ void sswwjjAnalysis(int theControlRegion = 0,
 							  6800, 7100, 7500, 8000,
 							  8800, 9100, 9500,10000,
 							 10800,11100,11500,12000};
-  TH1D* histoMVA = new TH1D("histoMVA", "histoMVA", nBinMVA, xbins);
-  histoMVA->Sumw2();
 
   const int nBinWZMVA = 4; Float_t xbinsWZ[nBinWZMVA+1] = {500, 800, 1100, 1500, 2000};
+
+  if(finalVar == 1){
+    xbins[ 0] = 0; xbins[ 1] = 100; xbins[ 2] = 200; xbins[ 3] = 300; xbins[ 4] = 500;
+     		   xbins[ 5] =1100; xbins[ 6] =1200; xbins[ 7] =1300; xbins[ 8] =1500;
+     		   xbins[ 9] =2100; xbins[10] =2200; xbins[11] =2300; xbins[12] =2500;
+     		   xbins[13] =3100; xbins[14] =3200; xbins[15] =3300; xbins[16] =3500;
+     		   xbins[17] =4100; xbins[18] =4200; xbins[19] =4300; xbins[20] =4500;
+     		   xbins[21] =5100; xbins[22] =5200; xbins[23] =5300; xbins[24] =5500;
+
+    xbinsWZ[ 0] = 0; xbinsWZ[ 1] = 100; xbinsWZ[ 2] = 200; xbinsWZ[ 3] = 300; xbinsWZ[ 4] = 500;
+  }
+
+  TH1D* histoMVA = new TH1D("histoMVA", "histoMVA", nBinMVA, xbins);
+  histoMVA->Sumw2();
   TH1D* histoWZMVA = new TH1D("histoWZMVA", "histoWZMVA", nBinWZMVA, xbinsWZ);
   histoWZMVA->Sumw2();
 
@@ -1336,6 +1349,15 @@ void sswwjjAnalysis(int theControlRegion = 0,
       }
       else if(theControlRegion == 2){
         MVAVar = TMath::Min(dijet.M(),1999.999); MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999); MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999);
+      }
+
+      if(finalVar == 1){
+        MVAVar = TMath::Min(dilep.M(),499.999)+1000.*typeSel;
+        if(theControlRegion == 2){
+          MVAVar = TMath::Min(dilep.M(),499.999);
+        }
+        MVAVarJESSyst[0] = MVAVar;
+        MVAVarJESSyst[1] = MVAVar;
       }
 
       // Avoid QCD scale and PDF weights that are anomalous high
