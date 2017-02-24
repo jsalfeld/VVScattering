@@ -937,18 +937,20 @@ void wwAnalysis(
 	thePtwwWeight[3] = fhDWWPtRatio_resumup  ->GetBinContent(nptwwbin[3]);
 	thePtwwWeight[4] = fhDWWPtRatio_resumdown->GetBinContent(nptwwbin[4]);
       }
-      vector<int> isGenLep; unsigned int goodIsGenLep = 0;
+      vector<int> isGenLep; unsigned int goodIsGenLep = 0; unsigned int muGenLep = 0;
       for(unsigned nl=0; nl<idLep.size(); nl++){
         bool isGenLepton = false;
+        bool isGenMuon = false;
         for(int ngen=0; ngen<eventMonteCarlo.p4->GetEntriesFast(); ngen++) {
 	  if(isGenDupl[ngen] == 1) continue;
           if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) &&
 	    ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.3) {
 	    isGenLepton = true;
+            if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) == 13) isGenMuon = true;
 	    break;
 	  }
 	}
-	if(isGenLepton == true) {isGenLep.push_back(1); goodIsGenLep++;}
+	if(isGenLepton == true) {isGenLep.push_back(1); goodIsGenLep++; if(isGenMuon == true) muGenLep++;}
 	else                    {isGenLep.push_back(0);}
       }
 
@@ -1046,8 +1048,10 @@ void wwAnalysis(
       double btagCorr[2] = {(total_bjet_probLOOSEUP[1]  /total_bjet_probLOOSEUP[0]  )/(total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0]),
                             (total_bjet_probLOOSEDOWN[1]/total_bjet_probLOOSEDOWN[0])/(total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0])};
 
-     if(totalWeight == 0) continue;
+      if(totalWeight == 0) continue;
       // end event weighting
+
+      //if(theCategory == 9 && muGenLep >= 1) theCategory = 10;
 
       if(passAllCuts[SIGSEL] && infilecatv[ifile] == 0) totalFakeDataCount[type2l][nFakeCount] = totalFakeDataCount[type2l][nFakeCount] + 1;
 

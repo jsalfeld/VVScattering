@@ -267,6 +267,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
   delete fMuIsoSF;
 
   TString ECMsb  = "13TeV2016";
+/*
   const int nBinMVA = 24; Float_t xbins[nBinMVA+1] = {500, 800, 1100, 1500, 2000,
                                                           2800, 3100, 3500, 4000,
 							  4800, 5100, 5500, 6000,
@@ -275,16 +276,18 @@ void sswwjjAnalysis(int theControlRegion = 0,
 							 10800,11100,11500,12000};
 
   const int nBinWZMVA = 4; Float_t xbinsWZ[nBinWZMVA+1] = {500, 800, 1100, 1500, 2000};
+*/
+  const int nBinMVA = 30; const int nBinWZMVA = 5;
 
   if(finalVar == 1){
-    xbins[ 0] = 0; xbins[ 1] = 100; xbins[ 2] = 200; xbins[ 3] = 300; xbins[ 4] = 500;
-     		   xbins[ 5] =1100; xbins[ 6] =1200; xbins[ 7] =1300; xbins[ 8] =1500;
-     		   xbins[ 9] =2100; xbins[10] =2200; xbins[11] =2300; xbins[12] =2500;
-     		   xbins[13] =3100; xbins[14] =3200; xbins[15] =3300; xbins[16] =3500;
-     		   xbins[17] =4100; xbins[18] =4200; xbins[19] =4300; xbins[20] =4500;
-     		   xbins[21] =5100; xbins[22] =5200; xbins[23] =5300; xbins[24] =5500;
+    xbins[ 0] = 0; xbins[ 1] = 100; xbins[ 2] = 200; xbins[ 3] = 300; xbins[ 4] = 400; xbins[ 5] = 600;
+     		   xbins[ 6] =1100; xbins[ 7] =1200; xbins[ 8] =1300; xbins[ 9] =1400; xbins[10] =1600;
+     		   xbins[11] =2100; xbins[12] =2200; xbins[13] =2300; xbins[14] =2400; xbins[15] =2600;
+     		   xbins[16] =3100; xbins[17] =3200; xbins[18] =3300; xbins[19] =3400; xbins[20] =3600;
+     		   xbins[21] =4100; xbins[22] =4200; xbins[23] =4300; xbins[24] =4400; xbins[25] =4600;
+     		   xbins[26] =5100; xbins[27] =5200; xbins[28] =5300; xbins[29] =5400; xbins[30] =5600;
 
-    xbinsWZ[ 0] = 0; xbinsWZ[ 1] = 100; xbinsWZ[ 2] = 200; xbinsWZ[ 3] = 300; xbinsWZ[ 4] = 500;
+    xbinsWZ[ 0] = 0; xbinsWZ[ 1] = 100; xbinsWZ[ 2] = 200; xbinsWZ[ 3] = 300; xbinsWZ[ 4] = 400; xbinsWZ[ 5] = 600;
   }
 
   TH1D* histoMVA = new TH1D("histoMVA", "histoMVA", nBinMVA, xbins);
@@ -1352,9 +1355,9 @@ void sswwjjAnalysis(int theControlRegion = 0,
       }
 
       if(finalVar == 1){
-        MVAVar = TMath::Min(dilep.M(),499.999)+1000.*typeSel;
+        MVAVar = TMath::Min(dilep.M(),599.999)+1000.*typeSel;
         if(theControlRegion == 2){
-          MVAVar = TMath::Min(dilep.M(),499.999);
+          MVAVar = TMath::Min(dilep.M(),599.999);
         }
         MVAVarJESSyst[0] = MVAVar;
         MVAVarJESSyst[1] = MVAVar;
@@ -1682,7 +1685,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
   }
 
   // WZ scale factor from data
-  double sfE_WZ[nBinWZMVA] = {1.0,1.0,1.0,1.0};
+  double sfE_WZ[nBinWZMVA] = {1.0,1.0,1.0,1.0,1.0};
   printf("WZ SFs applied?: %d\n",useWZFromData);
   printf("WZini:");
   for(int np=1; np<=histo_WZ->GetNbinsX(); np++) {
