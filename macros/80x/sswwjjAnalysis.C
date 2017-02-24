@@ -25,7 +25,7 @@
 
 double WSSF[5]  = {1.253783,1.239172,0.944641,0.997775,1.099893};
 double WSSFE[5] = {0.373235,0.163163,0.053062,0.029079,0.037923};
-double the_sf_ZLL = 0.90;
+double the_sf_ZLL = 1.00;
 const double bTagCuts[2] = {0.8484,0.9535}; // 0.5426/0.8484/0.9535 (check BTagCalibration2Reader!)
 
 void func_ws_sf(double eta, double pt, double theSF[2]);
@@ -316,7 +316,8 @@ void sswwjjAnalysis(int theControlRegion = 0,
       else if(thePlot >=  9 && thePlot <=  9) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 1.0;}
       else if(thePlot >= 10 && thePlot <= 10) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot = 3.5;}
       else if(thePlot >= 11 && thePlot <= 12) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 2000;}
-      else if(thePlot >= 13 && thePlot <= 15) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
+      else if(thePlot >= 13 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200;}
+      else if(thePlot >= 15 && thePlot <= 15) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
       else if(thePlot >= 16 && thePlot <= 17) {nBinPlot = 100; xminPlot =-5.0; xmaxPlot = 5.0;}
       else if(thePlot >= 18 && thePlot <= 18) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 400;}
       else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 1.0;}
@@ -1299,8 +1300,8 @@ void sswwjjAnalysis(int theControlRegion = 0,
 	else if(thePlot == 10 && passNMinusOne[0])          {makePlot = true;theVar = TMath::Min((double)idSoft.size(),3.499);}
         else if(thePlot == 11 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
         else if(thePlot == 12 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
-        else if(thePlot == 13 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
-        else if(thePlot == 14 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
+        else if(thePlot == 13 && passSignalRegion)          {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Pt(),199.999);}
+        else if(thePlot == 14 && passSignalRegion)          {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Pt(),199.999);}
         else if(thePlot == 15 && passControlRegionSS2j)     {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
         else if(thePlot == 16 && passControlRegionSS2j)     {makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta();}
         else if(thePlot == 17 && passControlRegionSS2j)     {makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta();}
