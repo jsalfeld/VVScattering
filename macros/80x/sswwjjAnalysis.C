@@ -277,7 +277,8 @@ void sswwjjAnalysis(int theControlRegion = 0,
 
   const int nBinWZMVA = 4; Float_t xbinsWZ[nBinWZMVA+1] = {500, 800, 1100, 1500, 2000};
 */
-  const int nBinMVA = 30; const int nBinWZMVA = 5;
+  const int nBinMVA = 30; Float_t xbins[nBinMVA+1];
+  const int nBinWZMVA = 5;Float_t xbinsWZ[nBinWZMVA+1];
 
   if(finalVar == 1){
     xbins[ 0] = 0; xbins[ 1] = 100; xbins[ 2] = 200; xbins[ 3] = 300; xbins[ 4] = 400; xbins[ 5] = 600;
@@ -1685,6 +1686,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
   }
 
   // WZ scale factor from data
+  //double sfE_WZ[nBinWZMVA] = {1.0,1.0,1.0,1.0};
   double sfE_WZ[nBinWZMVA] = {1.0,1.0,1.0,1.0,1.0};
   printf("WZ SFs applied?: %d\n",useWZFromData);
   printf("WZini:");
