@@ -267,7 +267,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
   delete fMuIsoSF;
 
   TString ECMsb  = "13TeV2016";
-/*
+
   const int nBinMVA = 24; Float_t xbins[nBinMVA+1] = {500, 800, 1100, 1500, 2000,
                                                           2800, 3100, 3500, 4000,
 							  4800, 5100, 5500, 6000,
@@ -276,7 +276,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
 							 10800,11100,11500,12000};
 
   const int nBinWZMVA = 4; Float_t xbinsWZ[nBinWZMVA+1] = {500, 800, 1100, 1500, 2000};
-*/
+/*
   const int nBinMVA = 30; Float_t xbins[nBinMVA+1];
   const int nBinWZMVA = 5;Float_t xbinsWZ[nBinWZMVA+1];
 
@@ -290,7 +290,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
 
     xbinsWZ[ 0] = 0; xbinsWZ[ 1] = 100; xbinsWZ[ 2] = 200; xbinsWZ[ 3] = 300; xbinsWZ[ 4] = 400; xbinsWZ[ 5] = 600;
   }
-
+*/
   TH1D* histoMVA = new TH1D("histoMVA", "histoMVA", nBinMVA, xbins);
   histoMVA->Sumw2();
   TH1D* histoWZMVA = new TH1D("histoWZMVA", "histoWZMVA", nBinWZMVA, xbinsWZ);
@@ -1686,8 +1686,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
   }
 
   // WZ scale factor from data
-  //double sfE_WZ[nBinWZMVA] = {1.0,1.0,1.0,1.0};
-  double sfE_WZ[nBinWZMVA] = {1.0,1.0,1.0,1.0,1.0};
+  double sfE_WZ[nBinWZMVA]; for(int i=0; i<nBinWZMVA; i++) sfE_WZ[i] = 1.0;;
   printf("WZ SFs applied?: %d\n",useWZFromData);
   printf("WZini:");
   for(int np=1; np<=histo_WZ->GetNbinsX(); np++) {
@@ -2403,7 +2402,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
       newcardShape << Form("CMS_WZ_Norm%d  lnN    -     -   %7.5f   -     -     -    -     -      -     -  \n",(nb-1)%4,1.0+sfE_WZ[(nb-1)%4]);
       }
       else {
-      newcardShape << Form("CMS_wwss_WZnorm_bin%d rateParam  * WZ 1 [0.1,10]\n",(nb-1)%4);         
+      newcardShape << Form("CMS_wwss_WZnorm_bin%d rateParam  * WZ 1 [0.1,10]\n",(nb-1)%nBinWZMVA);         
       }
 
       //newcardShape << Form("CMS_wwss_wjetsMnorm_bin rateParam  * FakeM 1 [0.1,10]\n");         
