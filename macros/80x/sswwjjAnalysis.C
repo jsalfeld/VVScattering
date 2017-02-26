@@ -185,6 +185,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
   //Non-prompt leptons
   //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));                infilecatv.push_back(9);
   //infilenamev.push_back(Form("%sTTToSemiLeptonic_13TeV-powheg.root",filesPathMC2.Data()));                                    infilecatv.push_back(9);
+  }
   else {assert(0); return;}
 
   //infilenamev.clear();infilecatv.clear();
