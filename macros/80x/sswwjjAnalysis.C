@@ -183,8 +183,8 @@ void sswwjjAnalysis(int theControlRegion = 0,
   infilenamev.push_back(Form("%sWWTo2L2Nu_DoubleScattering_13TeV-pythia8.root",filesPathMC.Data()));                          infilecatv.push_back(8);
 
   //Non-prompt leptons
-  //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));                infilecatv.push_back(9)
-  }
+  //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));                infilecatv.push_back(9);
+  //infilenamev.push_back(Form("%sTTToSemiLeptonic_13TeV-powheg.root",filesPathMC2.Data()));                                    infilecatv.push_back(9);
   else {assert(0); return;}
 
   //infilenamev.clear();infilecatv.clear();
@@ -1257,7 +1257,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
       double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*trigEff;
 
       // Wrong sign scale factor
-      if(theCategory == 6 && useWSFromData) {
+      if(theCategory == 6 && useWSFromData  && usePureMC == false) {
         totalWeight = totalWeight * total_WS_SF[0];
       }
 
