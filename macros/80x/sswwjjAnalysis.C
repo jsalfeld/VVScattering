@@ -47,6 +47,7 @@ int period = 1;
 const bool usePUPPI = false;
 const bool useWSFromData = true;
 const bool useWZFromData = false;
+const double mjjCut = 500.;
 
 void sswwjjAnalysis(int theControlRegion = 0, 
  TString typeLepSel = "verytight", 
@@ -1042,7 +1043,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
       if(idJet.size() >= 2){
 	//Mjj cut
 	dijet = ( *(TLorentzVector*)(*eventJets.p4)[idJet[0]] ) + ( *(TLorentzVector*)(*eventJets.p4)[idJet[1]] );
-	if(dijet.M() > 500){
+	if(dijet.M() > mjjCut){
           passFilterSig[9] = kTRUE;
           passFilterCR1[9] = kTRUE;
           passFilterCR2[9] = kTRUE;
@@ -1110,23 +1111,23 @@ void sswwjjAnalysis(int theControlRegion = 0,
       }
 
       bool passSystCuts[nSystTypes] = {
-          passFilterSig[0] && passFilterSig[1] && idJetUp.size() >= 2	&& passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] 						   && dijetUp.M() > 500   && deltaEtaJJUp > 2.5   && passFilterSig[11],
-          passFilterSig[0] && passFilterSig[1] && idJetDown.size() >= 2 && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] 						   && dijetDown.M() > 500 && deltaEtaJJDown > 2.5 && passFilterSig[11],
-          passFilterSig[0] && passFilterSig[1] && passFilterSig[2]      && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesUp])->Pt()   > 40 && passFilterSig[9]    && passFilterSig[10]    && passFilterSig[11],
-          passFilterSig[0] && passFilterSig[1] && passFilterSig[2]      && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesDown])->Pt() > 40 && passFilterSig[9]    && passFilterSig[10]    && passFilterSig[11]
+          passFilterSig[0] && passFilterSig[1] && idJetUp.size() >= 2	&& passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] 						   && dijetUp.M() > mjjCut   && deltaEtaJJUp > 2.5   && passFilterSig[11],
+          passFilterSig[0] && passFilterSig[1] && idJetDown.size() >= 2 && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] 						   && dijetDown.M() > mjjCut && deltaEtaJJDown > 2.5 && passFilterSig[11],
+          passFilterSig[0] && passFilterSig[1] && passFilterSig[2]      && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesUp])->Pt()   > 40 && passFilterSig[9]       && passFilterSig[10]    && passFilterSig[11],
+          passFilterSig[0] && passFilterSig[1] && passFilterSig[2]      && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesDown])->Pt() > 40 && passFilterSig[9]       && passFilterSig[10]    && passFilterSig[11]
       };
  
       if     (theControlRegion == 1){
-        passSystCuts[JESUP]   = passFilterCR1[0] && passFilterCR1[1] && idJetUp.size() >= 2   && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8]							 && dijetUp.M() > 500	&& deltaEtaJJUp > 2.5	&& passFilterCR1[11];
-        passSystCuts[JESDOWN] = passFilterCR1[0] && passFilterCR1[1] && idJetDown.size() >= 2 && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8]							 && dijetDown.M() > 500 && deltaEtaJJDown > 2.5 && passFilterCR1[11];
-        passSystCuts[METUP]   = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2]      && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesUp])->Pt()   > 40 && passFilterCR1[9]	&& passFilterCR1[10]	&& passFilterCR1[11];
-        passSystCuts[METDOWN] = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2]      && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesDown])->Pt() > 40 && passFilterCR1[9]	&& passFilterCR1[10]	&& passFilterCR1[11];
+        passSystCuts[JESUP]   = passFilterCR1[0] && passFilterCR1[1] && idJetUp.size() >= 2   && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8]							 && dijetUp.M() > mjjCut   && deltaEtaJJUp > 2.5   && passFilterCR1[11];
+        passSystCuts[JESDOWN] = passFilterCR1[0] && passFilterCR1[1] && idJetDown.size() >= 2 && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8]							 && dijetDown.M() > mjjCut && deltaEtaJJDown > 2.5 && passFilterCR1[11];
+        passSystCuts[METUP]   = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2]      && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesUp])->Pt()   > 40 && passFilterCR1[9]	   && passFilterCR1[10]    && passFilterCR1[11];
+        passSystCuts[METDOWN] = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2]      && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesDown])->Pt() > 40 && passFilterCR1[9]	   && passFilterCR1[10]    && passFilterCR1[11];
       }
       else if(theControlRegion == 2){
-        passSystCuts[JESUP]   = passFilterCR2[0] && passFilterCR2[1] && idJetUp.size() >= 2   && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8]							 && dijetUp.M() > 500	&& deltaEtaJJUp > 2.5	&& passFilterCR2[11];
-        passSystCuts[JESDOWN] = passFilterCR2[0] && passFilterCR2[1] && idJetDown.size() >= 2 && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8]							 && dijetDown.M() > 500 && deltaEtaJJDown > 2.5 && passFilterCR2[11];
-        passSystCuts[METUP]   = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2]      && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesUp])->Pt()   > 40 && passFilterCR2[9]	&& passFilterCR2[10]	&& passFilterCR2[11];
-        passSystCuts[METDOWN] = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2]      && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesDown])->Pt() > 40 && passFilterCR2[9]	&& passFilterCR2[10]	&& passFilterCR2[11];
+        passSystCuts[JESUP]   = passFilterCR2[0] && passFilterCR2[1] && idJetUp.size() >= 2   && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8]							 && dijetUp.M() > mjjCut   && deltaEtaJJUp > 2.5   && passFilterCR2[11];
+        passSystCuts[JESDOWN] = passFilterCR2[0] && passFilterCR2[1] && idJetDown.size() >= 2 && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8]							 && dijetDown.M() > mjjCut && deltaEtaJJDown > 2.5 && passFilterCR2[11];
+        passSystCuts[METUP]   = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2]      && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesUp])->Pt()   > 40 && passFilterCR2[9]	   && passFilterCR2[10]	   && passFilterCR2[11];
+        passSystCuts[METDOWN] = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2]      && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && ((TLorentzVector*)(*eventMet.metSyst)[BareMet::JesDown])->Pt() > 40 && passFilterCR2[9]	   && passFilterCR2[10]    && passFilterCR2[11];
       }
 
       // begin event weighting
