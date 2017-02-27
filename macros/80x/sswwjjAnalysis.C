@@ -297,6 +297,8 @@ void sswwjjAnalysis(int theControlRegion = 0,
   histoMVA->Sumw2();
   TH1D* histoWZMVA = new TH1D("histoWZMVA", "histoWZMVA", nBinWZMVA, xbinsWZ);
   histoWZMVA->Sumw2();
+  TH1D* histoOneBin = new TH1D("histoOneBin", "histoOneBin", 1, -0.5, 0.5);
+  histoOneBin->Sumw2();
 
   TH1D *histo_Data  = (TH1D*) histoMVA->Clone("histo_Data");
   TH1D *histo_EWK   = (TH1D*) histoMVA->Clone("histo_EWK"); 
@@ -309,6 +311,18 @@ void sswwjjAnalysis(int theControlRegion = 0,
   TH1D *histo_DPS   = (TH1D*) histoMVA->Clone("histo_DPS");
   TH1D *histo_FakeM = (TH1D*) histoMVA->Clone("histo_FakeM");  
   TH1D *histo_FakeE = (TH1D*) histoMVA->Clone("histo_FakeE");  
+
+  TH1D *histoOneBin_Data  = (TH1D*) histoOneBin->Clone("histoOneBin_Data");
+  TH1D *histoOneBin_EWK   = (TH1D*) histoOneBin->Clone("histoOneBin_EWK"); 
+  TH1D *histoOneBin_QCD   = (TH1D*) histoOneBin->Clone("histoOneBin_QCD");    
+  TH1D *histoOneBin_WZ    = (TH1D*) histoOneBin->Clone("histoOneBin_WZ");
+  TH1D *histoOneBin_ZZ    = (TH1D*) histoOneBin->Clone("histoOneBin_ZZ");
+  TH1D *histoOneBin_VVV   = (TH1D*) histoOneBin->Clone("histoOneBin_VVV");
+  TH1D *histoOneBin_WS    = (TH1D*) histoOneBin->Clone("histoOneBin_WS");
+  TH1D *histoOneBin_WG    = (TH1D*) histoOneBin->Clone("histoOneBin_WG");
+  TH1D *histoOneBin_DPS   = (TH1D*) histoOneBin->Clone("histoOneBin_DPS");
+  TH1D *histoOneBin_FakeM = (TH1D*) histoOneBin->Clone("histoOneBin_FakeM");  
+  TH1D *histoOneBin_FakeE = (TH1D*) histoOneBin->Clone("histoOneBin_FakeE");  
 
   double totalFakeDataCount[6][5];
   for(int i=0; i<6; i++) for(int j=0; j<5; j++) totalFakeDataCount[i][j] = 0;
@@ -2366,6 +2380,47 @@ void sswwjjAnalysis(int theControlRegion = 0,
 	systQCDScale[2] = 1.0; systPDF[2] = 1.0;
       }
 
+      char outputLimits[200];
+      sprintf(outputLimits,"wwss_%s_input_%s_bin%d.root", finalStateName, ECMsb.Data(),nb-1);
+      TFile* outFileLimits = new TFile(outputLimits,"recreate");
+      outFileLimits->cd();
+    
+      histoOneBin_Data ->Reset();
+      histoOneBin_EWK  ->Reset();
+      histoOneBin_QCD  ->Reset();
+      histoOneBin_WZ   ->Reset();
+      histoOneBin_ZZ   ->Reset();
+      histoOneBin_VVV  ->Reset();
+      histoOneBin_WS   ->Reset();
+      histoOneBin_WG   ->Reset();
+      histoOneBin_DPS  ->Reset();
+      histoOneBin_FakeM->Reset();
+      histoOneBin_FakeE->Reset();
+      histoOneBin_Data ->SetBinContent(1,            histo_Data ->GetBinContent(nb));
+      histoOneBin_EWK  ->SetBinContent(1, TMath::Max(histo_EWK  ->GetBinContent(nb),0.0));
+      histoOneBin_QCD  ->SetBinContent(1, TMath::Max(histo_QCD  ->GetBinContent(nb),0.0));
+      histoOneBin_WZ   ->SetBinContent(1, TMath::Max(histo_WZ   ->GetBinContent(nb),0.0));
+      histoOneBin_ZZ   ->SetBinContent(1, TMath::Max(histo_ZZ   ->GetBinContent(nb),0.0));
+      histoOneBin_VVV  ->SetBinContent(1, TMath::Max(histo_VVV  ->GetBinContent(nb),0.0));
+      histoOneBin_WS   ->SetBinContent(1, TMath::Max(histo_WS   ->GetBinContent(nb),0.0));
+      histoOneBin_WG   ->SetBinContent(1, TMath::Max(histo_WG   ->GetBinContent(nb),0.0));
+      histoOneBin_DPS  ->SetBinContent(1, TMath::Max(histo_DPS  ->GetBinContent(nb),0.0));
+      histoOneBin_FakeM->SetBinContent(1, TMath::Max(histo_FakeM->GetBinContent(nb),0.0));
+      histoOneBin_FakeE->SetBinContent(1, TMath::Max(histo_FakeE->GetBinContent(nb),0.0));
+      histoOneBin_Data ->Write();
+      histoOneBin_EWK  ->Write();
+      histoOneBin_QCD  ->Write();
+      histoOneBin_WZ   ->Write();
+      histoOneBin_ZZ   ->Write();
+      histoOneBin_VVV  ->Write();
+      histoOneBin_WS   ->Write();
+      histoOneBin_WG   ->Write();
+      histoOneBin_DPS  ->Write();
+      histoOneBin_FakeM->Write();
+      histoOneBin_FakeE->Write();
+
+      outFileLimits->Close();
+
       char outputLimitsShape[200];                                            
       sprintf(outputLimitsShape,"histo_limits_wwss_%s_shape_%s_bin%d.txt",finalStateName,ECMsb.Data(),nb-1);
       ofstream newcardShape;
@@ -2373,6 +2428,8 @@ void sswwjjAnalysis(int theControlRegion = 0,
       newcardShape << Form("imax 1 number of channels\n");
       newcardShape << Form("jmax * number of background\n");
       newcardShape << Form("kmax * number of nuisance parameters\n");
+      newcardShape << Form("shapes *   *   %s  histoOneBin_$PROCESS\n",outputLimits);
+      newcardShape << Form("shapes data_obs * %s  histoOneBin_Data \n",outputLimits);
       newcardShape << Form("Observation %d\n",(int)histo_Data->GetBinContent(nb));
       newcardShape << Form("bin %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d %2s%4s%d\n",finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1,finalStateName,ECMsb.Data(),nb-1);
       newcardShape << Form("process EWK QCD WZ ZZ VVV WS WG DPS FakeM FakeE\n");
