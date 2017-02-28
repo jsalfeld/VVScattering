@@ -278,6 +278,17 @@ void sswwjjAnalysis(int theControlRegion = 0,
 							 10800,11100,11500,12000};
 
   const int nBinWZMVA = 4; Float_t xbinsWZ[nBinWZMVA+1] = {500, 800, 1100, 1500, 2000};
+
+  if(finalVar == 1){
+    xbins[ 0] = 0; xbins[ 1] = 100; xbins[ 2] = 200; xbins[ 3] = 300; xbins[ 4] = 600;
+     		   xbins[ 5] =1100; xbins[ 6] =1200; xbins[ 7] =1300; xbins[ 8] =1600;
+     		   xbins[ 9] =2100; xbins[10] =2200; xbins[11] =2300; xbins[12] =2600;
+     		   xbins[13] =3100; xbins[14] =3200; xbins[15] =3300; xbins[16] =3600;
+     		   xbins[17] =4100; xbins[18] =4200; xbins[19] =4300; xbins[20] =4600;
+     		   xbins[21] =5100; xbins[22] =5200; xbins[23] =5300; xbins[24] =5600;
+
+    xbinsWZ[ 0] = 0; xbinsWZ[ 1] = 100; xbinsWZ[ 2] = 200; xbinsWZ[ 3] = 300; xbinsWZ[ 4] = 600;
+  }
 /*
   const int nBinMVA = 30; Float_t xbins[nBinMVA+1];
   const int nBinWZMVA = 5;Float_t xbinsWZ[nBinWZMVA+1];
