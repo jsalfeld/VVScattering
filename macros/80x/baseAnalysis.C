@@ -1145,8 +1145,8 @@ void baseAnalysis(
   for(int np=1; np<histBins; np++) printf(" %.3f",histo[0][np]->GetSumOfWeights());
   printf(" = %.3f\n",sumEvents);
   for(int thePlot=0; thePlot<allPlots; thePlot++){
-    sprintf(output,"histo_nice_%d_%d_%d.root",thePlot,nsel,typeSel);	  
-    if(useDYPT == true) sprintf(output,"histo_nice_%d_%d_%d_pt.root",thePlot,nsel,typeSel);	  
+    sprintf(output,"histo_nice_%d_%d_%d_%s.root",thePlot,nsel,typeSel,typeLepSel.Data());	  
+    if(useDYPT == true) sprintf(output,"histo_nice_%d_%d_%d_%s_pt.root",thePlot,nsel,typeSel,typeLepSel.Data());	  
     TFile* outFilePlotsNote = new TFile(output,"recreate");
     outFilePlotsNote->cd();
     for(int np=0; np<histBins; np++) histo[thePlot][np]->Write();
