@@ -24,11 +24,16 @@ double fake_rate_e_25_tight[6][5] = {
 0.338,0.330,0.313,0.300,0.302,0.301
 };
 double fake_rate_e_25_verytight[6][5] = {
-0.389,0.385,0.363,0.313,0.298,0.290,
-0.371,0.416,0.356,0.322,0.298,0.301,
-0.399,0.430,0.369,0.338,0.332,0.310,
-0.424,0.363,0.338,0.302,0.281,0.239,
-0.278,0.243,0.208,0.175,0.154,0.134
+//0.389,0.385,0.363,0.313,0.298,0.290,
+//0.371,0.416,0.356,0.322,0.298,0.301,
+//0.399,0.430,0.369,0.338,0.332,0.310,
+//0.424,0.363,0.338,0.302,0.281,0.239,
+//0.278,0.243,0.208,0.175,0.154,0.134
+0.358,0.354,0.330,0.274,0.251,0.224,
+0.312,0.377,0.313,0.277,0.256,0.221,
+0.347,0.383,0.317,0.288,0.256,0.218,
+0.365,0.298,0.263,0.229,0.197,0.157,
+0.221,0.176,0.150,0.117,0.099,0.082
 };
 double fake_rate_e_25_medium_mva[6][5] = {
 0.705,0.680,0.536,0.474,0.406,0.368,
@@ -301,7 +306,7 @@ bool passJetId(Float_t fMVACut[4][4], double mva, double pt, double eta){
 }
 
 double effhDScaleFactor(double pt, double eta, int nsel, TString type, TH2D *fhDMuMediumSF, TH2D *fhDElMediumSF, TH2D *fhDElTightSF, 
-TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF, bool applyTrkSF = true){
+TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF, TH1D *fhDVeryTightSF, bool applyTrkSF = true){
 
   if     (pt>=100 && TMath::Abs(nsel) == 13) pt =  +99.999;
   else if(pt>=200 && TMath::Abs(nsel) == 11) pt = +199.999;
@@ -356,9 +361,14 @@ TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF, 
     if(isoSF <= 0) isoSF = 1.0;
   }
 
+  double effVeryTight = 1.0;
+  if(TMath::Abs(nsel) == 11 && type== "verytight") {
+    Int_t binXT = fhDVeryTightSF->GetXaxis()->FindFixBin(eta);
+    //effVeryTight = fhDVeryTightSF->GetBinContent(binXT);
+  }
   //printf("eff: %f %f %f - %f %f - %d %d %d %d\n",result,trkSF,isoSF,pt,eta,binXA,binYA,binXB,binYB);
 
-  return result*trkSF*isoSF;
+  return result*trkSF*isoSF*effVeryTight;
 }
 
 double effScaleFactor(double pt, double eta, int nsel, int period, TString type){

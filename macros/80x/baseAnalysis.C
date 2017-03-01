@@ -24,7 +24,7 @@
 bool isMINIAOD = true;
 int whichSkim = 0;
 bool usePureMC = false; 
-int mcPrescale = 5.0;
+int mcPrescale = 1.0;
 const bool useDYMVA = false;
 const bool doTriggerStudy = true;
 const Int_t period = 1;
@@ -210,6 +210,12 @@ void baseAnalysis(
   fhDElMediumSF->SetDirectory(0);
   fhDElTightSF->SetDirectory(0);
   delete fElSF;
+
+  TFile *fElVeryTightSF = TFile::Open(Form("MitAnalysisRunII/data/80x/veryTightSF_37ifb.root"));
+  TH1D *fhDVeryTightSF = (TH1D*)(fElVeryTightSF->Get("veryTightSF"));
+  assert(fhDVeryTightSF);
+  fhDVeryTightSF->SetDirectory(0);
+  delete fElVeryTightSF;
 
   TFile *fTrackMuonReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/Tracking_EfficienciesAndSF_BCDEFGH.root"));
   TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackMuonReco_SF->Get("ratio_eff_eta3_dr030e030_corr")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
@@ -857,7 +863,7 @@ void baseAnalysis(
           //        period,typeLepSel.Data());
           effSF = effSF * effhDScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),
 	        ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),
-	  	typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF,fhDmutrksfptg10,fhDeltrksf,eventVertex.npv,true,fhDMuIsoSF,true);
+	  	typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF,fhDmutrksfptg10,fhDeltrksf,eventVertex.npv,true,fhDMuIsoSF,fhDVeryTightSF,true);
         }
       }
 
@@ -905,6 +911,9 @@ void baseAnalysis(
       //if(infilecatv[ifile] == 2 && zBoson.size() == 1) {
       //  totalWeight = totalWeight * zpt_correction(((TLorentzVector*)(*eventMonteCarlo.p4)[zBoson[0]])->Pt(), 0);
       //}
+
+      // Btag scale factor (only for bbA analysis)
+      if(nsel == 4) totalWeight = totalWeight * total_bjet_prob[1]/total_bjet_prob[0];
 
       if(totalWeight == 0) continue;
       // end event weighting

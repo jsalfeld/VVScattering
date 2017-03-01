@@ -23,8 +23,11 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
-double WSSF[5]  = {1.253783,1.239172,0.944641,0.997775,1.099893};
-double WSSFE[5] = {0.373235,0.163163,0.053062,0.029079,0.037923};
+//double WSSF[5]  = {1.253783,1.239172,0.944641,0.997775,1.099893};
+//double WSSFE[5] = {0.373235,0.163163,0.053062,0.029079,0.037923};
+double WSSF[5]  = {0.928989,1.849775,0.934050,1.009142,1.217937};
+double WSSFE[5] = {0.195289,0.428332,0.114633,0.065883,0.091815};
+
 double the_sf_ZLL = 1.00;
 const double bTagCuts[2] = {0.8484,0.9535}; // 0.5426/0.8484/0.9535 (check BTagCalibration2Reader!)
 
@@ -251,6 +254,12 @@ void sswwjjAnalysis(int theControlRegion = 0,
   fhDElMediumSF->SetDirectory(0);
   fhDElTightSF->SetDirectory(0);
   delete fElSF;
+
+  TFile *fElVeryTightSF = TFile::Open(Form("MitAnalysisRunII/data/80x/veryTightSF_37ifb.root"));
+  TH1D *fhDVeryTightSF = (TH1D*)(fElVeryTightSF->Get("veryTightSF"));
+  assert(fhDVeryTightSF);
+  fhDVeryTightSF->SetDirectory(0);
+  delete fElVeryTightSF;
 
   TFile *fTrackMuonReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/Tracking_EfficienciesAndSF_BCDEFGH.root"));
   TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackMuonReco_SF->Get("ratio_eff_eta3_dr030e030_corr")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
@@ -1234,7 +1243,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
         for(unsigned int nl=0; nl<idLep.size(); nl++){
           effSF = effSF * effhDScaleFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),
 	        ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta(),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),
-	  	typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF,fhDmutrksfptg10,fhDeltrksf,eventVertex.npv,true,fhDMuIsoSF,true);
+	  	typeLepSel.Data(),fhDMuMediumSF,fhDElMediumSF,fhDElTightSF,fhDmutrksfptg10,fhDeltrksf,eventVertex.npv,true,fhDMuIsoSF,fhDVeryTightSF,true);
         }
       }
 
@@ -1260,7 +1269,7 @@ void sswwjjAnalysis(int theControlRegion = 0,
             else if(infilecatv[ifile] != 0 && goodIsTight == idTight.size()-1) fakeSF = -1.0 * fakeSF; // single fake, MC
             else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) fakeSF = -1.0 * fakeSF; // double fake, data
             else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) fakeSF =  1.0 * fakeSF; // single fake, data
-            if(typeFakeLepton[0] < typeFakeLepton[1]) theCategory = 10;
+            if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) theCategory = 10;
 	}
 	else if(infilecatv[ifile] != 0 && infilecatv[ifile] != 7 && (goodIsGenRSLep+goodIsGenWSLep) != isGenLep.size()){ // remove MC dilepton fakes from ll events
           fakeSF = 0.0;
