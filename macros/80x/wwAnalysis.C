@@ -44,8 +44,8 @@ const bool usePUPPI = false;
 const bool useTopCR = true;
 //const TString typeLepSel = "default";
 
-double topNorm[3]  = {0.78,0.90,0.99};
-double topNormE[3] = {0.08,0.13,0.01};
+double topNorm[3]  = {0.81,0.95,1.00};
+double topNormE[3] = {0.09,0.11,0.01};
 
 void wwAnalysis(
  unsigned int nJetsType = 0,
@@ -1049,7 +1049,7 @@ void wwAnalysis(
       if(infilecatv[ifile] == 8) totalWeight = totalWeight * 1.2;
 
       // Btag scale factor
-      totalWeight = totalWeight * total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0];
+      if(useTopCR == true) totalWeight = totalWeight * total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0];
 
       double btagCorr[2] = {(total_bjet_probLOOSEUP[1]  /total_bjet_probLOOSEUP[0]  )/(total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0]),
                             (total_bjet_probLOOSEDOWN[1]/total_bjet_probLOOSEDOWN[0])/(total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0])};
