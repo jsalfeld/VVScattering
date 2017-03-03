@@ -263,8 +263,8 @@ void wwAnalysis(
   const int nBinMVA = 8; Float_t xbins[nBinMVA+1] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
   if(isShapeAna && theControlRegion == 0){
     xbins[0] =  12; xbins[1] = 100; xbins[2] = 150; xbins[3] = 200;
-    xbins[4] = 250, xbins[5] = 300; xbins[6] = 350; xbins[7] = 400;
-    xbins[8] = 500;
+    xbins[4] = 250, xbins[5] = 300; xbins[6] = 400; xbins[7] = 600;
+    xbins[8] = 800;
   }
   TH1D* histoMVA = new TH1D("histoMVA", "histoMVA", nBinMVA, xbins);
   histoMVA->Sumw2();
@@ -310,23 +310,26 @@ void wwAnalysis(
   TString processName[histBins] = {".Data", ".qqWW", ".ggWW", "..Top", "...DY", "...VV", "..VVV", "...WG", "..WGS", "WjetsM", "WjetsE", "Higgs"};
 
   for(int thePlot=0; thePlot<allPlots; thePlot++){
+    bool isMVAPlot = false;
     if     (thePlot >=  0 && thePlot <=  2) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >=  3 && thePlot <=  3) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >=  4 && thePlot <=  4) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
+    else if(thePlot >=  4 && thePlot <=  4) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
 
     else if(thePlot >=  5 && thePlot <=  7) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >=  8 && thePlot <=  8) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >=  9 && thePlot <=  9) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
+    else if(thePlot >=  9 && thePlot <=  9) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
 
     else if(thePlot >= 10 && thePlot <= 12) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 13 && thePlot <= 13) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >= 14 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
+    else if(thePlot >= 14 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
 
     else if(thePlot >= 15 && thePlot <= 17) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 18 && thePlot <= 18) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;}
+    else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
 
-    TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
+    TH1D* histos;
+    if(isMVAPlot == false) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
+    else                   histos = new TH1D("histos", "histos", nBinMVA, xbins);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
     histos->Reset();histos->Clear();
@@ -1943,7 +1946,7 @@ void wwAnalysis(
     histoOneBin_WjetsE->Reset();
     histoOneBin_Higgs ->Reset();
     histoOneBin_Data  ->SetBinContent(1,	    histo_Data  ->GetBinContent(nb));
-    histoOneBin_qqWW  ->SetBinContent(1,	    histo_qqWW  ->GetBinContent(nb));
+    histoOneBin_qqWW  ->SetBinContent(1, TMath::Max(histo_qqWW  ->GetBinContent(nb),0.0));
     histoOneBin_ggWW  ->SetBinContent(1, TMath::Max(histo_ggWW  ->GetBinContent(nb),0.0));
     histoOneBin_Top   ->SetBinContent(1, TMath::Max(histo_Top	->GetBinContent(nb),0.0));
     histoOneBin_DY    ->SetBinContent(1, TMath::Max(histo_DY	->GetBinContent(nb),0.0));
@@ -1983,7 +1986,7 @@ void wwAnalysis(
     //                            0    1    2   3  4  5   6  7   8     9      10
     newcardShape << Form("process qqWW ggWW Top DY VV VVV WG WGS Higgs WjetsM WjetsE\n");
     newcardShape << Form("process -1 0 1 2 3 4 5 6 7 8 9\n");
-    newcardShape << Form("rate %8.5f %8.5f  %8.5f  %8.5f %8.5f %8.5f %8.5f  %8.5f  %8.5f %8.5f %8.5f\n",histo_qqWW->GetBinContent(nb),histo_ggWW->GetBinContent(nb),histo_Top->GetBinContent(nb),histo_DY->GetBinContent(nb),histo_VV->GetBinContent(nb),histo_VVV->GetBinContent(nb),histo_WG->GetBinContent(nb),histo_WGS->GetBinContent(nb),histo_Higgs->GetBinContent(nb),histo_WjetsM->GetBinContent(nb),histo_WjetsE->GetBinContent(nb));
+    newcardShape << Form("rate %8.5f %8.5f  %8.5f  %8.5f %8.5f %8.5f %8.5f  %8.5f  %8.5f %8.5f %8.5f\n",TMath::Max(histo_qqWW->GetBinContent(nb),0.0),TMath::Max(histo_ggWW->GetBinContent(nb),0.0),TMath::Max(histo_Top->GetBinContent(nb),0.0),TMath::Max(histo_DY->GetBinContent(nb),0.0),TMath::Max(histo_VV->GetBinContent(nb),0.0),TMath::Max(histo_VVV->GetBinContent(nb),0.0),TMath::Max(histo_WG->GetBinContent(nb),0.0),TMath::Max(histo_WGS->GetBinContent(nb),0.0),TMath::Max(histo_Higgs->GetBinContent(nb),0.0),TMath::Max(histo_WjetsM->GetBinContent(nb),0.0),TMath::Max(histo_WjetsE->GetBinContent(nb),0.0));
     newcardShape << Form("lumi_%4s                               lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",ECMsb.Data(),lumiE,lumiE,lumiE,lumiE,lumiE,lumiE,lumiE,lumiE,lumiE);		     
     newcardShape << Form("%s                                     lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",effMName,systLepEffM[0],systLepEffM[1],systLepEffM[2],systLepEffM[3],systLepEffM[4],systLepEffM[5],systLepEffM[6],systLepEffM[7],systLepEffM[8]);
     newcardShape << Form("%s                                     lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",effEName,systLepEffE[0],systLepEffE[1],systLepEffE[2],systLepEffE[3],systLepEffE[4],systLepEffE[5],systLepEffE[6],systLepEffE[7],systLepEffE[8]);
