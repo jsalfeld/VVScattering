@@ -51,6 +51,7 @@ void wwAnalysis(
  unsigned int nJetsType = 0,
  int theControlRegion = 0,
  TString typeLepSel = "default",
+ bool isShapeAna = false,
  bool isMIT = false
  ){
 
@@ -259,9 +260,16 @@ void wwAnalysis(
   delete fWWPtRatio;
 
   TString ECMsb  = "13TeV2016";
-  const int nBinMVA = 2; Float_t xbins[nBinMVA+1] = {0, 1, 2};
+  const int nBinMVA = 8; Float_t xbins[nBinMVA+1] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+  if(isShapeAna && theControlRegion == 0){
+    xbins[0] =  12; xbins[1] = 100; xbins[2] = 150; xbins[3] = 200;
+    xbins[4] = 250, xbins[5] = 300; xbins[6] = 350; xbins[7] = 400;
+    xbins[8] = 500;
+  }
   TH1D* histoMVA = new TH1D("histoMVA", "histoMVA", nBinMVA, xbins);
   histoMVA->Sumw2();
+  TH1D* histoOneBin = new TH1D("histoOneBin", "histoOneBin", 1, -0.5, 0.5);
+  histoOneBin->Sumw2();
 
   TH1D *histo_Data   = (TH1D*) histoMVA->Clone("histo_Data");
   TH1D *histo_qqWW   = (TH1D*) histoMVA->Clone("histo_qqWW"); 
@@ -275,6 +283,19 @@ void wwAnalysis(
   TH1D *histo_WjetsM = (TH1D*) histoMVA->Clone("histo_WjetsM");	 
   TH1D *histo_WjetsE = (TH1D*) histoMVA->Clone("histo_WjetsE");	 
   TH1D *histo_Higgs  = (TH1D*) histoMVA->Clone("histo_Higgs");	 
+
+  TH1D *histoOneBin_Data   = (TH1D*) histoOneBin->Clone("histoOneBin_Data");
+  TH1D *histoOneBin_qqWW   = (TH1D*) histoOneBin->Clone("histoOneBin_qqWW"); 
+  TH1D *histoOneBin_ggWW   = (TH1D*) histoOneBin->Clone("histoOneBin_ggWW");
+  TH1D *histoOneBin_Top    = (TH1D*) histoOneBin->Clone("histoOneBin_Top");   
+  TH1D *histoOneBin_DY     = (TH1D*) histoOneBin->Clone("histoOneBin_DY");
+  TH1D *histoOneBin_VV     = (TH1D*) histoOneBin->Clone("histoOneBin_VV");
+  TH1D *histoOneBin_VVV    = (TH1D*) histoOneBin->Clone("histoOneBin_VVV");
+  TH1D *histoOneBin_WG     = (TH1D*) histoOneBin->Clone("histoOneBin_WG");
+  TH1D *histoOneBin_WGS    = (TH1D*) histoOneBin->Clone("histoOneBin_WGS");
+  TH1D *histoOneBin_WjetsM = (TH1D*) histoOneBin->Clone("histoOneBin_WjetsM");        
+  TH1D *histoOneBin_WjetsE = (TH1D*) histoOneBin->Clone("histoOneBin_WjetsE");        
+  TH1D *histoOneBin_Higgs  = (TH1D*) histoOneBin->Clone("histoOneBin_Higgs");	      
 
   double totalFakeDataCount[4][5];
   for(int i=0; i<4; i++) for(int j=0; j<5; j++) totalFakeDataCount[i][j] = 0;
@@ -1098,7 +1119,10 @@ void wwAnalysis(
 
       if(1) {
 	double MVAVar = (double)typePair;
-	//double MVAVar = 0;
+	if(isShapeAna){
+          if(typePair == 1) {passAllCuts[SIGSEL] = false; passAllCuts[TOPSEL] = false;}
+          MVAVar =  TMath::Min(dilep.M(),xbins[nBinMVA]-0.001);
+        }
 
         // Avoid QCD scale and PDF weights that are anomalous high
         double maxQCDscale = (TMath::Abs((double)eventMonteCarlo.r1f2)+TMath::Abs((double)eventMonteCarlo.r1f5)+TMath::Abs((double)eventMonteCarlo.r2f1)+
@@ -1901,6 +1925,49 @@ void wwAnalysis(
     if     (histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_MVAWW_sup_nlo	    ->GetBinContent(nb) > 0) systWWNNLO[1] = histo_qqWW_CMS_MVAWW_sup_nlo->GetBinContent(nb)/histo_qqWW->GetBinContent(nb);
     else if(histo_qqWW->GetBinContent(nb)> 0 && histo_qqWW_CMS_MVAWW_sdown_nlo      ->GetBinContent(nb) > 0) systWWNNLO[1] = histo_qqWW->GetBinContent(nb)/histo_qqWW_CMS_MVAWW_sdown_nlo->GetBinContent(nb);
 
+    char outputLimits[200];
+    sprintf(outputLimits,"ww_%s_%dj_input_%s_bin%d.root",finalStateName,nJetsType,ECMsb.Data(),nb-1);
+    TFile* outFileLimits = new TFile(outputLimits,"recreate");
+    outFileLimits->cd();
+    
+    histoOneBin_Data  ->Reset();
+    histoOneBin_qqWW  ->Reset();
+    histoOneBin_ggWW  ->Reset();
+    histoOneBin_Top   ->Reset();
+    histoOneBin_DY    ->Reset();
+    histoOneBin_VV    ->Reset();
+    histoOneBin_VVV   ->Reset();
+    histoOneBin_WG    ->Reset();
+    histoOneBin_WGS   ->Reset();
+    histoOneBin_WjetsM->Reset();
+    histoOneBin_WjetsE->Reset();
+    histoOneBin_Higgs ->Reset();
+    histoOneBin_Data  ->SetBinContent(1,	    histo_Data  ->GetBinContent(nb));
+    histoOneBin_qqWW  ->SetBinContent(1,	    histo_qqWW  ->GetBinContent(nb));
+    histoOneBin_ggWW  ->SetBinContent(1, TMath::Max(histo_ggWW  ->GetBinContent(nb),0.0));
+    histoOneBin_Top   ->SetBinContent(1, TMath::Max(histo_Top	->GetBinContent(nb),0.0));
+    histoOneBin_DY    ->SetBinContent(1, TMath::Max(histo_DY	->GetBinContent(nb),0.0));
+    histoOneBin_VV    ->SetBinContent(1, TMath::Max(histo_VV	->GetBinContent(nb),0.0));
+    histoOneBin_VVV   ->SetBinContent(1, TMath::Max(histo_VVV	->GetBinContent(nb),0.0));
+    histoOneBin_WG    ->SetBinContent(1, TMath::Max(histo_WG	->GetBinContent(nb),0.0));
+    histoOneBin_WGS   ->SetBinContent(1, TMath::Max(histo_WGS	->GetBinContent(nb),0.0));
+    histoOneBin_WjetsM->SetBinContent(1, TMath::Max(histo_WjetsM->GetBinContent(nb),0.0));
+    histoOneBin_WjetsE->SetBinContent(1, TMath::Max(histo_WjetsE->GetBinContent(nb),0.0));
+    histoOneBin_Higgs ->SetBinContent(1, TMath::Max(histo_Higgs ->GetBinContent(nb),0.0));
+    histoOneBin_Data  ->Write();
+    histoOneBin_qqWW  ->Write();
+    histoOneBin_ggWW  ->Write();
+    histoOneBin_Top   ->Write();
+    histoOneBin_DY    ->Write();
+    histoOneBin_VV    ->Write();
+    histoOneBin_VVV   ->Write();
+    histoOneBin_WG    ->Write();
+    histoOneBin_WGS   ->Write();
+    histoOneBin_WjetsM->Write();
+    histoOneBin_WjetsE->Write();
+    histoOneBin_Higgs ->Write();
+
+    outFileLimits->Close();
 
     char outputLimitsShape[200];
     sprintf(outputLimitsShape,"histo_limits_ww%s_%dj_%s_bin%d.txt",finalStateName,nJetsType,ECMsb.Data(),nb-1);
@@ -1909,6 +1976,8 @@ void wwAnalysis(
     newcardShape << Form("imax 1 number of channels\n");
     newcardShape << Form("jmax * number of background\n");
     newcardShape << Form("kmax * number of nuisance parameters\n");
+    newcardShape << Form("shapes *   *   %s  histoOneBin_$PROCESS\n",outputLimits);
+    newcardShape << Form("shapes data_obs * %s  histoOneBin_Data \n",outputLimits);
     newcardShape << Form("Observation %d\n",(int)histo_Data->GetBinContent(nb));
     newcardShape << Form("bin ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d ww%2s%dj%d\n",finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1,finalStateName,nJetsType,nb-1);
     //                            0    1    2   3  4  5   6  7   8     9      10
@@ -1968,4 +2037,10 @@ void wwAnalysis(
     }
   }
   delete btagCalib;
+
+  // delete garbage
+  if(!isShapeAna || theControlRegion != 0){
+    system(Form("rm -f ww_%s_%dj_input_%s_bin[2-%d].root",finalStateName,nJetsType,ECMsb.Data(),nBinMVA));
+    system(Form("rm -f histo_limits_ww%s_%dj_%s_bin[2-%d].txt",finalStateName,nJetsType,ECMsb.Data(),nBinMVA));
+  }
 }
