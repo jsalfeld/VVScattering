@@ -277,7 +277,8 @@ void baseAnalysis(
     else if(thePlot >= 41 && thePlot <= 41) {nBinPlot = 200; xminPlot = -TMath::Pi(); xmaxPlot = TMath::Pi();}
     else if(thePlot >= 42 && thePlot <= 42) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
     else if(thePlot >= 43 && thePlot <= 46) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
-    else if(thePlot >= 47 && thePlot <= 50) {nBinPlot = 500; xminPlot = 0.0; xmaxPlot = 100.0;}
+    else if(thePlot >= 47 && thePlot <= 48) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 49 && thePlot <= 50) {nBinPlot = 100; xminPlot =-2.5; xmaxPlot =   2.5;}
     else if(thePlot >= 51 && thePlot <= 52) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot =   3.5;}
     else if(thePlot >= 53 && thePlot <= 53) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot =   4.0;}
     else if(thePlot >= 54 && thePlot <= 59) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot =   1.0;}
@@ -741,7 +742,7 @@ void baseAnalysis(
 	}
 	if(tagWGS[0]!=-1){
 	  if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[tagWGS[2]]]) == 13) type3lWGS += 0;
-	  else							           type3lWGS += 2;
+	  else							             type3lWGS += 2;
           TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + 
 	                            ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + 
 	                            ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) ) ));
@@ -1059,10 +1060,10 @@ void baseAnalysis(
 	else if(thePlot == 44 && numberQuarks[1] == 0 && bDiscrMax < bTagCuts[1]) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 45 && numberQuarks[1]  > 0                           ) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
 	else if(thePlot == 46 && numberQuarks[1]  > 0 && bDiscrMax < bTagCuts[1]) {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-	else if(thePlot == 47 && type3lWGS == 0) {makePlot = true;theVar = TMath::Min(minMassSF,99.999);}
-	else if(thePlot == 48 && type3lWGS == 1) {makePlot = true;theVar = TMath::Min(minMassSF,99.999);}
-	else if(thePlot == 49 && type3lWGS == 2) {makePlot = true;theVar = TMath::Min(minMassSF,99.999);}
-	else if(thePlot == 50 && type3lWGS == 3) {makePlot = true;theVar = TMath::Min(minMassSF,99.999);}
+	else if(thePlot == 47 && signQ != 0) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
+	else if(thePlot == 48 && signQ != 0) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
+	else if(thePlot == 49 && signQ != 0) {makePlot = true;theVar = ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta();}
+	else if(thePlot == 50 && signQ != 0) {makePlot = true;theVar = ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta();}
 	else if(thePlot == 51) {makePlot = true;theVar = type3l;}
 	else if(thePlot == 52) {makePlot = true;theVar = type3lWGS;}
 	else if(thePlot == 53) {makePlot = true;theVar = TMath::Min(deltaRllMinWGS,3.999);}

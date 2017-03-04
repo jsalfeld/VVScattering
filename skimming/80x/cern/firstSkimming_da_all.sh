@@ -10,9 +10,6 @@
 ./MitAnalysisRunII/skimming/80x/cern/firstSkimming_batch.sh cms/store/group/phys_higgs/ceballos/Nero/v2.2                                    cms/store/group/phys_higgs/ceballos/Nero/skim_80x   dm
 ./MitAnalysisRunII/skimming/80x/cern/firstSkimming_batch.sh cms/store/user/ceballos/Nero/v2.2                                                cms/store/caf/user/ceballos/Nero/skim_80x   dm
 
-#./MitAnalysisRunII/skimming/80x/cern/firstSkimming_batch.sh cms/store/user/ceballos/Nero/v2.2/WZTo3LNu_3Jets_MLL-4To50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8         cms/store/caf/user/ceballos/Nero/skim_80x/WZTo3LNu_3Jets_MLL-4To50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 dm
-
-
 
 
 

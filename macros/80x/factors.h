@@ -29,11 +29,11 @@ double fake_rate_e_25_verytight[6][5] = {
 //0.399,0.430,0.369,0.338,0.332,0.310,
 //0.424,0.363,0.338,0.302,0.281,0.239,
 //0.278,0.243,0.208,0.175,0.154,0.134
-0.358,0.354,0.330,0.274,0.251,0.224,
-0.312,0.377,0.313,0.277,0.256,0.221,
-0.347,0.383,0.317,0.288,0.256,0.218,
-0.365,0.298,0.263,0.229,0.197,0.157,
-0.221,0.176,0.150,0.117,0.099,0.082
+0.360,0.354,0.331,0.277,0.258,0.245,
+0.317,0.378,0.314,0.279,0.263,0.243,
+0.352,0.384,0.318,0.290,0.262,0.236,
+0.366,0.298,0.264,0.230,0.198,0.162,
+0.221,0.176,0.150,0.117,0.100,0.084
 };
 double fake_rate_e_25_medium_mva[6][5] = {
 0.705,0.680,0.536,0.474,0.406,0.368,
@@ -364,7 +364,7 @@ TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF, 
   double effVeryTight = 1.0;
   if(TMath::Abs(nsel) == 11 && type== "verytight") {
     Int_t binXT = fhDVeryTightSF->GetXaxis()->FindFixBin(eta);
-    //effVeryTight = fhDVeryTightSF->GetBinContent(binXT);
+    effVeryTight = fhDVeryTightSF->GetBinContent(binXT);
   }
   //printf("eff: %f %f %f - %f %f - %d %d %d %d\n",result,trkSF,isoSF,pt,eta,binXA,binYA,binXB,binYB);
 
