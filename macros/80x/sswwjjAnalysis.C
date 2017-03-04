@@ -2029,6 +2029,7 @@ void sswwjjAnalysis(
     outFileLimits->cd();
     
     if(verbose) {
+      printf("*************** Model: %s ******************\n",theSignalName.Data());
       cout << histo_Data ->GetSumOfWeights() << " ";
       cout << histo_EWK  ->GetSumOfWeights() << " ";
       cout << histo_QCD  ->GetSumOfWeights() << " ";
@@ -2350,7 +2351,7 @@ void sswwjjAnalysis(
         if(TMath::Abs(histo_WG_CMS_QCDScaleBounding[nqcd] ->GetBinContent(nb)-histo_WG ->GetBinContent(nb)) > systQCDScale[6]) systQCDScale[6] = TMath::Abs(histo_WG_CMS_QCDScaleBounding[nqcd] ->GetBinContent(nb)-histo_WG ->GetBinContent(nb));
         if(TMath::Abs(histo_DPS_CMS_QCDScaleBounding[nqcd]->GetBinContent(nb)-histo_DPS->GetBinContent(nb)) > systQCDScale[7]) systQCDScale[7] = TMath::Abs(histo_DPS_CMS_QCDScaleBounding[nqcd]->GetBinContent(nb)-histo_DPS->GetBinContent(nb));
         if(TMath::Abs(histo_Higgs_CMS_QCDScaleBounding[TMath::Max(nModel,0)][nqcd]->GetBinContent(nb)  -histo_Higgs[TMath::Max(nModel,0)]->GetBinContent(nb)) > systQCDScale[8]) systQCDScale[8] = TMath::Abs(histo_Higgs_CMS_QCDScaleBounding[TMath::Max(nModel,0)][nqcd]->GetBinContent(nb)  -histo_Higgs[TMath::Max(nModel,0)]  ->GetBinContent(nb));
-      }                 
+      }
       if(histo_EWK->GetBinContent(nb) > 0) systQCDScale[0] = 1 + systQCDScale[0]/histo_EWK->GetBinContent(nb); else systQCDScale[0] = 1;
       if(histo_QCD->GetBinContent(nb) > 0) systQCDScale[1] = 1 + systQCDScale[1]/histo_QCD->GetBinContent(nb); else systQCDScale[1] = 1;
       if(histo_WZ ->GetBinContent(nb) > 0) systQCDScale[2] = 1 + systQCDScale[2]/histo_WZ ->GetBinContent(nb); else systQCDScale[2] = 1;
@@ -2639,8 +2640,8 @@ void sswwjjAnalysis(
       newcardShape << Form("QCDscale_tt    lnN    -     -     -     -     -   %7.5f   -     -     -     -     -  \n",systQCDScale[5]);		
       newcardShape << Form("QCDscale_WG    lnN    -     -     -     -     -     -   %7.5f   -     -     -     -  \n",systQCDScale[6]);		
       newcardShape << Form("QCDscale_Higgs lnN    -     -     -     -     -     -     -     -     -     -   %7.5f\n",systQCDScale[8]);		
-      newcardShape << Form("pdf_qqbar      lnN  %7.5f %7.5f %7.5f %7.5f %7.5f   -   %7.5f %7.5f   -     -     -  \n",systPDF[0],systPDF[1],systPDF[2],systPDF[3],systPDF[4],systPDF[6],systPDF[7]);
-      newcardShape << Form("pdf_gg         lnN    -     -     -     -     -   %7.5f   -     -     -     -   %7.5f\n",systPDF[5],systPDF[8]);
+      newcardShape << Form("pdf_qqbar      lnN  %7.5f %7.5f %7.5f %7.5f %7.5f   -   %7.5f %7.5f   -     -   %7.5f\n",systPDF[0],systPDF[1],systPDF[2],systPDF[3],systPDF[4],systPDF[6],systPDF[7],systPDF[8]);
+      newcardShape << Form("pdf_gg         lnN    -     -     -     -     -   %7.5f   -     -     -     -     -  \n",systPDF[5]);
       if(theControlRegion != 2){
       if(histo_FakeM->GetBinContent(nb)>0)
       newcardShape << Form("CMS_FakeM      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.30);
