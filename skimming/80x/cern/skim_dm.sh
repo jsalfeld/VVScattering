@@ -3,7 +3,7 @@
 export INPUTDIR=/eos/cms/store/group/phys_higgs/ceballos/Nero/merging_80x/dm;
 export OUTPUTDIR=/eos/cms/store/caf/user/ceballos/Nero/output_80x;
 
-#ls $INPUTDIR|grep -e DarkMatter -e ADDMonoZ -e Unpart -e Inv|awk '{printf("root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\\(\\\"$INPUTDIR/%s\\\",\\\"$OUTPUTDIR/${PREFIX}%s\\\",\\\"dm_em\\\",$1\\)\n",$1,$1)}'
+#ls $INPUTDIR|grep -e DarkMatter -e ADDMonoZ -e Unpart -e Inv -e Doubly|awk '{printf("root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\\(\\\"$INPUTDIR/%s\\\",\\\"$OUTPUTDIR/${PREFIX}%s\\\",\\\"dm_em\\\",$1\\)\n",$1,$1)}'
 
 export PREFIX="";
 if [ $1 == 1 ]
@@ -287,3 +287,13 @@ root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZH_ZToMM_HToInvisible_M1000_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZH_ZToMM_HToInvisible_M1000_13TeV_powheg_pythia8.root\",\"zmmhinv1000\",$1\)
 
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ggZH_HToInv_ZToLL_M125_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ggZH_HToInv_ZToLL_M125_13TeV_powheg_pythia8.root\",\"ggzhinv125\",$1\)
+
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/DoublyChargedHiggsGMmodel_HWW_M200_13TeV-madgraph_0000.root\",\"$OUTPUTDIR/${PREFIX}DoublyChargedHiggsGMmodel_HWW_M200_13TeV-madgraph.root\",\"qq_cH_WW\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/DoublyChargedHiggsGMmodel_HWW_M300_13TeV-madgraph_0000.root\",\"$OUTPUTDIR/${PREFIX}DoublyChargedHiggsGMmodel_HWW_M300_13TeV-madgraph.root\",\"qq_cH_WW\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/DoublyChargedHiggsGMmodel_HWW_M400_13TeV-madgraph_0000.root\",\"$OUTPUTDIR/${PREFIX}DoublyChargedHiggsGMmodel_HWW_M400_13TeV-madgraph.root\",\"qq_cH_WW\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/DoublyChargedHiggsGMmodel_HWW_M500_13TeV-madgraph_0000.root\",\"$OUTPUTDIR/${PREFIX}DoublyChargedHiggsGMmodel_HWW_M500_13TeV-madgraph.root\",\"qq_cH_WW\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/DoublyChargedHiggsGMmodel_HWW_M600_13TeV-madgraph_0000.root\",\"$OUTPUTDIR/${PREFIX}DoublyChargedHiggsGMmodel_HWW_M600_13TeV-madgraph.root\",\"qq_cH_WW\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/DoublyChargedHiggsGMmodel_HWW_M700_13TeV-madgraph_0000.root\",\"$OUTPUTDIR/${PREFIX}DoublyChargedHiggsGMmodel_HWW_M700_13TeV-madgraph.root\",\"qq_cH_WW\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/DoublyChargedHiggsGMmodel_HWW_M800_13TeV-madgraph_0000.root\",\"$OUTPUTDIR/${PREFIX}DoublyChargedHiggsGMmodel_HWW_M800_13TeV-madgraph.root\",\"qq_cH_WW\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/DoublyChargedHiggsGMmodel_HWW_M900_13TeV-madgraph_0000.root\",\"$OUTPUTDIR/${PREFIX}DoublyChargedHiggsGMmodel_HWW_M900_13TeV-madgraph.root\",\"qq_cH_WW\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/DoublyChargedHiggsGMmodel_HWW_M1000_13TeV-madgraph_0000.root\",\"$OUTPUTDIR/${PREFIX}DoublyChargedHiggsGMmodel_HWW_M1000_13TeV-madgraph.root\",\"qq_cH_WW\",$1\)
