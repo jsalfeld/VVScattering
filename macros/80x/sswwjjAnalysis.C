@@ -197,7 +197,15 @@ void sswwjjAnalysis(
 
   {
   int i=0;
-  signalName_.push_back(Form("mh%d", 125)); infilenamev.push_back(Form("%sWWTo2L2Nu_DoubleScattering_13TeV-pythia8.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  signalName_.push_back(Form("mh%d", 200)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M200_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  //signalName_.push_back(Form("mh%d", 300)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M300_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  //signalName_.push_back(Form("mh%d", 400)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M400_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  signalName_.push_back(Form("mh%d", 500)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M500_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  //signalName_.push_back(Form("mh%d", 600)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M600_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  //signalName_.push_back(Form("mh%d", 700)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M700_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  //signalName_.push_back(Form("mh%d", 800)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M800_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  //signalName_.push_back(Form("mh%d", 900)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M900_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  //signalName_.push_back(Form("mh%d",1000)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M1000_13TeV-madgraph.root",filesPathMC.Data()));infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   }
 
   } // end period == 1
@@ -383,9 +391,9 @@ void sswwjjAnalysis(
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
   const int allPlots = 34;
-  const int histBins = 12;
+  const int histBins = 13;
   TH1D* histo[7][allPlots][histBins];
-  TString processName[histBins] = {".Data", "EWKWW", "QCDWW", "...WZ", "...ZZ", "..VVV", "...WS", "...WG", "..DPS", "FakeM", "FakeE", "Higgs"};
+  TString processName[histBins] = {".Data", "EWKWW", "QCDWW", "...WZ", "...ZZ", "..VVV", "...WS", "...WG", "..DPS", "FakeM", "FakeE", "Higgs1", "Higgs2"};
 
   for(int nModel=0; nModel<7; nModel++){
     for(int thePlot=0; thePlot<allPlots; thePlot++){
@@ -1468,6 +1476,8 @@ void sswwjjAnalysis(
 
         if(makePlot && nModel <= 0) histo[typeSel][thePlot][theCategory]->Fill(theVar,totalWeight);
         if(makePlot && nModel <= 0) histo[6][thePlot][theCategory]->Fill(theVar,totalWeight);
+        if(makePlot && nModel == 1) histo[typeSel][thePlot][theCategory+1]->Fill(theVar,totalWeight);
+        if(makePlot && nModel == 1) histo[6][thePlot][theCategory+1]->Fill(theVar,totalWeight);
       }
 
       // Making histograms for datacards
@@ -1932,6 +1942,7 @@ void sswwjjAnalysis(
   histo[6][allPlots-1][9] ->Add(histo_FakeM);
   histo[6][allPlots-1][10]->Add(histo_FakeE);
   histo[6][allPlots-1][11]->Add(histo_Higgs[0]);
+  histo[6][allPlots-1][12]->Add(histo_Higgs[1]);
 
   for(int nModel=0; nModel<7; nModel++){
     for(int thePlot=0; thePlot<allPlots; thePlot++){
