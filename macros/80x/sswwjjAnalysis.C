@@ -393,9 +393,9 @@ void sswwjjAnalysis(
   const int allPlots = 34;
   const int histBins = 13;
   TH1D* histo[7][allPlots][histBins];
-  TString processName[histBins] = {".Data", "EWKWW", "QCDWW", "...WZ", "...ZZ", "..VVV", "...WS", "...WG", "..DPS", "FakeM", "FakeE", "Higgs1", "Higgs2"};
+  TString processName[histBins] = {".Data", "EWKWW", "QCDWW", "...WZ", "...ZZ", "..VVV", "...WS", "...WG", "..DPS", "FakeM", "FakeE", "..Hig1", "..Hig2"};
 
-  for(int nModel=0; nModel<7; nModel++){
+  for(int nState=0; nState<7; nState++){
     for(int thePlot=0; thePlot<allPlots; thePlot++){
       if     (thePlot >=  0 && thePlot <=  0) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 2000;}
       else if(thePlot >=  1 && thePlot <=  1) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
@@ -425,14 +425,14 @@ void sswwjjAnalysis(
       else if(thePlot < allPlots-1) histos = new TH1D("histos", "histos", nBinWZMVA, xbinsWZ);
       else                          histos = new TH1D("histos", "histos", nBinMVA, xbins);
       histos->Sumw2();
-      for(int i=0; i<histBins; i++) histo[nModel][thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
+      for(int i=0; i<histBins; i++) histo[nState][thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
       histos->Reset();histos->Clear();
     }
   }
 
   double bgdDecay[6][nSelTypes][histBins],weiDecay[6][nSelTypes][histBins];
-  for(int nModel=0; nModel<6; nModel++) { for(unsigned int i=0; i<nSelTypes; i++) { for(int j=0; j<histBins; j++) {       
-    bgdDecay[nModel][i][j] = 0.0; weiDecay[nModel][i][j] = 0.0; 
+  for(int nState=0; nState<6; nState++) { for(unsigned int i=0; i<nSelTypes; i++) { for(int j=0; j<histBins; j++) {       
+    bgdDecay[nState][i][j] = 0.0; weiDecay[nState][i][j] = 0.0; 
   }}}
 
   char finalStateName[6],effMName[10],effEName[10],momMName[10],momEName[10],metName[10],jesName[10],puName[10],btagName[20],mistagName[20];
@@ -764,8 +764,8 @@ void sswwjjAnalysis(
   for(UInt_t ifile=0; ifile<infilenamev.size(); ifile++) {
     printf("sampleNames(%d): %s\n",ifile,infilenamev[ifile].Data());
 
-    int nModel = (infilecatv[ifile]==11) ? signalIndex_[ifile] : -1;
-    if(nModel>=0) signalName=signalName_[nModel];
+    int sigModel = (infilecatv[ifile]==11) ? signalIndex_[ifile] : -1;
+    if(sigModel>=0) signalName=signalName_[sigModel];
 
     TFile *the_input_file = TFile::Open(infilenamev[ifile].Data());
     TTree *the_input_tree = (TTree*)the_input_file->FindObjectAny("events");
@@ -923,8 +923,8 @@ void sswwjjAnalysis(
 	passFilterSig[0] = kTRUE;
 	passFilterCR1[0] = kTRUE;
       }
-      if(idTight.size() == 2 && signQ == 0 && (typeSel == 2 || typeSel == 5))  passFilterCR3[0] = kTRUE;
-      if(idTight.size() == 3 )  					       passFilterCR2[0] = kTRUE; 
+      if(idTight.size() == 2 && signQ == 0 && typePair == 2)  passFilterCR3[0] = kTRUE;
+      if(idTight.size() == 3 )                                passFilterCR2[0] = kTRUE; 
 
       //lepton pT cut
       if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 25 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20){
@@ -1129,7 +1129,7 @@ void sswwjjAnalysis(
       passFilterCR2[6] = kTRUE;
       
       //Z veto
-      if(((typeSel == 1 || typeSel == 4) && (TMath::Abs(dilep.M()-91.1876) > 15.0)) || !(typeSel == 1 || typeSel == 4)){
+      if((typePair == 1 && TMath::Abs(dilep.M()-91.1876) > 15.0) || typePair != 1){
 	passFilterSig[7] = kTRUE;
 	passFilterCR1[7] = kTRUE;
       }
@@ -1354,7 +1354,7 @@ void sswwjjAnalysis(
 
       // fake rate
       double fakeSF = 1.0;
-      if(usePureMC == false && nModel == -1){
+      if(usePureMC == false && sigModel == -1){
 	if((infilecatv[ifile] == 0 || infilecatv[ifile] == 7 || (goodIsGenRSLep+goodIsGenWSLep) == isGenLep.size()) && goodIsTight != idTight.size()){
             unsigned int typeFakeLepton[2] = {0,0};
             for(unsigned int nl=0; nl<idLep.size(); nl++){
@@ -1403,7 +1403,7 @@ void sswwjjAnalysis(
       else if(infilenamev[ifile].Contains("JetsToLL") && goodIsTight != idTight.size() && (passAllCuts[SIGSEL] || passAllCuts[TOPSEL] || passAllCuts[WZSEL])) {
         totalWeight = 0.0;
       }
-      if(infilenamev[ifile].Contains("JetsToLL") && (typeSel == 0 || typeSel == 3) && signQ != 0) {
+      if(infilenamev[ifile].Contains("JetsToLL") && typePair == 0 && signQ != 0) {
         totalWeight = 0.0;
         if(passSignalRegion && goodIsGenWSLep == 0) printf("mm event with no WS candidates\n");
       }
@@ -1430,7 +1430,7 @@ void sswwjjAnalysis(
       for(int nl=0; nl <=sumEvol[typeSel]; nl++) if(fakeSF == 1) {hDWWLL[typeSel]->Fill((double)nl,totalWeight);hDWWLL[6]->Fill((double)nl,totalWeight);}
 
       for(unsigned int i=0; i<nSelTypes; i++) {
-        if(passAllCuts[i] && nModel == -1) {
+        if(passAllCuts[i] && sigModel == -1) {
           bgdDecay[typeSel][i][theCategory] += totalWeight;
           weiDecay[typeSel][i][theCategory] += totalWeight*totalWeight;
         }
@@ -1473,11 +1473,10 @@ void sswwjjAnalysis(
 
         else if(thePlot == 31 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
         else if(thePlot == 32 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
-
-        if(makePlot && nModel <= 0) histo[typeSel][thePlot][theCategory]->Fill(theVar,totalWeight);
-        if(makePlot && nModel <= 0) histo[6][thePlot][theCategory]->Fill(theVar,totalWeight);
-        if(makePlot && nModel == 1) histo[typeSel][thePlot][theCategory+1]->Fill(theVar,totalWeight);
-        if(makePlot && nModel == 1) histo[6][thePlot][theCategory+1]->Fill(theVar,totalWeight);
+        if(makePlot && sigModel <= 0) histo[typeSel][thePlot][theCategory]->Fill(theVar,totalWeight);
+        if(makePlot && sigModel <= 0) histo[6][thePlot][theCategory]->Fill(theVar,totalWeight);
+        if(makePlot && sigModel == 1) histo[typeSel][thePlot][theCategory+1]->Fill(theVar,totalWeight);
+        if(makePlot && sigModel == 1) histo[6][thePlot][theCategory+1]->Fill(theVar,totalWeight);
       }
 
       // Making histograms for datacards
@@ -1807,38 +1806,38 @@ void sswwjjAnalysis(
       }
       else if(theCategory == 11){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
-           histo_Higgs[nModel]->Fill(MVAVar,totalWeight);
-           histo_Higgs_CMS_QCDScaleBounding[nModel][0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
-           histo_Higgs_CMS_QCDScaleBounding[nModel][1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
-           histo_Higgs_CMS_QCDScaleBounding[nModel][2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1)/maxQCDscale);
-           histo_Higgs_CMS_QCDScaleBounding[nModel][3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2)/maxQCDscale);
-           histo_Higgs_CMS_QCDScaleBounding[nModel][4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
-           histo_Higgs_CMS_QCDScaleBounding[nModel][5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
+           histo_Higgs[sigModel]->Fill(MVAVar,totalWeight);
+           histo_Higgs_CMS_QCDScaleBounding[sigModel][0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
+           histo_Higgs_CMS_QCDScaleBounding[sigModel][1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
+           histo_Higgs_CMS_QCDScaleBounding[sigModel][2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1)/maxQCDscale);
+           histo_Higgs_CMS_QCDScaleBounding[sigModel][3]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f2)/maxQCDscale);
+           histo_Higgs_CMS_QCDScaleBounding[sigModel][4]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f1)/maxQCDscale);
+           histo_Higgs_CMS_QCDScaleBounding[sigModel][5]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r5f5)/maxQCDscale);
            if(initPDFTag != -1)
-           for(int npdf=0; npdf<100; npdf++) histo_Higgs_CMS_PDFBounding[nModel][npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag])/PDFAvg);
+           for(int npdf=0; npdf<100; npdf++) histo_Higgs_CMS_PDFBounding[sigModel][npdf]->Fill(MVAVar,totalWeight*TMath::Abs((double)(*eventMonteCarlo.pdfRwgt)[npdf+initPDFTag])/PDFAvg);
            else
-           for(int npdf=0; npdf<100; npdf++) histo_Higgs_CMS_PDFBounding[nModel][npdf]->Fill(MVAVar,totalWeight);
-           if	  (typePair == 0) histo_Higgs_CMS_MVALepEffMBoundingAvg [nModel]->Fill(MVAVar,totalWeight*1.00);
-           else if(typePair == 1) histo_Higgs_CMS_MVALepEffEBoundingAvg [nModel]->Fill(MVAVar,totalWeight*1.00);
-           else                  {histo_Higgs_CMS_MVALepEffMBoundingAvg [nModel]->Fill(MVAVar,totalWeight*0.50);
-	                          histo_Higgs_CMS_MVALepEffEBoundingAvg [nModel]->Fill(MVAVar,totalWeight*0.50);}
-           if	  (typePair == 0) histo_Higgs_CMS_MVALepEffMBoundingUp  [nModel]->Fill(MVAVar,totalWeight*1.02);
-           else if(typePair == 1) histo_Higgs_CMS_MVALepEffEBoundingUp  [nModel]->Fill(MVAVar,totalWeight*1.02);
-           else                  {histo_Higgs_CMS_MVALepEffMBoundingUp  [nModel]->Fill(MVAVar,totalWeight*0.50*1.02);
-	                          histo_Higgs_CMS_MVALepEffEBoundingUp  [nModel]->Fill(MVAVar,totalWeight*0.50*1.02);}
-           if	  (typePair == 0) histo_Higgs_CMS_MVALepEffMBoundingDown[nModel]->Fill(MVAVar,totalWeight*0.98);
-           else if(typePair == 1) histo_Higgs_CMS_MVALepEffEBoundingDown[nModel]->Fill(MVAVar,totalWeight*0.98);
-           else                  {histo_Higgs_CMS_MVALepEffMBoundingDown[nModel]->Fill(MVAVar,totalWeight*0.50*0.98);
-	                          histo_Higgs_CMS_MVALepEffEBoundingDown[nModel]->Fill(MVAVar,totalWeight*0.50*0.98);}
-           histo_Higgs_CMS_PUBoundingUp  [nModel]->Fill(MVAVar,totalWeight*puWeightUp  /puWeight);
-           histo_Higgs_CMS_PUBoundingDown[nModel]->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
-           histo_Higgs_CMS_MVABTAGBoundingUp  [nModel]->Fill(MVAVar,totalWeight*btagCorr[0]);
-           histo_Higgs_CMS_MVABTAGBoundingDown[nModel]->Fill(MVAVar,totalWeight*btagCorr[1]);
+           for(int npdf=0; npdf<100; npdf++) histo_Higgs_CMS_PDFBounding[sigModel][npdf]->Fill(MVAVar,totalWeight);
+           if	  (typePair == 0) histo_Higgs_CMS_MVALepEffMBoundingAvg [sigModel]->Fill(MVAVar,totalWeight*1.00);
+           else if(typePair == 1) histo_Higgs_CMS_MVALepEffEBoundingAvg [sigModel]->Fill(MVAVar,totalWeight*1.00);
+           else                  {histo_Higgs_CMS_MVALepEffMBoundingAvg [sigModel]->Fill(MVAVar,totalWeight*0.50);
+	                          histo_Higgs_CMS_MVALepEffEBoundingAvg [sigModel]->Fill(MVAVar,totalWeight*0.50);}
+           if	  (typePair == 0) histo_Higgs_CMS_MVALepEffMBoundingUp  [sigModel]->Fill(MVAVar,totalWeight*1.02);
+           else if(typePair == 1) histo_Higgs_CMS_MVALepEffEBoundingUp  [sigModel]->Fill(MVAVar,totalWeight*1.02);
+           else                  {histo_Higgs_CMS_MVALepEffMBoundingUp  [sigModel]->Fill(MVAVar,totalWeight*0.50*1.02);
+	                          histo_Higgs_CMS_MVALepEffEBoundingUp  [sigModel]->Fill(MVAVar,totalWeight*0.50*1.02);}
+           if	  (typePair == 0) histo_Higgs_CMS_MVALepEffMBoundingDown[sigModel]->Fill(MVAVar,totalWeight*0.98);
+           else if(typePair == 1) histo_Higgs_CMS_MVALepEffEBoundingDown[sigModel]->Fill(MVAVar,totalWeight*0.98);
+           else                  {histo_Higgs_CMS_MVALepEffMBoundingDown[sigModel]->Fill(MVAVar,totalWeight*0.50*0.98);
+	                          histo_Higgs_CMS_MVALepEffEBoundingDown[sigModel]->Fill(MVAVar,totalWeight*0.50*0.98);}
+           histo_Higgs_CMS_PUBoundingUp  [sigModel]->Fill(MVAVar,totalWeight*puWeightUp  /puWeight);
+           histo_Higgs_CMS_PUBoundingDown[sigModel]->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
+           histo_Higgs_CMS_MVABTAGBoundingUp  [sigModel]->Fill(MVAVar,totalWeight*btagCorr[0]);
+           histo_Higgs_CMS_MVABTAGBoundingDown[sigModel]->Fill(MVAVar,totalWeight*btagCorr[1]);
         }
-        if(passSystCuts[JESUP])  histo_Higgs_CMS_MVAJESBoundingUp  [nModel]->Fill(MVAVarJESSyst[0],totalWeight);
-        if(passSystCuts[JESDOWN])histo_Higgs_CMS_MVAJESBoundingDown[nModel]->Fill(MVAVarJESSyst[1],totalWeight);
-        if(passSystCuts[METUP])  histo_Higgs_CMS_MVAMETBoundingUp  [nModel]->Fill(MVAVar,totalWeight);
-        if(passSystCuts[METDOWN])histo_Higgs_CMS_MVAMETBoundingDown[nModel]->Fill(MVAVar,totalWeight);
+        if(passSystCuts[JESUP])  histo_Higgs_CMS_MVAJESBoundingUp  [sigModel]->Fill(MVAVarJESSyst[0],totalWeight);
+        if(passSystCuts[JESDOWN])histo_Higgs_CMS_MVAJESBoundingDown[sigModel]->Fill(MVAVarJESSyst[1],totalWeight);
+        if(passSystCuts[METUP])  histo_Higgs_CMS_MVAMETBoundingUp  [sigModel]->Fill(MVAVar,totalWeight);
+        if(passSystCuts[METDOWN])histo_Higgs_CMS_MVAMETBoundingDown[sigModel]->Fill(MVAVar,totalWeight);
       }
     }
     printf("                          mm+          ee+          em+          mm-          ee-          em-          all\n");
@@ -1941,7 +1940,9 @@ void sswwjjAnalysis(
   histo[6][allPlots-1][8] ->Add(histo_DPS);
   histo[6][allPlots-1][9] ->Add(histo_FakeM);
   histo[6][allPlots-1][10]->Add(histo_FakeE);
+  if(nSigModels >= 1)
   histo[6][allPlots-1][11]->Add(histo_Higgs[0]);
+  if(nSigModels >= 2)
   histo[6][allPlots-1][12]->Add(histo_Higgs[1]);
 
   for(int nModel=0; nModel<7; nModel++){
@@ -1967,6 +1968,7 @@ void sswwjjAnalysis(
 	  sumEventsType[     6] = sumEventsType[     6] + bgdDecay[nModel][ns][np]; sumEventsTypeE[     6] = sumEventsTypeE[     6] + weiDecay[nModel][ns][np];
         }
       }
+      if(!processName[np].Contains("Hig"))
       printf("(%5s): %8.2f +/- %6.2f | %8.2f +/- %6.2f | %8.2f +/- %6.2f | %8.2f +/- %6.2f | %8.2f +/- %6.2f | %8.2f +/- %6.2f => %8.2f +/- %6.2f\n",
       processName[np].Data(),bgdDecay[0][ns][np],sqrt(weiDecay[0][ns][np]),bgdDecay[1][ns][np],sqrt(weiDecay[1][ns][np]),
         		     bgdDecay[2][ns][np],sqrt(weiDecay[2][ns][np]),bgdDecay[3][ns][np],sqrt(weiDecay[3][ns][np]),
