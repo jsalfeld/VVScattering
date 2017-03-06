@@ -108,8 +108,8 @@ void sswwjjAnalysis(
   //signal: EWK + QCD
   //infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
   infilenamev.push_back(Form("%sWpWpJJ_EWK_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(1);
-  //infilenamev.push_back(Form("%sWpWpJJ_13TeV-powheg-pythia8.root",filesPathMC.Data()));			             infilecatv.push_back(1);
-  //infilenamev.push_back(Form("%sWmWmJJ_13TeV-powheg-pythia8.root",filesPathMC.Data()));			             infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWpWpJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
+  //infilenamev.push_back(Form("%sWmWmJJ_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));			       infilecatv.push_back(1);
 
   //QCD to be subtracted from signal
   //infilenamev.push_back(Form("%sWpWpJJ_QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                   infilecatv.push_back(-1);
@@ -199,7 +199,7 @@ void sswwjjAnalysis(
   int i=0;
   signalName_.push_back(Form("mh%d", 200)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M200_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   //signalName_.push_back(Form("mh%d", 300)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M300_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
-  //signalName_.push_back(Form("mh%d", 400)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M400_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  signalName_.push_back(Form("mh%d", 400)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M400_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d", 500)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M500_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   //signalName_.push_back(Form("mh%d", 600)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M600_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   //signalName_.push_back(Form("mh%d", 700)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M700_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
@@ -307,7 +307,8 @@ void sswwjjAnalysis(
 							  8800, 9100, 9500,10000,
 							 10800,11100,11500,12000};
 
-  const int nBinWZMVA = 5; Float_t xbinsWZ[nBinWZMVA+1] = {500, 800, 1100, 1500, 2000, 3000};
+  const int nBinWZMVA = 5; Float_t xbinsWZ[nBinWZMVA+1] = {500, 800, 1100, 1500, 2000, 2000.00001};
+  int nBinWZMVAModule = 4;
 
   if     (finalVar == 1){
     xbins[ 0] = 0; xbins[ 1] = 100; xbins[ 2] = 200; xbins[ 3] = 300; xbins[ 4] = 600;
@@ -317,7 +318,8 @@ void sswwjjAnalysis(
      		   xbins[17] =4100; xbins[18] =4200; xbins[19] =4300; xbins[20] =4600;
      		   xbins[21] =5100; xbins[22] =5200; xbins[23] =5300; xbins[24] =5600;
 
-    xbinsWZ[ 0] = 0; xbinsWZ[ 1] = 100; xbinsWZ[ 2] = 200; xbinsWZ[ 3] = 300; xbinsWZ[ 4] = 600; xbinsWZ[ 5] = 3000;
+    xbinsWZ[ 0] = 0; xbinsWZ[ 1] = 100; xbinsWZ[ 2] = 200; xbinsWZ[ 3] = 300; xbinsWZ[ 4] = 600; xbinsWZ[ 5] = 600.00001;
+    nBinWZMVAModule = 4;
   }
   else if(finalVar == 2){
     xbins[ 0] = 0; xbins[ 1] = 100; xbins[ 2] = 200; xbins[ 3] = 300; xbins[ 4] = 400; xbins[ 5] = 600;
@@ -328,22 +330,9 @@ void sswwjjAnalysis(
      		   xbins[21] =4100; xbins[22] =4200; xbins[23] =4300; xbins[24] =4400;
 
     xbinsWZ[ 0] = 0; xbinsWZ[ 1] = 100; xbinsWZ[ 2] = 200; xbinsWZ[ 3] = 300; xbinsWZ[ 4] = 400; xbinsWZ[ 5] = 600;
+    nBinWZMVAModule = 5;
   }
-/*
-  const int nBinMVA = 30; Float_t xbins[nBinMVA+1];
-  const int nBinWZMVA = 5;Float_t xbinsWZ[nBinWZMVA+1];
 
-  if(finalVar == 1){
-    xbins[ 0] = 0; xbins[ 1] = 100; xbins[ 2] = 200; xbins[ 3] = 300; xbins[ 4] = 400; xbins[ 5] = 600;
-     		   xbins[ 6] =1100; xbins[ 7] =1200; xbins[ 8] =1300; xbins[ 9] =1400; xbins[10] =1600;
-     		   xbins[11] =2100; xbins[12] =2200; xbins[13] =2300; xbins[14] =2400; xbins[15] =2600;
-     		   xbins[16] =3100; xbins[17] =3200; xbins[18] =3300; xbins[19] =3400; xbins[20] =3600;
-     		   xbins[21] =4100; xbins[22] =4200; xbins[23] =4300; xbins[24] =4400; xbins[25] =4600;
-     		   xbins[26] =5100; xbins[27] =5200; xbins[28] =5300; xbins[29] =5400; xbins[30] =5600;
-
-    xbinsWZ[ 0] = 0; xbinsWZ[ 1] = 100; xbinsWZ[ 2] = 200; xbinsWZ[ 3] = 300; xbinsWZ[ 4] = 400; xbinsWZ[ 5] = 600;
-  }
-*/
   TH1D* histoMVA = new TH1D("histoMVA", "histoMVA", nBinMVA, xbins);
   histoMVA->Sumw2();
   TH1D* histoWZMVA = new TH1D("histoWZMVA", "histoWZMVA", nBinWZMVA, xbinsWZ);
@@ -390,7 +379,7 @@ void sswwjjAnalysis(
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 34;
+  const int allPlots = 35;
   const int histBins = 13;
   TH1D* histo[7][allPlots][histBins];
   TString processName[histBins] = {".Data", "EWKWW", "QCDWW", "...WZ", "...ZZ", "..VVV", "...WS", "...WG", "..DPS", "FakeM", "FakeE", "..Hig1", "..Hig2"};
@@ -421,7 +410,7 @@ void sswwjjAnalysis(
       else if(thePlot >= 28 && thePlot <= 29) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
       else if(thePlot >= 30 && thePlot <= 30) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot = 3.5;}
       TH1D* histos;
-      if     (thePlot < allPlots-3) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
+      if     (thePlot < allPlots-4) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
       else if(thePlot < allPlots-1) histos = new TH1D("histos", "histos", nBinWZMVA, xbinsWZ);
       else                          histos = new TH1D("histos", "histos", nBinMVA, xbins);
       histos->Sumw2();
@@ -1436,6 +1425,29 @@ void sswwjjAnalysis(
         }
       }
 
+      // Making histograms for datacards
+      double MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSel;
+      double MVAVarJESSyst[2] = {TMath::Min(dijetUp.M(),1999.999)+2000.*typeSel,TMath::Min(dijetDown.M(),1999.999)+2000.*typeSel};
+      double MVAVarPlot = TMath::Min(dijet.M(),1999.999);
+
+      if     (theControlRegion == 1){
+        MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSel; MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999)+2000.*typeSel; MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999)+2000.*typeSel;
+        //MVAVar = 501.0+2000.*typeSel; MVAVarJESSyst[0] = 501.0+2000.*typeSel; MVAVarJESSyst[1] = 501.0+2000.*typeSel;
+      }
+      else if(theControlRegion == 2){
+        MVAVar = TMath::Min(dijet.M(),1999.999); MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999); MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999);
+      }
+
+      if(finalVar == 1 || finalVar == 2){
+        MVAVar = TMath::Min(dilep.M(),599.999)+1000.*typeSel;
+        MVAVarPlot = TMath::Min(dilep.M(),599.999);
+        if(theControlRegion == 2){
+          MVAVar = TMath::Min(dilep.M(),599.999);
+        }
+        MVAVarJESSyst[0] = MVAVar;
+        MVAVarJESSyst[1] = MVAVar;
+      }
+
       for(int thePlot=0; thePlot<allPlots; thePlot++){
         double theVar = 0.0;
         bool makePlot = false;
@@ -1471,33 +1483,13 @@ void sswwjjAnalysis(
         else if(thePlot == 29 && passLooseControlRegionWZ)  {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
         else if(thePlot == 30 && passNMinusOne[3])          {makePlot = true;theVar = TMath::Min((double)idLepLoose.size(),3.499);}
 
-        else if(thePlot == 31 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
-        else if(thePlot == 32 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 31 && passControlRegionTop)      {makePlot = true;theVar = MVAVarPlot;}
+        else if(thePlot == 32 && passControlRegionWZ)       {makePlot = true;theVar = MVAVarPlot;}
+        else if(thePlot == 33 && passSignalRegion)          {makePlot = true;theVar = MVAVarPlot;}
         if(makePlot && sigModel <= 0) histo[typeSel][thePlot][theCategory]->Fill(theVar,totalWeight);
         if(makePlot && sigModel <= 0) histo[6][thePlot][theCategory]->Fill(theVar,totalWeight);
         if(makePlot && sigModel == 1) histo[typeSel][thePlot][theCategory+1]->Fill(theVar,totalWeight);
         if(makePlot && sigModel == 1) histo[6][thePlot][theCategory+1]->Fill(theVar,totalWeight);
-      }
-
-      // Making histograms for datacards
-      double MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSel;
-      double MVAVarJESSyst[2] = {TMath::Min(dijetUp.M(),1999.999)+2000.*typeSel,TMath::Min(dijetDown.M(),1999.999)+2000.*typeSel};
-
-      if     (theControlRegion == 1){
-        MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSel; MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999)+2000.*typeSel; MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999)+2000.*typeSel;
-        //MVAVar = 501.0+2000.*typeSel; MVAVarJESSyst[0] = 501.0+2000.*typeSel; MVAVarJESSyst[1] = 501.0+2000.*typeSel;
-      }
-      else if(theControlRegion == 2){
-        MVAVar = TMath::Min(dijet.M(),1999.999); MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999); MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999);
-      }
-
-      if(finalVar == 1 || finalVar == 2){
-        MVAVar = TMath::Min(dilep.M(),599.999)+1000.*typeSel;
-        if(theControlRegion == 2){
-          MVAVar = TMath::Min(dilep.M(),599.999);
-        }
-        MVAVarJESSyst[0] = MVAVar;
-        MVAVarJESSyst[1] = MVAVar;
       }
 
       // Avoid QCD scale and PDF weights that are anomalous high
@@ -2682,7 +2674,7 @@ void sswwjjAnalysis(
       newcardShape << Form("CMS_WZ_Norm%d  lnN    -     -   %7.5f   -     -     -    -     -      -     -     -  \n",(nb-1)%4,1.0+sfE_WZ[(nb-1)%4]);
       }
       else {
-      newcardShape << Form("CMS_wwss_WZnorm_bin%d rateParam  * WZ 1 [0.1,10]\n",(nb-1)%nBinWZMVA);         
+      newcardShape << Form("CMS_wwss_WZnorm_bin%d rateParam  * WZ 1 [0.1,10]\n",(nb-1)%nBinWZMVAModule);         
       }
 
       //newcardShape << Form("CMS_wwss_wjetsMnorm_bin rateParam  * FakeM 1 [0.1,10]\n");         
