@@ -55,7 +55,7 @@ const double mjjCut = 500.;
 void sswwjjAnalysis(
  int theControlRegion = 0, 
  TString typeLepSel = "verytight", 
- int finalVar = 0, // 0 == mjj 4 x 6, 1 == mll 4 x 6, 2 == mll  5 x 2
+ int finalVar = 0, // 0 == mjj 4 x 6, 1 == mll 4 x 6, 2 == mll  5 x 2, 3 == mll 5 x 1, 4 == mjj vs. mll 4 x 5
  bool isBlinded = false,
  bool isMIT = false
  ){
@@ -331,6 +331,19 @@ void sswwjjAnalysis(
 
     xbinsWZ[ 0] = 0; xbinsWZ[ 1] = 100; xbinsWZ[ 2] = 200; xbinsWZ[ 3] = 300; xbinsWZ[ 4] = 400; xbinsWZ[ 5] = 600;
     nBinWZMVAModule = 5;
+  }
+  else if(finalVar == 3){
+    xbins[ 0] = 0; xbins[ 1] = 100; xbins[ 2] = 200; xbins[ 3] = 300; xbins[ 4] = 400; xbins[ 5] = 600;
+                   // not used!
+     		   xbins[ 6] =1100; xbins[ 7] =1200; xbins[ 8] =1300; xbins[ 9] =1400; xbins[10] =1600;
+     		   xbins[11] =2100; xbins[12] =2200; xbins[13] =2300; xbins[14] =2400; xbins[15] =2600;
+     		   xbins[16] =3100; xbins[17] =3200; xbins[18] =3300; xbins[19] =3400; xbins[20] =3600;
+     		   xbins[21] =4100; xbins[22] =4200; xbins[23] =4300; xbins[24] =4400;
+
+    xbinsWZ[ 0] = 0; xbinsWZ[ 1] = 100; xbinsWZ[ 2] = 200; xbinsWZ[ 3] = 300; xbinsWZ[ 4] = 400; xbinsWZ[ 5] = 600;
+    nBinWZMVAModule = 5;
+  }
+  else if(finalVar == 4){ // just to show nothing needs to be done
   }
 
   TH1D* histoMVA = new TH1D("histoMVA", "histoMVA", nBinMVA, xbins);
@@ -889,7 +902,7 @@ void sswwjjAnalysis(
 
       if(passPresel == kFALSE) continue; // ptl1/l2 > 25/20
 
-      // typeSel = 0(m+m+), 1(e+e+), 2(e+m+/m+e+) 3(m-m-), 4(e-e-), 5(e-m-/m-e-) --> ++/-- (for finalVar == 2)
+      // typeSel = 0(m+m+), 1(e+e+), 2(e+m+/m+e+) 3(m-m-), 4(e-e-), 5(e-m-/m-e-) --> ++/-- for finalVar == 2 / one category for  finalVar == 3
       // typePair = 0(mm), 1(ee), 2(em)
       int typeSel = -1; int typePair = -1;
       if(idTight.size() >= 2){
@@ -901,7 +914,8 @@ void sswwjjAnalysis(
       }
       else {assert(1); printf("Not possible %d %d %d\n",(int)idLep.size(),(int)idTight.size(),goodIsTight); return;}                                                                                                     ;
 
-      if(finalVar == 2) {if(typeSel <= 2) typeSel = 0; else typeSel = 1;}
+      if     (finalVar == 2) {if(typeSel <= 2) typeSel = 0; else typeSel = 1;}
+      else if(finalVar == 3) {typeSel = 0;}
 
      //signQ = 0(opposite sign), +/-2(same sign)
       int signQ = -1;
@@ -1431,14 +1445,13 @@ void sswwjjAnalysis(
       double MVAVarPlot = TMath::Min(dijet.M(),1999.999);
 
       if     (theControlRegion == 1){
-        MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSel; MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999)+2000.*typeSel; MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999)+2000.*typeSel;
-        //MVAVar = 501.0+2000.*typeSel; MVAVarJESSyst[0] = 501.0+2000.*typeSel; MVAVarJESSyst[1] = 501.0+2000.*typeSel;
+        // MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSel; MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999)+2000.*typeSel; MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999)+2000.*typeSel;
       }
       else if(theControlRegion == 2){
         MVAVar = TMath::Min(dijet.M(),1999.999); MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999); MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999);
       }
 
-      if(finalVar == 1 || finalVar == 2){
+      if     (finalVar == 1 || finalVar == 2 || finalVar == 3){
         MVAVar = TMath::Min(dilep.M(),599.999)+1000.*typeSel;
         MVAVarPlot = TMath::Min(dilep.M(),599.999);
         if(theControlRegion == 2){
@@ -1446,6 +1459,24 @@ void sswwjjAnalysis(
         }
         MVAVarJESSyst[0] = MVAVar;
         MVAVarJESSyst[1] = MVAVar;
+      }
+      else if(finalVar == 4){
+        int typeSelAux = 0;
+        if     (dilep.M() < 100) typeSelAux = 0;
+        else if(dilep.M() < 200) typeSelAux = 1;
+        else if(dilep.M() < 300) typeSelAux = 2;
+        else if(dilep.M() < 400) typeSelAux = 3;
+        else                     typeSelAux = 4;
+
+        MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSelAux;
+        MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999)+2000.*typeSelAux;
+        MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999)+2000.*typeSelAux;
+
+        if(theControlRegion == 2){
+          MVAVar = TMath::Min(dijet.M(),1999.999); 
+          MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999);
+          MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999);
+        }
       }
 
       for(int thePlot=0; thePlot<allPlots; thePlot++){
