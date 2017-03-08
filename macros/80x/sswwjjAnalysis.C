@@ -23,6 +23,8 @@
 
 #include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
 
+const double effTimesXsFiducial[2] = {0.177093*0.0269642*1000, 0.157640*0.0269642*1000}; // eff x cross section x 1000 (pb -> fb)
+
 //double WSSF[5]  = {1.253783,1.239172,0.944641,0.997775,1.099893};
 //double WSSFE[5] = {0.373235,0.163163,0.053062,0.029079,0.037923};
 double WSSF[5]  = {1.159353,1.186796,0.932848,0.996142,1.097076};
@@ -217,6 +219,9 @@ void sswwjjAnalysis(
   if(infilenamev.size() != infilecatv.size()) {assert(0); return;}
   
   int nSigModels=signalName_.size();
+
+  double selectedFiducial[2] = {0, 0};
+  double selectedNonFiducial[2] = {0, 0};
 
   double denBTagging[5][5][3],jetEpsBtagLOOSE[5][5][3],jetEpsBtagTIGHT[5][5][3];
   double numBTaggingLOOSE[5][5][3],numBTaggingTIGHT[5][5][3];
@@ -1567,6 +1572,53 @@ void sswwjjAnalysis(
            histo_EWK_CMS_PUBoundingDown->Fill(MVAVar,totalWeight*puWeightDown/puWeight);
            histo_EWK_CMS_MVABTAGBoundingUp  ->Fill(MVAVar,totalWeight*btagCorr[0]);
            histo_EWK_CMS_MVABTAGBoundingDown->Fill(MVAVar,totalWeight*btagCorr[1]);
+
+          bool passFiducial[2] = {false, false};
+	  // Begin gen fiducial selection
+	  Int_t countSelectedGenLeptons = 0;
+	  vector<int> idGenLep;
+	  for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
+	    if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 11 && TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 13) continue;
+	    bool isGoodFlags = ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::PromptFinalState) == BareMonteCarlo::PromptFinalState ||
+          		       ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::DirectPromptTauDecayProductFinalState) == BareMonteCarlo::DirectPromptTauDecayProductFinalState;
+	    if(!isGoodFlags) continue;
+	    idGenLep.push_back(ngen0);
+	    bool passSelLepton = 
+               //(((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::PromptFinalState)                      == BareMonteCarlo::PromptFinalState ||
+               // ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::DirectPromptTauDecayProductFinalState) == BareMonteCarlo::DirectPromptTauDecayProductFinalState) &&
+               ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::PromptFinalState)                      == BareMonteCarlo::PromptFinalState &&
+               TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Eta()) < 2.5 &&
+               ((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Pt() > 20;
+	    if(passSelLepton) countSelectedGenLeptons ++;
+	  }
+
+	  if(countSelectedGenLeptons >= 2){
+	    vector<int> idGenJet30;
+	    for(int njetgen=0; njetgen<eventMonteCarlo.jetP4->GetEntriesFast(); njetgen++) {
+              if(TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[njetgen])->Eta()) >= 5.0) continue;
+              bool isGenLepton = false;
+              for(unsigned int nglep = 0; nglep<idGenLep.size(); nglep++) {
+             	if(((TLorentzVector*)(*eventMonteCarlo.p4)[idGenLep[nglep]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.jetP4)[njetgen])) < 0.3) {
+	     	  isGenLepton = true;
+             	  break;
+	     	}
+              }
+              if(isGenLepton) continue;
+              if(((TLorentzVector*)(*eventMonteCarlo.jetP4)[njetgen])->Pt() > 30) idGenJet30.push_back(njetgen);
+	    }
+
+	    if(idGenJet30.size() >= 2){
+              TLorentzVector dijet =	   ( *(TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet30[0]] ) +   ( *(TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet30[1]] );
+	      double deltaEtaJJ = TMath::Abs(((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet30[0]])->Eta()-((TLorentzVector*)(*eventMonteCarlo.jetP4)[idGenJet30[1]])->Eta());
+              if(deltaEtaJJ > 2.5 && dijet.M() > 300) passFiducial[0] = true;
+              if(deltaEtaJJ > 2.5 && dijet.M() > 500) passFiducial[1] = true;
+	    }
+	  }
+	  // End gen fiducial selection
+          if(passFiducial[0]) selectedFiducial[0]    = selectedFiducial[0]    + totalWeight;
+          else                selectedNonFiducial[0] = selectedNonFiducial[0] + totalWeight;
+          if(passFiducial[1]) selectedFiducial[1]    = selectedFiducial[1]    + totalWeight;
+          else                selectedNonFiducial[1] = selectedNonFiducial[1] + totalWeight;
         }
         if(passSystCuts[JESUP])  histo_EWK_CMS_MVAJESBoundingUp  ->Fill(MVAVarJESSyst[0],totalWeight);
         if(passSystCuts[JESDOWN])histo_EWK_CMS_MVAJESBoundingDown->Fill(MVAVarJESSyst[1],totalWeight);
@@ -1950,6 +2002,13 @@ void sswwjjAnalysis(
     printf("(ZLL study): data: %8.2f +/- %6.2f | bkg: %8.2f +/- %6.2f | zll: %8.2f +/- %6.2f -> sf = %4.2f +/- %4.2f (%4.2f/%4.2f/%4.2f)\n",
     	   sumEventsType[0],sqrt(sumEventsTypeE[0]),sumEventsType[1],sqrt(sumEventsTypeE[1]),sumEventsType[2],sqrt(sumEventsTypeE[2]),
 	   sf_ZLL[0],sf_ZLL[1],sqrt(sf_ZLLE[0]),sqrt(sf_ZLLE[1]),sqrt(sf_ZLLE[2]));
+  }
+
+  if(histo_EWK->GetSumOfWeights() > 0){
+    printf("Signal selected Fiducial0 ==> good: %f / bad: %f -> %f\n",selectedFiducial[0],selectedNonFiducial[0],selectedNonFiducial[0]/histo_EWK->GetSumOfWeights());
+    printf("Signal selected Fiducial1 ==> good: %f / bad: %f -> %f\n",selectedFiducial[1],selectedNonFiducial[1],selectedNonFiducial[1]/histo_EWK->GetSumOfWeights());
+    printf("Cross section Fiducial0/1 (fb): %f %f\n",effTimesXsFiducial[0],effTimesXsFiducial[1]);
+    printf("Efficiency Fiducial0/1 ==> %f %f\n",selectedFiducial[0]/effTimesXsFiducial[0]/lumi,selectedFiducial[1]/effTimesXsFiducial[1]/lumi);
   }
 
   histo[6][allPlots-1][0] ->Add(histo_Data);
@@ -2711,17 +2770,17 @@ void sswwjjAnalysis(
       //newcardShape << Form("CMS_wwss_wjetsMnorm_bin rateParam  * FakeM 1 [0.1,10]\n");         
       //newcardShape << Form("CMS_wwss_wjetsEnorm_bin rateParam  * FakeE 1 [0.1,10]\n");         
 
-      if(histo_EWK  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_EWKStatBounding2016_%s_Bin%d    lnN %7.5f   -     -     -     -     -     -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_EWK  ->GetBinError(nb)/histo_EWK  ->GetBinContent(nb));
-      if(histo_QCD  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_QCDStatBounding2016_%s_Bin%d    lnN   -   %7.5f   -     -     -     -     -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_QCD  ->GetBinError(nb)/histo_QCD  ->GetBinContent(nb));
-      if(histo_WZ   ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_WZStatBounding2016_%s_Bin%d     lnN   -     -   %7.5f   -     -     -     -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_WZ   ->GetBinError(nb)/histo_WZ   ->GetBinContent(nb));
-      if(histo_ZZ   ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_ZZStatBounding2016_%s_Bin%d     lnN   -     -     -   %7.5f   -     -     -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_ZZ   ->GetBinError(nb)/histo_ZZ   ->GetBinContent(nb));
-      if(histo_VVV  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_VVVStatBounding2016_%s_Bin%d    lnN   -     -     -     -   %7.5f   -     -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_VVV  ->GetBinError(nb)/histo_VVV  ->GetBinContent(nb));
-      if(histo_WS   ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_WSStatBounding2016_%s_Bin%d     lnN   -     -     -     -     -   %7.5f   -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_WS   ->GetBinError(nb)/histo_WS   ->GetBinContent(nb));
-      if(histo_WG   ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_WGStatBounding2016_%s_Bin%d     lnN   -     -     -     -     -     -   %7.5f   -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_WG   ->GetBinError(nb)/histo_WG   ->GetBinContent(nb));
-      if(histo_DPS  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_DPSStatBounding2016_%s_Bin%d    lnN   -     -     -     -     -     -     -   %7.5f   -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_DPS  ->GetBinError(nb)/histo_DPS  ->GetBinContent(nb));
-      if(histo_FakeM->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_FakeMStatBounding2016_%s_Bin%d  lnN   -     -     -     -     -     -     -     -   %7.5f   -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_FakeM->GetBinError(nb)/histo_FakeM->GetBinContent(nb));
-      if(histo_FakeE->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_FakeEStatBounding2016_%s_Bin%d  lnN   -     -     -     -     -     -     -     -    -   %7.5f  - \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_FakeE->GetBinError(nb)/histo_FakeE->GetBinContent(nb));
-      if(histo_Higgs[TMath::Max(nModel,0)]  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_HiggsStatBounding2016_%s_Bin%d    lnN -   -     -     -     -     -     -     -     -     -    %7.5f \n",finalStateName,ECMsb.Data(),nb-1,1.0+histo_Higgs[TMath::Max(nModel,0)]  ->GetBinError(nb)/histo_Higgs[TMath::Max(nModel,0)]  ->GetBinContent(nb));
+      if(histo_EWK  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_EWKStatBounding2016_%s_Bin%d    lnN %7.5f   -     -     -     -     -     -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_EWK  ->GetBinError(nb)/histo_EWK  ->GetBinContent(nb),0.999));
+      if(histo_QCD  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_QCDStatBounding2016_%s_Bin%d    lnN   -   %7.5f   -     -     -     -     -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_QCD  ->GetBinError(nb)/histo_QCD  ->GetBinContent(nb),0.999));
+      if(histo_WZ   ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_WZStatBounding2016_%s_Bin%d     lnN   -     -   %7.5f   -     -     -     -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_WZ   ->GetBinError(nb)/histo_WZ   ->GetBinContent(nb),0.999));
+      if(histo_ZZ   ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_ZZStatBounding2016_%s_Bin%d     lnN   -     -     -   %7.5f   -     -     -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_ZZ   ->GetBinError(nb)/histo_ZZ   ->GetBinContent(nb),0.999));
+      if(histo_VVV  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_VVVStatBounding2016_%s_Bin%d    lnN   -     -     -     -   %7.5f   -     -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_VVV  ->GetBinError(nb)/histo_VVV  ->GetBinContent(nb),0.999));
+      if(histo_WS   ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_WSStatBounding2016_%s_Bin%d     lnN   -     -     -     -     -   %7.5f   -     -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_WS   ->GetBinError(nb)/histo_WS   ->GetBinContent(nb),0.999));
+      if(histo_WG   ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_WGStatBounding2016_%s_Bin%d     lnN   -     -     -     -     -     -   %7.5f   -     -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_WG   ->GetBinError(nb)/histo_WG   ->GetBinContent(nb),0.999));
+      if(histo_DPS  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_DPSStatBounding2016_%s_Bin%d    lnN   -     -     -     -     -     -     -   %7.5f   -     -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_DPS  ->GetBinError(nb)/histo_DPS  ->GetBinContent(nb),0.999));
+      if(histo_FakeM->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_FakeMStatBounding2016_%s_Bin%d  lnN   -     -     -     -     -     -     -     -   %7.5f   -   - \n",finalStateName,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_FakeM->GetBinError(nb)/histo_FakeM->GetBinContent(nb),0.999));
+      if(histo_FakeE->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_FakeEStatBounding2016_%s_Bin%d  lnN   -     -     -     -     -     -     -     -    -   %7.5f  - \n",finalStateName,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_FakeE->GetBinError(nb)/histo_FakeE->GetBinContent(nb),0.999));
+      if(histo_Higgs[TMath::Max(nModel,0)]  ->GetBinContent(nb) > 0) newcardShape << Form("CMS_wwss%s_histo_HiggsStatBounding2016_%s_Bin%d    lnN -   -     -     -     -     -     -     -     -     -    %7.5f \n",finalStateName,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_Higgs[TMath::Max(nModel,0)]  ->GetBinError(nb)/histo_Higgs[TMath::Max(nModel,0)]  ->GetBinContent(nb),0.999));
     }
   }
   for(int iF=0; iF<3; iF++){
