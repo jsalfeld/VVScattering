@@ -2036,7 +2036,7 @@ void sswwjjAnalysis(
   for(int nModel=0; nModel<7; nModel++){
     for(int thePlot=0; thePlot<allPlots; thePlot++){
       char output[200];
-      sprintf(output,"histowwss_%d_%d.root",nModel,thePlot);	  
+      sprintf(output,"histowwss%d_%d_%d.root",finalVar,nModel,thePlot);	  
       TFile* outFilePlotsNote = new TFile(output,"recreate");
       outFilePlotsNote->cd();
       for(int np=0; np<histBins; np++) histo[nModel][thePlot][np]->Write();
@@ -2137,7 +2137,7 @@ void sswwjjAnalysis(
     TString theSignalName = "sm";
     if(nModel >= 0)  theSignalName = signalName_[nModel].Data();
     char outputLimits[200];
-    sprintf(outputLimits,"wwss_%s_%s_input_%s.root", finalStateName,theSignalName.Data(),ECMsb.Data());
+    sprintf(outputLimits,"wwss%d_%s_%s_input_%s.root",finalVar,finalStateName,theSignalName.Data(),ECMsb.Data());
     TFile* outFileLimits = new TFile(outputLimits,"recreate");
     outFileLimits->cd();
     
@@ -2676,7 +2676,7 @@ void sswwjjAnalysis(
       }
 
       char outputLimits[200];
-      sprintf(outputLimits,"wwss_%s_%s_input_%s_bin%d.root", finalStateName, theSignalName.Data(), ECMsb.Data(),nb-1);
+      sprintf(outputLimits,"wwss%d_%s_%s_input_%s_bin%d.root",finalVar,finalStateName,theSignalName.Data(),ECMsb.Data(),nb-1);
       TFile* outFileLimits = new TFile(outputLimits,"recreate");
       outFileLimits->cd();
     
@@ -2723,7 +2723,7 @@ void sswwjjAnalysis(
       if(nModel >= 0) sigYield = histo_Higgs[TMath::Max(nModel,0)]->GetBinContent(nb);
 
       char outputLimitsShape[200];                                            
-      sprintf(outputLimitsShape,"histo_limits_wwss_%s_%s_shape_%s_bin%d.txt",finalStateName,theSignalName.Data(),ECMsb.Data(),nb-1);
+      sprintf(outputLimitsShape,"histo_limits_wwss%d_%s_%s_shape_%s_bin%d.txt",finalVar,finalStateName,theSignalName.Data(),ECMsb.Data(),nb-1);
       ofstream newcardShape;
       newcardShape.open(outputLimitsShape);
       newcardShape << Form("imax 1 number of channels\n");
