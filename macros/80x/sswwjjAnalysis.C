@@ -735,6 +735,9 @@ void sswwjjAnalysis(
   TH1D* histo_WS_CMS_WSSFUp    	              = new TH1D( Form("histo_WS_CMS_WSSFUp")  , Form("histo_WS_CMS_WSSFUp")  , nBinMVA, xbins); histo_WS_CMS_WSSFUp  ->Sumw2();
   TH1D* histo_WS_CMS_WSSFDown  	              = new TH1D( Form("histo_WS_CMS_WSSFDown"), Form("histo_WS_CMS_WSSFDown"), nBinMVA, xbins); histo_WS_CMS_WSSFDown->Sumw2();
 
+  TH1D* histo_Fake_CMS_SystM    	      = new TH1D( Form("histo_Fake_CMS_SystM"), Form("histo_Fake_CMS_SystM"), nBinMVA, xbins); histo_Fake_CMS_SystM->Sumw2();
+  TH1D* histo_Fake_CMS_SystE  	              = new TH1D( Form("histo_Fake_CMS_SystE"), Form("histo_Fake_CMS_SystE"), nBinMVA, xbins); histo_Fake_CMS_SystE->Sumw2();
+
   for(int nModel=0; nModel<nSigModels; nModel++) { 
     histo_Higgs_CMS_MVALepEffMBoundingUp[nModel]          = new TH1D( Form("histo_Higgs_%s_%sUp",   signalName_[nModel].Data(), effMName), Form("histo_Higgs_%s_%sUp",  signalName_[nModel].Data(), effMName), nBinMVA, xbins); histo_Higgs_CMS_MVALepEffMBoundingUp[nModel]  ->Sumw2();
     histo_Higgs_CMS_MVALepEffMBoundingDown[nModel]        = new TH1D( Form("histo_Higgs_%s_%sDown", signalName_[nModel].Data(), effMName), Form("histo_Higgs_%s_%sDown",signalName_[nModel].Data(), effMName), nBinMVA, xbins); histo_Higgs_CMS_MVALepEffMBoundingDown[nModel]->Sumw2();
@@ -1361,10 +1364,10 @@ void sswwjjAnalysis(
       if((theCategory == 3 || theCategory == 4 || theCategory == 5) && goodIsGenWSLep > 0) theCategory  = 6;
 
       // fake rate
+      unsigned int typeFakeLepton[2] = {0,0};
       double fakeSF = 1.0;
       if(usePureMC == false && sigModel == -1){
 	if((infilecatv[ifile] == 0 || infilecatv[ifile] == 7 || (goodIsGenRSLep+goodIsGenWSLep) == isGenLep.size()) && goodIsTight != idTight.size()){
-            unsigned int typeFakeLepton[2] = {0,0};
             for(unsigned int nl=0; nl<idLep.size(); nl++){
               if(idTight[nl] == 1) continue;
               fakeSF = fakeSF * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data());
@@ -1376,7 +1379,7 @@ void sswwjjAnalysis(
             else if(infilecatv[ifile] != 0 && goodIsTight == idTight.size()-1) fakeSF = -1.0 * fakeSF; // single fake, MC
             else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) fakeSF = -1.0 * fakeSF; // double fake, data
             else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) fakeSF =  1.0 * fakeSF; // single fake, data
-            if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) theCategory = 10;
+            //if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) {theCategory = 10; typeFakeLepton[1] = 0}
 	}
 	else if(infilecatv[ifile] != 0 && infilecatv[ifile] != 7 && (goodIsGenRSLep+goodIsGenWSLep) != isGenLep.size()){ // remove MC dilepton fakes from ll events
           fakeSF = 0.0;
@@ -1469,9 +1472,10 @@ void sswwjjAnalysis(
         int typeSelAux = 0;
         if     (dilep.M() < 100) typeSelAux = 0;
         else if(dilep.M() < 200) typeSelAux = 1;
-        else if(dilep.M() < 300) typeSelAux = 2;
-        else if(dilep.M() < 400) typeSelAux = 3;
-        else                     typeSelAux = 4;
+        //else if(dilep.M() < 400) typeSelAux = 2;
+        //else if(dilep.M() < 400) typeSelAux = 3;
+        //else                     typeSelAux = 4;
+        else                     typeSelAux = 2;
 
         MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSelAux;
         MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999)+2000.*typeSelAux;
@@ -1871,6 +1875,8 @@ void sswwjjAnalysis(
       }
       else if(theCategory == 9){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
+           if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) histo_Fake_CMS_SystE->Fill(MVAVar,totalWeight);
+	   else                                                           histo_Fake_CMS_SystM->Fill(MVAVar,totalWeight);
            histo_FakeM->Fill(MVAVar,totalWeight);
         }
       }
@@ -2750,10 +2756,15 @@ void sswwjjAnalysis(
       newcardShape << Form("pdf_qqbar      lnN  %7.5f %7.5f %7.5f %7.5f %7.5f   -   %7.5f %7.5f   -     -   %7.5f\n",systPDF[0],systPDF[1],systPDF[2],systPDF[3],systPDF[4],systPDF[6],systPDF[7],systPDF[8]);
       newcardShape << Form("pdf_gg         lnN    -     -     -     -     -   %7.5f   -     -     -     -     -  \n",systPDF[5]);
       if(theControlRegion != 2){
-      if(histo_FakeM->GetBinContent(nb)>0)
-      newcardShape << Form("CMS_FakeM      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.30);
+
+      if(histo_FakeM->GetBinContent(nb)>0 && histo_Fake_CMS_SystM->GetBinContent(nb)>0)
+      newcardShape << Form("CMS_FakeM      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0+0.3*TMath::Min(histo_Fake_CMS_SystM->GetBinContent(nb)/histo_FakeM->GetBinContent(nb) ,1.0));
+      if(histo_FakeM->GetBinContent(nb)>0 && histo_Fake_CMS_SystE->GetBinContent(nb)>0)
+      newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0+0.3*TMath::Min(histo_Fake_CMS_SystE->GetBinContent(nb)/histo_FakeM->GetBinContent(nb) ,1.0));
+
       if(histo_FakeE->GetBinContent(nb)>0)
       newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -      -   %7.5f   -  \n",1.30);
+
       } else {
       if(histo_FakeM->GetBinContent(nb)>0)
       newcardShape << Form("CMS_Fake3l     lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.30);
