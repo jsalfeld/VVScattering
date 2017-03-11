@@ -1472,7 +1472,7 @@ void sswwjjAnalysis(
         int typeSelAux = 0;
         if     (dilep.M() < 100) typeSelAux = 0;
         else if(dilep.M() < 180) typeSelAux = 1;
-        else if(dilep.M() < 400) typeSelAux = 2;
+        else if(dilep.M() < 300) typeSelAux = 2;
         else                     typeSelAux = 3;
 
         MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSelAux;
@@ -2758,10 +2758,12 @@ void sswwjjAnalysis(
       newcardShape << Form("pdf_gg         lnN    -     -     -     -     -   %7.5f   -     -     -     -     -  \n",systPDF[5]);
       if(theControlRegion != 2){
 
-      if(histo_FakeM->GetBinContent(nb)>0 && histo_Fake_CMS_SystM->GetBinContent(nb)>0)
-      newcardShape << Form("CMS_FakeM      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0+0.3*TMath::Min(histo_Fake_CMS_SystM->GetBinContent(nb)/histo_FakeM->GetBinContent(nb) ,1.0));
-      if(histo_FakeM->GetBinContent(nb)>0 && histo_Fake_CMS_SystE->GetBinContent(nb)>0)
-      newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0+0.3*TMath::Min(histo_Fake_CMS_SystE->GetBinContent(nb)/histo_FakeM->GetBinContent(nb) ,1.0));
+      //if(histo_FakeM->GetBinContent(nb)>0 && histo_Fake_CMS_SystM->GetBinContent(nb)>0)
+      //newcardShape << Form("CMS_FakeM      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0+0.3*TMath::Min(histo_Fake_CMS_SystM->GetBinContent(nb)/histo_FakeM->GetBinContent(nb) ,1.0));
+      //if(histo_FakeM->GetBinContent(nb)>0 && histo_Fake_CMS_SystE->GetBinContent(nb)>0)
+      //newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0+0.3*TMath::Min(histo_Fake_CMS_SystE->GetBinContent(nb)/histo_FakeM->GetBinContent(nb) ,1.0));
+
+      newcardShape << Form("CMS_FakeM      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.3);
 
       if(histo_FakeE->GetBinContent(nb)>0)
       newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -      -   %7.5f   -  \n",1.30);
