@@ -2478,6 +2478,7 @@ void sswwjjAnalysis(
 
       for(int ntype=0; ntype<9; ntype++) if(systQCDScale[ntype] < 0) systQCDScale[ntype] = 1.0;
       if(verbose) printf("QCDScale(%d): %f %f %f %f %f %f %f %f %f\n",nb,systQCDScale[0],systQCDScale[1],systQCDScale[2],systQCDScale[3],systQCDScale[4],systQCDScale[5],systQCDScale[6],systQCDScale[7],systQCDScale[8]);
+      for(int ntype=0; ntype<9; ntype++) if(systQCDScale[ntype] > 1.5) systQCDScale[ntype] = 1.5;
   
       // PDF study
       double systPDF[9];
