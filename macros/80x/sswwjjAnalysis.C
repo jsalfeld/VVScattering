@@ -1471,11 +1471,9 @@ void sswwjjAnalysis(
       else if(finalVar == 4){
         int typeSelAux = 0;
         if     (dilep.M() < 100) typeSelAux = 0;
-        else if(dilep.M() < 200) typeSelAux = 1;
-        //else if(dilep.M() < 400) typeSelAux = 2;
-        //else if(dilep.M() < 400) typeSelAux = 3;
-        //else                     typeSelAux = 4;
-        else                     typeSelAux = 2;
+        else if(dilep.M() < 180) typeSelAux = 1;
+        else if(dilep.M() < 400) typeSelAux = 2;
+        else                     typeSelAux = 3;
 
         MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSelAux;
         MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999)+2000.*typeSelAux;
@@ -1875,9 +1873,12 @@ void sswwjjAnalysis(
       }
       else if(theCategory == 9){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
-           if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) histo_Fake_CMS_SystE->Fill(MVAVar,totalWeight);
-	   else                                                           histo_Fake_CMS_SystM->Fill(MVAVar,totalWeight);
-           histo_FakeM->Fill(MVAVar,totalWeight);
+          if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) histo_Fake_CMS_SystE->Fill(MVAVar,totalWeight);
+	  else  							 histo_Fake_CMS_SystM->Fill(MVAVar,totalWeight);
+          histo_FakeM->Fill(MVAVar,totalWeight);
+          //if(dijet.M() > 1500 && dilep.M() > 180) {
+          //  printf("HIGHMJJMLL: %f %f %d %f / %f %f %f %f %f %f %f\n",dijet.M(),dilep.M(),typeSel,totalWeight,mcWeight,theLumi,puWeight,effSF,fakeSF,theMCPrescale,trigEff);
+          //}
         }
       }
       else if(theCategory == 10){
