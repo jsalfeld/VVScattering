@@ -2763,7 +2763,7 @@ void sswwjjAnalysis(
       //if(histo_FakeM->GetBinContent(nb)>0 && histo_Fake_CMS_SystE->GetBinContent(nb)>0)
       //newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0+0.3*TMath::Min(histo_Fake_CMS_SystE->GetBinContent(nb)/histo_FakeM->GetBinContent(nb) ,1.0));
 
-      newcardShape << Form("CMS_FakeM      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.3);
+      newcardShape << Form("CMS_FakeM      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.30);
 
       if(histo_FakeE->GetBinContent(nb)>0)
       newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -      -   %7.5f   -  \n",1.30);
