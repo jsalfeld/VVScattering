@@ -304,7 +304,7 @@ void wwAnalysis(
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 20;
+  const int allPlots = 25;
   const int histBins = 12;
   TH1D* histo[allPlots][histBins];
   TString processName[histBins] = {".Data", ".qqWW", ".ggWW", "..Top", "...DY", "...VV", "..VVV", "...WG", "..WGS", "WjetsM", "WjetsE", "Higgs"};
@@ -313,19 +313,25 @@ void wwAnalysis(
     bool isMVAPlot = false;
     if     (thePlot >=  0 && thePlot <=  2) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >=  3 && thePlot <=  3) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >=  4 && thePlot <=  4) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
+    else if(thePlot >=  4 && thePlot <=  4) {nBinPlot = 500; xminPlot = 0.0; xmaxPlot = 500.0;}
+    else if(thePlot >=  5 && thePlot <=  5) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
 
-    else if(thePlot >=  5 && thePlot <=  7) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
-    else if(thePlot >=  8 && thePlot <=  8) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >=  9 && thePlot <=  9) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
+    else if(thePlot >=  6 && thePlot <=  8) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >=  9 && thePlot <=  9) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
+    else if(thePlot >= 10 && thePlot <= 10) {nBinPlot = 500; xminPlot = 0.0; xmaxPlot = 500.0;}
+    else if(thePlot >= 11 && thePlot <= 11) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
 
-    else if(thePlot >= 10 && thePlot <= 12) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
-    else if(thePlot >= 13 && thePlot <= 13) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >= 14 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
+    else if(thePlot >= 12 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 15 && thePlot <= 15) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
+    else if(thePlot >= 16 && thePlot <= 16) {nBinPlot = 500; xminPlot = 0.0; xmaxPlot = 500.0;}
+    else if(thePlot >= 17 && thePlot <= 17) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
 
-    else if(thePlot >= 15 && thePlot <= 17) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
-    else if(thePlot >= 18 && thePlot <= 18) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >= 19 && thePlot <= 19) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
+    else if(thePlot >= 18 && thePlot <= 20) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
+    else if(thePlot >= 21 && thePlot <= 21) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
+    else if(thePlot >= 22 && thePlot <= 22) {nBinPlot = 500; xminPlot = 0.0; xmaxPlot = 500.0;}
+    else if(thePlot >= 23 && thePlot <= 23) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500.0;isMVAPlot = true;}
+
+    else if(thePlot >= 24 && thePlot <= 24) {nBinPlot = 500; xminPlot = 0.0; xmaxPlot = 500.0;}
 
     TH1D* histos;
     if(isMVAPlot == false) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
@@ -792,6 +798,9 @@ void wwAnalysis(
       double total_bjet_probLOOSE[2] = {1,1};double total_bjet_probLOOSEUP[2] = {1,1};double total_bjet_probLOOSEDOWN[2] = {1,1};
       double dPhiJetMET = -1.0;
       double dPhiJetDiLep = -1.0;
+      double theHT = ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() +
+                     ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() +
+                     theMET.Pt();
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 15) continue;
         //bool passId = passJetId(fMVACut, (float)(*eventJets.puId)[nj], ((TLorentzVector*)(*eventJets.p4)[nj])->Pt(), TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()));
@@ -866,6 +875,8 @@ void wwAnalysis(
 	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 15 && 
 	   (float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
 
+        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt()      > 30) theHT = theHT + ((TLorentzVector*)(*eventJets.p4)[nj])->Pt();
+
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt()      > 30) idJet.push_back(nj);
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt()*1.05 > 30) idJetUp.push_back(nj);
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt()*0.95 > 30) idJetDown.push_back(nj);
@@ -902,6 +913,8 @@ void wwAnalysis(
       bool passSameSignRegion = goodSameSign  && passFilter[1] && passFilter[2] && passFilter[3] && passFilter[4] && passFilter[5] &&  passFilter[6] &&   passFilter[7] &&  passFilter[8]  && passFilter[9];
       bool passTopRegion      = passFilter[0] && passFilter[1] && passFilter[2] && passFilter[3] && passFilter[4] && passFilter[5] &&  passFilter[6] && (!passFilter[7] || !passFilter[8]) && passFilter[9];
       bool passDYRegion       = passFilter[0] && passFilter[1] && passFilter[2] && passFilter[3] && passFilter[4] && passFilter[5] && !passFilter[6] &&   passFilter[7] &&  passFilter[8]  && passFilter[9];
+
+      bool passNoJetCutRegion = passFilter[0] && passFilter[1] && passFilter[2] && passFilter[3] && passFilter[4] && passFilter[5] &&  passFilter[6] &&   passFilter[7] &&  passFilter[8];
 
       bool passAllCuts[nSelTypes] = {totalSel, passSameSignRegion, passTopRegion, passDYRegion};
 
@@ -1101,22 +1114,32 @@ void wwAnalysis(
         else if(thePlot ==  1 && passAllCuts[SIGSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
         else if(thePlot ==  2 && passAllCuts[SIGSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
         else if(thePlot ==  3 && passAllCuts[SIGSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
-        else if(thePlot ==  4 && passAllCuts[SIGSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
-        else if(thePlot ==  5 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
-        else if(thePlot ==  6 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
-        else if(thePlot ==  7 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
-        else if(thePlot ==  8 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
-        else if(thePlot ==  9 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
-        else if(thePlot == 10 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
-        else if(thePlot == 11 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
-        else if(thePlot == 12 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
-        else if(thePlot == 13 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
-        else if(thePlot == 14 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
-        else if(thePlot == 15 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
-        else if(thePlot == 16 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
-        else if(thePlot == 17 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
-        else if(thePlot == 18 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
-        else if(thePlot == 19 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
+        else if(thePlot ==  4 && passAllCuts[SIGSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(theHT,499.999);}
+        else if(thePlot ==  5 && passAllCuts[SIGSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
+
+        else if(thePlot ==  6 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
+        else if(thePlot ==  7 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
+        else if(thePlot ==  8 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+        else if(thePlot ==  9 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
+        else if(thePlot == 10 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(theHT,499.999);}
+        else if(thePlot == 11 && passAllCuts[SSSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
+
+        else if(thePlot == 12 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
+        else if(thePlot == 13 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
+        else if(thePlot == 14 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+        else if(thePlot == 15 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
+        else if(thePlot == 16 && passAllCuts[TOPSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(theHT,499.999);}
+        else if(thePlot == 17 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
+
+        else if(thePlot == 18 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
+        else if(thePlot == 19 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
+        else if(thePlot == 20 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
+        else if(thePlot == 21 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
+        else if(thePlot == 22 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(theHT,499.999);}
+        else if(thePlot == 23 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(dilep.M(),499.999);}
+
+        else if(thePlot == 24 && passNoJetCutRegion && typeSel == 2)  {makePlot = true;theVar = TMath::Min(theHT,499.999);}
+
         if(makePlot) histo[thePlot][theCategory]->Fill(theVar,totalWeight);
       }
 
