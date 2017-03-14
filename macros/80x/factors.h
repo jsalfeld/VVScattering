@@ -233,12 +233,11 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
     return (idCut && iso/pt < isoCut);
   }
   else if(TMath::Abs(pdgId) == 11 && (type == "medium" || type == "default" || type == "verytight" || type == "veto" || type == "loose")) {
-    if     (type == "medium")    idCut =  (selBits & BareLeptons::LepMedium) == BareLeptons::LepMedium;
-    else if(type == "default")   idCut =  (selBits & BareLeptons::LepTight)  == BareLeptons::LepTight;
-    else if(type == "verytight") idCut = ((selBits & BareLeptons::LepTight)  == BareLeptons::LepTight) && ((selBits & BareLeptons::EleTripleCharge) == BareLeptons::EleTripleCharge) && ((selBits & BareLeptons::EleNoMissingHits) == BareLeptons::EleNoMissingHits);
-    //else if(type == "verytight") idCut = ((selBits & BareLeptons::LepTight)  == BareLeptons::LepTight) && ((selBits & BareLeptons::EleTripleCharge) == BareLeptons::EleTripleCharge);
-    else if(type == "loose"  )   idCut =  (selBits & BareLeptons::LepLoose)  == BareLeptons::LepLoose;
-    else if(type == "veto"   )   idCut =  (selBits & BareLeptons::LepVeto)   == BareLeptons::LepVeto;
+    if     (type == "medium")    idCut = (selBits & BareLeptons::LepMedium)  == BareLeptons::LepMedium;
+    else if(type == "default")   idCut = (selBits & BareLeptons::LepTight)   == BareLeptons::LepTight;
+    else if(type == "verytight") idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP && (selBits & BareLeptons::EleTripleCharge) == BareLeptons::EleTripleCharge && (selBits & BareLeptons::EleNoMissingHits) == BareLeptons::EleNoMissingHits;
+    else if(type == "loose"  )   idCut = (selBits & BareLeptons::LepLoose)   == BareLeptons::LepLoose;
+    else if(type == "veto"   )   idCut = (selBits & BareLeptons::LepVeto)    == BareLeptons::LepVeto;
 
     return (idCut);
   }
