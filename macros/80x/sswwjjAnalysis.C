@@ -1225,7 +1225,7 @@ void sswwjjAnalysis(
       passControlRegionTop       = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2] && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8] && passFilterCR1[9] && passFilterCR1[10] && passFilterCR1[11];
       passControlRegionWZ        = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8] && passFilterCR2[9] && passFilterCR2[10] && passFilterCR2[11];
       passControlRegionDi        = passFilterCR3[0] && passFilterCR3[1] && passFilterCR3[2] && passFilterCR3[3] && passFilterCR3[4] && passFilterCR3[5] && passFilterCR3[6] && passFilterCR3[7] && passFilterCR3[8] && passFilterCR3[9] && passFilterCR3[10] && passFilterCR3[11];
-      passControlRegionSS2j      = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8] && passFilterCR3[9];
+      passControlRegionSS2j      = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8] && passFilterCR3[9] &&                      TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 1.0;
       passControlRegionZLL       = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] &&                     passFilterSig[6] &&!passFilterSig[7] && passFilterSig[8] && passFilterCR3[9];
       passLooseControlRegionTop  = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2] && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8]                     && passFilterCR1[10];
       passLooseControlRegionWZ   = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8]                     && passFilterCR2[10];
@@ -1456,7 +1456,6 @@ void sswwjjAnalysis(
       // Making histograms for datacards
       double MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSel;
       double MVAVarJESSyst[2] = {TMath::Min(dijetUp.M(),1999.999)+2000.*typeSel,TMath::Min(dijetDown.M(),1999.999)+2000.*typeSel};
-      double MVAVarPlot = TMath::Min(dijet.M(),1999.999);
 
       if     (theControlRegion == 1){
         // MVAVar = TMath::Min(dijet.M(),1999.999)+2000.*typeSel; MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999)+2000.*typeSel; MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999)+2000.*typeSel;
@@ -1467,7 +1466,6 @@ void sswwjjAnalysis(
 
       if     (finalVar == 1 || finalVar == 2 || finalVar == 3){
         MVAVar = TMath::Min(dilep.M(),599.999)+1000.*typeSel;
-        MVAVarPlot = TMath::Min(dilep.M(),599.999);
         if(theControlRegion == 2){
           MVAVar = TMath::Min(dilep.M(),599.999);
         }
@@ -1535,9 +1533,9 @@ void sswwjjAnalysis(
         else if(thePlot == 35 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(dilep.M(),599.999);}
         else if(thePlot == 36 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(dilep.M(),599.999);}
 
-        else if(thePlot == 37 && passSignalRegion)          {makePlot = true;theVar = MVAVarPlot;}
-        else if(thePlot == 38 && passControlRegionTop)      {makePlot = true;theVar = MVAVarPlot;}
-        else if(thePlot == 39 && passControlRegionWZ)       {makePlot = true;theVar = MVAVarPlot;}
+        else if(thePlot == 37 && passSignalRegion)          {makePlot = true;theVar = MVAVar;}
+        else if(thePlot == 38 && passControlRegionTop)      {makePlot = true;theVar = MVAVar;}
+        else if(thePlot == 39 && passControlRegionWZ)       {makePlot = true;theVar = MVAVar;}
 
         if(makePlot && sigModel <= 0) histo[typeSel][thePlot][theCategory]  ->Fill(theVar,totalWeight);
         if(makePlot && sigModel <= 0) histo[6]      [thePlot][theCategory]  ->Fill(theVar,totalWeight);
