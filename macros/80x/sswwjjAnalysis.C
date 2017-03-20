@@ -405,7 +405,7 @@ void sswwjjAnalysis(
   TString processName[histBins] = {".Data", "EWKWW", "QCDWW", "...WZ", "...ZZ", "..VVV", "...WS", "...WG", "..DPS", "FakeM", "FakeE", "..Hig1", "..Hig2"};
 
   const int nBinMJJMVA = 4; Float_t xbinsMJJ[nBinMJJMVA+1] = {500, 800, 1100, 1500, 2000};
-  const int nBinMLLMVA = 4; Float_t xbinsMLL[nBinMLLMVA+1] = {0, 100, 200, 300, 600};
+  const int nBinMLLMVA = 4; Float_t xbinsMLL[nBinMLLMVA+1] = {0, 100, 180, 300, 600};
 
   for(int nState=0; nState<7; nState++){
     for(int thePlot=0; thePlot<allPlots; thePlot++){
