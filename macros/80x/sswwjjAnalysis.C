@@ -399,10 +399,13 @@ void sswwjjAnalysis(
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 35;
+  const int allPlots = 41;
   const int histBins = 13;
   TH1D* histo[7][allPlots][histBins];
   TString processName[histBins] = {".Data", "EWKWW", "QCDWW", "...WZ", "...ZZ", "..VVV", "...WS", "...WG", "..DPS", "FakeM", "FakeE", "..Hig1", "..Hig2"};
+
+  const int nBinMJJMVA = 4; Float_t xbinsMJJ[nBinMJJMVA+1] = {500, 800, 1100, 1500, 2000};
+  const int nBinMLLMVA = 4; Float_t xbinsMLL[nBinMLLMVA+1] = {0, 100, 200, 300, 600};
 
   for(int nState=0; nState<7; nState++){
     for(int thePlot=0; thePlot<allPlots; thePlot++){
@@ -430,9 +433,10 @@ void sswwjjAnalysis(
       else if(thePlot >= 28 && thePlot <= 29) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
       else if(thePlot >= 30 && thePlot <= 30) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot = 3.5;}
       TH1D* histos;
-      if     (thePlot < allPlots-4) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
-      else if(thePlot < allPlots-1) histos = new TH1D("histos", "histos", nBinWZMVA, xbinsWZ);
-      else                          histos = new TH1D("histos", "histos", nBinMVA, xbins);
+      if     (thePlot < allPlots-10) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
+      else if(thePlot < allPlots-7)  histos = new TH1D("histos", "histos", nBinMJJMVA, xbinsMJJ);
+      else if(thePlot < allPlots-4)  histos = new TH1D("histos", "histos", nBinMLLMVA, xbinsMLL);
+      else                           histos = new TH1D("histos", "histos", nBinMVA, xbins);
       histos->Sumw2();
       for(int i=0; i<histBins; i++) histo[nState][thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
       histos->Reset();histos->Clear();
@@ -1523,13 +1527,22 @@ void sswwjjAnalysis(
         else if(thePlot == 29 && passLooseControlRegionWZ)  {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
         else if(thePlot == 30 && passNMinusOne[3])          {makePlot = true;theVar = TMath::Min((double)idLepLoose.size(),3.499);}
 
-        else if(thePlot == 31 && passControlRegionTop)      {makePlot = true;theVar = MVAVarPlot;}
-        else if(thePlot == 32 && passControlRegionWZ)       {makePlot = true;theVar = MVAVarPlot;}
-        else if(thePlot == 33 && passSignalRegion)          {makePlot = true;theVar = MVAVarPlot;}
-        if(makePlot && sigModel <= 0) histo[typeSel][thePlot][theCategory]->Fill(theVar,totalWeight);
-        if(makePlot && sigModel <= 0) histo[6][thePlot][theCategory]->Fill(theVar,totalWeight);
+        else if(thePlot == 31 && passSignalRegion)          {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 32 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 33 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+
+        else if(thePlot == 34 && passSignalRegion)          {makePlot = true;theVar = TMath::Min(dilep.M(),599.999);}
+        else if(thePlot == 35 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(dilep.M(),599.999);}
+        else if(thePlot == 36 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(dilep.M(),599.999);}
+
+        else if(thePlot == 37 && passSignalRegion)          {makePlot = true;theVar = MVAVarPlot;}
+        else if(thePlot == 38 && passControlRegionTop)      {makePlot = true;theVar = MVAVarPlot;}
+        else if(thePlot == 39 && passControlRegionWZ)       {makePlot = true;theVar = MVAVarPlot;}
+
+        if(makePlot && sigModel <= 0) histo[typeSel][thePlot][theCategory]  ->Fill(theVar,totalWeight);
+        if(makePlot && sigModel <= 0) histo[6]      [thePlot][theCategory]  ->Fill(theVar,totalWeight);
         if(makePlot && sigModel == 1) histo[typeSel][thePlot][theCategory+1]->Fill(theVar,totalWeight);
-        if(makePlot && sigModel == 1) histo[6][thePlot][theCategory+1]->Fill(theVar,totalWeight);
+        if(makePlot && sigModel == 1) histo[6]      [thePlot][theCategory+1]->Fill(theVar,totalWeight);
       }
 
       // Avoid QCD scale and PDF weights that are anomalous high
@@ -1948,17 +1961,17 @@ void sswwjjAnalysis(
     printf(" %.2f +/- %.2f",histo_WZ->GetBinContent(np),histo_WZ->GetBinError(np));
   }
   printf("\n");
-  for(int nb=1; nb<=histo[6][allPlots-2][0]->GetNbinsX(); nb++) {
+  for(int nb=1; nb<=histo[6][allPlots-4][0]->GetNbinsX(); nb++) {
     double sumEventsType[3] = {0,0,0}; double sumEventsTypeE[3] = {0,0,0};
     for(int np=0; np<histBins; np++) {
       if     (np==0){
-        sumEventsType[0] = sumEventsType[0] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[0] = sumEventsTypeE[0] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
+        sumEventsType[0] = sumEventsType[0] + histo[6][allPlots-4][np]->GetBinContent(nb); sumEventsTypeE[0] = sumEventsTypeE[0] + histo[6][allPlots-4][np]->GetBinError(nb)*histo[6][allPlots-4][np]->GetBinError((nb));
       }
       else if(np==3){
-        sumEventsType[2] = sumEventsType[2] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[2] = sumEventsTypeE[2] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
+        sumEventsType[2] = sumEventsType[2] + histo[6][allPlots-4][np]->GetBinContent(nb); sumEventsTypeE[2] = sumEventsTypeE[2] + histo[6][allPlots-4][np]->GetBinError(nb)*histo[6][allPlots-4][np]->GetBinError((nb));
       }
       else {
-        sumEventsType[1] = sumEventsType[1] + histo[6][allPlots-2][np]->GetBinContent(nb); sumEventsTypeE[1] = sumEventsTypeE[1] + histo[6][allPlots-2][np]->GetBinError(nb)*histo[6][allPlots-2][np]->GetBinError((nb));
+        sumEventsType[1] = sumEventsType[1] + histo[6][allPlots-4][np]->GetBinContent(nb); sumEventsTypeE[1] = sumEventsTypeE[1] + histo[6][allPlots-4][np]->GetBinError(nb)*histo[6][allPlots-4][np]->GetBinError((nb));
       }
     }
     double sf_WZ  = (sumEventsType[0]-sumEventsType[1])/sumEventsType[2]; // 0 = data, 1=bg, 2=wz
