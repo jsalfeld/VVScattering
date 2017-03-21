@@ -1483,7 +1483,7 @@ void sswwjjAnalysis(
         MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999)+2000.*typeSelAux;
         MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999)+2000.*typeSelAux;
 
-        if(theControlRegion == 2){
+        if(theControlRegion == 1 || theControlRegion == 2){
           MVAVar = TMath::Min(dijet.M(),1999.999); 
           MVAVarJESSyst[0] = TMath::Min(dijetUp.M(),1999.999);
           MVAVarJESSyst[1] = TMath::Min(dijetDown.M(),1999.999);
