@@ -784,7 +784,7 @@ void wwAnalysis(
       passFilter[0] = passFilter[0] * (signQ == 0);
 
       TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) )); 
-      if(dilep.M() > 12) passFilter[2] = kTRUE;
+      if(dilep.M() > 20) passFilter[2] = kTRUE;
 
       vector<int> idB,idC;
       for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
