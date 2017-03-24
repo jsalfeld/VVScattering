@@ -2671,10 +2671,10 @@ void sswwjjAnalysis(
       if(histo_DPS->GetBinContent(nb) > 0 && histo_DPS_CMS_PUBoundingDown->GetBinContent(nb) > 0) systPUDown[7] = histo_DPS_CMS_PUBoundingDown->GetBinContent(nb)/histo_DPS->GetBinContent(nb);
       if(histo_Higgs[TMath::Max(nModel,0)]->GetBinContent(nb) > 0 && histo_Higgs_CMS_PUBoundingUp  [TMath::Max(nModel,0)]->GetBinContent(nb) > 0) systPUUp  [8] = histo_Higgs_CMS_PUBoundingUp  [TMath::Max(nModel,0)]->GetBinContent(nb)/histo_Higgs[TMath::Max(nModel,0)]->GetBinContent(nb);
       if(histo_Higgs[TMath::Max(nModel,0)]->GetBinContent(nb) > 0 && histo_Higgs_CMS_PUBoundingDown[TMath::Max(nModel,0)]->GetBinContent(nb) > 0) systPUDown[8] = histo_Higgs_CMS_PUBoundingDown[TMath::Max(nModel,0)]->GetBinContent(nb)/histo_Higgs[TMath::Max(nModel,0)]->GetBinContent(nb);
-      for(int npu=0; npu<9; npu++) if(systPUUp[npu]   > 1.03) systPUUp[npu]   = 1.03;
-      for(int npu=0; npu<9; npu++) if(systPUUp[npu]   < 0.97) systPUUp[npu]   = 0.97;
-      for(int npu=0; npu<9; npu++) if(systPUDown[npu] > 1.03) systPUDown[npu] = 1.03;
-      for(int npu=0; npu<9; npu++) if(systPUDown[npu] < 0.97) systPUDown[npu] = 0.97;	
+      for(int npu=0; npu<9; npu++) if(systPUUp[npu]   > 1.02) systPUUp[npu]   = 1.02;
+      for(int npu=0; npu<9; npu++) if(systPUUp[npu]   < 0.98) systPUUp[npu]   = 0.98;
+      for(int npu=0; npu<9; npu++) if(systPUDown[npu] > 1.02) systPUDown[npu] = 1.02;
+      for(int npu=0; npu<9; npu++) if(systPUDown[npu] < 0.98) systPUDown[npu] = 0.98;	
 
       double systWSSFUp  [1] = {1.0};
       double systWSSFDown[1] = {1.0};
@@ -2755,10 +2755,10 @@ void sswwjjAnalysis(
       newcardShape << Form("lumi_%4s       lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-   %7.5f\n",ECMsb.Data(),lumiE,lumiE,lumiEWZ,lumiE,lumiE,lumiE,lumiE,lumiE,lumiE);		     
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-   %7.5f\n",effMName,systLepEffM[0],systLepEffM[1],systLepEffM[2],systLepEffM[3],systLepEffM[4],systLepEffM[5],systLepEffM[6],systLepEffM[7],systLepEffM[8]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-   %7.5f\n",effEName,systLepEffE[0],systLepEffE[1],systLepEffE[2],systLepEffE[3],systLepEffE[4],systLepEffE[5],systLepEffE[6],systLepEffE[7],systLepEffE[8]);
-      newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-   %7.5f\n",metName,systMetUp[0],systMetUp[1],systMetUp[2],systMetUp[3],systMetUp[4],systMetUp[5],systMetUp[6],systMetUp[7],systMetUp[8]);
-      newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-   %7.5f\n",jesName,systJesUp[0],systJesUp[1],systJesUp[2],systJesUp[3],systJesUp[4],systJesUp[5],systJesUp[6],systJesUp[7],systJesUp[8]);
-      newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-   %7.5f\n",btagName,systBtagUp[0],systBtagUp[1],systBtagUp[2],systBtagUp[3],systBtagUp[4],systBtagUp[5],systBtagUp[6],systBtagUp[7],systBtagUp[8]);
-      newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-   %7.5f\n",puName,systPUUp[0],systPUUp[1],systPUUp[2],systPUUp[3],systPUUp[4],systPUUp[5],systPUUp[6],systPUUp[7],systPUUp[8]);
+      newcardShape << Form("%s             lnN  %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f   -	-   %7.5f/%7.5f\n",metName,systMetUp[0],systMetDown[0],systMetUp[1],systMetDown[1],systMetUp[2],systMetDown[2],systMetUp[3],systMetDown[3],systMetUp[4],systMetDown[4],systMetUp[5],systMetDown[5],systMetUp[6],systMetDown[6],systMetUp[7],systMetDown[7],systMetUp[8],systMetDown[8]);
+      newcardShape << Form("%s             lnN  %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f   -	-   %7.5f/%7.5f\n",jesName,systJesUp[0],systJesDown[0],systJesUp[1],systJesDown[1],systJesUp[2],systJesDown[2],systJesUp[3],systJesDown[3],systJesUp[4],systJesDown[4],systJesUp[5],systJesDown[5],systJesUp[6],systJesDown[6],systJesUp[7],systJesDown[7],systJesUp[8],systJesDown[8]);
+      newcardShape << Form("%s             lnN  %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f   -	-   %7.5f/%7.5f\n",btagName,systBtagUp[0],systBtagDown[0],systBtagUp[1],systBtagDown[1],systBtagUp[2],systBtagDown[2],systBtagUp[3],systBtagDown[3],systBtagUp[4],systBtagDown[4],systBtagUp[5],systBtagDown[5],systBtagUp[6],systBtagDown[6],systBtagUp[7],systBtagDown[7],systBtagUp[8],systBtagDown[8]);
+      newcardShape << Form("%s             lnN  %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f %7.5f/%7.5f   -	-   %7.5f/%7.5f\n",puName,systPUUp[0],systPUDown[0],systPUUp[1],systPUDown[1],systPUUp[2],systPUDown[2],systPUUp[3],systPUDown[3],systPUUp[4],systPUDown[4],systPUUp[5],systPUDown[5],systPUUp[6],systPUDown[6],systPUUp[7],systPUDown[7],systPUUp[8],systPUDown[8]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-   %7.5f\n",momMName,systLepResM[0],systLepResM[1],systLepResM[2],systLepResM[3],systLepResM[4],systLepResM[5],systLepResM[6],systLepResM[7],systLepResM[8]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-   %7.5f\n",momEName,systLepResE[0],systLepResE[1],systLepResE[2],systLepResE[3],systLepResE[4],systLepResE[5],systLepResE[6],systLepResE[7],systLepResE[8]);
       newcardShape << Form("CMS_WZ_l       lnN    -     -   %7.5f   -     -     -    -     -      -     -     -  \n",1.01);
