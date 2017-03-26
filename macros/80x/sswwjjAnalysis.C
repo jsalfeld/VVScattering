@@ -987,6 +987,8 @@ void sswwjjAnalysis(
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 20) continue;
 
+        //if(((int)(*eventJets.selBits)[nj] & BareJets::JetTight)!= BareJets::JetTight) continue;
+
         Bool_t isLepton = kFALSE;
         for(unsigned int nl=0; nl<idLep.size(); nl++){
           if(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaR(*((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])) < 0.4) isLepton = kTRUE;
