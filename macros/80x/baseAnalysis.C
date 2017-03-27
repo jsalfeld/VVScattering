@@ -25,7 +25,7 @@ bool isMINIAOD = true;
 int whichSkim = 0;
 bool usePureMC = false; 
 int mcPrescale = 1.0;
-const bool useDYMVA = false;
+const int useDYMVA = false;
 const bool doTriggerStudy = true;
 const Int_t period = 1;
 const double bTagCuts[3] = {0.5426,0.8484,0.9535};
@@ -35,7 +35,7 @@ void baseAnalysis(
  Int_t typeSel = 4,
  TString typeLepSel = "default",
  UInt_t specialCut = 0,
- bool useDYPT = false,
+ int useDYType = 0,
  bool isMIT = false
  ){
 
@@ -50,7 +50,7 @@ void baseAnalysis(
   Double_t lumi = 35.9;
 
   if(nsel == 2 || nsel == 5) usePureMC = true;
-  if(useDYPT==true) {
+  if(useDYType==1) {
     whichSkim = 4;
     filesPathDA  = filesPathDA  + "met_";
     filesPathMC  = filesPathMC  + "met_";
@@ -83,10 +83,20 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg.root",filesPathMC.Data()));					infilecatv.push_back(1);
   infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV.root",filesPathMC.Data()));  				infilecatv.push_back(1);
 
-  if(useDYPT==false){
+  if     (useDYType==0||useDYType==2){
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));      infilecatv.push_back(2);
   }
+  /*else if(useDYType==2){
+  infilenamev.push_back(Form("%sDY1JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data())); infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDY2JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data())); infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDY3JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data())); infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDY4JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data())); infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	infilecatv.push_back(2);
+  infilenamev.push_back(Form("%sDY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	infilecatv.push_back(2);
+  }*/
   else {
   infilenamev.push_back(Form("%sDYJetsToLL_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));   infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));  infilecatv.push_back(2);
@@ -269,8 +279,8 @@ void baseAnalysis(
     else if(thePlot >= 28 && thePlot <= 28) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
     else if(thePlot >= 29 && thePlot <= 31) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 32 && thePlot <= 32) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
-    else if(thePlot >= 33 && thePlot <= 35) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200.0;}
-    else if(thePlot >= 36 && thePlot <= 36) {nBinPlot =  90; xminPlot = 0.0; xmaxPlot = 180.0;}
+    else if(thePlot >= 33 && thePlot <= 34) {nBinPlot = 200; xminPlot =-5.0; xmaxPlot =   5.0;}
+    else if(thePlot >= 35 && thePlot <= 36) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 37 && thePlot <= 38) {nBinPlot = 100; xminPlot =-2.5; xmaxPlot =   2.5;}
     else if(thePlot >= 39 && thePlot <= 39) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = 200.0;}
     else if(thePlot >= 40 && thePlot <= 40) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot =   6.5;}
@@ -501,7 +511,7 @@ void baseAnalysis(
 
       TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) ));
 
-      if(useDYPT==true && (dilep.Pt() <= 60. || ((TLorentzVector*)(*eventMet.p4)[0])->Pt() <= 40)) continue;
+      if(useDYType==1 && (dilep.Pt() <= 60. || ((TLorentzVector*)(*eventMet.p4)[0])->Pt() <= 40)) continue;
 
       double minMassll = 999.0;
       double minMassZ = 999.0;
@@ -628,6 +638,8 @@ void baseAnalysis(
         histoBTAG[fileType][2]->Fill(TMath::Min((double)idJet.size(),6.4999),1.0);
         histoBTAG[fileType][3]->Fill(TMath::Min((double)idC.size(),1.0)+2*TMath::Min((double)idB.size(),1.0),1.0);
       }
+
+      if(useDYType == 2 && idJet.size() < 2) continue;
 
       double dPhiDiLepMET = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])))*180./TMath::Pi();
       double ptFrac = TMath::Abs(dilep.Pt()-((TLorentzVector*)(*eventMet.p4)[0])->Pt())/dilep.Pt();
@@ -1046,10 +1058,10 @@ void baseAnalysis(
 	else if(thePlot == 30 && idJet.size() == 1 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.trackMet->Pt(),199.999);}
 	else if(thePlot == 31 && idJet.size() == 1 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.CaloMet->Pt(),199.999);}
 	else if(thePlot == 32 && idJet.size() == 1 && bDiscrMax < 0.605 && idSoft.size() == 0 && ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 100) {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
-	else if(thePlot == 33 && idJet.size() >= 2 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
-	else if(thePlot == 34 && idJet.size() >= 2 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.trackMet->Pt(),199.999);}
-	else if(thePlot == 35 && idJet.size() >= 2 && bDiscrMax < 0.605 && idSoft.size() == 0) {makePlot = true;theVar = TMath::Min((double)eventMet.CaloMet->Pt(),199.999);}
-	else if(thePlot == 36 && idJet.size() >= 2 && bDiscrMax < 0.605 && idSoft.size() == 0 && ((TLorentzVector*)(*eventMet.p4)[0])->Pt() > 100) {makePlot = true;theVar = dPhiLepMETMin*180/TMath::Pi();}
+	else if(thePlot == 33 && idJet.size() >= 2) {makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta();}
+	else if(thePlot == 34 && idJet.size() >= 2) {makePlot = true;theVar = ((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta();}
+	else if(thePlot == 35 && idJet.size() >= 2) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Pt(),199.999);}
+	else if(thePlot == 36 && idJet.size() >= 2) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Pt(),199.999);}
 	else if(thePlot == 37) {makePlot = true;theVar = ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta();}
 	else if(thePlot == 38) {makePlot = true;theVar = ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta();}
 	else if(thePlot == 39 && dilep.Pt() > 100) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
@@ -1156,7 +1168,8 @@ void baseAnalysis(
   printf(" = %.3f\n",sumEvents);
   for(int thePlot=0; thePlot<allPlots; thePlot++){
     sprintf(output,"histo_nice_%d_%d_%d_%s.root",thePlot,nsel,typeSel,typeLepSel.Data());	  
-    if(useDYPT == true) sprintf(output,"histo_nice_%d_%d_%d_%s_pt.root",thePlot,nsel,typeSel,typeLepSel.Data());	  
+    if     (useDYType == 1) sprintf(output,"histo_nice_%d_%d_%d_%s_pt.root",thePlot,nsel,typeSel,typeLepSel.Data());	  
+    else if(useDYType == 2) sprintf(output,"histo_nice_%d_%d_%d_%s_nj.root",thePlot,nsel,typeSel,typeLepSel.Data());	  
     TFile* outFilePlotsNote = new TFile(output,"recreate");
     outFilePlotsNote->cd();
     for(int np=0; np<histBins; np++) histo[thePlot][np]->Write();
