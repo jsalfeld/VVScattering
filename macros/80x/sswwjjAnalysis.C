@@ -36,9 +36,10 @@ double the_sf_ZLL = 0.80;
 const double bTagCuts[2] = {0.8484,0.9535}; // 0.5426/0.8484/0.9535 (check BTagCalibration2Reader!)
 
 void func_ws_sf(double eta, double pt, double theSF[2]);
+double func_ws_eff(double eta1, double eta2, TH1D *fhEff);
 
-enum selType                     {SIGSEL=0, TOPSEL,   WZSEL,   DILSEL,   SS2JSEL,   SSZLLSEL,  nSelTypes};
-TString selTypeName[nSelTypes]= {"SIGSEL", "TOPSEL", "WZSEL", "DILSEL", "SS2JSEL", "SSZLLSEL"};
+enum selType                     {SIGSEL=0, TOPSEL,   WZSEL,   DILSEL,   SS2JSEL,   OS2JSEL,   SSZLLSEL, nSelTypes};
+TString selTypeName[nSelTypes]= {"SIGSEL", "TOPSEL", "WZSEL", "DILSEL", "SS2JSEL", "OS2JSEL", "SSZLLSEL"};
 
 enum systType                     {JESUP=0, JESDOWN,  JERUP,  JERDOWN,  METUP,  METDOWN, nSystTypes};
 TString systTypeName[nSystTypes]= {"JESUP","JESDOWN","JERUP","JERDOWN","METUP","METDOWN"};
@@ -206,9 +207,9 @@ void sswwjjAnalysis(
   //signalName_.push_back(Form("mh%d", 300)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M300_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d", 400)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M400_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d", 500)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M500_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
-  //signalName_.push_back(Form("mh%d", 700)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M700_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  signalName_.push_back(Form("mh%d", 700)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M700_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d", 800)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M800_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
-  //signalName_.push_back(Form("mh%d", 900)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M900_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  signalName_.push_back(Form("mh%d", 900)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M900_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d",1000)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M1000_13TeV-madgraph.root",filesPathMC.Data()));infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   }
 
@@ -288,6 +289,12 @@ void sswwjjAnalysis(
   assert(fhDVeryTightSF);
   fhDVeryTightSF->SetDirectory(0);
   delete fElVeryTightSF;
+
+  //TFile *fElveryTightWrongSignEff = TFile::Open(Form("MitAnalysisRunII/data/80x/veryTightWrongSignEff_37ifb.root"));
+  //TH1D *fhDveryTightWrongSignEff = (TH1D*)(fElveryTightWrongSignEff->Get("veryTightWrongSignEff"));
+  //assert(fhDveryTightWrongSignEff);
+  //fhDveryTightWrongSignEff->SetDirectory(0);
+  //delete fElveryTightWrongSignEff;
 
   TFile *fTrackMuonReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/Tracking_EfficienciesAndSF_BCDEFGH.root"));
   TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackMuonReco_SF->Get("ratio_eff_eta3_dr030e030_corr")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
@@ -419,7 +426,8 @@ void sswwjjAnalysis(
       else if(thePlot >=  8 && thePlot <=  8) {nBinPlot =  50; xminPlot = 0.0; xmaxPlot = 50;}
       else if(thePlot >=  9 && thePlot <=  9) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 1.0;}
       else if(thePlot >= 10 && thePlot <= 10) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot = 3.5;}
-      else if(thePlot >= 11 && thePlot <= 12) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 2000;}
+      else if(thePlot >= 11 && thePlot <= 11) {}
+      else if(thePlot >= 12 && thePlot <= 12) {}
       else if(thePlot >= 13 && thePlot <= 14) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200;}
       else if(thePlot >= 15 && thePlot <= 15) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
       else if(thePlot >= 16 && thePlot <= 17) {nBinPlot = 100; xminPlot =-5.0; xmaxPlot = 5.0;}
@@ -433,7 +441,9 @@ void sswwjjAnalysis(
       else if(thePlot >= 28 && thePlot <= 29) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
       else if(thePlot >= 30 && thePlot <= 30) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot = 3.5;}
       TH1D* histos;
-      if     (thePlot < allPlots-10) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
+      if     (thePlot == 11)         histos = new TH1D("histos", "histos", nBinMJJMVA, xbinsMJJ);
+      else if(thePlot == 12)         histos = new TH1D("histos", "histos", nBinMLLMVA, xbinsMLL);
+      else if(thePlot < allPlots-10) histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
       else if(thePlot < allPlots-7)  histos = new TH1D("histos", "histos", nBinMJJMVA, xbinsMJJ);
       else if(thePlot < allPlots-4)  histos = new TH1D("histos", "histos", nBinMLLMVA, xbinsMLL);
       else                           histos = new TH1D("histos", "histos", nBinMVA, xbins);
@@ -870,16 +880,18 @@ void sswwjjAnalysis(
       Bool_t passFilterSig[numberCuts] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       Bool_t passFilterCR1[numberCuts] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       Bool_t passFilterCR2[numberCuts] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
-      Bool_t passFilterCR3[numberCuts] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       Bool_t passPresel = kFALSE;
       Bool_t passSignalRegion = kFALSE;
       Bool_t passControlRegionTop      = kFALSE;
       Bool_t passControlRegionWZ       = kFALSE;
       Bool_t passControlRegionDi       = kFALSE;
       Bool_t passControlRegionSS2j     = kFALSE;
+      Bool_t passControlRegionOS2j     = kFALSE;
       Bool_t passControlRegionZLL      = kFALSE;
       Bool_t passLooseControlRegionTop = kFALSE;
       Bool_t passLooseControlRegionWZ  = kFALSE;
+      Bool_t passMjjLoose = kFALSE;
+      Bool_t passOS = kFALSE;
 
       if(infilecatv[ifile] != 999) {
         for (int nt = 0; nt <(int)numtokens; nt++) {
@@ -962,14 +974,13 @@ void sswwjjAnalysis(
 	passFilterSig[0] = kTRUE;
 	passFilterCR1[0] = kTRUE;
       }
-      if(idTight.size() == 2 && signQ == 0 && typePair == 2)  passFilterCR3[0] = kTRUE;
+      if(idTight.size() == 2 && signQ == 0 && typePair == 2)  passOS = kTRUE;
       if(idTight.size() == 3 )                                passFilterCR2[0] = kTRUE; 
 
       //lepton pT cut
       if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 25 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20){
 	passFilterSig[1] = kTRUE;
 	passFilterCR1[1] = kTRUE;
-	passFilterCR3[1] = kTRUE;
 	if(idTight.size() == 3 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt() > 10) passFilterCR2[1] = kTRUE;
       }
 
@@ -1108,7 +1119,6 @@ void sswwjjAnalysis(
 	passFilterSig[2] = kTRUE;
         passFilterCR1[2] = kTRUE;
         passFilterCR2[2] = kTRUE;
-        passFilterCR3[2] = kTRUE;
       }
 
       int numberGoodTaus = 0;
@@ -1132,7 +1142,6 @@ void sswwjjAnalysis(
 
       if(bDiscrMax < bTagCuts[0] && idSoft.size() == 0){
 	passFilterSig[3] = kTRUE;
-        passFilterCR3[3] = kTRUE;
       } else{
         passFilterCR1[3] = kTRUE;
       }
@@ -1144,7 +1153,6 @@ void sswwjjAnalysis(
       if(numberGoodTaus == 0){
 	passFilterSig[4] = kTRUE;
         passFilterCR1[4] = kTRUE;
-        passFilterCR3[4] = kTRUE;
       }
       passFilterCR2[4] = kTRUE;
 
@@ -1153,7 +1161,6 @@ void sswwjjAnalysis(
       if(dilep.M() > 20){
 	passFilterSig[5] = kTRUE;
 	passFilterCR1[5] = kTRUE;
-	passFilterCR3[5] = kTRUE;
       }
       passFilterCR2[5] = kTRUE;
 
@@ -1176,7 +1183,6 @@ void sswwjjAnalysis(
       if(TMath::Abs(minMassLooseZ-91.1876) > 15 && idLepLoose.size() == 0){
 	passFilterSig[6] = kTRUE;
         passFilterCR1[6] = kTRUE;
-        passFilterCR3[6] = kTRUE;     
       }
       passFilterCR2[6] = kTRUE;
       
@@ -1202,7 +1208,6 @@ void sswwjjAnalysis(
 	}
       }
       if(TMath::Abs(minMassZ-91.1876) < 15.0) passFilterCR2[7] = kTRUE;
-      passFilterCR3[7] = kTRUE;
 
       //access met info
       TLorentzVector theMET;
@@ -1221,7 +1226,6 @@ void sswwjjAnalysis(
         passFilterSig[8] = kTRUE;
         passFilterCR1[8] = kTRUE;
         passFilterCR2[8] = kTRUE;
-        passFilterCR3[8] = kTRUE;
       }
 
       TLorentzVector dijet; double deltaEtaJJ = 0.0;double theLeptonZ[2] = {0.999,0.999};
@@ -1234,7 +1238,7 @@ void sswwjjAnalysis(
           passFilterCR2[9] = kTRUE;
 	}
 	if(dijet.M() > 100){
-          passFilterCR3[9] = kTRUE;
+          passMjjLoose = kTRUE;
 	}
 
 	//deltaEta jj cut
@@ -1244,7 +1248,6 @@ void sswwjjAnalysis(
           passFilterCR1[10] = kTRUE;
           passFilterCR2[10] = kTRUE;
 	}
-	passFilterCR3[10] = kTRUE;
 	
 	theLeptonZ[0] = TMath::Min(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()-(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()+((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta())/2.)/deltaEtaJJ,0.999);
 	theLeptonZ[1] = TMath::Min(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()-(((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta()+((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta())/2.)/deltaEtaJJ,0.999);
@@ -1252,16 +1255,16 @@ void sswwjjAnalysis(
         passFilterSig[11] = TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.75;
         passFilterCR1[11] = TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.75;
         passFilterCR2[11] = kTRUE;
-        passFilterCR3[11] = TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.75;
       }
 
       //                           #lep, sign, flavor  lep pT cut          #jets with pT>30    btag-veto           tau veto            mll cut             loose Z veto        Z veto              met cut             mjj cut             deltaetajj cut       zeppenfeld cut
       passSignalRegion           = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] && passFilterSig[9] && passFilterSig[10] && passFilterSig[11];
       passControlRegionTop       = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2] && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8] && passFilterCR1[9] && passFilterCR1[10] && passFilterCR1[11];
       passControlRegionWZ        = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8] && passFilterCR2[9] && passFilterCR2[10] && passFilterCR2[11];
-      passControlRegionDi        = passFilterCR3[0] && passFilterCR3[1] && passFilterCR3[2] && passFilterCR3[3] && passFilterCR3[4] && passFilterCR3[5] && passFilterCR3[6] && passFilterCR3[7] && passFilterCR3[8] && passFilterCR3[9] && passFilterCR3[10] && passFilterCR3[11];
-      passControlRegionSS2j      = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8] && passFilterCR3[9] &&                      TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.999;
-      passControlRegionZLL       = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] &&                     passFilterSig[6] &&!passFilterSig[7] && passFilterSig[8] && passFilterCR3[9];
+      passControlRegionDi        = passOS           && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] && passFilterSig[9] && passFilterSig[10] && passFilterSig[11];
+      passControlRegionSS2j      = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8] && passMjjLoose     &&                      TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.999;
+      passControlRegionOS2j      = passOS           && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8] && passMjjLoose     &&                      TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.999;
+      passControlRegionZLL       = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] &&                     passFilterSig[6] &&!passFilterSig[7] && passFilterSig[8] && passMjjLoose;
       passLooseControlRegionTop  = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2] && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8]                     && passFilterCR1[10];
       passLooseControlRegionWZ   = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8]                     && passFilterCR2[10];
 
@@ -1282,7 +1285,7 @@ void sswwjjAnalysis(
 	if(totalSel == kTRUE) sumEvol[typeSel]++;
       }
 
-      bool passAllCuts[nSelTypes] = {passSignalRegion,passControlRegionTop,passControlRegionWZ,passControlRegionDi,passControlRegionSS2j,passControlRegionZLL};                 
+      bool passAllCuts[nSelTypes] = {passSignalRegion,passControlRegionTop,passControlRegionWZ,passControlRegionDi,passControlRegionSS2j,passControlRegionOS2j,passControlRegionZLL};                 
 
       TLorentzVector dijetjesUp,dijetjesDown;
       double deltaEtaJJjesUp = 0; double deltaEtaJJjesDown = 0;
@@ -1487,6 +1490,13 @@ void sswwjjAnalysis(
         totalWeight = totalWeight * total_WS_SF[0];
       }
 
+      // Wrong sign efficiency in OS events
+      //if(passControlRegionDi || passControlRegionOS2j) {
+      //  totalWeight = totalWeight * func_ws_eff(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta(),
+      //                                          ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta(),
+      //                                          fhDveryTightWrongSignEff);
+      //}
+
       // Z->ll scale factor
       if     (infilenamev[ifile].Contains("JetsToLL") && goodIsTight == idTight.size()) {
         totalWeight = totalWeight * the_sf_ZLL;
@@ -1586,8 +1596,10 @@ void sswwjjAnalysis(
 	else if(thePlot ==  8 && passSignalRegion)          {makePlot = true;theVar = (double)(numberGoodGenLep[1]+10*numberGoodGenLep[0]);}
 	else if(thePlot ==  9 && passNMinusOne[0])          {makePlot = true;theVar = TMath::Min(TMath::Max(bDiscrMax,0.001),0.999);}
 	else if(thePlot == 10 && passNMinusOne[0])          {makePlot = true;theVar = TMath::Min((double)idSoft.size(),3.499);}
-        else if(thePlot == 11 && passControlRegionTop)      {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
-        else if(thePlot == 12 && passControlRegionWZ)       {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+
+        else if(thePlot == 11 && passControlRegionDi)       {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 12 && passControlRegionDi)       {makePlot = true;theVar = TMath::Min(dilep.M(),599.999);}
+
         else if(thePlot == 13 && passSignalRegion)          {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Pt(),199.999);}
         else if(thePlot == 14 && passSignalRegion)          {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Pt(),199.999);}
         else if(thePlot == 15 && passControlRegionSS2j)     {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
@@ -3009,4 +3021,9 @@ void func_ws_sf(double eta, double pt, double SF[2]){
   else                           iEta = 4;
   SF[0] = SF[0] * WSSF[iEta];
   SF[1] = SF[1] * (1.0 + WSSFE[iEta]);
+}
+
+double func_ws_eff(double eta1, double eta2, TH1D *fhEff){
+  return TMath::Max(fhEff->GetBinContent(fhEff->GetXaxis()->FindBin(eta1)),
+                    fhEff->GetBinContent(fhEff->GetXaxis()->FindBin(eta2)));
 }
