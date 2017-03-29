@@ -437,7 +437,8 @@ void sswwjjAnalysis(
       else if(thePlot >= 21 && thePlot <= 22) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 1.0;}
       else if(thePlot >= 23 && thePlot <= 24) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 200;}
       else if(thePlot >= 25 && thePlot <= 25) {nBinPlot =   7; xminPlot =-0.5; xmaxPlot = 6.5;}
-      else if(thePlot >= 26 && thePlot <= 27) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 2000;}
+      else if(thePlot >= 26 && thePlot <= 26) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 500;}
+      else if(thePlot >= 27 && thePlot <= 27) {nBinPlot = 100; xminPlot = 0.0; xmaxPlot = 2000;}
       else if(thePlot >= 28 && thePlot <= 29) {nBinPlot =  80; xminPlot = 0.0; xmaxPlot = 8;}
       else if(thePlot >= 30 && thePlot <= 30) {nBinPlot =   4; xminPlot =-0.5; xmaxPlot = 3.5;}
       TH1D* histos;
@@ -1613,7 +1614,7 @@ void sswwjjAnalysis(
         else if(thePlot == 23 && passSignalRegion)          {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
         else if(thePlot == 24 && passSignalRegion)          {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
         else if(thePlot == 25 && passControlRegionZLL)      {makePlot = true;theVar = TMath::Min((double)idJet.size(),6.499);}
-        else if(thePlot == 26 && passLooseControlRegionTop) {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
+        else if(thePlot == 26 && passSignalRegion)          {makePlot = true;theVar = TMath::Min(dilep.Pt(),499.999);}
         else if(thePlot == 27 && passLooseControlRegionWZ)  {makePlot = true;theVar = TMath::Min(dijet.M(),1999.999);}
         else if(thePlot == 28 && passLooseControlRegionTop) {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}
         else if(thePlot == 29 && passLooseControlRegionWZ)  {makePlot = true;theVar = TMath::Min(deltaEtaJJ,7.999);}

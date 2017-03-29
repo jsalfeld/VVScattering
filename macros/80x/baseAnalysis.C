@@ -50,7 +50,7 @@ void baseAnalysis(
   Double_t lumi = 35.9;
 
   if(nsel == 2 || nsel == 5) usePureMC = true;
-  if(useDYType==1) {
+  if(useDYType == 1 || useDYType == 2) {
     whichSkim = 4;
     filesPathDA  = filesPathDA  + "met_";
     filesPathMC  = filesPathMC  + "met_";
@@ -83,11 +83,11 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg.root",filesPathMC.Data()));					infilecatv.push_back(1);
   infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV.root",filesPathMC.Data()));  				infilecatv.push_back(1);
 
-  if     (useDYType==0||useDYType==2){
+  if     (useDYType == 0){
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));  infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));      infilecatv.push_back(2);
   }
-  /*else if(useDYType==2){
+  else if(useDYType == 2){
   infilenamev.push_back(Form("%sDY1JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data())); infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDY2JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data())); infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDY3JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data())); infilecatv.push_back(2);
@@ -96,7 +96,7 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sDY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));	infilecatv.push_back(2);
-  }*/
+  }
   else {
   infilenamev.push_back(Form("%sDYJetsToLL_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));   infilecatv.push_back(2);
   infilenamev.push_back(Form("%sDYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root",filesPathMC.Data()));  infilecatv.push_back(2);
@@ -511,7 +511,7 @@ void baseAnalysis(
 
       TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) ));
 
-      if(useDYType==1 && (dilep.Pt() <= 60. || ((TLorentzVector*)(*eventMet.p4)[0])->Pt() <= 40)) continue;
+      if(useDYType == 1 && (dilep.Pt() <= 60. || ((TLorentzVector*)(*eventMet.p4)[0])->Pt() <= 40)) continue;
 
       double minMassll = 999.0;
       double minMassZ = 999.0;
@@ -639,7 +639,7 @@ void baseAnalysis(
         histoBTAG[fileType][3]->Fill(TMath::Min((double)idC.size(),1.0)+2*TMath::Min((double)idB.size(),1.0),1.0);
       }
 
-      if(useDYType == 2 && idJet.size() < 2) continue;
+      if(useDYType == 2 && (dilep.Pt() <= 60. || ((TLorentzVector*)(*eventMet.p4)[0])->Pt() <= 40 || idJet.size() < 2)) continue;
 
       double dPhiDiLepMET = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventMet.p4)[0])))*180./TMath::Pi();
       double ptFrac = TMath::Abs(dilep.Pt()-((TLorentzVector*)(*eventMet.p4)[0])->Pt())/dilep.Pt();
