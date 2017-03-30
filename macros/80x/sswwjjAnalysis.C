@@ -36,7 +36,7 @@ double the_sf_ZLL = 0.80;
 const double bTagCuts[2] = {0.8484,0.9535}; // 0.5426/0.8484/0.9535 (check BTagCalibration2Reader!)
 
 void func_ws_sf(double eta, double pt, double theSF[2]);
-double func_ws_eff(double eta1, double eta2, TH1D *fhEff);
+double func_ws_eff(double eta1, double eta2, int pdgId1, int pdgId2, TH1D *fhEff);
 
 enum selType                     {SIGSEL=0, TOPSEL,   WZSEL,   DILSEL,   SS2JSEL,   OS2JSEL,   SSZLLSEL, nSelTypes};
 TString selTypeName[nSelTypes]= {"SIGSEL", "TOPSEL", "WZSEL", "DILSEL", "SS2JSEL", "OS2JSEL", "SSZLLSEL"};
@@ -873,7 +873,7 @@ void sswwjjAnalysis(
       if((selBit_ & 0x1<<whichSkim1) == 0 && (selBit_ & 0x1<<whichSkim2) == 0) continue;
 
       the_input_tree->GetEntry(i);
- 
+
       int initPDFTag = 0;
       if((*eventMonteCarlo.pdfRwgt).size() == 0) initPDFTag = -1;
 
@@ -1164,7 +1164,6 @@ void sswwjjAnalysis(
 	passFilterCR1[5] = kTRUE;
       }
       passFilterCR2[5] = kTRUE;
-
 
       double minMassLooseZ = 999.0;
       for(unsigned nl0=0; nl0<idLep.size(); nl0++){
@@ -1487,8 +1486,10 @@ void sswwjjAnalysis(
       // Wrong sign efficiency in OS events
       //if(passControlRegionDi || passControlRegionOS2j) {
       //  totalWeight = totalWeight * func_ws_eff(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta(),
-      //                                          ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta(),
-      //                                          fhDveryTightWrongSignEff);
+      //  					  ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta(),
+      //  					  TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),
+      //  					  TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]),
+      //  					  fhDveryTightWrongSignEff);
       //}
 
       // Z->ll scale factor
@@ -3017,7 +3018,9 @@ void func_ws_sf(double eta, double pt, double SF[2]){
   SF[1] = SF[1] * (1.0 + WSSFE[iEta]);
 }
 
-double func_ws_eff(double eta1, double eta2, TH1D *fhEff){
-  return TMath::Max(fhEff->GetBinContent(fhEff->GetXaxis()->FindBin(eta1)),
-                    fhEff->GetBinContent(fhEff->GetXaxis()->FindBin(eta2)));
+double func_ws_eff(double eta1, double eta2, int pdgId1, int pdgId2, TH1D *fhEff){
+  double prob = 0.0;
+  if(abs(pdgId1) == 11) prob = prob + fhEff->GetBinContent(fhEff->GetXaxis()->FindBin(eta1));
+  if(abs(pdgId2) == 11) prob = prob + fhEff->GetBinContent(fhEff->GetXaxis()->FindBin(eta2));
+  return prob;
 }
