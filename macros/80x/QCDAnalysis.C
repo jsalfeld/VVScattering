@@ -315,6 +315,10 @@ void QCDAnalysis(
       for(unsigned nl=0; nl<idLep.size(); nl++){
         bool isGenLepton = false;
         for(int ngen=0; ngen<eventMonteCarlo.p4->GetEntriesFast(); ngen++) {
+	  bool isGoodFlags = ((*eventMonteCarlo.flags)[ngen] & BareMonteCarlo::PromptFinalState) == BareMonteCarlo::PromptFinalState ||
+            		     ((*eventMonteCarlo.flags)[ngen] & BareMonteCarlo::DirectPromptTauDecayProductFinalState) == BareMonteCarlo::DirectPromptTauDecayProductFinalState;
+          isGoodFlags = isGoodFlags && (TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) == 11 || TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) == 13);
+          if(isGoodFlags == false) continue;
           if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen]) &&
 	    ((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen])) < 0.3) {
 	    isGenLepton = true;

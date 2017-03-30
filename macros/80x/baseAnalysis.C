@@ -829,18 +829,12 @@ void baseAnalysis(
         if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 4 && ((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Pt() > 15) numberQuarks[0]++;
         if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 5 && ((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->Pt() > 15) numberQuarks[1]++;
         isGenDupl.push_back(0);
-	if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 11 &&
-	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 13) isGenDupl[ngen0] = 1;
-	if(TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 11 &&
-	   TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) != 13) continue;
-        for(int ngen1=ngen0+1; ngen1<eventMonteCarlo.p4->GetEntriesFast(); ngen1++) {
-	  if((int)(*eventMonteCarlo.pdgId)[ngen0] != (int)(*eventMonteCarlo.pdgId)[ngen1]) continue;
-          if(((TLorentzVector*)(*eventMonteCarlo.p4)[ngen0])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[ngen1])) < 0.02) {
-	    isGenDupl[ngen0] = 1;
-	    break;
-	  }
-        }
+	bool isGoodFlags = ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::PromptFinalState) == BareMonteCarlo::PromptFinalState ||
+            		   ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::DirectPromptTauDecayProductFinalState) == BareMonteCarlo::DirectPromptTauDecayProductFinalState;
+        isGoodFlags = isGoodFlags && (TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 11 || TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 13);
+        if(isGoodFlags == false) isGenDupl[ngen0] = 1;
       }
+
       vector<int> isGenLep; unsigned int goodIsGenLep = 0;
       for(unsigned nl=0; nl<idLep.size(); nl++){
         bool isGenLepton = false;
@@ -941,21 +935,21 @@ void baseAnalysis(
 	if(infilecatv[ifile] != 0 && infilecatv[ifile] != 2) theZWeight = -1.0 * theZWeight;
 	
 	int iPt[2] = {-1, -1};
-	if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 2000) iPt[0] = 0;
-	else                                                                  iPt[0] = 1;
-	if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 2000) iPt[1] = 0;
-	else                                                                  iPt[1] = 1;
+	if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 50) iPt[0] = 0;
+	else                                                                iPt[0] = 1;
+	if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 50) iPt[1] = 0;
+	else                                                                iPt[1] = 1;
 
 	int iEta[2] = {-1, -1};
-	if     (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 0.5) iEta[0] = 0;
-	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 1.0) iEta[0] = 1;
-	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 1.5) iEta[0] = 2;
-	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 2.0) iEta[0] = 3;
+	if     (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 1.0) iEta[0] = 0;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 1.5) iEta[0] = 1;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 2.0) iEta[0] = 2;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 2.5) iEta[0] = 3;
 	else                                                                              iEta[0] = 4;
-	if     (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 0.5) iEta[1] = 0;
-	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 1.0) iEta[1] = 1;
-	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 1.5) iEta[1] = 2;
-	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 2.0) iEta[1] = 3;
+	if     (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 1.0) iEta[1] = 0;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 1.5) iEta[1] = 1;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 2.0) iEta[1] = 2;
+	else if(TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()) < 2.5) iEta[1] = 3;
 	else                                                                              iEta[1] = 4;
         
 	if(signQ == 0)  evtZ[0][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeDat] =  evtZ[0][iPt[0]][iEta[0]][iPt[1]][iEta[1]][typeDat] + theZWeight;

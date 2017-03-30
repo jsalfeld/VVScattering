@@ -966,7 +966,7 @@ void sswwjjAnalysis(
       if     (finalVar == 2) {if(typeSel <= 2) typeSel = 0; else typeSel = 1;}
       else if(finalVar == 3) {typeSel = 0;}
 
-     //signQ = 0(opposite sign), +/-2(same sign)
+      // signQ = 0(opposite sign), +/-2(same sign)
       int signQ = -1;
       signQ = (int)(*eventLeptons.pdgId)[idLep[0]]/TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) + (int)(*eventLeptons.pdgId)[idLep[1]]/TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]);
 
