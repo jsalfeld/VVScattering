@@ -48,6 +48,7 @@ bool verbose = true;
 bool isMINIAOD = true;
 int whichSkim1 = 6;
 int whichSkim2 = 7;
+int whichSkim3 = 2;
 double mcPrescale = 1.0;
 bool usePureMC = false;
 int period = 1;
@@ -160,6 +161,8 @@ void sswwjjAnalysis(
   infilenamev.push_back(Form("%stZq_ll_4f_13TeV-amcatnlo-pythia8.root",filesPathMC.Data()));				      infilecatv.push_back(5);
 
   //Wrong sign
+  infilenamev.push_back(Form("%sWWJJToLNuLNu_EWK_noTop_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                     infilecatv.push_back(6);
+
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg.root",filesPathMC.Data()));                                            infilecatv.push_back(6);
   infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV.root",filesPathMC.Data()));                                        infilecatv.push_back(6);
 
@@ -870,7 +873,7 @@ void sswwjjAnalysis(
     for (int i=0; i<int(the_input_tree->GetEntries()/theMCPrescale); ++i) {
       the_SelBit_tree->GetEntry(i);
       if(i%100000==0) printf("event %d out of %d\n",i,(int)the_input_tree->GetEntries());
-      if((selBit_ & 0x1<<whichSkim1) == 0 && (selBit_ & 0x1<<whichSkim2) == 0) continue;
+      if((selBit_ & 0x1<<whichSkim1) == 0 && (selBit_ & 0x1<<whichSkim2) == 0 && (selBit_ & 0x1<<whichSkim3) == 0) continue;
 
       the_input_tree->GetEntry(i);
 
