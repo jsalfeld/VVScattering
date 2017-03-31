@@ -1458,7 +1458,7 @@ void sswwjjAnalysis(
             else if(infilecatv[ifile] != 0 && goodIsTight == idTight.size()-1) fakeSF = -1.0 * fakeSF; // single fake, MC
             else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) fakeSF = -1.0 * fakeSF; // double fake, data
             else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) fakeSF =  1.0 * fakeSF; // single fake, data
-            //if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) {theCategory = 10; typeFakeLepton[1] = 0}
+            //if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) {theCategory = 10;}
 	}
 	else if(infilecatv[ifile] != 0 && infilecatv[ifile] != 7 && (goodIsGenRSLep+goodIsGenWSLep) != isGenLep.size()){ // remove MC dilepton fakes from ll events
           fakeSF = 0.0;
