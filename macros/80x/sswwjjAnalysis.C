@@ -2602,7 +2602,7 @@ void sswwjjAnalysis(
 
     outFileLimits->Close();
 
-    double lumiE = 1.026;
+    double lumiE = 1.025;
     double systLepResE[9] = {1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01};
     double systLepResM[9] = {1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01};
  

@@ -1729,7 +1729,7 @@ void wwAnalysis(
   if(nJetsType != 0){
     theUEPS[0] = 0.995; theUEPS[1] = 0.947;
   }
-  double lumiE = 1.026;
+  double lumiE = 1.025;
   double systLepResE[9] = {1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01};
   double systLepResM[9] = {1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01};
   double syst_btag = 1.02;
