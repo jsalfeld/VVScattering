@@ -37,6 +37,7 @@ const double bTagCuts[2] = {0.8484,0.9535}; // 0.5426/0.8484/0.9535 (check BTagC
 
 void func_ws_sf(double eta, double pt, double theSF[2]);
 double func_ws_eff(double eta1, double eta2, int pdgId1, int pdgId2, TH1D *fhEff);
+double func_ewk_syst(double mjj, double mll, TH2D *fhDSyst);
 
 enum selType                     {SIGSEL=0, TOPSEL,   WZSEL,   DILSEL,   SS2JSEL,   OS2JSEL,   SSZLLSEL, nSelTypes};
 TString selTypeName[nSelTypes]= {"SIGSEL", "TOPSEL", "WZSEL", "DILSEL", "SS2JSEL", "OS2JSEL", "SSZLLSEL"};
@@ -159,6 +160,8 @@ void sswwjjAnalysis(
   infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root",filesPathMC.Data()));			      infilecatv.push_back(5);
   infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8.root",filesPathMC.Data()));	      infilecatv.push_back(5);
   infilenamev.push_back(Form("%stZq_ll_4f_13TeV-amcatnlo-pythia8.root",filesPathMC.Data()));				      infilecatv.push_back(5);
+  infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8.root",filesPathMC.Data()));                 infilecatv.push_back(5);
+  infilenamev.push_back(Form("%sttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8.root",filesPathMC.Data()));     infilecatv.push_back(5);
 
   //Wrong sign
   infilenamev.push_back(Form("%sWWJJToLNuLNu_EWK_noTop_13TeV-madgraph-pythia8.root",filesPathMC.Data()));                     infilecatv.push_back(6);
@@ -314,6 +317,12 @@ void sswwjjAnalysis(
   //TFile *fMuIsoSF = TFile::Open(Form("MitAnalysisRunII/data/80x/MuonIso_Z_RunBCD_prompt80X_7p65.root"));
   //TH2D *fhDMuIsoSF = (TH2D*)(fMuIsoSF->Get("MC_NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/abseta_pt_ratio")); assert(fhDMuIsoSF); fhDMuIsoSF->SetDirectory(0);
   delete fMuIsoSF;
+
+  TFile *fEWKInt_syst = TFile::Open(Form("MitAnalysisRunII/data/80x/phantom_interference_2D.root"));
+  TH2D *fhDEWKInt_syst = (TH2D*)(fEWKInt_syst->Get("interference"));
+  assert(fhDEWKInt_syst);
+  fhDEWKInt_syst->SetDirectory(0);
+  delete fEWKInt_syst;
 
   TString ECMsb  = "13TeV2016";
 
@@ -772,6 +781,9 @@ void sswwjjAnalysis(
   TH1D* histo_Higgs_CMS_PUBoundingUp[nSigModels];  
   TH1D* histo_Higgs_CMS_PUBoundingDown[nSigModels];
 
+  TH1D* histo_EWK_CMS_IntfUp    	      = new TH1D( Form("histo_EWK_IntfUp")  , Form("histo_EWK_IntUp")  , nBinMVA, xbins); histo_EWK_CMS_IntfUp  ->Sumw2();
+  TH1D* histo_EWK_CMS_IntfDown  	      = new TH1D( Form("histo_EWK_IntfDown"), Form("histo_EWK_IntfDown"), nBinMVA, xbins); histo_EWK_CMS_IntfDown->Sumw2();
+
   TH1D* histo_WS_CMS_WSSFUp    	              = new TH1D( Form("histo_WS_CMS_WSSFUp")  , Form("histo_WS_CMS_WSSFUp")  , nBinMVA, xbins); histo_WS_CMS_WSSFUp  ->Sumw2();
   TH1D* histo_WS_CMS_WSSFDown  	              = new TH1D( Form("histo_WS_CMS_WSSFDown"), Form("histo_WS_CMS_WSSFDown"), nBinMVA, xbins); histo_WS_CMS_WSSFDown->Sumw2();
 
@@ -1033,9 +1045,9 @@ void sswwjjAnalysis(
 	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 1.5) nJEta = 2;
 	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 2.0) nJEta = 3;
           else                                                                     nJEta = 4;
-          denBTagging[nJPt][nJEta][jetFlavor]++;
-          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[0]) numBTaggingLOOSE[nJPt][nJEta][jetFlavor]++;
-          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[1]) numBTaggingTIGHT[nJPt][nJEta][jetFlavor]++;
+          denBTagging[nJEta][nJPt][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[0]) numBTaggingLOOSE[nJEta][nJPt][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[1]) numBTaggingTIGHT[nJEta][nJPt][jetFlavor]++;
 
           double bjet_SFLOOSE = 1;
 	  if(jetFlavor == BTagEntry::FLAV_UDSG) bjet_SFLOOSE = btagReaderLLOOSE.eval (jetFlavor,TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),((TLorentzVector*)(*eventJets.p4)[nj])->Pt());
@@ -1051,19 +1063,19 @@ void sswwjjAnalysis(
           if(bjet_SFLOOSEDOWN == 0) bjet_SFLOOSEDOWN = 1;
 
 	  if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[0]){
-	    total_bjet_probLOOSE[0] = total_bjet_probLOOSE[0] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor];
-	    total_bjet_probLOOSE[1] = total_bjet_probLOOSE[1] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSE;
-	    total_bjet_probLOOSEUP[0] = total_bjet_probLOOSEUP[0] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor];
-	    total_bjet_probLOOSEUP[1] = total_bjet_probLOOSEUP[1] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSEUP;
-	    total_bjet_probLOOSEDOWN[0] = total_bjet_probLOOSEDOWN[0] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor];
-	    total_bjet_probLOOSEDOWN[1] = total_bjet_probLOOSEDOWN[1] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSEDOWN;
+	    total_bjet_probLOOSE[0] = total_bjet_probLOOSE[0] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor];
+	    total_bjet_probLOOSE[1] = total_bjet_probLOOSE[1] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSE;
+	    total_bjet_probLOOSEUP[0] = total_bjet_probLOOSEUP[0] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor];
+	    total_bjet_probLOOSEUP[1] = total_bjet_probLOOSEUP[1] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSEUP;
+	    total_bjet_probLOOSEDOWN[0] = total_bjet_probLOOSEDOWN[0] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor];
+	    total_bjet_probLOOSEDOWN[1] = total_bjet_probLOOSEDOWN[1] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSEDOWN;
 	  } else {
-	    total_bjet_probLOOSE[0] = total_bjet_probLOOSE[0] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor]);
-	    total_bjet_probLOOSE[1] = total_bjet_probLOOSE[1] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSE);
-	    total_bjet_probLOOSEUP[0] = total_bjet_probLOOSEUP[0] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor]);
-	    total_bjet_probLOOSEUP[1] = total_bjet_probLOOSEUP[1] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSEUP);
-	    total_bjet_probLOOSEDOWN[0] = total_bjet_probLOOSEDOWN[0] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor]);
-	    total_bjet_probLOOSEDOWN[1] = total_bjet_probLOOSEDOWN[1] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSEDOWN);
+	    total_bjet_probLOOSE[0] = total_bjet_probLOOSE[0] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor]);
+	    total_bjet_probLOOSE[1] = total_bjet_probLOOSE[1] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSE);
+	    total_bjet_probLOOSEUP[0] = total_bjet_probLOOSEUP[0] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor]);
+	    total_bjet_probLOOSEUP[1] = total_bjet_probLOOSEUP[1] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSEUP);
+	    total_bjet_probLOOSEDOWN[0] = total_bjet_probLOOSEDOWN[0] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor]);
+	    total_bjet_probLOOSEDOWN[1] = total_bjet_probLOOSEDOWN[1] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSEDOWN);
 	  }
 
           double bjet_SFTIGHT = 1;
@@ -1080,19 +1092,19 @@ void sswwjjAnalysis(
           if(bjet_SFTIGHTDOWN == 0) bjet_SFTIGHTDOWN = 1;
 
 	  if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[1]){
-	    total_bjet_probTIGHT[0] = total_bjet_probTIGHT[0] * jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor];
-	    total_bjet_probTIGHT[1] = total_bjet_probTIGHT[1] * jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor] * bjet_SFTIGHT;
-	    total_bjet_probTIGHTUP[0] = total_bjet_probTIGHTUP[0] * jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor];
-	    total_bjet_probTIGHTUP[1] = total_bjet_probTIGHTUP[1] * jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor] * bjet_SFTIGHTUP;
-	    total_bjet_probTIGHTDOWN[0] = total_bjet_probTIGHTDOWN[0] * jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor];
-	    total_bjet_probTIGHTDOWN[1] = total_bjet_probTIGHTDOWN[1] * jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor] * bjet_SFTIGHTDOWN;
+	    total_bjet_probTIGHT[0] = total_bjet_probTIGHT[0] * jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor];
+	    total_bjet_probTIGHT[1] = total_bjet_probTIGHT[1] * jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor] * bjet_SFTIGHT;
+	    total_bjet_probTIGHTUP[0] = total_bjet_probTIGHTUP[0] * jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor];
+	    total_bjet_probTIGHTUP[1] = total_bjet_probTIGHTUP[1] * jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor] * bjet_SFTIGHTUP;
+	    total_bjet_probTIGHTDOWN[0] = total_bjet_probTIGHTDOWN[0] * jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor];
+	    total_bjet_probTIGHTDOWN[1] = total_bjet_probTIGHTDOWN[1] * jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor] * bjet_SFTIGHTDOWN;
 	  } else {
-	    total_bjet_probTIGHT[0] = total_bjet_probTIGHT[0] * (1.0 - jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor]);
-	    total_bjet_probTIGHT[1] = total_bjet_probTIGHT[1] * (1.0 - jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor] * bjet_SFTIGHT);
-	    total_bjet_probTIGHTUP[0] = total_bjet_probTIGHTUP[0] * (1.0 - jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor]);
-	    total_bjet_probTIGHTUP[1] = total_bjet_probTIGHTUP[1] * (1.0 - jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor] * bjet_SFTIGHTUP);
-	    total_bjet_probTIGHTDOWN[0] = total_bjet_probTIGHTDOWN[0] * (1.0 - jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor]);
-	    total_bjet_probTIGHTDOWN[1] = total_bjet_probTIGHTDOWN[1] * (1.0 - jetEpsBtagTIGHT[nJPt][nJEta][jetFlavor] * bjet_SFTIGHTDOWN);
+	    total_bjet_probTIGHT[0] = total_bjet_probTIGHT[0] * (1.0 - jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor]);
+	    total_bjet_probTIGHT[1] = total_bjet_probTIGHT[1] * (1.0 - jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor] * bjet_SFTIGHT);
+	    total_bjet_probTIGHTUP[0] = total_bjet_probTIGHTUP[0] * (1.0 - jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor]);
+	    total_bjet_probTIGHTUP[1] = total_bjet_probTIGHTUP[1] * (1.0 - jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor] * bjet_SFTIGHTUP);
+	    total_bjet_probTIGHTDOWN[0] = total_bjet_probTIGHTDOWN[0] * (1.0 - jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor]);
+	    total_bjet_probTIGHTDOWN[1] = total_bjet_probTIGHTDOWN[1] * (1.0 - jetEpsBtagTIGHT[nJEta][nJPt][jetFlavor] * bjet_SFTIGHTDOWN);
 	  }
 
           double sf_jer[2] = {1,1};
@@ -1653,6 +1665,9 @@ void sswwjjAnalysis(
       else if(theCategory == 1){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
            histo_EWK->Fill(MVAVar,totalWeight);
+           double systEWKIntf = func_ewk_syst(dijet.M(),dilep.M(),fhDEWKInt_syst);
+           histo_EWK_CMS_IntfUp  ->Fill(MVAVar,totalWeight*(1.0+systEWKIntf));
+           histo_EWK_CMS_IntfDown->Fill(MVAVar,totalWeight/(1.0+systEWKIntf));
            histo_EWK_CMS_QCDScaleBounding[0]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f2)/maxQCDscale);
            histo_EWK_CMS_QCDScaleBounding[1]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r1f5)/maxQCDscale);
            histo_EWK_CMS_QCDScaleBounding[2]->Fill(MVAVar,totalWeight*TMath::Abs((double)eventMonteCarlo.r2f1)/maxQCDscale);
@@ -2425,6 +2440,9 @@ void sswwjjAnalysis(
       printf("uncertainties WSSF\n");
       for(int i=1; i<=histo_WS ->GetNbinsX(); i++) {if(histo_WS ->GetBinContent(i)>0)printf("%5.1f ",histo_WS_CMS_WSSFUp          ->GetBinContent(i)/histo_WS ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
       for(int i=1; i<=histo_WS ->GetNbinsX(); i++) {if(histo_WS ->GetBinContent(i)>0)printf("%5.1f ",histo_WS_CMS_WSSFDown        ->GetBinContent(i)/histo_WS ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      printf("uncertainties EWK Intf\n");
+      for(int i=1; i<=histo_EWK->GetNbinsX(); i++) {if(histo_EWK->GetBinContent(i)>0)printf("%5.1f ",histo_EWK_CMS_IntfUp         ->GetBinContent(i)/histo_EWK->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      for(int i=1; i<=histo_EWK->GetNbinsX(); i++) {if(histo_EWK->GetBinContent(i)>0)printf("%5.1f ",histo_EWK_CMS_IntfDown       ->GetBinContent(i)/histo_EWK->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
     } 
 
     histo_Data ->Write();
@@ -2599,6 +2617,9 @@ void sswwjjAnalysis(
 
     histo_WS_CMS_WSSFUp         ->Write();
     histo_WS_CMS_WSSFDown       ->Write();
+
+    histo_EWK_CMS_IntfUp        ->Write();
+    histo_EWK_CMS_IntfDown      ->Write();
 
     outFileLimits->Close();
 
@@ -2855,6 +2876,11 @@ void sswwjjAnalysis(
       if(histo_WS ->GetBinContent(nb) > 0 && histo_WS_CMS_WSSFUp         ->GetBinContent(nb) > 0) systWSSFUp  [0] = histo_WS_CMS_WSSFUp	      ->GetBinContent(nb)/histo_WS ->GetBinContent(nb);
       if(histo_WS ->GetBinContent(nb) > 0 && histo_WS_CMS_WSSFDown       ->GetBinContent(nb) > 0) systWSSFDown[0] = histo_WS_CMS_WSSFDown     ->GetBinContent(nb)/histo_WS ->GetBinContent(nb);
 
+      double systIntfUp   = 1.0;
+      double systIntfDown = 1.0;
+      if(histo_EWK->GetBinContent(nb) > 0 && histo_EWK_CMS_IntfUp  ->GetBinContent(nb) > 0) systIntfUp   = histo_EWK_CMS_IntfUp  ->GetBinContent(nb)/histo_EWK->GetBinContent(nb);
+      if(histo_EWK->GetBinContent(nb) > 0 && histo_EWK_CMS_IntfDown->GetBinContent(nb) > 0) systIntfDown = histo_EWK_CMS_IntfDown->GetBinContent(nb)/histo_EWK->GetBinContent(nb);
+
       double lumiEWZ = lumiE;
       if(useWZFromData){
         lumiEWZ = 1.0;
@@ -2938,6 +2964,7 @@ void sswwjjAnalysis(
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-   %7.5f\n",momMName,systLepResM[0],systLepResM[1],systLepResM[2],systLepResM[3],systLepResM[4],systLepResM[5],systLepResM[6],systLepResM[7],systLepResM[8]);
       newcardShape << Form("%s             lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f   -	-   %7.5f\n",momEName,systLepResE[0],systLepResE[1],systLepResE[2],systLepResE[3],systLepResE[4],systLepResE[5],systLepResE[6],systLepResE[7],systLepResE[8]);
       newcardShape << Form("CMS_WZ_l       lnN    -     -   %7.5f   -     -     -    -     -      -     -     -  \n",1.01);
+      newcardShape << Form("EWK_Intf       lnN  %7.5f   -     -     -     -     -     -     -     -     -     -  \n",systIntfUp);		
       newcardShape << Form("QCDscale_EWK   lnN  %7.5f   -     -     -     -     -     -     -     -     -     -  \n",systQCDScale[0]);		
       newcardShape << Form("QCDscale_VV    lnN    -   %7.5f %7.5f %7.5f   -     -     -   %7.5f   -     -     -  \n",systQCDScale[1],systQCDScale[2],systQCDScale[3],systQCDScale[7]);		
       newcardShape << Form("QCDscale_VVV   lnN    -     -     -     -   %7.5f   -     -     -     -     -     -  \n",systQCDScale[4]);		
@@ -2991,7 +3018,7 @@ void sswwjjAnalysis(
     printf("double jetEpsBtagLOOSE[%d] = \n",iF);
     for(int iEta=0; iEta<5; iEta++){
       for(int iPt=0; iPt<5; iPt++){
-        printf("%5.4f",numBTaggingLOOSE[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        printf("%5.4f",numBTaggingLOOSE[iEta][iPt][iF]/denBTagging[iEta][iPt][iF]);
         if(iPt!=4||iEta!=4) printf(",");
         if(iPt==4) printf("\n");
       }
@@ -3001,7 +3028,7 @@ void sswwjjAnalysis(
     printf("double jetEpsBtagTIGHT[%d] = \n",iF);
     for(int iEta=0; iEta<5; iEta++){
       for(int iPt=0; iPt<5; iPt++){
-        printf("%5.4f",numBTaggingTIGHT[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        printf("%5.4f",numBTaggingTIGHT[iEta][iPt][iF]/denBTagging[iEta][iPt][iF]);
         if(iPt!=4||iEta!=4) printf(",");
         if(iPt==4) printf("\n");
       }
@@ -3026,4 +3053,12 @@ double func_ws_eff(double eta1, double eta2, int pdgId1, int pdgId2, TH1D *fhEff
   if(abs(pdgId1) == 11) prob = prob + fhEff->GetBinContent(fhEff->GetXaxis()->FindBin(eta1));
   if(abs(pdgId2) == 11) prob = prob + fhEff->GetBinContent(fhEff->GetXaxis()->FindBin(eta2));
   return prob;
+}
+
+double func_ewk_syst(double mjj, double mll, TH2D *fhDSyst){
+ int binX = fhDSyst->GetXaxis()->FindFixBin(TMath::Min(mjj,1999.999));
+ int binY = fhDSyst->GetYaxis()->FindFixBin(TMath::Min(mll,599.999));
+ double result = fhDSyst->GetBinContent(binX, binY);
+ if(result == 0) printf("ResultEWK == 0! %f %d %d - %f %f\n",result,binX,binY,mjj,mll);
+ return result;
 }

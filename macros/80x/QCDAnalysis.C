@@ -37,10 +37,10 @@ void QCDAnalysis(
 
   Double_t prescale[6];
 
-  double denFRDA[6][5] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
-  double numFRDA[6][5] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
-  double denFRBG[6][5] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
-  double numFRBG[6][5] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
+  double denFRDA[5][6] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
+  double numFRDA[5][6] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
+  double denFRBG[5][6] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
+  double numFRBG[5][6] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
 
   double denSFDA[6]    = {0,0,0,0,0,0};
   double denSFBG[6]    = {0,0,0,0,0,0};
@@ -60,8 +60,8 @@ void QCDAnalysis(
   if     (period==0){
   }
   else if(period==1){
-  if     (typeSel == 11) {prescale[0]=0.00232;prescale[1]=0.00259;prescale[2]=0.00248;prescale[3]=0.00253;prescale[4]=0.00254;prescale[5]=0.00257;}
-  else if(typeSel == 13) {prescale[0]=0.00570;prescale[1]=0.00642;prescale[2]=0.00678;prescale[3]=0.00659;prescale[4]=0.00633;prescale[5]=0.00658;}
+  if     (typeSel == 11) {prescale[0]=0.00244;prescale[1]=0.00275;prescale[2]=0.00262;prescale[3]=0.00257;prescale[4]=0.00260;prescale[5]=0.00262;}
+  else if(typeSel == 13) {prescale[0]=0.00570;prescale[1]=0.00643;prescale[2]=0.00678;prescale[3]=0.00659;prescale[4]=0.00633;prescale[5]=0.00658;}
 
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
 
@@ -492,12 +492,12 @@ void QCDAnalysis(
 
       if(passSel[1] == kTRUE) {
 	if(infilecatv[ifile] == 0) {
-                              denFRDA[iPt][iEta] = denFRDA[iPt][iEta] + totalWeight;
-          if(idTight[0] == 1) numFRDA[iPt][iEta] = numFRDA[iPt][iEta] + totalWeight;
+                              denFRDA[iEta][iPt] = denFRDA[iEta][iPt] + totalWeight;
+          if(idTight[0] == 1) numFRDA[iEta][iPt] = numFRDA[iEta][iPt] + totalWeight;
 	}
 	else {
-                              denFRBG[iPt][iEta] = denFRBG[iPt][iEta] + totalWeight;
-          if(idTight[0] == 1) numFRBG[iPt][iEta] = numFRBG[iPt][iEta] + totalWeight;
+                              denFRBG[iEta][iPt] = denFRBG[iEta][iPt] + totalWeight;
+          if(idTight[0] == 1) numFRBG[iEta][iPt] = numFRBG[iEta][iPt] + totalWeight;
 	}
       }
 
@@ -550,20 +550,20 @@ void QCDAnalysis(
   double sumTot[2] = {0.,0.};
   for(int iEta=0; iEta<5; iEta++){
     for(int iPt=0; iPt<6; iPt++){
-      sumTot[0] = sumTot[0] + denFRDA[iPt][iEta];
-      sumTot[1] = sumTot[1] + denFRBG[iPt][iEta];
-      printf("(%d,%d): (%6.1f-%6.1f)/(%6.1f-%6.1f)=%4.3f | ",iPt,iEta,numFRDA[iPt][iEta],numFRBG[iPt][iEta] , denFRDA[iPt][iEta],denFRBG[iPt][iEta],
-                                                                     (numFRDA[iPt][iEta]-numFRBG[iPt][iEta])/(denFRDA[iPt][iEta]-denFRBG[iPt][iEta]));
+      sumTot[0] = sumTot[0] + denFRDA[iEta][iPt];
+      sumTot[1] = sumTot[1] + denFRBG[iEta][iPt];
+      printf("(%d,%d): (%6.1f-%6.1f)/(%6.1f-%6.1f)=%4.3f | ",iPt,iEta,numFRDA[iEta][iPt],numFRBG[iEta][iPt] , denFRDA[iEta][iPt],denFRBG[iEta][iPt],
+                                                                     (numFRDA[iEta][iPt]-numFRBG[iEta][iPt])/(denFRDA[iEta][iPt]-denFRBG[iEta][iPt]));
       if(iPt==5) printf("\n");
     }
   }
   printf("sumTot(da/bg) = %f / %f = %f\n",sumTot[0],sumTot[1],sumTot[0]/sumTot[1]);
 
-  if(typeSel == 11) printf("double fake_rate_e[%d][%d] = {\n",6,5);
-  else              printf("double fake_rate_m[%d][%d] = {\n",6,5);
+  if(typeSel == 11) printf("double fake_rate_e[%d][%d] = {\n",5,6);
+  else              printf("double fake_rate_m[%d][%d] = {\n",5,6);
   for(int iEta=0; iEta<5; iEta++){
     for(int iPt=0; iPt<6; iPt++){
-      printf("%4.3f",TMath::Abs((numFRDA[iPt][iEta]-numFRBG[iPt][iEta])/(denFRDA[iPt][iEta]-denFRBG[iPt][iEta])));
+      printf("%4.3f",TMath::Abs((numFRDA[iEta][iPt]-numFRBG[iEta][iPt])/(denFRDA[iEta][iPt]-denFRBG[iEta][iPt])));
       if(iPt!=5||iEta!=4) printf(",");
       if(iPt==5) printf("\n");
     }

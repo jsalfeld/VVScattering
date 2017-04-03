@@ -835,8 +835,8 @@ void wwAnalysis(
 	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 1.5) nJEta = 2;
 	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 2.0) nJEta = 3;
           else                                                                     nJEta = 4;
-          denBTagging[nJPt][nJEta][jetFlavor]++;
-          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[0]) numBTaggingLOOSE[nJPt][nJEta][jetFlavor]++;
+          denBTagging[nJEta][nJPt][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[0]) numBTaggingLOOSE[nJEta][nJPt][jetFlavor]++;
 
           double bjet_SFLOOSE = 1;
 	  if(jetFlavor == BTagEntry::FLAV_UDSG) bjet_SFLOOSE = btagReaderLLOOSE.eval (jetFlavor,TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),TMath::Max(((TLorentzVector*)(*eventJets.p4)[nj])->Pt(),20.0));
@@ -852,19 +852,19 @@ void wwAnalysis(
           if(bjet_SFLOOSEDOWN == 0) bjet_SFLOOSEDOWN = 1;
 
 	  if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[0]){
-	    total_bjet_probLOOSE[0] = total_bjet_probLOOSE[0] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor];
-	    total_bjet_probLOOSE[1] = total_bjet_probLOOSE[1] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSE;
-	    total_bjet_probLOOSEUP[0] = total_bjet_probLOOSEUP[0] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor];
-	    total_bjet_probLOOSEUP[1] = total_bjet_probLOOSEUP[1] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSEUP;
-	    total_bjet_probLOOSEDOWN[0] = total_bjet_probLOOSEDOWN[0] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor];
-	    total_bjet_probLOOSEDOWN[1] = total_bjet_probLOOSEDOWN[1] * jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSEDOWN;
+	    total_bjet_probLOOSE[0] = total_bjet_probLOOSE[0] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor];
+	    total_bjet_probLOOSE[1] = total_bjet_probLOOSE[1] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSE;
+	    total_bjet_probLOOSEUP[0] = total_bjet_probLOOSEUP[0] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor];
+	    total_bjet_probLOOSEUP[1] = total_bjet_probLOOSEUP[1] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSEUP;
+	    total_bjet_probLOOSEDOWN[0] = total_bjet_probLOOSEDOWN[0] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor];
+	    total_bjet_probLOOSEDOWN[1] = total_bjet_probLOOSEDOWN[1] * jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSEDOWN;
 	  } else {
-	    total_bjet_probLOOSE[0] = total_bjet_probLOOSE[0] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor]);
-	    total_bjet_probLOOSE[1] = total_bjet_probLOOSE[1] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSE);
-	    total_bjet_probLOOSEUP[0] = total_bjet_probLOOSEUP[0] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor]);
-	    total_bjet_probLOOSEUP[1] = total_bjet_probLOOSEUP[1] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSEUP);
-	    total_bjet_probLOOSEDOWN[0] = total_bjet_probLOOSEDOWN[0] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor]);
-	    total_bjet_probLOOSEDOWN[1] = total_bjet_probLOOSEDOWN[1] * (1.0 - jetEpsBtagLOOSE[nJPt][nJEta][jetFlavor] * bjet_SFLOOSEDOWN);
+	    total_bjet_probLOOSE[0] = total_bjet_probLOOSE[0] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor]);
+	    total_bjet_probLOOSE[1] = total_bjet_probLOOSE[1] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSE);
+	    total_bjet_probLOOSEUP[0] = total_bjet_probLOOSEUP[0] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor]);
+	    total_bjet_probLOOSEUP[1] = total_bjet_probLOOSEUP[1] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSEUP);
+	    total_bjet_probLOOSEDOWN[0] = total_bjet_probLOOSEDOWN[0] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor]);
+	    total_bjet_probLOOSEDOWN[1] = total_bjet_probLOOSEDOWN[1] * (1.0 - jetEpsBtagLOOSE[nJEta][nJPt][jetFlavor] * bjet_SFLOOSEDOWN);
 	  }
 
         }
@@ -2049,7 +2049,7 @@ void wwAnalysis(
     printf("double jetEpsBtagLOOSE[%d] = \n",iF);
     for(int iEta=0; iEta<5; iEta++){
       for(int iPt=0; iPt<5; iPt++){
-        printf("%5.4f",numBTaggingLOOSE[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        printf("%5.4f",numBTaggingLOOSE[iEta][iPt][iF]/denBTagging[iEta][iPt][iF]);
         if(iPt!=4||iEta!=4) printf(",");
         if(iPt==4) printf("\n");
       }

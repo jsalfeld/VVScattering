@@ -2,59 +2,49 @@ double effSF_m_25_medium[10] = {0.836574,0.829962,0.877106,0.892587,0.935558,0.9
 double effSF_e_25_medium[10] = {0.739427,0.690631,0.815957,0.822430,0.856509,0.859530,0.902980,0.923910,0.976901,0.942210};
 double effSF_e_25_tight[10]  = {0.742330,0.661762,0.812364,0.820798,0.851298,0.846768,0.888956,0.915187,0.965834,0.927740};
 
-double fake_rate_m_25_medium[6][5] = {
+double fake_rate_m_25_medium[5][6] = {
 0.305,0.269,0.260,0.242,0.217,0.214,
 0.320,0.283,0.269,0.257,0.239,0.237,
 0.363,0.332,0.319,0.298,0.284,0.261,
 0.408,0.386,0.381,0.363,0.344,0.319,
 0.432,0.421,0.418,0.409,0.386,0.346
 };
-double fake_rate_m_25_verytight[6][5] = {
-0.199,0.167,0.159,0.142,0.121,0.122,
-0.208,0.178,0.167,0.155,0.137,0.143,
-0.246,0.218,0.205,0.182,0.169,0.147,
-0.289,0.265,0.259,0.243,0.221,0.201,
-0.313,0.300,0.295,0.280,0.250,0.190
+double fake_rate_m_25_verytight[5][6] = {
+0.199,0.167,0.159,0.142,0.122,0.125,
+0.209,0.178,0.167,0.156,0.138,0.146,
+0.246,0.218,0.205,0.183,0.170,0.150,
+0.289,0.265,0.260,0.243,0.222,0.204,
+0.313,0.300,0.295,0.280,0.252,0.195
 };
-double fake_rate_e_25_medium[6][5] = {
+double fake_rate_e_25_medium[5][6] = {
 0.531,0.525,0.515,0.501,0.501,0.586,
 0.555,0.550,0.512,0.498,0.505,0.582,
 0.589,0.580,0.541,0.535,0.557,0.602,
 0.595,0.570,0.565,0.554,0.568,0.556,
 0.553,0.542,0.536,0.521,0.514,0.501
 };
-double fake_rate_e_25_tight[6][5] = {
-0.394,0.392,0.370,0.328,0.329,0.376,
-0.378,0.424,0.367,0.346,0.330,0.387,
-0.417,0.450,0.396,0.381,0.396,0.430,
-0.437,0.388,0.376,0.351,0.354,0.348,
-0.338,0.330,0.313,0.300,0.302,0.301
+double fake_rate_e_25_tight[5][6] = {
+0.390,0.390,0.368,0.326,0.324,0.364,
+0.372,0.423,0.366,0.345,0.327,0.378,
+0.414,0.449,0.395,0.380,0.394,0.426,
+0.437,0.388,0.376,0.351,0.353,0.346,
+0.337,0.329,0.313,0.300,0.301,0.300
 };
-double fake_rate_e_25_verytight[6][5] = {
-//0.389,0.385,0.363,0.313,0.298,0.290,
-//0.371,0.416,0.356,0.322,0.298,0.301,
-//0.399,0.430,0.369,0.338,0.332,0.310,
-//0.424,0.363,0.338,0.302,0.281,0.239,
-//0.278,0.243,0.208,0.175,0.154,0.134
-//0.360,0.354,0.331,0.277,0.258,0.245,
-//0.317,0.378,0.314,0.279,0.263,0.243,
-//0.352,0.384,0.318,0.290,0.262,0.236,
-//0.366,0.298,0.264,0.230,0.198,0.162,
-//0.221,0.176,0.150,0.117,0.100,0.084
+double fake_rate_e_25_verytight[5][6] = {
 0.251,0.313,0.306,0.268,0.258,0.243,
 0.236,0.331,0.290,0.269,0.259,0.240,
 0.255,0.334,0.293,0.279,0.257,0.234,
 0.265,0.250,0.241,0.217,0.194,0.159,
 0.166,0.152,0.136,0.110,0.096,0.083
 };
-double fake_rate_e_25_medium_mva[6][5] = {
+double fake_rate_e_25_medium_mva[5][6] = {
 0.705,0.680,0.536,0.474,0.406,0.368,
 0.515,0.632,0.492,0.430,0.410,0.387,
 0.321,0.463,0.397,0.350,0.351,0.316,
 0.202,0.322,0.305,0.280,0.255,0.201,
 0.267,0.244,0.201,0.166,0.132,0.103
 };
-double fake_rate_e_25_tight_mva[6][5] = {
+double fake_rate_e_25_tight_mva[5][6] = {
 0.427,0.484,0.376,0.332,0.280,0.223,
 0.300,0.455,0.355,0.296,0.285,0.250,
 0.170,0.332,0.281,0.239,0.228,0.206,
@@ -379,7 +369,13 @@ TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF, 
     effVeryTight = fhDVeryTightSF->GetBinContent(binXT);
   }
   else if(TMath::Abs(nsel) == 13 && type== "verytight") {
-    effVeryTight = 0.994;
+    if     (pt <  30) effVeryTight = 0.992754;
+    else if(pt <  40) effVeryTight = 0.993588;
+    else if(pt <  50) effVeryTight = 0.994453;
+    else if(pt <  60) effVeryTight = 0.995199;
+    else if(pt <  80) effVeryTight = 0.996272;
+    else if(pt < 100) effVeryTight = 0.996282;
+    else              effVeryTight = 0.996406;
   }
   //printf("eff: %f %f %f - %f %f - %d %d %d %d\n",result,trkSF,isoSF,pt,eta,binXA,binYA,binXB,binYB);
 
@@ -438,13 +434,13 @@ double fakeRateFactor(double pt, double eta, int nsel, int period, TString type)
   else if(TMath::Abs(eta) < 2.0) iEta = 3;
   else  			 iEta = 4;
 
-  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default" || type== "medium_mva" || type== "default_mva")) return addFactor*fake_rate_m_25_medium    [iPt][iEta]/(1.0-fake_rate_m_25_medium    [iPt][iEta]);
-  else if(TMath::Abs(nsel) == 13 && period == 1 &&  type== "verytight")                                                                  return addFactor*fake_rate_m_25_verytight [iPt][iEta]/(1.0-fake_rate_m_25_verytight [iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")			                                                 return addFactor*fake_rate_e_25_medium    [iPt][iEta]/(1.0-fake_rate_e_25_medium    [iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default")			                                                 return addFactor*fake_rate_e_25_tight     [iPt][iEta]/(1.0-fake_rate_e_25_tight     [iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "verytight")			                                                 return addFactor*fake_rate_e_25_verytight [iPt][iEta]/(1.0-fake_rate_e_25_verytight [iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium_mva")		                                                 return addFactor*fake_rate_e_25_medium_mva[iPt][iEta]/(1.0-fake_rate_e_25_medium_mva[iPt][iEta]);
-  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default_mva")		                                                 return addFactor*fake_rate_e_25_tight_mva [iPt][iEta]/(1.0-fake_rate_e_25_tight_mva [iPt][iEta]);
+  if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default" || type== "medium_mva" || type== "default_mva")) return addFactor*fake_rate_m_25_medium    [iEta][iPt]/(1.0-fake_rate_m_25_medium    [iEta][iPt]);
+  else if(TMath::Abs(nsel) == 13 && period == 1 &&  type== "verytight")                                                                  return addFactor*fake_rate_m_25_verytight [iEta][iPt]/(1.0-fake_rate_m_25_verytight [iEta][iPt]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")			                                                 return addFactor*fake_rate_e_25_medium    [iEta][iPt]/(1.0-fake_rate_e_25_medium    [iEta][iPt]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default")			                                                 return addFactor*fake_rate_e_25_tight     [iEta][iPt]/(1.0-fake_rate_e_25_tight     [iEta][iPt]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "verytight")			                                                 return addFactor*fake_rate_e_25_verytight [iEta][iPt]/(1.0-fake_rate_e_25_verytight [iEta][iPt]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium_mva")		                                                 return addFactor*fake_rate_e_25_medium_mva[iEta][iPt]/(1.0-fake_rate_e_25_medium_mva[iEta][iPt]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default_mva")		                                                 return addFactor*fake_rate_e_25_tight_mva [iEta][iPt]/(1.0-fake_rate_e_25_tight_mva [iEta][iPt]);
   else    printf("PROBLEM WITH FAKES\n");
 
   assert(0);

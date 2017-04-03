@@ -602,10 +602,10 @@ void baseAnalysis(
 	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 1.5) nJEta = 2;
 	  else if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) < 2.0) nJEta = 3;
           else                                                                     nJEta = 4;
-          denBTagging[nJPt][nJEta][jetFlavor]++;
-          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[0]) numBTaggingLOOSE[nJPt][nJEta][jetFlavor]++;
-          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[1]) numBTaggingMEDIUM[nJPt][nJEta][jetFlavor]++;
-          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[2]) numBTaggingTIGHT[nJPt][nJEta][jetFlavor]++;
+          denBTagging[nJEta][nJPt][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[0]) numBTaggingLOOSE[nJEta][nJPt][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[1]) numBTaggingMEDIUM[nJEta][nJPt][jetFlavor]++;
+          if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[2]) numBTaggingTIGHT[nJEta][nJPt][jetFlavor]++;
 
           double bjet_SF = 1;
 	  if(jetFlavor == BTagEntry::FLAV_UDSG) bjet_SF = btagReaderL.eval (jetFlavor,TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()),((TLorentzVector*)(*eventJets.p4)[nj])->Pt());
@@ -613,11 +613,11 @@ void baseAnalysis(
           if(bjet_SF == 0) bjet_SF = 1;
 
 	  if((float)(*eventJets.bDiscr)[nj] >= bTagCuts[1]){
-	    total_bjet_prob[0] = total_bjet_prob[0] * jetEpsBtag[nJPt][nJEta][jetFlavor];
-	    total_bjet_prob[1] = total_bjet_prob[1] * jetEpsBtag[nJPt][nJEta][jetFlavor] * bjet_SF;
+	    total_bjet_prob[0] = total_bjet_prob[0] * jetEpsBtag[nJEta][nJPt][jetFlavor];
+	    total_bjet_prob[1] = total_bjet_prob[1] * jetEpsBtag[nJEta][nJPt][jetFlavor] * bjet_SF;
 	  } else {
-	    total_bjet_prob[0] = total_bjet_prob[0] * (1.0 - jetEpsBtag[nJPt][nJEta][jetFlavor]);
-	    total_bjet_prob[1] = total_bjet_prob[1] * (1.0 - jetEpsBtag[nJPt][nJEta][jetFlavor] * bjet_SF);
+	    total_bjet_prob[0] = total_bjet_prob[0] * (1.0 - jetEpsBtag[nJEta][nJPt][jetFlavor]);
+	    total_bjet_prob[1] = total_bjet_prob[1] * (1.0 - jetEpsBtag[nJEta][nJPt][jetFlavor] * bjet_SF);
 	  }
 	  if(fileType != -1 && TMath::Abs(dilep.M()-91.1876) <= 15.0 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 25 && 
 	                                                                ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 25){
@@ -1173,7 +1173,7 @@ void baseAnalysis(
     printf("double jetEpsBtagLOOSE[%d] = \n",iF);
     for(int iEta=0; iEta<5; iEta++){
       for(int iPt=0; iPt<5; iPt++){
-        printf("%5.4f",numBTaggingLOOSE[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        printf("%5.4f",numBTaggingLOOSE[iEta][iPt][iF]/denBTagging[iEta][iPt][iF]);
         if(iPt!=4||iEta!=4) printf(",");
         if(iPt==4) printf("\n");
       }
@@ -1183,7 +1183,7 @@ void baseAnalysis(
     printf("double jetEpsBtagMEDIUM[%d] = \n",iF);
     for(int iEta=0; iEta<5; iEta++){
       for(int iPt=0; iPt<5; iPt++){
-        printf("%5.4f",numBTaggingMEDIUM[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        printf("%5.4f",numBTaggingMEDIUM[iEta][iPt][iF]/denBTagging[iEta][iPt][iF]);
         if(iPt!=4||iEta!=4) printf(",");
         if(iPt==4) printf("\n");
       }
@@ -1193,7 +1193,7 @@ void baseAnalysis(
     printf("double jetEpsBtagTIGHT[%d] = \n",iF);
     for(int iEta=0; iEta<5; iEta++){
       for(int iPt=0; iPt<5; iPt++){
-        printf("%5.4f",numBTaggingTIGHT[iPt][iEta][iF]/denBTagging[iPt][iEta][iF]);
+        printf("%5.4f",numBTaggingTIGHT[iEta][iPt][iF]/denBTagging[iEta][iPt][iF]);
         if(iPt!=4||iEta!=4) printf(",");
         if(iPt==4) printf("\n");
       }
