@@ -39,8 +39,8 @@ void func_ws_sf(double eta, double pt, double theSF[2]);
 double func_ws_eff(double eta1, double eta2, int pdgId1, int pdgId2, TH1D *fhEff);
 double func_ewk_syst(double mjj, double mll, TH2D *fhDSyst);
 
-enum selType                     {SIGSEL=0, TOPSEL,   WZSEL,   DILSEL,   SS2JSEL,   OS2JSEL,   SSZLLSEL, nSelTypes};
-TString selTypeName[nSelTypes]= {"SIGSEL", "TOPSEL", "WZSEL", "DILSEL", "SS2JSEL", "OS2JSEL", "SSZLLSEL"};
+enum selType                     {SIGSEL=0, TOPSEL,   WZSEL,   DILSEL,   SS2JSEL,   OS2JSEL,   SSZLLSEL,   TIGHTSEL,   WHSEL, nSelTypes};
+TString selTypeName[nSelTypes]= {"SIGSEL", "TOPSEL", "WZSEL", "DILSEL", "SS2JSEL", "OS2JSEL", "SSZLLSEL", "TIGHTSEL", "WHSEL"};
 
 enum systType                     {JESUP=0, JESDOWN,  JERUP,  JERDOWN,  METUP,  METDOWN, nSystTypes};
 TString systTypeName[nSystTypes]= {"JESUP","JESDOWN","JERUP","JERDOWN","METUP","METDOWN"};
@@ -897,15 +897,17 @@ void sswwjjAnalysis(
       Bool_t passFilterCR1[numberCuts] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       Bool_t passFilterCR2[numberCuts] = {kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE,kFALSE};
       Bool_t passPresel = kFALSE;
-      Bool_t passSignalRegion = kFALSE;
+      Bool_t passSignalRegion          = kFALSE;
       Bool_t passControlRegionTop      = kFALSE;
-      Bool_t passControlRegionWZ       = kFALSE;
       Bool_t passControlRegionDi       = kFALSE;
       Bool_t passControlRegionSS2j     = kFALSE;
       Bool_t passControlRegionOS2j     = kFALSE;
       Bool_t passControlRegionZLL      = kFALSE;
       Bool_t passLooseControlRegionTop = kFALSE;
       Bool_t passLooseControlRegionWZ  = kFALSE;
+      Bool_t passTightSignalRegion     = kFALSE;
+      Bool_t passControlRegionWZ       = kFALSE;
+      Bool_t passControlRegionWH       = kFALSE;
       Bool_t passMjjLoose = kFALSE;
       Bool_t passOS = kFALSE;
 
@@ -1207,22 +1209,37 @@ void sswwjjAnalysis(
 	passFilterCR1[7] = kTRUE;
       }
 
+      double minMassll = 999.0;
       double minMassZ = 999.0;
+      int type3l = 0;
       if(idTight.size() == 3){
+        int tagZ[3] = {-1,-1,-1};
 	for(unsigned nl0=0; nl0<idLep.size()-1; nl0++){
           for(unsigned nl1=nl0+1; nl1<idLep.size(); nl1++){
 
-	    if((int)(*eventLeptons.pdgId)[idLep[nl0]] + (int)(*eventLeptons.pdgId)[idLep[nl1]] != 0) continue; // OSSF pairs only
+            if((int)(*eventLeptons.pdgId)[idLep[nl0]] * (int)(*eventLeptons.pdgId)[idLep[nl1]] > 0) continue; // OS pairs only
             TLorentzVector dilepAux(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[nl0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[nl1])) ) ));
 
 	    if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl1]]) &&
 	       TMath::Abs(dilepAux.M()-91.1876) < TMath::Abs(minMassZ-91.1876)) {
-	       minMassZ = dilepAux.M();
+	       minMassZ = dilepAux.M();tagZ[0]=nl0;tagZ[1]=nl1;
+               if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl0]]) == 13) type3l = 0;
+               else                                                         type3l = 1;
 	    }
+            if(minMassll > dilepAux.M()) minMassll = dilepAux.M();
           }
 	}
+        for(unsigned nl0=0; nl0<idLep.size(); nl0++){
+          if((int)nl0==tagZ[0]||(int)nl0==tagZ[1]) continue;
+          tagZ[2] = nl0;
+          break;
+        }
+        if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[tagZ[2]]]) == 13) type3l += 0;
+        else                                                             type3l += 2;
+        if(tagZ[0] == -1) type3l = 4;
+        if(TMath::Abs(minMassZ-91.1876) < 15.0 && minMassll > 4.0) passFilterCR2[7] = kTRUE;
+        typeSel = type3l;
       }
-      if(TMath::Abs(minMassZ-91.1876) < 15.0) passFilterCR2[7] = kTRUE;
 
       //access met info
       TLorentzVector theMET;
@@ -1275,13 +1292,15 @@ void sswwjjAnalysis(
       //                           #lep, sign, flavor  lep pT cut          #jets with pT>30    btag-veto           tau veto            mll cut             loose Z veto        Z veto              met cut             mjj cut             deltaetajj cut       zeppenfeld cut
       passSignalRegion           = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] && passFilterSig[9] && passFilterSig[10] && passFilterSig[11];
       passControlRegionTop       = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2] && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8] && passFilterCR1[9] && passFilterCR1[10] && passFilterCR1[11];
-      passControlRegionWZ        = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8] && passFilterCR2[9] && passFilterCR2[10] && passFilterCR2[11];
       passControlRegionDi        = passOS           && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] && passFilterSig[9] && passFilterSig[10] && passFilterSig[11];
       passControlRegionSS2j      = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8] && passMjjLoose     &&                      TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.999;
       passControlRegionOS2j      = passOS           && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] &&                     passFilterSig[8] && passMjjLoose     &&                      TMath::Max(theLeptonZ[0],theLeptonZ[1]) < 0.999;
       passControlRegionZLL       = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] &&                     passFilterSig[6] &&!passFilterSig[7] && passFilterSig[8] && passMjjLoose;
       passLooseControlRegionTop  = passFilterCR1[0] && passFilterCR1[1] && passFilterCR1[2] && passFilterCR1[3] && passFilterCR1[4] && passFilterCR1[5] && passFilterCR1[6] && passFilterCR1[7] && passFilterCR1[8]                     && passFilterCR1[10];
       passLooseControlRegionWZ   = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8]                     && passFilterCR2[10];
+      passTightSignalRegion      = passFilterSig[0] && passFilterSig[1] && passFilterSig[2] && passFilterSig[3] && passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] && dijet.M() > 1500 && passFilterSig[10] && passFilterSig[11];
+      passControlRegionWZ        = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] && passFilterCR2[7] && passFilterCR2[8] && passFilterCR2[9] && passFilterCR2[10] && passFilterCR2[11];
+      passControlRegionWH        = passFilterCR2[0] && passFilterCR2[1] && passFilterCR2[2] && passFilterCR2[3] && passFilterCR2[4] && passFilterCR2[5] && passFilterCR2[6] &&!passFilterCR2[7] && passFilterCR2[8] && passFilterCR2[9] && passFilterCR2[10] && passFilterCR2[11] && minMassll > 4.0;
 
       bool passNMinusOne[8] = {
         passFilterSig[0] && passFilterSig[1] && passFilterSig[2] &&                     passFilterSig[4] && passFilterSig[5] && passFilterSig[6] && passFilterSig[7] && passFilterSig[8] && passFilterSig[9] && passFilterSig[10] && passFilterSig[11], // btag veto
@@ -1300,7 +1319,7 @@ void sswwjjAnalysis(
 	if(totalSel == kTRUE) sumEvol[typeSel]++;
       }
 
-      bool passAllCuts[nSelTypes] = {passSignalRegion,passControlRegionTop,passControlRegionWZ,passControlRegionDi,passControlRegionSS2j,passControlRegionOS2j,passControlRegionZLL};                 
+      bool passAllCuts[nSelTypes] = {passSignalRegion,passControlRegionTop,passControlRegionWZ,passControlRegionDi,passControlRegionSS2j,passControlRegionOS2j,passControlRegionZLL,passTightSignalRegion,passControlRegionWH};                 
 
       TLorentzVector dijetjesUp,dijetjesDown;
       double deltaEtaJJjesUp = 0; double deltaEtaJJjesDown = 0;
@@ -1470,7 +1489,7 @@ void sswwjjAnalysis(
             else if(infilecatv[ifile] != 0 && goodIsTight == idTight.size()-1) fakeSF = -1.0 * fakeSF; // single fake, MC
             else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) fakeSF = -1.0 * fakeSF; // double fake, data
             else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) fakeSF =  1.0 * fakeSF; // single fake, data
-            //if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) {theCategory = 10;}
+            if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) {theCategory = 10;}
 	}
 	else if(infilecatv[ifile] != 0 && infilecatv[ifile] != 7 && (goodIsGenRSLep+goodIsGenWSLep) != isGenLep.size()){ // remove MC dilepton fakes from ll events
           fakeSF = 0.0;
@@ -2007,7 +2026,7 @@ void sswwjjAnalysis(
         if(passSystCuts[METUP])  histo_DPS_CMS_MVAMETBoundingUp  ->Fill(MVAVar,totalWeight);
         if(passSystCuts[METDOWN])histo_DPS_CMS_MVAMETBoundingDown->Fill(MVAVar,totalWeight);
       }
-      else if(theCategory == 9){
+      else if(theCategory == 9 || theCategory == 10){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
           if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) histo_Fake_CMS_SystE->Fill(MVAVar,totalWeight);
 	  else  							 histo_Fake_CMS_SystM->Fill(MVAVar,totalWeight);
@@ -2017,7 +2036,7 @@ void sswwjjAnalysis(
           //}
         }
       }
-      else if(theCategory == 10){
+      else if(theCategory == 10){ // This won't be used at this point
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
            histo_FakeE->Fill(MVAVar,totalWeight);
         }

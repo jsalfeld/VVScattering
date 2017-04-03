@@ -10,11 +10,16 @@ double fake_rate_m_25_medium[5][6] = {
 0.432,0.421,0.418,0.409,0.386,0.346
 };
 double fake_rate_m_25_verytight[5][6] = {
-0.199,0.167,0.159,0.142,0.122,0.125,
-0.209,0.178,0.167,0.156,0.138,0.146,
-0.246,0.218,0.205,0.183,0.170,0.150,
-0.289,0.265,0.260,0.243,0.222,0.204,
-0.313,0.300,0.295,0.280,0.252,0.195
+//0.199,0.167,0.159,0.142,0.122,0.125,
+//0.209,0.178,0.167,0.156,0.138,0.146,
+//0.246,0.218,0.205,0.183,0.170,0.150,
+//0.289,0.265,0.260,0.243,0.222,0.204,
+//0.313,0.300,0.295,0.280,0.252,0.195
+0.305,0.269,0.260,0.242,0.217,0.214,
+0.320,0.283,0.269,0.257,0.239,0.237,
+0.363,0.332,0.319,0.298,0.284,0.261,
+0.408,0.386,0.381,0.363,0.344,0.319,
+0.432,0.421,0.418,0.409,0.386,0.346
 };
 double fake_rate_e_25_medium[5][6] = {
 0.531,0.525,0.515,0.501,0.501,0.586,
@@ -226,7 +231,7 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
   bool idCut = false;
   if     (TMath::Abs(pdgId) == 13) {
     if     (type=="loose" || type=="veto") isoCut = 0.25;
-    else if(type=="verytight")             isoCut = 0.10;
+    else if(type=="verytight")             isoCut = 0.15; // 0.10
     else                                   isoCut = 0.15;
     if     (type == "medium" || type == "default" || type == "verytight" || type == "default_mva" || type == "medium_mva") idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP;
     else if(type == "loose") idCut= (selBits & BareLeptons::LepLoose) == BareLeptons::LepLoose;
@@ -368,15 +373,15 @@ TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF, 
     Int_t binXT = fhDVeryTightSF->GetXaxis()->FindFixBin(eta);
     effVeryTight = fhDVeryTightSF->GetBinContent(binXT);
   }
-  else if(TMath::Abs(nsel) == 13 && type== "verytight") {
-    if     (pt <  30) effVeryTight = 0.992754;
-    else if(pt <  40) effVeryTight = 0.993588;
-    else if(pt <  50) effVeryTight = 0.994453;
-    else if(pt <  60) effVeryTight = 0.995199;
-    else if(pt <  80) effVeryTight = 0.996272;
-    else if(pt < 100) effVeryTight = 0.996282;
-    else              effVeryTight = 0.996406;
-  }
+  //else if(TMath::Abs(nsel) == 13 && type== "verytight") {
+  //  if     (pt <  30) effVeryTight = 0.992754;
+  //  else if(pt <  40) effVeryTight = 0.993588;
+  //  else if(pt <  50) effVeryTight = 0.994453;
+  //  else if(pt <  60) effVeryTight = 0.995199;
+  //  else if(pt <  80) effVeryTight = 0.996272;
+  //  else if(pt < 100) effVeryTight = 0.996282;
+  //  else              effVeryTight = 0.996406;
+  //}
   //printf("eff: %f %f %f - %f %f - %d %d %d %d\n",result,trkSF,isoSF,pt,eta,binXA,binYA,binXB,binYB);
 
   return result*trkSF*isoSF*effVeryTight;
