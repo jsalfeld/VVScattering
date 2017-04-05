@@ -273,10 +273,10 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
 void InitializeJetIdCuts(Float_t fMVACut[4][4])
 {
   float cutValues[4][4] = {
-    -0.95, -0.96 ,-0.94, -0.95,
-    -0.95, -0.96 ,-0.94, -0.95,
-    -0.15, -0.26 ,-0.16, -0.16,
-    -0.15, -0.26 ,-0.16, -0.16
+    -0.97, -0.68, -0.53, -0.47,
+    -0.97, -0.68, -0.53, -0.47,
+    -0.97, -0.68, -0.53, -0.47,
+    -0.89, -0.52, -0.38, -0.30
   };
   
   for(int i=0; i<4; i++){
@@ -288,6 +288,8 @@ void InitializeJetIdCuts(Float_t fMVACut[4][4])
 }
 
 bool passJetId(Float_t fMVACut[4][4], double mva, double pt, double eta){
+
+  if(pt > 50) return true;
 
   int lPtId = 3;
   if     (pt < 10.)
@@ -305,8 +307,7 @@ bool passJetId(Float_t fMVACut[4][4], double mva, double pt, double eta){
   else if(eta < 3.00)
     lEtaId = 2;
 
-  if (mva > fMVACut[lPtId][lEtaId])
-    return true;
+  if (mva > fMVACut[lPtId][lEtaId]) return true;
   
   return false;
 
