@@ -1016,7 +1016,9 @@ void sswwjjAnalysis(
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 20) continue;
 
-        //if(((int)(*eventJets.selBits)[nj] & BareJets::JetTight)!= BareJets::JetTight) continue;
+        //bool passId = passJetId(fMVACut, (float)(*eventJets.puId)[nj], ((TLorentzVector*)(*eventJets.p4)[nj])->Pt(), TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()));
+        //if(passId == false) continue;
+        //if(((int)(*eventJets.selBits)[nj] & BareJets::JetLoose)!= BareJets::JetLoose) continue;
 
         Bool_t isLepton = kFALSE;
         for(unsigned int nl=0; nl<idLep.size(); nl++){
