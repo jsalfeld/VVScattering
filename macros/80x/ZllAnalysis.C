@@ -32,14 +32,17 @@ void ZllAnalysis(
   TString filesPathMC  = "root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/output_80x/";
   Double_t lumi = 35.9;
 
-  double denFRDAMU[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
-  double numFRDAMU[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
-  double denFRBGMU[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
-  double numFRBGMU[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
-  double denFRDAEL[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
-  double numFRDAEL[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
-  double denFRBGEL[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
-  double numFRBGEL[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  const int etaBins = 5;
+  const int ptBins = 8;
+
+  double denFRDAMU[etaBins][ptBins] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double numFRDAMU[etaBins][ptBins] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double denFRBGMU[etaBins][ptBins] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double numFRBGMU[etaBins][ptBins] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double denFRDAEL[etaBins][ptBins] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double numFRDAEL[etaBins][ptBins] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double denFRBGEL[etaBins][ptBins] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double numFRBGEL[etaBins][ptBins] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
 
   //*******************************************************
   //Input Files
@@ -227,7 +230,6 @@ void ZllAnalysis(
       else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])!=TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]))	  {typeSel = 2;}
       else {printf("IMPOSSIBLE TYPESEL!\n"); return;}
 
-
       int iPt[2] = {-1, -1};
       if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <  15) iPt[0] = 0;
       else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <  20) iPt[0] = 1;
@@ -312,88 +314,88 @@ void ZllAnalysis(
   } // end of chain
 
   double sumTot[2] = {0.,0.};
-  printf("*******muons*******\n");
+  printf("*********Muons*********\n");
   sumTot[0] = 0.; sumTot[1] = 0.;
-  for(int iEta=0; iEta<5; iEta++){
-    for(int iPt=0; iPt<6; iPt++){
+  for(int iEta=0; iEta<etaBins; iEta++){
+    for(int iPt=0; iPt<ptBins; iPt++){
       sumTot[0] = sumTot[0] + numFRDAMU[iEta][iPt];
       sumTot[1] = sumTot[1] + denFRDAMU[iEta][iPt];
       printf("(%d,%d): %9.1f/%9.1f=%4.3f | ",iPt,iEta,numFRDAMU[iEta][iPt],denFRDAMU[iEta][iPt],numFRDAMU[iEta][iPt]/denFRDAMU[iEta][iPt]);
-      if(iPt==5) printf("\n");
+      if(iPt==ptBins-1) printf("\n");
     }
   }
   printf("sumTotDA = %f / %f = %f\n",sumTot[0],sumTot[1],sumTot[0]/sumTot[1]);
 
   sumTot[0] = 0.; sumTot[1] = 0.;
-  for(int iEta=0; iEta<5; iEta++){
-    for(int iPt=0; iPt<6; iPt++){
+  for(int iEta=0; iEta<etaBins; iEta++){
+    for(int iPt=0; iPt<ptBins; iPt++){
       sumTot[0] = sumTot[0] + numFRBGMU[iEta][iPt];
       sumTot[1] = sumTot[1] + denFRBGMU[iEta][iPt];
       printf("(%d,%d): %9.1f/%9.1f=%4.3f | ",iPt,iEta,numFRBGMU[iEta][iPt],denFRBGMU[iEta][iPt],numFRBGMU[iEta][iPt]/denFRBGMU[iEta][iPt]);
-      if(iPt==5) printf("\n");
+      if(iPt==ptBins-1) printf("\n");
     }
   }
   printf("sumTotBG = %f / %f = %f\n",sumTot[0],sumTot[1],sumTot[0]/sumTot[1]);
 
-  printf("double prompt_rate_DAMU[%d][%d] = {\n",5,6);
-  for(int iEta=0; iEta<5; iEta++){
-    for(int iPt=0; iPt<6; iPt++){
+  printf("double prompt_rate_DAMU[%d][%d] = {\n",etaBins,ptBins);
+  for(int iEta=0; iEta<etaBins; iEta++){
+    for(int iPt=0; iPt<ptBins; iPt++){
       printf("%4.3f",numFRDAMU[iEta][iPt]/denFRDAMU[iEta][iPt]);
-      if(iPt!=5||iEta!=4) printf(",");
-      if(iPt==5) printf("\n");
+      if(iPt!=ptBins-1||iEta!=etaBins-1) printf(",");
+      if(iPt==ptBins-1) printf("\n");
     }
   }
   printf("};\n");
 
-  printf("double prompt_rate_BGMU[%d][%d] = {\n",5,6);
-  for(int iEta=0; iEta<5; iEta++){
-    for(int iPt=0; iPt<6; iPt++){
+  printf("double prompt_rate_BGMU[%d][%d] = {\n",etaBins,ptBins);
+  for(int iEta=0; iEta<etaBins; iEta++){
+    for(int iPt=0; iPt<ptBins; iPt++){
       printf("%4.3f",numFRBGMU[iEta][iPt]/denFRBGMU[iEta][iPt]);
-      if(iPt!=5||iEta!=4) printf(",");
-      if(iPt==5) printf("\n");
+      if(iPt!=ptBins-1||iEta!=etaBins-1) printf(",");
+      if(iPt==ptBins-1) printf("\n");
     }
   }
   printf("};\n");
 
-  printf("*******electrons*******\n");
+  printf("*********Electrons*********\n");
   sumTot[0] = 0.; sumTot[1] = 0.;
-  for(int iEta=0; iEta<5; iEta++){
-    for(int iPt=0; iPt<6; iPt++){
+  for(int iEta=0; iEta<etaBins; iEta++){
+    for(int iPt=0; iPt<ptBins; iPt++){
       sumTot[0] = sumTot[0] + numFRDAEL[iEta][iPt];
       sumTot[1] = sumTot[1] + denFRDAEL[iEta][iPt];
       printf("(%d,%d): %9.1f/%9.1f=%4.3f | ",iPt,iEta,numFRDAEL[iEta][iPt],denFRDAEL[iEta][iPt],numFRDAEL[iEta][iPt]/denFRDAEL[iEta][iPt]);
-      if(iPt==5) printf("\n");
+      if(iPt==ptBins-1) printf("\n");
     }
   }
   printf("sumTotDA = %f / %f = %f\n",sumTot[0],sumTot[1],sumTot[0]/sumTot[1]);
 
   sumTot[0] = 0.; sumTot[1] = 0.;
-  for(int iEta=0; iEta<5; iEta++){
-    for(int iPt=0; iPt<6; iPt++){
+  for(int iEta=0; iEta<etaBins; iEta++){
+    for(int iPt=0; iPt<ptBins; iPt++){
       sumTot[0] = sumTot[0] + numFRBGEL[iEta][iPt];
       sumTot[1] = sumTot[1] + denFRBGEL[iEta][iPt];
       printf("(%d,%d): %9.1f/%9.1f=%4.3f | ",iPt,iEta,numFRBGEL[iEta][iPt],denFRBGEL[iEta][iPt],numFRBGEL[iEta][iPt]/denFRBGEL[iEta][iPt]);
-      if(iPt==5) printf("\n");
+      if(iPt==ptBins-1) printf("\n");
     }
   }
   printf("sumTotBG = %f / %f = %f\n",sumTot[0],sumTot[1],sumTot[0]/sumTot[1]);
 
-  printf("double prompt_rate_DAEL[%d][%d] = {\n",5,6);
-  for(int iEta=0; iEta<5; iEta++){
-    for(int iPt=0; iPt<6; iPt++){
+  printf("double prompt_rate_DAEL[%d][%d] = {\n",etaBins,ptBins);
+  for(int iEta=0; iEta<etaBins; iEta++){
+    for(int iPt=0; iPt<ptBins; iPt++){
       printf("%4.3f",numFRDAEL[iEta][iPt]/denFRDAEL[iEta][iPt]);
-      if(iPt!=5||iEta!=4) printf(",");
-      if(iPt==5) printf("\n");
+      if(iPt!=ptBins-1||iEta!=etaBins-1) printf(",");
+      if(iPt==ptBins-1) printf("\n");
     }
   }
   printf("};\n");
 
-  printf("double prompt_rate_BGEL[%d][%d] = {\n",5,6);
-  for(int iEta=0; iEta<5; iEta++){
-    for(int iPt=0; iPt<6; iPt++){
+  printf("double prompt_rate_BGEL[%d][%d] = {\n",etaBins,ptBins);
+  for(int iEta=0; iEta<etaBins; iEta++){
+    for(int iPt=0; iPt<ptBins; iPt++){
       printf("%4.3f",numFRBGEL[iEta][iPt]/denFRBGEL[iEta][iPt]);
-      if(iPt!=5||iEta!=4) printf(",");
-      if(iPt==5) printf("\n");
+      if(iPt!=ptBins-1||iEta!=etaBins-1) printf(",");
+      if(iPt==ptBins-1) printf("\n");
     }
   }
   printf("};\n");
