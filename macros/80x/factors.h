@@ -531,10 +531,10 @@ double fakePromptRateFactor(double pt1, double eta1, double nsel1, double pt2, d
   double peta2 =   promptFactor(pt2, eta2, nsel2, 1, type);
 
   double den = (1.0 - eps1*peta1) * (1.0 - eps2*peta2);
-  if     (typeDiSel == 0) return         1/den;
-  else if(typeDiSel == 1) return     -eps1/den;
-  else if(typeDiSel == 2) return     -eps2/den;
-  else if(typeDiSel == 3) return eps1*eps2/den;
+  if     (typeDiSel == 0) return   (1.0-1.0/den);
+  else if(typeDiSel == 1) return      +eps1/den;
+  else if(typeDiSel == 2) return      +eps2/den;
+  else if(typeDiSel == 3) return -eps1*eps2/den;
 
   return 0.0;
 }
