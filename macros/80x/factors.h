@@ -57,12 +57,44 @@ double fake_rate_e_25_tight_mva[5][6] = {
 0.143,0.153,0.128,0.099,0.078,0.059
 };
 
-double prompt_medium[5][8] = {
-0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,
-0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,
-0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,
-0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,
-0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9
+double prompt_m_medium[5][8] = {
+0.751,0.805,0.852,0.895,0.938,0.972,0.985,0.991,
+0.797,0.821,0.868,0.905,0.941,0.976,0.988,0.990,
+0.798,0.842,0.887,0.921,0.949,0.981,0.990,0.991,
+0.833,0.884,0.912,0.943,0.963,0.988,0.992,0.993,
+0.858,0.894,0.918,0.947,0.967,0.986,0.992,0.992
+};
+
+double prompt_m_verytight[5][8] = {
+0.751,0.805,0.852,0.895,0.938,0.972,0.985,0.991,
+0.798,0.822,0.868,0.905,0.941,0.976,0.988,0.991,
+0.798,0.842,0.887,0.921,0.949,0.981,0.990,0.991,
+0.833,0.884,0.912,0.943,0.963,0.988,0.992,0.993,
+0.858,0.894,0.918,0.947,0.967,0.986,0.992,0.992
+};
+
+double prompt_e_medium[5][8] = {
+0.784,0.852,0.880,0.894,0.912,0.930,0.947,0.954,
+0.824,0.874,0.887,0.904,0.918,0.937,0.956,0.958,
+0.886,0.894,0.909,0.917,0.929,0.946,0.955,0.966,
+0.851,0.874,0.911,0.935,0.954,0.970,0.977,0.995,
+0.813,0.867,0.887,0.913,0.934,0.951,0.965,0.962
+};
+
+double prompt_e_tight[5][8] = {
+0.686,0.761,0.809,0.828,0.862,0.895,0.925,0.941,
+0.732,0.775,0.809,0.844,0.868,0.902,0.938,0.947,
+0.784,0.804,0.832,0.856,0.875,0.912,0.935,0.955,
+0.735,0.774,0.832,0.869,0.902,0.931,0.952,0.986,
+0.679,0.764,0.802,0.849,0.876,0.908,0.942,0.953
+};
+
+double prompt_e_verytight[5][8] = {
+0.643,0.691,0.745,0.758,0.793,0.824,0.854,0.868,
+0.680,0.714,0.748,0.782,0.806,0.836,0.870,0.893,
+0.752,0.736,0.769,0.787,0.799,0.824,0.843,0.873,
+0.634,0.666,0.719,0.739,0.763,0.784,0.788,0.822,
+0.545,0.601,0.618,0.640,0.657,0.674,0.694,0.691
 };
 
 double jetEpsBtagBLOOSE[5][5] = {
@@ -480,19 +512,28 @@ double promptFactor(double pt, double eta, int nsel, int period, TString type){
   else if(TMath::Abs(eta) < 2.0) iEta = 3;
   else  			 iEta = 4;
 
-  return (1.0-prompt_medium[iEta][iPt])/prompt_medium[iEta][iPt];
+  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default" || type== "medium_mva" || type== "default_mva")) return (1.0-   prompt_m_medium[iEta][iPt])/	prompt_m_medium[iEta][iPt];
+  else if(TMath::Abs(nsel) == 13 &&  type== "verytight")								  return (1.0-prompt_m_verytight[iEta][iPt])/prompt_m_verytight[iEta][iPt];
+  else if(TMath::Abs(nsel) == 11 &&  type== "medium")									  return (1.0-   prompt_e_medium[iEta][iPt])/   prompt_e_medium[iEta][iPt];
+  else if(TMath::Abs(nsel) == 11 &&  type== "default")  								  return (1.0-    prompt_e_tight[iEta][iPt])/    prompt_e_tight[iEta][iPt];
+  else if(TMath::Abs(nsel) == 11 &&  type== "verytight")								  return (1.0-prompt_e_verytight[iEta][iPt])/prompt_e_verytight[iEta][iPt];
+  else if(TMath::Abs(nsel) == 11 &&  type== "medium_mva")								  return  1.0;
+  else if(TMath::Abs(nsel) == 11 &&  type== "default_mva")								  return  1.0;
+  else    printf("PROBLEM WITH PROMPTRATES\n");
+
+  return 0.0;
 }
 
 double fakePromptRateFactor(double pt1, double eta1, double nsel1, double pt2, double eta2, int nsel2, TString type, int typeDiSel){
   double eps1  = fakeRateFactor(pt1, eta1, nsel1, 1, type);
   double eps2  = fakeRateFactor(pt2, eta2, nsel2, 1, type);
-  double peta1 = promptFactor(pt1, eta1, nsel1, 1, type);
-  double peta2 = promptFactor(pt2, eta2, nsel2, 1, type);
+  double peta1 =   promptFactor(pt1, eta1, nsel1, 1, type);
+  double peta2 =   promptFactor(pt2, eta2, nsel2, 1, type);
 
   double den = (1.0 - eps1*peta1) * (1.0 - eps2*peta2);
-  if     (typeDiSel == 0) return 1/den;
-  else if(typeDiSel == 1) return -eps1/den;
-  else if(typeDiSel == 2) return -eps2/den;
+  if     (typeDiSel == 0) return         1/den;
+  else if(typeDiSel == 1) return     -eps1/den;
+  else if(typeDiSel == 2) return     -eps2/den;
   else if(typeDiSel == 3) return eps1*eps2/den;
 
   return 0.0;

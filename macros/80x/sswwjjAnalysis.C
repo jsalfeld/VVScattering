@@ -215,8 +215,8 @@ void sswwjjAnalysis(
   signalName_.push_back(Form("mh%d", 500)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M500_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d", 700)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M700_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d", 800)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M800_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
-  */signalName_.push_back(Form("mh%d", 900)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M900_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
-  signalName_.push_back(Form("mh%d",1000)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M1000_13TeV-madgraph.root",filesPathMC.Data()));infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  signalName_.push_back(Form("mh%d", 900)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M900_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  */signalName_.push_back(Form("mh%d",1000)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M1000_13TeV-madgraph.root",filesPathMC.Data()));infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   }
 
   } // end period == 1
@@ -1556,19 +1556,6 @@ void sswwjjAnalysis(
 
       if(theCategory == -1) {theCategory = 1; totalWeight = -1.0 * totalWeight;}
 
-      double totalFakeWeight = 0.0;
-      if(infilecatv[ifile] == 0){
-        int typeDiSel = -1;
-        if     (idTight[0] == 0 && idTight[1] == 0) typeDiSel = 0;
-        else if(idTight[0] == 1 && idTight[1] == 0) typeDiSel = 1;
-        else if(idTight[0] == 0 && idTight[1] == 1) typeDiSel = 2;
-        else if(idTight[0] == 1 && idTight[1] == 1) typeDiSel = 3;
-        totalFakeWeight = 1.0 -
-        fakePromptRateFactor(
-        ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),
-        ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]),
-        typeLepSel.Data(),typeDiSel);
-      }
       if(totalWeight == 0) continue;
       // end event weighting
 
@@ -1693,10 +1680,28 @@ void sswwjjAnalysis(
         PDFAvg = PDFAvg/100.0;
       }
 
+      if(infilecatv[ifile] == 0){
+        if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
+
+          int typeDiSel = -1;
+	  double TTCor = 0.0;
+          if     (idTight[0] == 1 && idTight[1] == 1) {typeDiSel = 0; TTCor = 1.0;}
+          else if(idTight[0] == 0 && idTight[1] == 1) {typeDiSel = 1; TTCor = 0.0;}
+          else if(idTight[0] == 1 && idTight[1] == 0) {typeDiSel = 2; TTCor = 0.0;}
+          else if(idTight[0] == 0 && idTight[1] == 0) {typeDiSel = 3; TTCor = 0.0;}
+          double totalFakeWeight = TTCor -
+          fakePromptRateFactor(
+          ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),
+          ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]),
+          typeLepSel.Data(),typeDiSel);
+
+          histo_FakeData->Fill(MVAVar,totalFakeWeight);
+        }
+      }
+
       if     (theCategory == 0){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
            histo_Data->Fill(MVAVar,totalWeight);
-           histo_FakeData->Fill(MVAVar,totalFakeWeight);
         }
       }
       else if(theCategory == 1){
