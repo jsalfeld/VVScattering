@@ -110,7 +110,7 @@ void sswwjjAnalysis(
     infilenamev.push_back(Form("%sdata_Run2016H.root",filesPathDA.Data())); infilecatv.push_back(0);
   } else {
   }
-
+/*
   //MC samples
   //signal: EWK + QCD
   //infilenamev.push_back(Form("%sWpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8.root",filesPathMC.Data()));               infilecatv.push_back(1);
@@ -201,7 +201,7 @@ void sswwjjAnalysis(
   //Non-prompt leptons
   //infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root",filesPathMC.Data()));                infilecatv.push_back(9);
   //infilenamev.push_back(Form("%sTTToSemiLeptonic_13TeV-powheg.root",filesPathMC2.Data()));                                    infilecatv.push_back(9);
-
+*/
   for(int ifile=0; ifile<(int)infilenamev.size(); ifile++) {
     signalIndex_.push_back(-1); // Populate vector of signal indices with -1 for the non-MC-signal files
   }
@@ -209,13 +209,13 @@ void sswwjjAnalysis(
   {
   int i=0;
   signalName_.push_back(Form("mh%d", 200)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M200_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
-  signalName_.push_back(Form("mh%d", 600)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M600_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  /*signalName_.push_back(Form("mh%d", 600)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M600_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d", 300)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M300_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d", 400)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M400_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d", 500)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M500_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d", 700)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M700_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d", 800)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M800_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
-  signalName_.push_back(Form("mh%d", 900)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M900_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
+  */signalName_.push_back(Form("mh%d", 900)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M900_13TeV-madgraph.root",filesPathMC.Data())); infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   signalName_.push_back(Form("mh%d",1000)); infilenamev.push_back(Form("%sDoublyChargedHiggsGMmodel_HWW_M1000_13TeV-madgraph.root",filesPathMC.Data()));infilecatv.push_back(11); signalIndex_.push_back(i); i++;
   }
 
@@ -378,6 +378,8 @@ void sswwjjAnalysis(
   histoWZMVA->Sumw2();
   TH1D* histoOneBin = new TH1D("histoOneBin", "histoOneBin", 1, -0.5, 0.5);
   histoOneBin->Sumw2();
+
+  TH1D *histo_FakeData  = (TH1D*) histoMVA->Clone("histo_FakeData");
 
   TH1D *histo_Data  = (TH1D*) histoMVA->Clone("histo_Data");
   TH1D *histo_EWK   = (TH1D*) histoMVA->Clone("histo_EWK"); 
@@ -1554,6 +1556,19 @@ void sswwjjAnalysis(
 
       if(theCategory == -1) {theCategory = 1; totalWeight = -1.0 * totalWeight;}
 
+      double totalFakeWeight = 0.0;
+      if(infilecatv[ifile] == 0){
+        int typeDiSel = -1;
+        if     (idTight[0] == 0 && idTight[1] == 0) typeDiSel = 0;
+        else if(idTight[0] == 1 && idTight[1] == 0) typeDiSel = 1;
+        else if(idTight[0] == 0 && idTight[1] == 1) typeDiSel = 2;
+        else if(idTight[0] == 1 && idTight[1] == 1) typeDiSel = 3;
+        totalFakeWeight = 1.0 -
+        fakePromptRateFactor(
+        ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),
+        ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]),
+        typeLepSel.Data(),typeDiSel);
+      }
       if(totalWeight == 0) continue;
       // end event weighting
 
@@ -1681,6 +1696,7 @@ void sswwjjAnalysis(
       if     (theCategory == 0){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
            histo_Data->Fill(MVAVar,totalWeight);
+           histo_FakeData->Fill(MVAVar,totalFakeWeight);
         }
       }
       else if(theCategory == 1){
@@ -2096,6 +2112,12 @@ void sswwjjAnalysis(
     for(int nj=0; nj<5; nj++) printf("%6.1f ",totalFakeDataCount[ni][nj]);
     printf("\n");
   }
+  printf("----------------------totalFakeData--------------------------------\n");
+  printf("total: %.2f\n",histo_FakeData->GetSumOfWeights());
+  for(int np=1; np<=histo_FakeData->GetNbinsX(); np++) {
+    printf(" %.2f ",histo_FakeData->GetBinContent(np));
+  }
+  printf("\n");
 
   // WZ scale factor from data
   double sfE_WZ[nBinWZMVA]; for(int i=0; i<nBinWZMVA; i++) sfE_WZ[i] = 1.0;;

@@ -57,6 +57,14 @@ double fake_rate_e_25_tight_mva[5][6] = {
 0.143,0.153,0.128,0.099,0.078,0.059
 };
 
+double prompt_medium[5][8] = {
+0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,
+0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,
+0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,
+0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,
+0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9
+};
+
 double jetEpsBtagBLOOSE[5][5] = {
 0.6869,0.7696,0.7970,0.8290,0.8453,
 0.7008,0.7806,0.8079,0.8389,0.8540,
@@ -450,6 +458,42 @@ double fakeRateFactor(double pt, double eta, int nsel, int period, TString type)
   else    printf("PROBLEM WITH FAKES\n");
 
   assert(0);
+
+  return 0.0;
+}
+
+double promptFactor(double pt, double eta, int nsel, int period, TString type){
+  int iPt = -1;
+  if	 (pt <  15) iPt = 0;
+  else if(pt <  20) iPt = 1;
+  else if(pt <  25) iPt = 2;
+  else if(pt <  30) iPt = 3;
+  else if(pt <  40) iPt = 4;
+  else if(pt <  60) iPt = 5;
+  else if(pt < 100) iPt = 6;
+  else  	    iPt = 7;
+
+  int iEta = -1;
+  if	 (TMath::Abs(eta) < 0.5) iEta = 0;
+  else if(TMath::Abs(eta) < 1.0) iEta = 1;
+  else if(TMath::Abs(eta) < 1.5) iEta = 2;
+  else if(TMath::Abs(eta) < 2.0) iEta = 3;
+  else  			 iEta = 4;
+
+  return (1.0-prompt_medium[iEta][iPt])/prompt_medium[iEta][iPt];
+}
+
+double fakePromptRateFactor(double pt1, double eta1, double nsel1, double pt2, double eta2, int nsel2, TString type, int typeDiSel){
+  double eps1  = fakeRateFactor(pt1, eta1, nsel1, 1, type);
+  double eps2  = fakeRateFactor(pt2, eta2, nsel2, 1, type);
+  double peta1 = promptFactor(pt1, eta1, nsel1, 1, type);
+  double peta2 = promptFactor(pt2, eta2, nsel2, 1, type);
+
+  double den = (1.0 - eps1*peta1) * (1.0 - eps2*peta2);
+  if     (typeDiSel == 0) return 1/den;
+  else if(typeDiSel == 1) return -eps1/den;
+  else if(typeDiSel == 2) return -eps2/den;
+  else if(typeDiSel == 3) return eps1*eps2/den;
 
   return 0.0;
 }

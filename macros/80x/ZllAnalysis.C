@@ -25,30 +25,27 @@ double mcPrescale = 1.0;
 bool isMINIAOD = true;
 
 void ZllAnalysis(
- Int_t typeSel = 4,
  TString typeLepSel = "medium"
 ){
 
   TString filesPathDA = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/";
   TString filesPathMC  = "root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/output_80x/";
-  TString filesPathMC2 = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/mc/";
   Double_t lumi = 35.9;
 
-  double denFRDA[5][6] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
-  double numFRDA[5][6] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
-  double denFRBG[5][6] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
-  double numFRBG[5][6] = {0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0};
+  double denFRDAMU[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double numFRDAMU[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double denFRBGMU[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double numFRBGMU[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double denFRDAEL[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double numFRDAEL[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double denFRBGEL[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
+  double numFRBGEL[5][8] = {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0};
 
   //*******************************************************
   //Input Files
   //*******************************************************
   vector<TString> infilenamev;  
   vector<Int_t> infilecatv;  
-
-  double minLepPt = 10.0;
-  if(typeSel == 11) minLepPt = 12.0;
-
-  if(typeSel != 11 && typeSel != 13) {assert(0); return;}
 
   TString triggerSuffix = "*";
   if(isMINIAOD) triggerSuffix = "";
@@ -214,10 +211,9 @@ void ZllAnalysis(
       if(passFilter[2] == kFALSE) continue;
 
       if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <= 25 ||
-         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <= minLepPt) continue;
+         ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <= 12) continue;
 
-      passFilter[3] = ((int)(*eventLeptons.pdgId)[idLep[0]]*(int)(*eventLeptons.pdgId)[idLep[1]] < 0) &&
-                      (TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==typeSel&&TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])==typeSel);
+      passFilter[3] = (int)(*eventLeptons.pdgId)[idLep[0]]*(int)(*eventLeptons.pdgId)[idLep[1]] < 0;
       if(passFilter[3] == kFALSE) continue;
 
       TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) )); 
@@ -225,20 +221,31 @@ void ZllAnalysis(
       if(TMath::Abs(dilep.M()-91.1876)<15.0) passFilter[4] = kTRUE;  	    
       if(passFilter[4] == kFALSE) continue;
 
-      int iPt[2] = {-1, -1};
-      if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 15) iPt[0] = 0;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 20) iPt[0] = 1;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 25) iPt[0] = 2;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 30) iPt[0] = 3;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 40) iPt[0] = 4;
-      else                                                                iPt[0] = 5;
+      int typeSel = -1;
+      if     (TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==13&&TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])==13) {typeSel = 0;}
+      else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==11&&TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])==11) {typeSel = 1;}
+      else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])!=TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]))	  {typeSel = 2;}
+      else {printf("IMPOSSIBLE TYPESEL!\n"); return;}
 
-      if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 15) iPt[1] = 0;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 20) iPt[1] = 1;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 25) iPt[1] = 2;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 30) iPt[1] = 3;
-      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 40) iPt[1] = 4;
-      else                                                                iPt[1] = 5;
+
+      int iPt[2] = {-1, -1};
+      if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <  15) iPt[0] = 0;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <  20) iPt[0] = 1;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <  25) iPt[0] = 2;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <  30) iPt[0] = 3;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <  40) iPt[0] = 4;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() <  60) iPt[0] = 5;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 100) iPt[0] = 6;
+      else                                                                 iPt[0] = 7;
+
+      if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <  15) iPt[1] = 0;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <  20) iPt[1] = 1;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <  25) iPt[1] = 2;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <  30) iPt[1] = 3;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <  40) iPt[1] = 4;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() <  60) iPt[1] = 5;
+      else if(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() < 100) iPt[1] = 6;
+      else                                                                 iPt[1] = 7;
 
       int iEta[2] = {-1, -1};
       if     (TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()) < 0.5) iEta[0] = 0;
@@ -270,28 +277,48 @@ void ZllAnalysis(
       }
 
       double totalWeight = mcWeight*theLumi*puWeight*effSF*theMCPrescale;
-   
-      if(infilecatv[ifile] == 0) {
-        denFRDA[iEta[0]][iPt[0]] = denFRDA[iEta[0]][iPt[0]] + totalWeight;
-        denFRDA[iEta[1]][iPt[1]] = denFRDA[iEta[1]][iPt[1]] + totalWeight;
-        if(idTight[0]) numFRDA[iEta[0]][iPt[0]] = numFRDA[iEta[0]][iPt[0]] + totalWeight;
-        if(idTight[1]) numFRDA[iEta[1]][iPt[1]] = numFRDA[iEta[1]][iPt[1]] + totalWeight;
+      if(typeSel == 2) totalWeight = -0.5 * totalWeight;
+
+      if(typeSel == 0 || typeSel == 2){ // mm or em
+	if(infilecatv[ifile] == 0) {
+          denFRDAMU[iEta[0]][iPt[0]] = denFRDAMU[iEta[0]][iPt[0]] + totalWeight;
+          denFRDAMU[iEta[1]][iPt[1]] = denFRDAMU[iEta[1]][iPt[1]] + totalWeight;
+          if(idTight[0]) numFRDAMU[iEta[0]][iPt[0]] = numFRDAMU[iEta[0]][iPt[0]] + totalWeight;
+          if(idTight[1]) numFRDAMU[iEta[1]][iPt[1]] = numFRDAMU[iEta[1]][iPt[1]] + totalWeight;
+	}
+	else {
+          denFRBGMU[iEta[0]][iPt[0]] = denFRBGMU[iEta[0]][iPt[0]] + totalWeight;
+          denFRBGMU[iEta[1]][iPt[1]] = denFRBGMU[iEta[1]][iPt[1]] + totalWeight;
+          if(idTight[0]) numFRBGMU[iEta[0]][iPt[0]] = numFRBGMU[iEta[0]][iPt[0]] + totalWeight;
+          if(idTight[1]) numFRBGMU[iEta[1]][iPt[1]] = numFRBGMU[iEta[1]][iPt[1]] + totalWeight;
+	}
       }
-      else {
-        denFRBG[iEta[0]][iPt[0]] = denFRBG[iEta[0]][iPt[0]] + totalWeight;
-        denFRBG[iEta[1]][iPt[1]] = denFRBG[iEta[1]][iPt[1]] + totalWeight;
-        if(idTight[0]) numFRBG[iEta[0]][iPt[0]] = numFRBG[iEta[0]][iPt[0]] + totalWeight;
-        if(idTight[1]) numFRBG[iEta[1]][iPt[1]] = numFRBG[iEta[1]][iPt[1]] + totalWeight;
+
+      if(typeSel == 1 || typeSel == 2){ // ee or em
+	if(infilecatv[ifile] == 0) {
+          denFRDAEL[iEta[0]][iPt[0]] = denFRDAEL[iEta[0]][iPt[0]] + totalWeight;
+          denFRDAEL[iEta[1]][iPt[1]] = denFRDAEL[iEta[1]][iPt[1]] + totalWeight;
+          if(idTight[0]) numFRDAEL[iEta[0]][iPt[0]] = numFRDAEL[iEta[0]][iPt[0]] + totalWeight;
+          if(idTight[1]) numFRDAEL[iEta[1]][iPt[1]] = numFRDAEL[iEta[1]][iPt[1]] + totalWeight;
+	}
+	else {
+          denFRBGEL[iEta[0]][iPt[0]] = denFRBGEL[iEta[0]][iPt[0]] + totalWeight;
+          denFRBGEL[iEta[1]][iPt[1]] = denFRBGEL[iEta[1]][iPt[1]] + totalWeight;
+          if(idTight[0]) numFRBGEL[iEta[0]][iPt[0]] = numFRBGEL[iEta[0]][iPt[0]] + totalWeight;
+          if(idTight[1]) numFRBGEL[iEta[1]][iPt[1]] = numFRBGEL[iEta[1]][iPt[1]] + totalWeight;
+	}
       }
     }
   } // end of chain
 
   double sumTot[2] = {0.,0.};
+  printf("*******muons*******\n");
+  sumTot[0] = 0.; sumTot[1] = 0.;
   for(int iEta=0; iEta<5; iEta++){
     for(int iPt=0; iPt<6; iPt++){
-      sumTot[0] = sumTot[0] + numFRDA[iEta][iPt];
-      sumTot[1] = sumTot[1] + denFRDA[iEta][iPt];
-      printf("(%d,%d): %9.1f/%9.1f=%4.3f | ",iPt,iEta,numFRDA[iEta][iPt],denFRDA[iEta][iPt],numFRDA[iEta][iPt]/denFRDA[iEta][iPt]);
+      sumTot[0] = sumTot[0] + numFRDAMU[iEta][iPt];
+      sumTot[1] = sumTot[1] + denFRDAMU[iEta][iPt];
+      printf("(%d,%d): %9.1f/%9.1f=%4.3f | ",iPt,iEta,numFRDAMU[iEta][iPt],denFRDAMU[iEta][iPt],numFRDAMU[iEta][iPt]/denFRDAMU[iEta][iPt]);
       if(iPt==5) printf("\n");
     }
   }
@@ -300,28 +327,71 @@ void ZllAnalysis(
   sumTot[0] = 0.; sumTot[1] = 0.;
   for(int iEta=0; iEta<5; iEta++){
     for(int iPt=0; iPt<6; iPt++){
-      sumTot[0] = sumTot[0] + numFRBG[iEta][iPt];
-      sumTot[1] = sumTot[1] + denFRBG[iEta][iPt];
-      printf("(%d,%d): %9.1f/%9.1f=%4.3f | ",iPt,iEta,numFRBG[iEta][iPt],denFRBG[iEta][iPt],numFRBG[iEta][iPt]/denFRBG[iEta][iPt]);
+      sumTot[0] = sumTot[0] + numFRBGMU[iEta][iPt];
+      sumTot[1] = sumTot[1] + denFRBGMU[iEta][iPt];
+      printf("(%d,%d): %9.1f/%9.1f=%4.3f | ",iPt,iEta,numFRBGMU[iEta][iPt],denFRBGMU[iEta][iPt],numFRBGMU[iEta][iPt]/denFRBGMU[iEta][iPt]);
       if(iPt==5) printf("\n");
     }
   }
   printf("sumTotBG = %f / %f = %f\n",sumTot[0],sumTot[1],sumTot[0]/sumTot[1]);
 
-  printf("double prompt_rate_DA[%d][%d] = {\n",5,6);
+  printf("double prompt_rate_DAMU[%d][%d] = {\n",5,6);
   for(int iEta=0; iEta<5; iEta++){
     for(int iPt=0; iPt<6; iPt++){
-      printf("%4.3f",numFRDA[iEta][iPt]/denFRDA[iEta][iPt]);
+      printf("%4.3f",numFRDAMU[iEta][iPt]/denFRDAMU[iEta][iPt]);
       if(iPt!=5||iEta!=4) printf(",");
       if(iPt==5) printf("\n");
     }
   }
   printf("};\n");
 
-  printf("double prompt_rate_BG[%d][%d] = {\n",5,6);
+  printf("double prompt_rate_BGMU[%d][%d] = {\n",5,6);
   for(int iEta=0; iEta<5; iEta++){
     for(int iPt=0; iPt<6; iPt++){
-      printf("%4.3f",numFRBG[iEta][iPt]/denFRBG[iEta][iPt]);
+      printf("%4.3f",numFRBGMU[iEta][iPt]/denFRBGMU[iEta][iPt]);
+      if(iPt!=5||iEta!=4) printf(",");
+      if(iPt==5) printf("\n");
+    }
+  }
+  printf("};\n");
+
+  printf("*******electrons*******\n");
+  sumTot[0] = 0.; sumTot[1] = 0.;
+  for(int iEta=0; iEta<5; iEta++){
+    for(int iPt=0; iPt<6; iPt++){
+      sumTot[0] = sumTot[0] + numFRDAEL[iEta][iPt];
+      sumTot[1] = sumTot[1] + denFRDAEL[iEta][iPt];
+      printf("(%d,%d): %9.1f/%9.1f=%4.3f | ",iPt,iEta,numFRDAEL[iEta][iPt],denFRDAEL[iEta][iPt],numFRDAEL[iEta][iPt]/denFRDAEL[iEta][iPt]);
+      if(iPt==5) printf("\n");
+    }
+  }
+  printf("sumTotDA = %f / %f = %f\n",sumTot[0],sumTot[1],sumTot[0]/sumTot[1]);
+
+  sumTot[0] = 0.; sumTot[1] = 0.;
+  for(int iEta=0; iEta<5; iEta++){
+    for(int iPt=0; iPt<6; iPt++){
+      sumTot[0] = sumTot[0] + numFRBGEL[iEta][iPt];
+      sumTot[1] = sumTot[1] + denFRBGEL[iEta][iPt];
+      printf("(%d,%d): %9.1f/%9.1f=%4.3f | ",iPt,iEta,numFRBGEL[iEta][iPt],denFRBGEL[iEta][iPt],numFRBGEL[iEta][iPt]/denFRBGEL[iEta][iPt]);
+      if(iPt==5) printf("\n");
+    }
+  }
+  printf("sumTotBG = %f / %f = %f\n",sumTot[0],sumTot[1],sumTot[0]/sumTot[1]);
+
+  printf("double prompt_rate_DAEL[%d][%d] = {\n",5,6);
+  for(int iEta=0; iEta<5; iEta++){
+    for(int iPt=0; iPt<6; iPt++){
+      printf("%4.3f",numFRDAEL[iEta][iPt]/denFRDAEL[iEta][iPt]);
+      if(iPt!=5||iEta!=4) printf(",");
+      if(iPt==5) printf("\n");
+    }
+  }
+  printf("};\n");
+
+  printf("double prompt_rate_BGEL[%d][%d] = {\n",5,6);
+  for(int iEta=0; iEta<5; iEta++){
+    for(int iPt=0; iPt<6; iPt++){
+      printf("%4.3f",numFRBGEL[iEta][iPt]/denFRBGEL[iEta][iPt]);
       if(iPt!=5||iEta!=4) printf(",");
       if(iPt==5) printf("\n");
     }
