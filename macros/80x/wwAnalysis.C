@@ -271,6 +271,8 @@ void wwAnalysis(
   TH1D* histoOneBin = new TH1D("histoOneBin", "histoOneBin", 1, -0.5, 0.5);
   histoOneBin->Sumw2();
 
+  TH1D *histo_FakeData  = (TH1D*) histoMVA->Clone("histo_FakeData");
+
   TH1D *histo_Data   = (TH1D*) histoMVA->Clone("histo_Data");
   TH1D *histo_qqWW   = (TH1D*) histoMVA->Clone("histo_qqWW"); 
   TH1D *histo_ggWW   = (TH1D*) histoMVA->Clone("histo_ggWW");
@@ -1153,6 +1155,24 @@ void wwAnalysis(
           PDFAvg = PDFAvg/100.0;
         }
 
+	if(infilecatv[ifile] == 0){
+          if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1)) {
+
+            int typeDiSel = -1;
+            if     (idTight[0] == 1 && idTight[1] == 1) {typeDiSel = 0;}
+            else if(idTight[0] == 0 && idTight[1] == 1) {typeDiSel = 1;}
+            else if(idTight[0] == 1 && idTight[1] == 0) {typeDiSel = 2;}
+            else if(idTight[0] == 0 && idTight[1] == 0) {typeDiSel = 3;}
+            double totalFakeWeight = 
+            fakePromptRateFactor(
+            ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]),
+            ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]]),
+            typeLepSel.Data(),typeDiSel);
+
+            histo_FakeData->Fill(MVAVar,totalFakeWeight);
+          }
+	}
+
         if     (theCategory == 0){
 	  if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1)) histo_Data->Fill(MVAVar,totalWeight);
         }
@@ -1461,6 +1481,17 @@ void wwAnalysis(
     for(int nj=0; nj<5; nj++) printf("%6.1f ",totalFakeDataCount[ni][nj]);
     printf("\n");
   }
+  printf("----------------------totalFakeData--------------------------------\n");
+  printf("total: %.2f\n",histo_FakeData->GetSumOfWeights());
+  double sumDataFakes[2] = {0.0, 0.0};
+  for(int np=1; np<=histo_FakeData->GetNbinsX(); np++) {
+    printf(" %.2f +/-  %.2f",histo_FakeData->GetBinContent(np),histo_FakeData->GetBinError(np));
+    sumDataFakes[0] = sumDataFakes[0] + histo_FakeData->GetBinContent(np);
+    sumDataFakes[1] = sumDataFakes[1] + histo_FakeData->GetBinError(np)*histo_FakeData->GetBinError(np);
+  }
+  printf("\n");
+  printf("sumDataFakes: %f +/- %f\n",sumDataFakes[0],sqrt(sumDataFakes[1]));
+
   printf("                    em                     ee/mm                     ll\n");
   printf("----------------------------------------------------------------------------------\n");
   for(int ns=0; ns<nSelTypes; ns++) {
