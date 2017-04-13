@@ -1700,6 +1700,7 @@ void sswwjjAnalysis(
 
       if     (theCategory == 0){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
+           //printf("DATA %d %d %llu\n",eventEvent.runNum,eventEvent.lumiNum,eventEvent.eventNum);
            histo_Data->Fill(MVAVar,totalWeight);
         }
       }
@@ -2708,7 +2709,7 @@ void sswwjjAnalysis(
       if(histo_WS ->GetBinContent(nb) > 0) systQCDScale[5] = 1 + systQCDScale[5]/histo_WS ->GetBinContent(nb); else systQCDScale[5] = 1;
       if(histo_WG ->GetBinContent(nb) > 0) systQCDScale[6] = 1 + systQCDScale[6]/histo_WG ->GetBinContent(nb); else systQCDScale[6] = 1;
       if(histo_DPS->GetBinContent(nb) > 0) systQCDScale[7] = 1 + systQCDScale[7]/histo_DPS->GetBinContent(nb); else systQCDScale[7] = 1;
-      if(histo_Higgs[TMath::Max(nModel,0)]->GetBinContent(nb) > 0) systQCDScale[8] = 1 + systQCDScale[8]/histo_Higgs[TMath::Max(nModel,0)]->GetBinContent(nb); else systQCDScale[0] = 1;
+      if(histo_Higgs[TMath::Max(nModel,0)]->GetBinContent(nb) > 0) systQCDScale[8] = 1 + systQCDScale[8]/histo_Higgs[TMath::Max(nModel,0)]->GetBinContent(nb); else systQCDScale[8] = 1;
 
       for(int ntype=0; ntype<9; ntype++) if(systQCDScale[ntype] < 0) systQCDScale[ntype] = 1.0;
       if(verbose) printf("QCDScale(%d): %f %f %f %f %f %f %f %f %f\n",nb,systQCDScale[0],systQCDScale[1],systQCDScale[2],systQCDScale[3],systQCDScale[4],systQCDScale[5],systQCDScale[6],systQCDScale[7],systQCDScale[8]);
