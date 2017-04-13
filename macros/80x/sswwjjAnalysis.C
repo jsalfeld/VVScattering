@@ -226,7 +226,9 @@ void sswwjjAnalysis(
   //infilenamev.push_back(Form("nero.root")); infilecatv.push_back(6);
 
   if(infilenamev.size() != infilecatv.size()) {assert(0); return;}
-  
+
+  ULong64_t badEvent[4] = {278957, 131, 134487415, 0};
+
   int nSigModels=signalName_.size();
 
   double selectedFiducial[2] = {0, 0};
@@ -912,6 +914,12 @@ void sswwjjAnalysis(
       Bool_t passControlRegionWH       = kFALSE;
       Bool_t passMjjLoose = kFALSE;
       Bool_t passOS = kFALSE;
+
+      if(infilecatv[ifile] == 0 && (unsigned int)eventEvent.runNum == badEvent[0] && (unsigned int)eventEvent.lumiNum == badEvent[1] && eventEvent.eventNum == badEvent[2]) {
+        badEvent[3]++;
+	printf("BAD EVENT FOUND (%d)\n",(unsigned int)badEvent[3]);
+	if(badEvent[3] > 1) continue;
+      }
 
       if(infilecatv[ifile] != 999) {
         for (int nt = 0; nt <(int)numtokens; nt++) {
@@ -1700,7 +1708,7 @@ void sswwjjAnalysis(
 
       if     (theCategory == 0){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
-           //printf("DATA %d %d %llu\n",eventEvent.runNum,eventEvent.lumiNum,eventEvent.eventNum);
+           if(verbose) printf("DATA %d %d %llu\n",eventEvent.runNum,eventEvent.lumiNum,eventEvent.eventNum);
            histo_Data->Fill(MVAVar,totalWeight);
         }
       }
