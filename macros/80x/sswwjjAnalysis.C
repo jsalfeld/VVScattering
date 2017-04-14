@@ -1020,7 +1020,7 @@ void sswwjjAnalysis(
 
       //access jet info
       vector<int> idJet,idJesUp,idJesDown,idJerUp,idJerDown;
-      double bDiscrMax = 0.0;
+      double bDiscrMax = 0.0; double bDiscrJetMax = 0.0;
       double total_bjet_probLOOSE[2] = {1,1};double total_bjet_probLOOSEUP[2] = {1,1};double total_bjet_probLOOSEDOWN[2] = {1,1};
       double total_bjet_probTIGHT[2] = {1,1};double total_bjet_probTIGHTUP[2] = {1,1};double total_bjet_probTIGHTDOWN[2] = {1,1};
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
@@ -1136,8 +1136,11 @@ void sswwjjAnalysis(
 	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 20) { 
 	   if ((float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
         }
+	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 30) { 
+	   if ((float)(*eventJets.bDiscr)[nj] > bDiscrJetMax) bDiscrJetMax = (float)(*eventJets.bDiscr)[nj];
+        }
 
-        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt()      > 30) {idJet.push_back(nj);}
+        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 30) {idJet.push_back(nj);}
 
       }
 
@@ -1145,7 +1148,7 @@ void sswwjjAnalysis(
       //if(TMath::Abs(total_bjet_probTIGHT[1]/total_bjet_probTIGHT[0]-1.0) > 0.05) printf("total_bjet_probTIGHT large correction: %f, bDiscrMax = %f\n",total_bjet_probTIGHT[1]/total_bjet_probTIGHT[0],bDiscrMax);
 
       // Requirement to reject clear btagged events
-      if(idJet.size() >= 2 && ((float)(*eventJets.bDiscr)[idJet[0]] > bTagCuts[1] || (float)(*eventJets.bDiscr)[idJet[1]] > bTagCuts[1])) continue;
+      if(bDiscrJetMax > bTagCuts[1]) continue;
 
       //#Jet with pT > 30 GeV
       if(idJet.size() >= 2){
