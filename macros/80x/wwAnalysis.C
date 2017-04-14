@@ -219,7 +219,12 @@ void wwAnalysis(
   fhDElTightSF->SetDirectory(0);
   delete fElSF;
 
-  TFile *fElVeryTightSF = TFile::Open(Form("MitAnalysisRunII/data/80x/veryTightSF_37ifb.root"));
+  TString theVeryTightSFName = "MitAnalysisRunII/data/80x/veryTightSF_37ifb.root";
+  if(strcmp(typeLepSel.Data(),"veryverytight")==0){
+    theVeryTightSFName = "MitAnalysisRunII/data/80x/veryveryTightSF_37ifb.root";
+    printf("Using veryverytight SF\n");
+  }
+  TFile *fElVeryTightSF = TFile::Open(Form("%s",theVeryTightSFName.Data()));
   TH1D *fhDVeryTightSF = (TH1D*)(fElVeryTightSF->Get("veryTightSF"));
   assert(fhDVeryTightSF);
   fhDVeryTightSF->SetDirectory(0);
