@@ -1144,6 +1144,9 @@ void sswwjjAnalysis(
       //if(TMath::Abs(total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0]-1.0) > 0.05) printf("total_bjet_probLOOSE large correction: %f, bDiscrMax = %f\n",total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0],bDiscrMax);
       //if(TMath::Abs(total_bjet_probTIGHT[1]/total_bjet_probTIGHT[0]-1.0) > 0.05) printf("total_bjet_probTIGHT large correction: %f, bDiscrMax = %f\n",total_bjet_probTIGHT[1]/total_bjet_probTIGHT[0],bDiscrMax);
 
+      // Requirement to reject clear btagged events
+      if(idJet.size() >= 2 && ((float)(*eventJets.bDiscr)[idJet[0]] > bTagCuts[1] || (float)(*eventJets.bDiscr)[idJet[1]] > bTagCuts[1])) continue;
+
       //#Jet with pT > 30 GeV
       if(idJet.size() >= 2){
 	passFilterSig[2] = kTRUE;
