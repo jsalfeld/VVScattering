@@ -1020,7 +1020,7 @@ void sswwjjAnalysis(
 
       //access jet info
       vector<int> idJet,idJesUp,idJesDown,idJerUp,idJerDown;
-      double bDiscrMax = 0.0; double bDiscrJetMax = 0.0;
+      double bDiscrMax = 0.0; int nBtaggedJets = 0;
       double total_bjet_probLOOSE[2] = {1,1};double total_bjet_probLOOSEUP[2] = {1,1};double total_bjet_probLOOSEDOWN[2] = {1,1};
       double total_bjet_probTIGHT[2] = {1,1};double total_bjet_probTIGHTUP[2] = {1,1};double total_bjet_probTIGHTDOWN[2] = {1,1};
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
@@ -1137,7 +1137,7 @@ void sswwjjAnalysis(
 	   if ((float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
         }
 	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 30) { 
-	   if ((float)(*eventJets.bDiscr)[nj] > bDiscrJetMax) bDiscrJetMax = (float)(*eventJets.bDiscr)[nj];
+	   if ((float)(*eventJets.bDiscr)[nj] > 0.99) nBtaggedJets++;
         }
 
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 30) {idJet.push_back(nj);}
@@ -1148,7 +1148,7 @@ void sswwjjAnalysis(
       //if(TMath::Abs(total_bjet_probTIGHT[1]/total_bjet_probTIGHT[0]-1.0) > 0.05) printf("total_bjet_probTIGHT large correction: %f, bDiscrMax = %f\n",total_bjet_probTIGHT[1]/total_bjet_probTIGHT[0],bDiscrMax);
 
       // Requirement to reject clear btagged events
-      if(bDiscrJetMax > bTagCuts[1]) continue;
+      if(nBtaggedJets >= 1) continue;
 
       //#Jet with pT > 30 GeV
       if(idJet.size() >= 2){
@@ -1178,7 +1178,7 @@ void sswwjjAnalysis(
 
       if(bDiscrMax < bTagCuts[0] && idSoft.size() == 0){
 	passFilterSig[3] = kTRUE;
-      } else{
+      } else if(idSoft.size() == 0){
         passFilterCR1[3] = kTRUE;
       }
       if(bDiscrMax < bTagCuts[1] && idSoft.size() == 0){
@@ -1696,7 +1696,6 @@ void sswwjjAnalysis(
 
       if(infilecatv[ifile] == 0){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
-
           int typeDiSel = -1;
           if     (idTight[0] == 1 && idTight[1] == 1) {typeDiSel = 0;}
           else if(idTight[0] == 0 && idTight[1] == 1) {typeDiSel = 1;}
