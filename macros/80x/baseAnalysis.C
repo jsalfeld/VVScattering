@@ -24,7 +24,7 @@
 bool isMINIAOD = true;
 int whichSkim = 0;
 bool usePureMC = false; 
-int mcPrescale = 50.0;
+int mcPrescale = 1.0;
 const int useDYMVA = false;
 const bool doTriggerStudy = true;
 const Int_t period = 1;
@@ -68,7 +68,7 @@ void baseAnalysis(
   if(isMINIAOD) triggerSuffix = "";
   if(period==1){
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
-/*
+
   if(isMINIAOD) {
     infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data())); infilecatv.push_back(0);
     infilenamev.push_back(Form("%sdata_Run2016C.root",filesPathDA.Data())); infilecatv.push_back(0);
@@ -79,7 +79,7 @@ void baseAnalysis(
     infilenamev.push_back(Form("%sdata_Run2016H.root",filesPathDA.Data())); infilecatv.push_back(0);
   } else {
   }
-*/
+
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg.root",filesPathMC.Data()));					infilecatv.push_back(1);
   infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV.root",filesPathMC.Data()));  				infilecatv.push_back(1);
 
@@ -108,6 +108,7 @@ void baseAnalysis(
   infilenamev.push_back(Form("%sTTTo2L2Nu_13TeV-powheg.root",filesPathMC2.Data()));					      infilecatv.push_back(3);
   infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));    infilecatv.push_back(3);
   infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root",filesPathMC.Data()));infilecatv.push_back(3);
+
   /*
   infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8.root",filesPathMC.Data()));  				   infilecatv.push_back(4);
   infilenamev.push_back(Form("%sGluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8.root",filesPathMC.Data()));		   infilecatv.push_back(4);
@@ -262,7 +263,7 @@ void baseAnalysis(
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 62;
+  const int allPlots = 70;
   const int histBins = 8;
   TH1D* histo[allPlots][histBins];
 
@@ -298,6 +299,7 @@ void baseAnalysis(
     else if(thePlot >= 54 && thePlot <= 59) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot =   1.0;}
     else if(thePlot >= 60 && thePlot <= 60) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = TMath::Pi();}
     else if(thePlot >= 61 && thePlot <= 61) {nBinPlot =  60; xminPlot = 0.0; xmaxPlot =   3.0;}
+    else if(thePlot >= 62 && thePlot <= 69) {nBinPlot = 100; xminPlot =60.0; xmaxPlot = 110.0;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
@@ -477,7 +479,7 @@ void baseAnalysis(
 	                                                                                               {idVeto.push_back(nlep);}
       }
       if(idLep.size()!=idTight.size()) {assert(1); return;}
-      if((idLep.size()==numberOfLeptons0||dLep.size()==numberOfLeptons1) && idVeto.size() == 0) passFilter[2] = kTRUE;
+      if((idLep.size()==numberOfLeptons0||idLep.size()==numberOfLeptons1) && idVeto.size() == 0) passFilter[2] = kTRUE;
       if(passFilter[2] == kTRUE) nPassCuts[2]++;
       if(passFilter[2] == kFALSE) continue;
 
@@ -743,28 +745,25 @@ void baseAnalysis(
         TLorentzVector trilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) )); 
         TLorentzVector dilepg(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) ));
         mass3l = 1000; mass2lg = 1000;
-        if(idPho.size() >= 1 && idLep.size() == 0 && signQ == 0){
+        if(idPho.size() >= 1 && idLep.size() == 2 && signQ == 0){
           dilepg = dilepg + ( *(TLorentzVector*)(eventPhotons.p4->At(idPho[0])));
 	  mass2lg = dilepg.M();
         }
-        else if(idPho.size() == 0 && idLep.size() == 3 && TMath::Abs(signQ) == 1 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt() > 25.0){
+        else if(idLep.size() == 3 && TMath::Abs(signQ) == 1 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt() > 20.0){
           trilep = trilep + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])));
 	  mass3l = trilep.M();
 	}
-	else {
-	  if(idLep.size() == 2 || (idLep.size() == 3&& ((TLorentzVector*)(*eventLeptons.p4)[idLep[2]])->Pt() > 25.0)) printf("nsel7: %d %d %d\n",idPho.size(),idLep.size(),signQ);
-        }
 
         type3l = -1;
-        if(mass2lg < 100){
-	  if     ((int)(*eventLeptons.pdgId)[idLep[0]] == 13 && 
-	          TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])) type3l = 0;
-	  else if((int)(*eventLeptons.pdgId)[idLep[0]] == 11 && 
-	          TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]])==TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])) type3l = 1;
-	  else                type3l = 2;
+        if(mass2lg > 60 && mass2lg < 110){
+	  if     (TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 13 && 
+	          TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])) type3l = 0;
+	  else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 11 && 
+	          TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])) type3l = 1;
+	  else                                                                                                          type3l = 2;
         }
 
-        if(mass3l < 100){
+        if(mass3l > 60 && mass3l < 110){
 	  int nmum = 0; int nmup = 0; int nelm = 0; int nelp = 0;
           for(unsigned nl=0; nl<idLep.size(); nl++){
 	    if((int)(*eventLeptons.pdgId)[idLep[nl]] == +13) nmum++;
@@ -772,16 +771,17 @@ void baseAnalysis(
 	    if((int)(*eventLeptons.pdgId)[idLep[nl]] == +11) nelm++;
 	    if((int)(*eventLeptons.pdgId)[idLep[nl]] == -11) nelp++;
 	  }
-	  if     (nmum == 2 && nmup == 1) type3l = 3;
-	  else if(nmup == 2 && nmum == 1) type3l = 3;
-	  if     (nmum == 2 && nelp == 1) type3l = 4;
-	  else if(nmup == 2 && nelm == 1) type3l = 4;
-	  if     (nelm == 2 && nmup == 1) type3l = 5;
-	  else if(nelm == 2 && nmup == 1) type3l = 5;
-	  if     (nelm == 2 && nelp == 1) type3l = 6;
-	  else if(nelm == 2 && nmup == 1) type3l = 6;
+	  if     (nmum == 2 && nmup == 1 && nelm == 0 && nelp == 0) type3l = 3;
+	  else if(nmum == 1 && nmup == 2 && nelm == 0 && nelp == 0) type3l = 3;
+	  else if(nmum == 1 && nmup == 1 && nelm == 1 && nelp == 0) type3l = 4;
+	  else if(nmum == 1 && nmup == 1 && nelm == 0 && nelp == 1) type3l = 4;
+	  else if(nmum == 1 && nmup == 0 && nelm == 1 && nelp == 1) type3l = 5;
+	  else if(nmum == 0 && nmup == 1 && nelm == 1 && nelp == 1) type3l = 5;
+	  else if(nmum == 0 && nmup == 0 && nelm == 2 && nelp == 1) type3l = 6;
+	  else if(nmum == 0 && nmup == 0 && nelm == 1 && nelp == 2) type3l = 6;
 	  else {type3l = 7; printf("type3lissue %d %d %d %d\n",nmum,nmup,nelm,nelp);}
         }
+        passFilter[5] = kTRUE;
 	passFilter[6] = type3l >= 0;
         passFilter[7] = kTRUE;
         passFilter[8] = kTRUE;
