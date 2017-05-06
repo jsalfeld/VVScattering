@@ -299,7 +299,7 @@ void baseAnalysis(
     else if(thePlot >= 54 && thePlot <= 59) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot =   1.0;}
     else if(thePlot >= 60 && thePlot <= 60) {nBinPlot = 200; xminPlot = 0.0; xmaxPlot = TMath::Pi();}
     else if(thePlot >= 61 && thePlot <= 61) {nBinPlot =  60; xminPlot = 0.0; xmaxPlot =   3.0;}
-    else if(thePlot >= 62 && thePlot <= 69) {nBinPlot = 100; xminPlot =60.0; xmaxPlot = 110.0;}
+    else if(thePlot >= 62 && thePlot <= 69) {nBinPlot =  80; xminPlot =60.0; xmaxPlot = 100.0;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
@@ -755,7 +755,7 @@ void baseAnalysis(
 	}
 
         type3l = -1;
-        if(mass2lg > 60 && mass2lg < 110){
+        if(mass2lg > 60 && mass2lg < 100){
 	  if     (TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 13 && 
 	          TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == TMath::Abs((int)(*eventLeptons.pdgId)[idLep[1]])) type3l = 0;
 	  else if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == 11 && 
@@ -763,7 +763,7 @@ void baseAnalysis(
 	  else                                                                                                          type3l = 2;
         }
 
-        if(mass3l > 60 && mass3l < 110){
+        if(mass3l > 60 && mass3l < 100){
 	  int nmum = 0; int nmup = 0; int nelm = 0; int nelp = 0;
           for(unsigned nl=0; nl<idLep.size(); nl++){
 	    if((int)(*eventLeptons.pdgId)[idLep[nl]] == +13) nmum++;
@@ -866,7 +866,7 @@ void baseAnalysis(
 	//				    (int)(*eventMonteCarlo.pdgId)[ngenl]);
       //}
       // begin event weighting
-      vector<bool> isGenDupl;
+      vector<bool> isGenDupl;vector<int> idGenPho;
       int numberQuarks[2] = {0,0};
       vector<int>zBoson;
       for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
@@ -880,6 +880,12 @@ void baseAnalysis(
             		   ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::DirectPromptTauDecayProductFinalState) == BareMonteCarlo::DirectPromptTauDecayProductFinalState;
         isGoodFlags = isGoodFlags && (TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 11 || TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 13);
         if(isGoodFlags == false) isGenDupl[ngen0] = 1;
+
+         // begin photons        
+         bool isGoodPhFlags = ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::PromptFinalState) == BareMonteCarlo::PromptFinalState ||
+                              ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::DirectPromptTauDecayProductFinalState) == BareMonteCarlo::DirectPromptTauDecayProductFinalState;
+	 isGoodPhFlags = isGoodPhFlags && (TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 22);
+	 if(isGoodPhFlags == true) idGenPho.push_back(ngen0);
       }
 
       vector<int> isGenLep; unsigned int goodIsGenLep = 0;
@@ -968,6 +974,17 @@ void baseAnalysis(
 
       // Btag scale factor (only for bbA analysis)
       if(nsel == 4) totalWeight = totalWeight * total_bjet_prob[1]/total_bjet_prob[0];
+
+      if(theCategory == 2 && idPho.size() > 0 && idGenPho.size() > 0 && infilenamev[ifile].Contains("ZGTo2LG") == kFALSE){
+        bool isGenPhoton = false;
+        for(unsigned int ngen=0; ngen<idGenPho.size(); ngen++) {
+          if(((TLorentzVector*)(*eventPhotons.p4)[idPho[0]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[idGenPho[ngen]])) < 0.1) {
+	    isGenPhoton = true;
+	    break;
+	  }
+	}
+	if(isGenPhoton == true) totalWeight = 0;
+      }
 
       if(totalWeight == 0) continue;
       // end event weighting
