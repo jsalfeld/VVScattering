@@ -509,6 +509,7 @@ void baseAnalysis(
       if     (nsel == 5 || nsel == 7)                         passFilter[4] = passFilter[4];
       else if(numberOfLeptons1 == 2 && nsel == 6)             passFilter[4] = passFilter[4] * (signQ != 0);
       else if(numberOfLeptons1 == 3)                          passFilter[4] = passFilter[4] * (TMath::Abs(signQ) == 1);
+      else if(numberOfLeptons1 == 2 || numberOfLeptons1 == 4) passFilter[4] = passFilter[4] * (signQ == 0);
       else {printf("PROBLEM numberOfLeptons\n");assert(0);return;}
 
       if(passFilter[4] == kTRUE) nPassCuts[4]++;
