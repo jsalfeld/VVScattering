@@ -791,8 +791,10 @@ void sswwjjAnalysis(
   TH1D* histo_WS_CMS_WSSFUp    	              = new TH1D( Form("histo_WS_CMS_WSSFUp")  , Form("histo_WS_CMS_WSSFUp")  , nBinMVA, xbins); histo_WS_CMS_WSSFUp  ->Sumw2();
   TH1D* histo_WS_CMS_WSSFDown  	              = new TH1D( Form("histo_WS_CMS_WSSFDown"), Form("histo_WS_CMS_WSSFDown"), nBinMVA, xbins); histo_WS_CMS_WSSFDown->Sumw2();
 
-  TH1D* histo_Fake_CMS_SystM    	      = new TH1D( Form("histo_Fake_CMS_SystM"), Form("histo_Fake_CMS_SystM"), nBinMVA, xbins); histo_Fake_CMS_SystM->Sumw2();
-  TH1D* histo_Fake_CMS_SystE  	              = new TH1D( Form("histo_Fake_CMS_SystE"), Form("histo_Fake_CMS_SystE"), nBinMVA, xbins); histo_Fake_CMS_SystE->Sumw2();
+  TH1D* histo_Fake_CMS_Syst[9];
+  for(int ns=0; ns<9; ns++) {
+    histo_Fake_CMS_Syst[ns] = new TH1D( Form("histo_Fake_CMS_Syst_%d",ns), Form("histo_Fake_CMS_Syst_%d",ns), nBinMVA, xbins); histo_Fake_CMS_Syst[ns]->Sumw2();
+  } 
 
   for(int nModel=0; nModel<nSigModels; nModel++) { 
     histo_Higgs_CMS_MVALepEffMBoundingUp[nModel]          = new TH1D( Form("histo_Higgs_%s_%sUp",   signalName_[nModel].Data(), effMName), Form("histo_Higgs_%s_%sUp",  signalName_[nModel].Data(), effMName), nBinMVA, xbins); histo_Higgs_CMS_MVALepEffMBoundingUp[nModel]  ->Sumw2();
@@ -2064,10 +2066,11 @@ void sswwjjAnalysis(
       }
       else if(theCategory == 9 || theCategory == 10){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
-          if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) histo_Fake_CMS_SystE->Fill(MVAVar,totalWeight);
-	  else  							 histo_Fake_CMS_SystM->Fill(MVAVar,totalWeight);
           histo_FakeM->Fill(MVAVar,totalWeight);
-          //if(dijet.M() > 1500 && dilep.M() > 180) {
+          if(infilecatv[ifile] == 0) histo_Fake_CMS_Syst[0]->Fill(MVAVar,totalWeight);
+	  for(int ns=1; ns<9; ns++) if(infilecatv[ifile] != ns) histo_Fake_CMS_Syst[ns]->Fill(MVAVar,totalWeight);
+	  
+	  //if(dijet.M() > 1500 && dilep.M() > 180) {
           //  printf("HIGHMJJMLL: %f %f %d %f / %f %f %f %f %f %f %f\n",dijet.M(),dilep.M(),typeSel,totalWeight,mcWeight,theLumi,puWeight,effSF,fakeSF,theMCPrescale,trigEff);
           //}
         }
@@ -2508,6 +2511,16 @@ void sswwjjAnalysis(
       printf("uncertainties EWK Intf\n");
       for(int i=1; i<=histo_EWK->GetNbinsX(); i++) {if(histo_EWK->GetBinContent(i)>0)printf("%5.1f ",histo_EWK_CMS_IntfUp         ->GetBinContent(i)/histo_EWK->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
       for(int i=1; i<=histo_EWK->GetNbinsX(); i++) {if(histo_EWK->GetBinContent(i)>0)printf("%5.1f ",histo_EWK_CMS_IntfDown       ->GetBinContent(i)/histo_EWK->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      printf("uncertainties Fake\n");
+      for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[0]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[1]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[2]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[3]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[4]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[5]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[6]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[7]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+      for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[8]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
     } 
 
     histo_Data ->Write();
@@ -2946,6 +2959,27 @@ void sswwjjAnalysis(
       if(histo_EWK->GetBinContent(nb) > 0 && histo_EWK_CMS_IntfUp  ->GetBinContent(nb) > 0) systIntfUp   = histo_EWK_CMS_IntfUp  ->GetBinContent(nb)/histo_EWK->GetBinContent(nb);
       if(histo_EWK->GetBinContent(nb) > 0 && histo_EWK_CMS_IntfDown->GetBinContent(nb) > 0) systIntfDown = histo_EWK_CMS_IntfDown->GetBinContent(nb)/histo_EWK->GetBinContent(nb);
 
+      double qcdScaleFrozen[9] = {1.00,0.15,0.30,0.15,0.25,0.20,0.20,0.25,0.30};
+      double systFake[9]  = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[1]->GetBinContent(nb) > 0) systFake[1] = 1.0 + TMath::Min(qcdScaleFrozen[1]*TMath::Abs(histo_Fake_CMS_Syst[1]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_FakeM->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[2]->GetBinContent(nb) > 0) systFake[2] = 1.0 + TMath::Min(qcdScaleFrozen[2]*TMath::Abs(histo_Fake_CMS_Syst[2]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_FakeM->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[3]->GetBinContent(nb) > 0) systFake[3] = 1.0 + TMath::Min(qcdScaleFrozen[3]*TMath::Abs(histo_Fake_CMS_Syst[3]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_FakeM->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[4]->GetBinContent(nb) > 0) systFake[4] = 1.0 + TMath::Min(qcdScaleFrozen[4]*TMath::Abs(histo_Fake_CMS_Syst[4]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_FakeM->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[5]->GetBinContent(nb) > 0) systFake[5] = 1.0 + TMath::Min(qcdScaleFrozen[5]*TMath::Abs(histo_Fake_CMS_Syst[5]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_FakeM->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[6]->GetBinContent(nb) > 0) systFake[6] = 1.0 + TMath::Min(qcdScaleFrozen[6]*TMath::Abs(histo_Fake_CMS_Syst[6]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_FakeM->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[7]->GetBinContent(nb) > 0) systFake[7] = 1.0 + TMath::Min(qcdScaleFrozen[7]*TMath::Abs(histo_Fake_CMS_Syst[7]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_FakeM->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[8]->GetBinContent(nb) > 0) systFake[8] = 1.0 + TMath::Min(qcdScaleFrozen[8]*TMath::Abs(histo_Fake_CMS_Syst[8]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_FakeM->GetBinContent(nb),0.999);
+
+      double systFakePrompt[9]  = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[1]->GetBinContent(nb) > 0 && histo_EWK->GetBinContent(nb) > 0) systFakePrompt[1] = 1.0 + TMath::Min(qcdScaleFrozen[1]*TMath::Abs(histo_Fake_CMS_Syst[1]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_EWK->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[2]->GetBinContent(nb) > 0 && histo_QCD->GetBinContent(nb) > 0) systFakePrompt[2] = 1.0 + TMath::Min(qcdScaleFrozen[2]*TMath::Abs(histo_Fake_CMS_Syst[2]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_QCD->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[3]->GetBinContent(nb) > 0 && histo_WZ ->GetBinContent(nb) > 0) systFakePrompt[3] = 1.0 + TMath::Min(qcdScaleFrozen[3]*TMath::Abs(histo_Fake_CMS_Syst[3]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_WZ ->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[4]->GetBinContent(nb) > 0 && histo_ZZ ->GetBinContent(nb) > 0) systFakePrompt[4] = 1.0 + TMath::Min(qcdScaleFrozen[4]*TMath::Abs(histo_Fake_CMS_Syst[4]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_ZZ ->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[5]->GetBinContent(nb) > 0 && histo_VVV->GetBinContent(nb) > 0) systFakePrompt[5] = 1.0 + TMath::Min(qcdScaleFrozen[5]*TMath::Abs(histo_Fake_CMS_Syst[5]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_VVV->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[6]->GetBinContent(nb) > 0 && histo_WS ->GetBinContent(nb) > 0) systFakePrompt[6] = 1.0 + TMath::Min(qcdScaleFrozen[6]*TMath::Abs(histo_Fake_CMS_Syst[6]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_WS ->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[7]->GetBinContent(nb) > 0 && histo_WG ->GetBinContent(nb) > 0) systFakePrompt[7] = 1.0 + TMath::Min(qcdScaleFrozen[7]*TMath::Abs(histo_Fake_CMS_Syst[7]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_WG ->GetBinContent(nb),0.999);
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[8]->GetBinContent(nb) > 0 && histo_DPS->GetBinContent(nb) > 0) systFakePrompt[8] = 1.0 + TMath::Min(qcdScaleFrozen[8]*TMath::Abs(histo_Fake_CMS_Syst[8]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_DPS->GetBinContent(nb),0.999);
+
       double lumiEWZ = lumiE;
       if(useWZFromData){
         lumiEWZ = 1.0;
@@ -3040,12 +3074,15 @@ void sswwjjAnalysis(
       newcardShape << Form("pdf_gg         lnN    -     -     -     -     -   %7.5f   -     -     -     -     -  \n",systPDF[5]);
       if(theControlRegion != 2){
 
-      //if(histo_FakeM->GetBinContent(nb)>0 && histo_Fake_CMS_SystM->GetBinContent(nb)>0)
-      //newcardShape << Form("CMS_FakeM      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0+0.3*TMath::Min(histo_Fake_CMS_SystM->GetBinContent(nb)/histo_FakeM->GetBinContent(nb) ,1.0));
-      //if(histo_FakeM->GetBinContent(nb)>0 && histo_Fake_CMS_SystE->GetBinContent(nb)>0)
-      //newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0+0.3*TMath::Min(histo_Fake_CMS_SystE->GetBinContent(nb)/histo_FakeM->GetBinContent(nb) ,1.0));
-
-      newcardShape << Form("CMS_FakeM      lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.30);
+      newcardShape << Form("CMS_FakeM         lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.30);
+      newcardShape << Form("CMS_SystFake_EWK  lnN  %7.5f   -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[1],systFake[1]);
+      newcardShape << Form("CMS_SystFake_QCD  lnN    -   %7.5f   -     -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[2],systFake[2]);
+      newcardShape << Form("CMS_SystFake_WZ   lnN    -     -   %7.5f   -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[3],systFake[3]);
+      newcardShape << Form("CMS_SystFake_ZZ   lnN    -     -     -   %7.5f   -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[4],systFake[4]);
+      newcardShape << Form("CMS_SystFake_VVV  lnN    -     -     -     -   %7.5f   -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[5],systFake[5]);
+      newcardShape << Form("CMS_SystFake_WS   lnN    -     -     -     -     -   %7.5f  -     -    %7.5f   -     -  \n",1.0/systFakePrompt[6],systFake[6]);
+      newcardShape << Form("CMS_SystFake_WG   lnN    -     -     -     -     -     -  %7.5f   -    %7.5f   -     -  \n",1.0/systFakePrompt[7],systFake[7]);
+      newcardShape << Form("CMS_SystFake_DPS  lnN    -     -     -     -     -     -    -   %7.5f  %7.5f   -     -  \n",1.0/systFakePrompt[8],systFake[8]);
 
       if(histo_FakeE->GetBinContent(nb)>0)
       newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -      -   %7.5f   -  \n",1.30);
