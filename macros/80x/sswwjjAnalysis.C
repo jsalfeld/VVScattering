@@ -1195,7 +1195,15 @@ void sswwjjAnalysis(
       passFilterCR2[4] = kTRUE;
 
       //Mll cut
-      TLorentzVector dilep(( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) ));
+      TLorentzVector dilep;
+      if(theControlRegion != 2 || idLep.size() != 3){
+        dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) );
+      } else {
+        if     ((int)(*eventLeptons.pdgId)[idLep[0]] * (int)(*eventLeptons.pdgId)[idLep[1]] > 0) dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) );
+        else if((int)(*eventLeptons.pdgId)[idLep[0]] * (int)(*eventLeptons.pdgId)[idLep[2]] > 0) dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) );
+        else                                                                                     dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) );
+      }
+
       if(dilep.M() > 20){
 	passFilterSig[5] = kTRUE;
 	passFilterCR1[5] = kTRUE;
@@ -3075,14 +3083,14 @@ void sswwjjAnalysis(
       if(theControlRegion != 2){
 
       newcardShape << Form("CMS_FakeM         lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.30);
-      newcardShape << Form("CMS_SystFake_EWK  lnN  %7.5f   -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[1],systFake[1]);
-      newcardShape << Form("CMS_SystFake_QCD  lnN    -   %7.5f   -     -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[2],systFake[2]);
-      newcardShape << Form("CMS_SystFake_WZ   lnN    -     -   %7.5f   -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[3],systFake[3]);
-      newcardShape << Form("CMS_SystFake_ZZ   lnN    -     -     -   %7.5f   -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[4],systFake[4]);
-      newcardShape << Form("CMS_SystFake_VVV  lnN    -     -     -     -   %7.5f   -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[5],systFake[5]);
-      newcardShape << Form("CMS_SystFake_WS   lnN    -     -     -     -     -   %7.5f  -     -    %7.5f   -     -  \n",1.0/systFakePrompt[6],systFake[6]);
-      newcardShape << Form("CMS_SystFake_WG   lnN    -     -     -     -     -     -  %7.5f   -    %7.5f   -     -  \n",1.0/systFakePrompt[7],systFake[7]);
-      newcardShape << Form("CMS_SystFake_DPS  lnN    -     -     -     -     -     -    -   %7.5f  %7.5f   -     -  \n",1.0/systFakePrompt[8],systFake[8]);
+      //newcardShape << Form("CMS_SystFake_EWK  lnN  %7.5f   -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[1],systFake[1]);
+      //newcardShape << Form("CMS_SystFake_QCD  lnN    -   %7.5f   -     -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[2],systFake[2]);
+      //newcardShape << Form("CMS_SystFake_WZ   lnN    -     -   %7.5f   -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[3],systFake[3]);
+      //newcardShape << Form("CMS_SystFake_ZZ   lnN    -     -     -   %7.5f   -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[4],systFake[4]);
+      //newcardShape << Form("CMS_SystFake_VVV  lnN    -     -     -     -   %7.5f   -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[5],systFake[5]);
+      //newcardShape << Form("CMS_SystFake_WS   lnN    -     -     -     -     -   %7.5f  -     -    %7.5f   -     -  \n",1.0/systFakePrompt[6],systFake[6]);
+      //newcardShape << Form("CMS_SystFake_WG   lnN    -     -     -     -     -     -  %7.5f   -    %7.5f   -     -  \n",1.0/systFakePrompt[7],systFake[7]);
+      //newcardShape << Form("CMS_SystFake_DPS  lnN    -     -     -     -     -     -    -   %7.5f  %7.5f   -     -  \n",1.0/systFakePrompt[8],systFake[8]);
 
       if(histo_FakeE->GetBinContent(nb)>0)
       newcardShape << Form("CMS_FakeE      lnN    -     -     -     -     -     -    -     -      -   %7.5f   -  \n",1.30);
