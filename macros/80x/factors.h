@@ -2,6 +2,22 @@ double effSF_m_25_medium[10] = {0.836574,0.829962,0.877106,0.892587,0.935558,0.9
 double effSF_e_25_medium[10] = {0.739427,0.690631,0.815957,0.822430,0.856509,0.859530,0.902980,0.923910,0.976901,0.942210};
 double effSF_e_25_tight[10]  = {0.742330,0.661762,0.812364,0.820798,0.851298,0.846768,0.888956,0.915187,0.965834,0.927740};
 
+double fake_rate_m_25_verytight_syst[5][6] = {
+0.265,0.223,0.212,0.198,0.203,0.235,
+0.286,0.231,0.223,0.203,0.212,0.254,
+0.331,0.277,0.259,0.261,0.250,0.287,
+0.368,0.337,0.323,0.311,0.311,0.345,
+0.370,0.369,0.365,0.356,0.370,0.409
+};
+
+double fake_rate_e_25_verytight_syst[5][6] = {
+0.270,0.298,0.290,0.262,0.241,0.268,
+0.217,0.329,0.273,0.256,0.254,0.246,
+0.216,0.333,0.280,0.266,0.260,0.241,
+0.219,0.243,0.231,0.199,0.184,0.153,
+0.166,0.159,0.131,0.103,0.089,0.081
+};
+
 double fake_rate_m_25_medium[5][6] = {
 0.305,0.269,0.260,0.242,0.217,0.214,
 0.320,0.283,0.269,0.257,0.239,0.237,
@@ -450,6 +466,31 @@ TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF, 
   return result*trkSF*isoSF*effVeryTight;
 }
 
+double effhDPhotonScaleFactor(double pt, double eta, TString type, TH2D *fhDIdSF, TH2D *fhDVetoSF){
+
+  if(pt>=200) pt = +199.999;
+
+  if     (eta>=+2.4) eta = +2.399;
+  else if(eta<=-2.4) eta = -2.399;
+
+  Int_t binXA = 0;
+  Int_t binYA = 0;
+  Int_t binXB = 0;
+  Int_t binYB = 0;
+
+  binXA = fhDIdSF  ->GetXaxis()->FindFixBin(eta);binYA = fhDIdSF  ->GetYaxis()->FindFixBin(pt);
+  
+  eta = abs(eta); if(eta < 1.5) eta = 1.0; else eta = 2.0;
+  binXB = fhDVetoSF->GetXaxis()->FindFixBin(eta);binYB = fhDVetoSF->GetYaxis()->FindFixBin(pt);
+
+  double idSF   = fhDIdSF  ->GetBinContent(binXA, binYA);
+  double vetoSF = fhDVetoSF->GetBinContent(binXB, binYB);
+  
+  if(idSF <= 0 || vetoSF <= 0) printf("photonSF <= 0! %f %f %d %d %d %d - %f %f\n",idSF,vetoSF,binXA,binYA,binXB,binYB,pt,eta);
+
+  return idSF*vetoSF;
+}
+
 double effScaleFactor(double pt, double eta, int nsel, int period, TString type){
   int iPt = -1;
   if	 (pt < 15) iPt = 0;
@@ -510,6 +551,10 @@ double fakeRateFactor(double pt, double eta, int nsel, int period, TString type)
   else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "veryverytight")                                                              return addFactor*fake_rate_e_25_veryverytight [iEta][iPt]/(1.0-fake_rate_e_25_veryverytight [iEta][iPt]);
   else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium_mva")		                                                 return addFactor*fake_rate_e_25_medium_mva    [iEta][iPt]/(1.0-fake_rate_e_25_medium_mva    [iEta][iPt]);
   else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default_mva")		                                                 return addFactor*fake_rate_e_25_tight_mva     [iEta][iPt]/(1.0-fake_rate_e_25_tight_mva     [iEta][iPt]);
+
+  else if(TMath::Abs(nsel) == 13 && period == 1 && (type== "verytight_syst"))                                                            return addFactor*fake_rate_m_25_verytight_syst[iEta][iPt]/(1.0-fake_rate_m_25_verytight_syst[iEta][iPt]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "verytight_syst")			                                         return addFactor*fake_rate_e_25_verytight_syst[iEta][iPt]/(1.0-fake_rate_e_25_verytight_syst[iEta][iPt]);
+
   else    printf("PROBLEM WITH FAKES\n");
 
   assert(0);

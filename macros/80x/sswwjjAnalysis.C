@@ -57,6 +57,7 @@ int period = 1;
 const bool usePUPPI = false;
 const bool useWSFromData = true;
 const bool useWZFromData = false;
+const bool addFakeShapeSyst = true;
 const double mjjCut = 500.;
 
 void sswwjjAnalysis(
@@ -795,6 +796,7 @@ void sswwjjAnalysis(
   for(int ns=0; ns<9; ns++) {
     histo_Fake_CMS_Syst[ns] = new TH1D( Form("histo_Fake_CMS_Syst_%d",ns), Form("histo_Fake_CMS_Syst_%d",ns), nBinMVA, xbins); histo_Fake_CMS_Syst[ns]->Sumw2();
   } 
+  TH1D* histo_Fake_CMS_ShapeSyst    	      = new TH1D( Form("histo_Fake_CMS_ShapeSyst")  , Form("histo_Fake_CMS_ShapeSyst")  , nBinMVA, xbins); histo_Fake_CMS_ShapeSyst  ->Sumw2();
 
   for(int nModel=0; nModel<nSigModels; nModel++) { 
     histo_Higgs_CMS_MVALepEffMBoundingUp[nModel]          = new TH1D( Form("histo_Higgs_%s_%sUp",   signalName_[nModel].Data(), effMName), Form("histo_Higgs_%s_%sUp",  signalName_[nModel].Data(), effMName), nBinMVA, xbins); histo_Higgs_CMS_MVALepEffMBoundingUp[nModel]  ->Sumw2();
@@ -1194,16 +1196,17 @@ void sswwjjAnalysis(
       }
       passFilterCR2[4] = kTRUE;
 
-      //Mll cut
-      TLorentzVector dilep;
-      if(theControlRegion != 2 || idLep.size() != 3){
-        dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) );
-      } else {
-        if     ((int)(*eventLeptons.pdgId)[idLep[0]] * (int)(*eventLeptons.pdgId)[idLep[1]] > 0) dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) );
-        else if((int)(*eventLeptons.pdgId)[idLep[0]] * (int)(*eventLeptons.pdgId)[idLep[2]] > 0) dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) );
-        else                                                                                     dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) );
-      }
+      TLorentzVector dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) );
+      //TLorentzVector dilep;
+      //if(theControlRegion != 2 || idLep.size() != 3){
+      //  dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) );
+      //} else {
+      //  if     ((int)(*eventLeptons.pdgId)[idLep[0]] * (int)(*eventLeptons.pdgId)[idLep[1]] > 0) dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) );
+      //  else if((int)(*eventLeptons.pdgId)[idLep[0]] * (int)(*eventLeptons.pdgId)[idLep[2]] > 0) dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) );
+      //  else                                                                                     dilep = ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[2])) );
+      //}
 
+      //Mll cut
       if(dilep.M() > 20){
 	passFilterSig[5] = kTRUE;
 	passFilterCR1[5] = kTRUE;
@@ -1503,30 +1506,36 @@ void sswwjjAnalysis(
 
       // fake rate
       unsigned int typeFakeLepton[2] = {0,0};
-      double fakeSF = 1.0;
+      double fakeSF_Def  = 1.0;
+      double fakeSF_Syst = 1.0;
       if(usePureMC == false && sigModel == -1){
 	if((infilecatv[ifile] == 0 || infilecatv[ifile] == 7 || (goodIsGenRSLep+goodIsGenWSLep) == isGenLep.size()) && goodIsTight != idTight.size()){
             for(unsigned int nl=0; nl<idLep.size(); nl++){
               if(idTight[nl] == 1) continue;
-              fakeSF = fakeSF * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data());
+              fakeSF_Def  = fakeSF_Def  * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,typeLepSel.Data());
+              fakeSF_Syst = fakeSF_Syst * fakeRateFactor(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Pt(),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[nl]])->Eta()),TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]),period,"verytight_syst");
               theCategory = 9;
 	      if(TMath::Abs((int)(*eventLeptons.pdgId)[idLep[nl]]) == 13) {typeFakeLepton[0]++; nFakeCount = nFakeCount + 1;}
 	      else                                                        {typeFakeLepton[1]++; nFakeCount = nFakeCount + 2;}
             }
-            if     (infilecatv[ifile] != 0 && goodIsTight == idTight.size()-2) fakeSF =  1.0 * fakeSF; // double fake, MC
-            else if(infilecatv[ifile] != 0 && goodIsTight == idTight.size()-1) fakeSF = -1.0 * fakeSF; // single fake, MC
-            else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) fakeSF = -1.0 * fakeSF; // double fake, data
-            else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) fakeSF =  1.0 * fakeSF; // single fake, data
+            if     (infilecatv[ifile] != 0 && goodIsTight == idTight.size()-2) fakeSF_Def =  1.0 * fakeSF_Def; // double fake, MC
+            else if(infilecatv[ifile] != 0 && goodIsTight == idTight.size()-1) fakeSF_Def = -1.0 * fakeSF_Def; // single fake, MC
+            else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) fakeSF_Def = -1.0 * fakeSF_Def; // double fake, data
+            else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) fakeSF_Def =  1.0 * fakeSF_Def; // single fake, data
             if(typeFakeLepton[0] < typeFakeLepton[1] && idLep.size() == 2) {theCategory = 10;}
+            if     (infilecatv[ifile] != 0 && goodIsTight == idTight.size()-2) fakeSF_Syst =  1.0 * fakeSF_Syst; // double fake, MC
+            else if(infilecatv[ifile] != 0 && goodIsTight == idTight.size()-1) fakeSF_Syst = -1.0 * fakeSF_Syst; // single fake, MC
+            else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-2) fakeSF_Syst = -1.0 * fakeSF_Syst; // double fake, data
+            else if(infilecatv[ifile] == 0 && goodIsTight == idTight.size()-1) fakeSF_Syst =  1.0 * fakeSF_Syst; // single fake, data
 	}
 	else if(infilecatv[ifile] != 0 && infilecatv[ifile] != 7 && (goodIsGenRSLep+goodIsGenWSLep) != isGenLep.size()){ // remove MC dilepton fakes from ll events
-          fakeSF = 0.0;
+          fakeSF_Def = 0.0; fakeSF_Syst = 0.0;
 	}
 	else if(infilecatv[ifile] != 0 && (goodIsGenRSLep+goodIsGenWSLep) == isGenLep.size()){ // MC with all good leptons
-          fakeSF = 1.0;
+          fakeSF_Def = 1.0; fakeSF_Syst = 1.0;
 	}
 	else if(infilecatv[ifile] == 0 || infilecatv[ifile] == 7){ // data or W+gamma with all good leptons
-          fakeSF = 1.0;
+          fakeSF_Def = 1.0; fakeSF_Syst = 1.0;
 	}
 	else {
           printf("PROBLEMFAKES: %d %d %d %d %d %d\n",infilecatv[ifile],goodIsGenRSLep,goodIsGenWSLep,(int)isGenLep.size(),goodIsTight,(int)idTight.size());
@@ -1538,7 +1547,7 @@ void sswwjjAnalysis(
 
       double mcWeight = eventMonteCarlo.mcWeight;
       if(infilecatv[ifile] == 0) mcWeight = 1.0;
-      double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*trigEff;
+      double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF_Def*theMCPrescale*trigEff;
 
       // Wrong sign scale factor
       if(theCategory == 6 && useWSFromData  && usePureMC == false) {
@@ -1585,7 +1594,7 @@ void sswwjjAnalysis(
 
       if(passSignalRegion && infilecatv[ifile] == 0) totalFakeDataCount[typeSel][nFakeCount] = totalFakeDataCount[typeSel][nFakeCount] + 1;
 
-      for(int nl=0; nl <=sumEvol[typeSel]; nl++) if(fakeSF == 1) {hDWWLL[typeSel]->Fill((double)nl,totalWeight);hDWWLL[6]->Fill((double)nl,totalWeight);}
+      for(int nl=0; nl <=sumEvol[typeSel]; nl++) if(fakeSF_Def == 1) {hDWWLL[typeSel]->Fill((double)nl,totalWeight);hDWWLL[6]->Fill((double)nl,totalWeight);}
 
       for(unsigned int i=0; i<nSelTypes; i++) {
         if(passAllCuts[i] && sigModel == -1) {
@@ -2077,9 +2086,12 @@ void sswwjjAnalysis(
           histo_FakeM->Fill(MVAVar,totalWeight);
           if(infilecatv[ifile] == 0) histo_Fake_CMS_Syst[0]->Fill(MVAVar,totalWeight);
 	  for(int ns=1; ns<9; ns++) if(infilecatv[ifile] != ns) histo_Fake_CMS_Syst[ns]->Fill(MVAVar,totalWeight);
-	  
+
+          if(fakeSF_Def > 0) histo_Fake_CMS_ShapeSyst->Fill(MVAVar,totalWeight*fakeSF_Syst/fakeSF_Def);
+          else               histo_Fake_CMS_ShapeSyst->Fill(MVAVar,totalWeight);
+
 	  //if(dijet.M() > 1500 && dilep.M() > 180) {
-          //  printf("HIGHMJJMLL: %f %f %d %f / %f %f %f %f %f %f %f\n",dijet.M(),dilep.M(),typeSel,totalWeight,mcWeight,theLumi,puWeight,effSF,fakeSF,theMCPrescale,trigEff);
+          //  printf("HIGHMJJMLL: %f %f %d %f / %f %f %f %f %f %f %f\n",dijet.M(),dilep.M(),typeSel,totalWeight,mcWeight,theLumi,puWeight,effSF,fakeSF_Def,theMCPrescale,trigEff);
           //}
         }
       }
@@ -2529,7 +2541,9 @@ void sswwjjAnalysis(
       for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[6]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
       for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[7]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
       for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_Syst[8]->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
-    } 
+      printf("uncertainties ShapeFake\n");
+      for(int i=1; i<=histo_FakeM->GetNbinsX(); i++) {if(histo_FakeM->GetBinContent(i)>0)printf("%5.1f ",histo_Fake_CMS_ShapeSyst->GetBinContent(i)/histo_FakeM->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
+    }
 
     histo_Data ->Write();
     histo_EWK  ->Write();
@@ -2988,6 +3002,9 @@ void sswwjjAnalysis(
       if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[7]->GetBinContent(nb) > 0 && histo_WG ->GetBinContent(nb) > 0) systFakePrompt[7] = 1.0 + TMath::Min(qcdScaleFrozen[7]*TMath::Abs(histo_Fake_CMS_Syst[7]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_WG ->GetBinContent(nb),0.999);
       if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_Syst[8]->GetBinContent(nb) > 0 && histo_DPS->GetBinContent(nb) > 0) systFakePrompt[8] = 1.0 + TMath::Min(qcdScaleFrozen[8]*TMath::Abs(histo_Fake_CMS_Syst[8]->GetBinContent(nb)-histo_FakeM->GetBinContent(nb))/histo_DPS->GetBinContent(nb),0.999);
 
+      double systFakeShape[1]  = {1.0};
+      if(histo_FakeM->GetBinContent(nb) > 0 && histo_Fake_CMS_ShapeSyst->GetBinContent(nb) > 0) systFakeShape[0] = histo_Fake_CMS_ShapeSyst->GetBinContent(nb)/histo_FakeM->GetBinContent(nb);
+
       double lumiEWZ = lumiE;
       if(useWZFromData){
         lumiEWZ = 1.0;
@@ -3082,7 +3099,14 @@ void sswwjjAnalysis(
       newcardShape << Form("pdf_gg         lnN    -     -     -     -     -   %7.5f   -     -     -     -     -  \n",systPDF[5]);
       if(theControlRegion != 2){
 
+      if(addFakeShapeSyst == false){
       newcardShape << Form("CMS_FakeM         lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.30);
+      } else {
+      newcardShape << Form("CMS_FakeM         lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",1.25);
+      newcardShape << Form("systFakeShape     lnN    -     -     -     -     -     -    -     -    %7.5f   -     -  \n",systFakeShape[0]);
+      }
+
+      // Prompt fake systematics
       //newcardShape << Form("CMS_SystFake_EWK  lnN  %7.5f   -     -     -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[1],systFake[1]);
       //newcardShape << Form("CMS_SystFake_QCD  lnN    -   %7.5f   -     -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[2],systFake[2]);
       //newcardShape << Form("CMS_SystFake_WZ   lnN    -     -   %7.5f   -     -     -    -     -    %7.5f   -     -  \n",1.0/systFakePrompt[3],systFake[3]);
