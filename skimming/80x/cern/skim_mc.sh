@@ -114,6 +114,7 @@ root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WW
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root\",\"wwz\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root\",\"wzz\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root\",\"zzz\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root\",\"wwg\",$1\)
 
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8.root\",\"wz1l1n2q4\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8.root\",\"wz1l3n4\",$1\)
