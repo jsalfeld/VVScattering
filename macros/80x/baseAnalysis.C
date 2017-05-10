@@ -250,6 +250,11 @@ void baseAnalysis(
   //TH2D *fhDMuIsoSF = (TH2D*)(fMuIsoSF->Get("MC_NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/abseta_pt_ratio")); assert(fhDMuIsoSF); fhDMuIsoSF->SetDirectory(0);
   delete fMuIsoSF;
 
+  TFile *fPhotonSF = TFile::Open(Form("MitAnalysisRunII/data/80x/photon_scalefactors_37ifb.root"));
+  TH2D *fhDPhotonSF       = (TH2D*)(fPhotonSF->Get("EGamma_SF2D")); assert(fhDPhotonSF); fhDPhotonSF->SetDirectory(0);
+  TH2D *fhDElectronVetoSF = (TH2D*)(fPhotonSF->Get("Scaling_Factors_HasPix_R9 Inclusive")); assert(fhDElectronVetoSF); fhDElectronVetoSF->SetDirectory(0);
+  delete fPhotonSF;
+
   TH1D* histoBTAG[4][4];
   for(int theType=0; theType<4; theType++){
     histoBTAG[theType][0] = new TH1D(Form("histoBTAG_%d_0",theType), Form("histoBTAG_%d_0",theType), 100, 0, 200);
@@ -867,7 +872,7 @@ void baseAnalysis(
 	//				    (int)(*eventMonteCarlo.pdgId)[ngenl]);
       //}
       // begin event weighting
-      vector<bool> isGenDupl;vector<int> idGenPho;
+      vector<bool> isGenDupl;vector<int> idGenPho;vector<int> idGenLep;
       int numberQuarks[2] = {0,0};
       vector<int>zBoson;
       for(int ngen0=0; ngen0<eventMonteCarlo.p4->GetEntriesFast(); ngen0++) {
@@ -880,7 +885,7 @@ void baseAnalysis(
 	bool isGoodFlags = ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::PromptFinalState) == BareMonteCarlo::PromptFinalState ||
             		   ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::DirectPromptTauDecayProductFinalState) == BareMonteCarlo::DirectPromptTauDecayProductFinalState;
         isGoodFlags = isGoodFlags && (TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 11 || TMath::Abs((int)(*eventMonteCarlo.pdgId)[ngen0]) == 13);
-        if(isGoodFlags == false) isGenDupl[ngen0] = 1;
+        if(isGoodFlags == false) {isGenDupl[ngen0] = 1; idGenLep.push_back(ngen0);}
 
          // begin photons        
          bool isGoodPhFlags = ((*eventMonteCarlo.flags)[ngen0] & BareMonteCarlo::PromptFinalState) == BareMonteCarlo::PromptFinalState ||
@@ -902,6 +907,34 @@ void baseAnalysis(
 	}
 	if(isGenLepton == true) {isGenLep.push_back(1); goodIsGenLep++;}
 	else                    {isGenLep.push_back(0);}
+      }
+
+      double photonSF = 1.0;
+      int isGenPho = 0;
+      bool isGenPhoton = false;
+      if(idPho.size() >= 1){
+        for(unsigned int ngenpho=0; ngenpho<idGenPho.size(); ngenpho++) {
+          if(((TLorentzVector*)(*eventPhotons.p4)[idPho[0]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[idGenPho[ngenpho]])) < 0.1) {
+	    isGenPhoton = true;
+	    break;
+	  }
+	}
+	if(isGenPhoton == true) isGenPho = 1;
+	if(isGenPho == 0){
+          bool isGenLepton = false;
+          for(unsigned int ngenlep=0; ngenlep<idGenLep.size(); ngenlep++) {
+            if(((TLorentzVector*)(*eventPhotons.p4)[idPho[0]])->DeltaR(*((TLorentzVector*)(*eventMonteCarlo.p4)[idGenLep[ngenlep]])) < 0.1) {
+	      isGenLepton = true;
+	      break;
+	    }
+	  }
+	  if(isGenLepton == true) isGenPho = 2;
+        }
+
+        if(isGenPho == 2) {photonSF = 0.90;}
+        else if(isGenPho == 1) {
+          photonSF = effhDPhotonScaleFactor(((TLorentzVector*)(*eventPhotons.p4)[idPho[0]])->Pt(), ((TLorentzVector*)(*eventPhotons.p4)[idPho[0]])->Eta(), "medium", fhDPhotonSF, fhDElectronVetoSF);
+        }
       }
 
       // trigger efficiency
@@ -965,7 +998,7 @@ void baseAnalysis(
       }
       double mcWeight = eventMonteCarlo.mcWeight;
       if(infilecatv[ifile] == 0) mcWeight = 1.0;
-      double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*trigEff;
+      double totalWeight = mcWeight*theLumi*puWeight*effSF*fakeSF*theMCPrescale*trigEff*photonSF;
       //double totalWeight = mcWeight*theLumi*theMCPrescale;
       //printf("totalWeight: %f * %f * %f * %f * %f * %f * %f = %f (%d %d %llu)\n",mcWeight,theLumi,puWeight,effSF,fakeSF,theMCPrescale,trigEff,totalWeight,eventEvent.runNum,eventEvent.lumiNum,eventEvent.eventNum);
       
