@@ -19,7 +19,7 @@
 #include "MitAnalysisRunII/macros/80x/factors.h"
 
 int whichSkim = 1;
-double mcPrescale = 50.0;
+double mcPrescale = 5.0;
 
 bool isMINIAOD = true;
 
