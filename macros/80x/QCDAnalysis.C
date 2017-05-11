@@ -19,7 +19,7 @@
 #include "MitAnalysisRunII/macros/80x/factors.h"
 
 int whichSkim = 1;
-double mcPrescale = 5.0;
+double mcPrescale = 50.0;
 
 bool isMINIAOD = true;
 
@@ -438,7 +438,8 @@ void QCDAnalysis(
 	thePass = thePass && TMath::Abs((int)(*eventLeptons.pdgId)[idLep[0]]) == typeSel;
         if(thePass) {
           nPassCuts[3][4]++;
-          dilep = ( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[1])) ) ); 
+          dilep = ( ( *(TLorentzVector*)(eventLeptons.p4->At(idLep[0])) ) + 
+                    ( *(TLorentzVector*)(eventPhotons.p4->At(idPho[0])) ) ); 
           if(TMath::Abs(dilep.M()-91.1876)<10.0) passSel[3] = kTRUE;	
 	}
       }
@@ -550,7 +551,8 @@ void QCDAnalysis(
       }
 
       // ZLG study
-      if(passSel[0] == kTRUE && ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 20 && ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20) {
+      if(passSel[0] == kTRUE && ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 20 && 
+                                ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() > 20) {
 	int iPt1 = -1;
 	if     (((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() < 25){
           iPt1 = 0;
@@ -587,7 +589,8 @@ void QCDAnalysis(
         else                       denLGTBG[iPt2] = denLGTBG[iPt2] + totalWeight;
       }
 
-      if(passSel[3] == kTRUE && ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 20 && ((TLorentzVector*)(*eventLeptons.p4)[idPho[0]])->Pt() > 20) {
+      if(passSel[3] == kTRUE && ((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt() > 20 && 
+                                ((TLorentzVector*)(*eventLeptons.p4)[idPho[0]])->Pt() > 20) {
 	int iPt2 = -1;
 	if     (((TLorentzVector*)(*eventLeptons.p4)[idPho[0]])->Pt() < 25){
           iPt2 = 0;
