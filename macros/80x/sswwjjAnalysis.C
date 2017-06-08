@@ -1732,7 +1732,10 @@ void sswwjjAnalysis(
 
       if     (theCategory == 0){
         if((passAllCuts[SIGSEL] && theControlRegion == 0) || (passAllCuts[TOPSEL] && theControlRegion == 1) || (passAllCuts[WZSEL] && theControlRegion == 2)) {
-           if(verbose) printf("DATA %d %d %llu\n",eventEvent.runNum,eventEvent.lumiNum,eventEvent.eventNum);
+           if(verbose) printf("DATA %d %d %llu %f %f %f %f %f %f %f %f %d\n",eventEvent.runNum,eventEvent.lumiNum,eventEvent.eventNum,
+	   ((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Pt(),((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Eta(),((TLorentzVector*)(*eventJets.p4)[idJet[0]])->Phi(),
+	   ((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Pt(),((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Eta(),((TLorentzVector*)(*eventJets.p4)[idJet[1]])->Phi(),
+	   dijet.M(),deltaEtaJJ,(int)idJet.size());
            histo_Data->Fill(MVAVar,totalWeight);
         }
       }
