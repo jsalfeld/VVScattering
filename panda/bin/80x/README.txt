@@ -32,7 +32,7 @@ TTG TTZ TTW ST_tW TTTo2L2Nu WGstarTo WGToLNuG ZGTo2LG JetsToLL DYJetsToTauTau --
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge.py WWdps  	    
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge.py VVV		    
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge.py ttV		    
-/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge.py TT2l		    
+/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge.py TT2L		    
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge.py TW		    
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge.py WGstar 	    
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge.py VG		    
