@@ -32,7 +32,7 @@ enum SelectionBit {
 
 const double mass_el = 0.000510998928;
 const double mass_mu = 0.10566;
-void pandaAnalysis()
+void pandaAnalysis(bool isMIT=false)
 {
   TString dirPathRM = TString(gSystem->Getenv("CMSSW_BASE")) + "/src/MitAnalysisRunII/data/80x/rcdata.2016.v3";
   RoccoR rmcor(dirPathRM.Data());
@@ -41,6 +41,7 @@ void pandaAnalysis()
   //Input Files
   //*******************************************************
   TString filesPath = "/data/t3home000/ceballos/panda/v_004_0/";
+  if(isMIT == false) filesPath = "/afs/cern.ch/work/c/ceballos/public/samples/panda/v_004_0/";
   vector<TString> infileName_;  
   vector<Int_t> infileCat_;  
   infileName_.push_back(Form("%sdata.root",filesPath.Data()));                 infileCat_.push_back(0);
@@ -116,7 +117,21 @@ void pandaAnalysis()
       if(thePandaFlat.metFilter == 0) continue;
       
       if(thePandaFlat.nLooseLep != 2) continue;
-      if(thePandaFlat.looseLep1Pt <= 25 || thePandaFlat.looseLep2Pt <= 25) continue;
+      
+
+      int theCategory = infileCat_[ifile];
+      float muonPtSF[2] = {1,1};
+      if(theCategory == 0) {
+        if(abs(thePandaFlat.looseLep1PdgId)==13) muonPtSF[0] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 0, 0);
+        if(abs(thePandaFlat.looseLep2PdgId)==13) muonPtSF[1] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 0, 0);
+      } else {
+        if(abs(thePandaFlat.looseLep1PdgId)==13) muonPtSF[0] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, gRandom->Rndm(), gRandom->Rndm(), 0, 0);
+        if(abs(thePandaFlat.looseLep2PdgId)==13) muonPtSF[1] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, gRandom->Rndm(), gRandom->Rndm(), 0, 0);
+      }
+      float looseNewLep1Pt = thePandaFlat.looseLep1Pt * muonPtSF[0];
+      float looseNewLep2Pt = thePandaFlat.looseLep2Pt * muonPtSF[1];
+
+      if(looseNewLep1Pt <= 25 || looseNewLep2Pt <= 25) continue;
       bool passLepId = ((thePandaFlat.looseLep1SelBit & kMedium) == kMedium) && ((thePandaFlat.looseLep2SelBit & kMedium) == kMedium);
       if(passLepId == false) continue;
 
@@ -137,8 +152,8 @@ void pandaAnalysis()
       else if(abs(lepType) == 2 && abs(thePandaFlat.looseLep1PdgId)==11) {thePDGMass[0] = mass_el;}
       else if(abs(lepType) == 2 && abs(thePandaFlat.looseLep2PdgId)==11) {thePDGMass[1] = mass_el;}
       TLorentzVector v1,v2;
-      v1.SetPtEtaPhiM(thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi,thePDGMass[0]);
-      v2.SetPtEtaPhiM(thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi,thePDGMass[1]);
+      v1.SetPtEtaPhiM(looseNewLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi,thePDGMass[0]);
+      v2.SetPtEtaPhiM(looseNewLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi,thePDGMass[1]);
 
       if(TMath::Abs((v1+v2).M()-91.1876) >= 15) continue;
 
@@ -156,7 +171,6 @@ void pandaAnalysis()
       }
 
       double totalWeight = 1.0;
-      int theCategory = infileCat_[ifile];
       if(theCategory != 0){
         totalWeight = thePandaFlat.normalizedWeight * lumi * thePandaFlat.sf_pu *
 	              thePandaFlat.sf_trk1 * thePandaFlat.sf_medium1 *
@@ -167,9 +181,6 @@ void pandaAnalysis()
       histo[lepType+4][theCategory]->Fill(TMath::Min(ZRecPt,1999.999),totalWeight);
       histo[lepType+6][theCategory]->Fill(TMath::Abs(ZRecPt-ZGenPt),totalWeight);
       
-     double dataSF = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 0, 0);
-     double mcSF = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, gRandom->Rndm(), gRandom->Rndm(), 0, 0);
-     printf("%f %f\n",dataSF,mcSF);
 
       if     (theCategory == 1){
         histoPtRecDY[lepType]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight);
