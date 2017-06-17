@@ -32,7 +32,7 @@ enum SelectionBit {
 
 const double mass_el = 0.000510998928;
 const double mass_mu = 0.10566;
-void pandaAnalysis(bool isMIT=false)
+void pandaAnalysis(int isLO = 0, bool isMIT=false)
 {
   TString dirPathRM = TString(gSystem->Getenv("CMSSW_BASE")) + "/src/MitAnalysisRunII/data/80x/rcdata.2016.v3";
   RoccoR rmcor(dirPathRM.Data());
@@ -46,7 +46,10 @@ void pandaAnalysis(bool isMIT=false)
   vector<Int_t> infileCat_;  
 
   infileName_.push_back(Form("%sdata.root",filesPath.Data()));                 infileCat_.push_back(0);
-  infileName_.push_back(Form("%sDYJetsToLL_M-50_LO.root" ,filesPath.Data()));  infileCat_.push_back(1);
+  if(isLO)
+ {infileName_.push_back(Form("%sDYJetsToLL_M-50_LO.root" ,filesPath.Data()));  infileCat_.push_back(1);}
+  else
+ {infileName_.push_back(Form("%sDYJetsToLL_M-50_NLO.root",filesPath.Data()));  infileCat_.push_back(1);}
   infileName_.push_back(Form("%sDYJetsToLL_M-10to50.root" ,filesPath.Data())); infileCat_.push_back(1);
   infileName_.push_back(Form("%sqqWW.root" ,filesPath.Data()));                infileCat_.push_back(2);
   infileName_.push_back(Form("%sggWW.root" ,filesPath.Data()));                infileCat_.push_back(2);
@@ -60,13 +63,12 @@ void pandaAnalysis(bool isMIT=false)
   infileName_.push_back(Form("%sVG.root" ,filesPath.Data()));                  infileCat_.push_back(7);
   infileName_.push_back(Form("%sH125.root" ,filesPath.Data()));                infileCat_.push_back(8);
 
-  const int nBinPt = 64; Float_t xbinsPt[nBinPt+1] = {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
+  const int nBinPt = 57; Float_t xbinsPt[nBinPt+1] = {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
                                                        10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                                                        20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
                                                        30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
-                                                       40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 
-						       90, 95,100,120,140,160,180,200,250,300,
-						      350,400,450,500,1000};
+                                                       40, 50, 60, 70, 80, 90,100,125,150,175, 
+						      200,250,300,350,400,450,500,1000};
 
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
