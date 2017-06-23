@@ -562,6 +562,15 @@ double fakeRateFactor(double pt, double eta, int nsel, int period, TString type)
   return 0.0;
 }
 
+double electronToPhotonSF(double pt){
+double effDA = 0.0292 + 0.131 / (pt - 12.80);
+double effMD = 0.0147 + 0.208 / (pt + 10.89);
+
+//printf("electronToPhotonSF: %f/%f=%f\n",effDA,effMD,effDA/effMD);
+
+return effDA/effMD;
+}
+
 double promptFactor(double pt, double eta, int nsel, int period, TString type){
   int iPt = -1;
   if	 (pt <  15) iPt = 0;
