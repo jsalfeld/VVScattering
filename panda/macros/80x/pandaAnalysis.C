@@ -8,6 +8,7 @@
 #include <TMath.h>
 #include <iostream>
 #include <fstream>
+#include "TRandom.h"
 #include "TLorentzVector.h"
 
 #include "MitAnalysisRunII/panda/macros/80x/pandaFlat.C"
@@ -69,19 +70,21 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
                                                        30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
                                                        40, 50, 60, 70, 80, 90,100,125,150,175, 
 						      200,250,300,350,400,450,500,1000};
+  /*const int nBinPt = 500; Float_t xbinsPt[nBinPt+1]; for(int i=0; i<=nBinPt;i++) xbinsPt[i] = i * 0.1;*/
 
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 10;
+  const int allPlots = 15;
   const int histBins = 9;
   TH1D* histo[allPlots][histBins];
   TString processName[histBins] = {".Data", "DY", "WW", "ZZ", "WZ", "VVV", "Top", "VG", "H125"};
   for(int thePlot=0; thePlot<allPlots; thePlot++){
-    if     (thePlot >=  0 && thePlot <=  1) {nBinPlot =  60; xminPlot = 91.1876-15; xmaxPlot = 91.1876+15;}
+    if     (thePlot >=  0 && thePlot <=  1) {nBinPlot = 120; xminPlot = 91.1876-15; xmaxPlot = 91.1876+15;}
     else if(thePlot >=  2 && thePlot <=  3) {nBinPlot = 200; xminPlot =  0.0; xmaxPlot = 200;}
     else if(thePlot >=  4 && thePlot <=  5) {nBinPlot = 200; xminPlot =  0.0; xmaxPlot =2000;}
     else if(thePlot >=  6 && thePlot <=  7) {nBinPlot = 200; xminPlot =  0.0; xmaxPlot =  20;}
+    else if(thePlot >=  8 && thePlot <= 13) {nBinPlot = 120; xminPlot = 91.1876-15; xmaxPlot = 91.1876+15;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
@@ -132,7 +135,7 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
       if (ientry < 0) break;
       nb = thePandaFlat.fChain->GetEntry(jentry);   nbytes += nb;
       if (jentry%1000000 == 0) printf("--- reading event %8lld (%8lld) of %8lld\n",jentry,ientry,nentries);
-      
+
       bool passTrigger = (thePandaFlat.trigger & kMuEGTrig) == kMuEGTrig || (thePandaFlat.trigger & kMuMuTrig) == kMuMuTrig ||
                          (thePandaFlat.trigger & kMuTrig)   == kMuTrig   || (thePandaFlat.trigger & kEGEGTrig) == kEGEGTrig ||
 			 (thePandaFlat.trigger & kEGTrig)   == kEGTrig;
@@ -143,82 +146,121 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
       
 
       int theCategory = infileCat_[ifile];
-      float muonPtSF[2] = {1,1};
-      float muonPtSFSyst[2] = {1,1};
-      if(theCategory == 0) {
+      float lepPtSF[2] = {1,1};
+      float lepPtSFSyst[2] = {1,1};
+      if(theCategory == 0) { // Data
         if(abs(thePandaFlat.looseLep1PdgId)==13) {
 	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
-          muonPtSF[0] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 0, 0);
-          double muonPtSyst[11];
-          muonPtSyst[0] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 2, 0);
-          muonPtSyst[1] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 4, 0);
-          muonPtSyst[2] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 4, 1);
-          muonPtSyst[3] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 4, 2);
-          muonPtSyst[4] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 4, 3);
-          muonPtSyst[5] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 4, 4);
-          muonPtSyst[6] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 5, 0);
-          muonPtSyst[7] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 5, 1);
-          muonPtSyst[8] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 5, 2);
-          muonPtSyst[9] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 5, 3);
-          muonPtSyst[10]= rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 5, 4);
-          muonPtSFSyst[0] = muonPtSF[0];
-          for(int i=0; i<11; i++) if(TMath::Abs(muonPtSF[0]-muonPtSyst[i]) > TMath::Abs(muonPtSF[0]-muonPtSFSyst[0])) muonPtSFSyst[0] = muonPtSyst[i];
-        }
-        if(abs(thePandaFlat.looseLep2PdgId)==13) {
-	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
-	  muonPtSF[1] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 0, 0);
-          double muonPtSyst[11];
-          muonPtSyst[0] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 2, 0);
-          muonPtSyst[1] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 4, 0);
-          muonPtSyst[2] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 4, 1);
-          muonPtSyst[3] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 4, 2);
-          muonPtSyst[4] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 4, 3);
-          muonPtSyst[5] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 4, 4);
-          muonPtSyst[6] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 5, 0);
-          muonPtSyst[7] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 5, 1);
-          muonPtSyst[8] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 5, 2);
-          muonPtSyst[9] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 5, 3);
-          muonPtSyst[10]= rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 5, 4);
-          muonPtSFSyst[1] = muonPtSF[1];
-          for(int i=0; i<11; i++) if(TMath::Abs(muonPtSF[1]-muonPtSyst[i]) > TMath::Abs(muonPtSF[1]-muonPtSFSyst[1])) muonPtSFSyst[1] = muonPtSyst[i];
-        }
-      } else {
-        if(abs(thePandaFlat.looseLep1PdgId)==13) {
-	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
-          muonPtSF[0] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 0, 0);
-          double muonPtSyst[11];
-          muonPtSyst[0] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 2, 0);
-          muonPtSyst[1] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 4, 0);
-          muonPtSyst[2] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 4, 1);
-          muonPtSyst[3] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 4, 2);
-          muonPtSyst[4] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 4, 3);
-          muonPtSyst[5] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 4, 4);
-          muonPtSyst[6] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 5, 0);
-          muonPtSyst[7] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 5, 1);
-          muonPtSyst[8] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 5, 2);
-          muonPtSyst[9] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 5, 3);
-          muonPtSyst[10]= rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 5, 4);
-          muonPtSFSyst[0] = muonPtSF[0];
-          for(int i=0; i<11; i++) if(TMath::Abs(muonPtSF[0]-muonPtSyst[i]) > TMath::Abs(muonPtSF[0]-muonPtSFSyst[0])) muonPtSFSyst[0] = muonPtSyst[i];
+          lepPtSF[0] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 0, 0);
+          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
+          double muonPtSystAll[4] = {lepPtSF[0], lepPtSF[0], lepPtSF[0], lepPtSF[0]};
+
+          for(int i=0; i<100; i++)
+            muonPtSystA[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 1, i);
+          for(int i=0; i<1; i++)
+            muonPtSystB[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 2, i);
+          for(int i=0; i<5; i++)
+            muonPtSystC[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 4, i);
+          for(int i=0; i<5; i++)
+            muonPtSystD[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 5, i);
+
+          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystA[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[0])) muonPtSystAll[0] = TMath::Abs(lepPtSF[0]-muonPtSystA[i]) + lepPtSF[0];
+          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystB[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[1])) muonPtSystAll[1] = TMath::Abs(lepPtSF[0]-muonPtSystB[i]) + lepPtSF[0];
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystC[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[2])) muonPtSystAll[2] = TMath::Abs(lepPtSF[0]-muonPtSystC[i]) + lepPtSF[0];
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystD[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[3])) muonPtSystAll[3] = TMath::Abs(lepPtSF[0]-muonPtSystD[i]) + lepPtSF[0];
+          lepPtSFSyst[0] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]/lepPtSF[0]/lepPtSF[0]+
+                                muonPtSystAll[1]*muonPtSystAll[1]/lepPtSF[0]/lepPtSF[0]+
+                                muonPtSystAll[2]*muonPtSystAll[2]/lepPtSF[0]/lepPtSF[0]+
+                                muonPtSystAll[3]*muonPtSystAll[3]/lepPtSF[0]/lepPtSF[0]) * lepPtSF[0]/2.;
 
         }
         if(abs(thePandaFlat.looseLep2PdgId)==13) {
 	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
-	  muonPtSF[1] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 0, 0);
+	  lepPtSF[1] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 0, 0);
+          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
+          double muonPtSystAll[4] = {lepPtSF[0], lepPtSF[0], lepPtSF[0], lepPtSF[0]};
+
+          for(int i=0; i<100; i++)
+            muonPtSystA[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 1, i);
+          for(int i=0; i<1; i++)
+            muonPtSystB[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 2, i);
+          for(int i=0; i<5; i++)
+            muonPtSystC[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 4, i);
+          for(int i=0; i<5; i++)
+            muonPtSystD[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 5, i);
+
+          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystA[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[0])) muonPtSystAll[0] = TMath::Abs(lepPtSF[1]-muonPtSystA[i]) + lepPtSF[1];
+          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystB[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[1])) muonPtSystAll[1] = TMath::Abs(lepPtSF[1]-muonPtSystB[i]) + lepPtSF[1];
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystC[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[2])) muonPtSystAll[2] = TMath::Abs(lepPtSF[1]-muonPtSystC[i]) + lepPtSF[1];
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystD[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[3])) muonPtSystAll[3] = TMath::Abs(lepPtSF[1]-muonPtSystD[i]) + lepPtSF[1];
+          lepPtSFSyst[1] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]/lepPtSF[1]/lepPtSF[1]+
+                                muonPtSystAll[1]*muonPtSystAll[1]/lepPtSF[1]/lepPtSF[1]+
+                                muonPtSystAll[2]*muonPtSystAll[2]/lepPtSF[1]/lepPtSF[1]+
+                                muonPtSystAll[3]*muonPtSystAll[3]/lepPtSF[1]/lepPtSF[1]) * lepPtSF[1]/2.;
+
+        }
+      } else { // MC
+        if(abs(thePandaFlat.looseLep1PdgId)==13) {
+	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
+          lepPtSF[0] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 0, 0);
           double muonPtSyst[11];
-          muonPtSyst[0] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 2, 0);
-          muonPtSyst[1] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 4, 0);
-          muonPtSyst[2] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 4, 1);
-          muonPtSyst[3] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 4, 2);
-          muonPtSyst[4] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 4, 3);
-          muonPtSyst[5] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 4, 4);
-          muonPtSyst[6] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 5, 0);
-          muonPtSyst[7] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 5, 1);
-          muonPtSyst[8] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 5, 2);
-          muonPtSyst[9] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 5, 3);
-          muonPtSyst[10]= rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 5, 4);
-          muonPtSFSyst[1] = muonPtSF[1];
-          for(int i=0; i<11; i++) if(TMath::Abs(muonPtSF[1]-muonPtSyst[i]) > TMath::Abs(muonPtSF[1]-muonPtSFSyst[1])) muonPtSFSyst[1] = muonPtSyst[i];
+          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
+          double muonPtSystAll[4] = {lepPtSF[0], lepPtSF[0], lepPtSF[0], lepPtSF[0]};
+
+          for(int i=0; i<100; i++)
+            muonPtSystA[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 1, i);
+
+          for(int i=0; i<1; i++)
+            muonPtSystB[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 2, i);
+          for(int i=0; i<5; i++)
+            muonPtSystC[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 4, i);
+          for(int i=0; i<5; i++)
+            muonPtSystD[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 5, i);
+
+          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystA[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[0])) muonPtSystAll[0] = TMath::Abs(lepPtSF[0]-muonPtSystA[i]) + lepPtSF[0];
+          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystB[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[1])) muonPtSystAll[1] = TMath::Abs(lepPtSF[0]-muonPtSystB[i]) + lepPtSF[0];
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystC[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[2])) muonPtSystAll[2] = TMath::Abs(lepPtSF[0]-muonPtSystC[i]) + lepPtSF[0];
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystD[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[3])) muonPtSystAll[3] = TMath::Abs(lepPtSF[0]-muonPtSystD[i]) + lepPtSF[0];
+          lepPtSFSyst[0] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]/lepPtSF[0]/lepPtSF[0]+
+                                muonPtSystAll[1]*muonPtSystAll[1]/lepPtSF[0]/lepPtSF[0]+
+                                muonPtSystAll[2]*muonPtSystAll[2]/lepPtSF[0]/lepPtSF[0]+
+                                muonPtSystAll[3]*muonPtSystAll[3]/lepPtSF[0]/lepPtSF[0]) * lepPtSF[0]/2.;
+
+        }
+        if(abs(thePandaFlat.looseLep2PdgId)==13) {
+	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
+	  lepPtSF[1] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 0, 0);
+          double muonPtSyst[11];
+          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
+          double muonPtSystAll[4] = {lepPtSF[1], lepPtSF[1], lepPtSF[1], lepPtSF[1]};
+
+          for(int i=0; i<100; i++)
+            muonPtSystA[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 1, i);
+
+          for(int i=0; i<1; i++)
+            muonPtSystB[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 2, i);
+          for(int i=0; i<5; i++)
+            muonPtSystC[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 4, i);
+          for(int i=0; i<5; i++)
+            muonPtSystD[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 5, i);
+
+          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystA[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[0])) muonPtSystAll[0] = TMath::Abs(lepPtSF[1]-muonPtSystA[i]) + lepPtSF[1];
+          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystB[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[1])) muonPtSystAll[1] = TMath::Abs(lepPtSF[1]-muonPtSystB[i]) + lepPtSF[1];
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystC[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[2])) muonPtSystAll[2] = TMath::Abs(lepPtSF[1]-muonPtSystC[i]) + lepPtSF[1];
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystD[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[3])) muonPtSystAll[3] = TMath::Abs(lepPtSF[1]-muonPtSystD[i]) + lepPtSF[1];
+          lepPtSFSyst[1] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]/lepPtSF[1]/lepPtSF[1]+
+                                muonPtSystAll[1]*muonPtSystAll[1]/lepPtSF[1]/lepPtSF[1]+
+                                muonPtSystAll[2]*muonPtSystAll[2]/lepPtSF[1]/lepPtSF[1]+
+                                muonPtSystAll[3]*muonPtSystAll[3]/lepPtSF[1]/lepPtSF[1]) * lepPtSF[1]/2.;
+
+        }
+        if(abs(thePandaFlat.looseLep1PdgId)==11) {
+          if(TMath::Abs(thePandaFlat.looseLep1Eta) <  1.5) lepPtSF[0] = gRandom->Gaus(1.000,0.013);
+          else                                             lepPtSF[0] = gRandom->Gaus(0.993,0.025);
+        }
+        if(abs(thePandaFlat.looseLep2PdgId)==11) {
+          if(TMath::Abs(thePandaFlat.looseLep2Eta) <  1.5) lepPtSF[1] = gRandom->Gaus(1.000,0.013);
+          else                                             lepPtSF[1] = gRandom->Gaus(0.993,0.025);
         }
       }
 
@@ -242,15 +284,16 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
       else if(abs(lepType) == 2 && abs(thePandaFlat.looseLep1PdgId)==11) {thePDGMass[0] = mass_el;}
       else if(abs(lepType) == 2 && abs(thePandaFlat.looseLep2PdgId)==11) {thePDGMass[1] = mass_el;}
       TLorentzVector v1,v2;
-      v1.SetPtEtaPhiM(thePandaFlat.looseLep1Pt*muonPtSF[0],thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi,thePDGMass[0]);
-      v2.SetPtEtaPhiM(thePandaFlat.looseLep2Pt*muonPtSF[1],thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi,thePDGMass[1]);
+      v1.SetPtEtaPhiM(thePandaFlat.looseLep1Pt*lepPtSF[0],thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi,thePDGMass[0]);
+      v2.SetPtEtaPhiM(thePandaFlat.looseLep2Pt*lepPtSF[1],thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi,thePDGMass[1]);
       TLorentzVector vMonRes1,vMonRes2;
-      vMonRes1.SetPtEtaPhiM(thePandaFlat.looseLep1Pt*sqrt(muonPtSFSyst[0]*muonPtSFSyst[0]*muonPtSFSyst[0]),thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi,thePDGMass[0]);
-      vMonRes2.SetPtEtaPhiM(thePandaFlat.looseLep2Pt*sqrt(muonPtSFSyst[1]*muonPtSFSyst[1]*muonPtSFSyst[1]),thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi,thePDGMass[1]);
+      vMonRes1.SetPtEtaPhiM(thePandaFlat.looseLep1Pt*sqrt(lepPtSFSyst[0]*lepPtSFSyst[0]*lepPtSFSyst[0]),thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi,thePDGMass[0]);
+      vMonRes2.SetPtEtaPhiM(thePandaFlat.looseLep2Pt*sqrt(lepPtSFSyst[1]*lepPtSFSyst[1]*lepPtSFSyst[1]),thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi,thePDGMass[1]);
       bool passSel = TMath::Abs((v1+v2).M()-91.1876) < 15 && v1.Pt() > 25 && v2.Pt() > 25;
       bool passSystSel[1] = {TMath::Abs((vMonRes1+vMonRes2).M()-91.1876) < 15 && vMonRes1.Pt() > 25 && vMonRes2.Pt() > 25};
 
       double ZRecPt = (v1+v2).Pt();
+
       double ZRecSystPt[1] = {(vMonRes1+vMonRes2).Pt()};
       double ZGenPt = 0; bool passFid = false;
       if(thePandaFlat.looseGenLep1PdgId != 0 && thePandaFlat.looseGenLep2PdgId != 0 &&
@@ -276,6 +319,15 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
 	histo[lepType+2][theCategory]->Fill(TMath::Min(ZRecPt, 199.999),totalWeight);
 	histo[lepType+4][theCategory]->Fill(TMath::Min(ZRecPt,1999.999),totalWeight);
 	histo[lepType+6][theCategory]->Fill(TMath::Abs(ZRecPt-ZGenPt),totalWeight);
+        if     (TMath::Abs(thePandaFlat.looseLep1Eta) <  1.5 && TMath::Abs(thePandaFlat.looseLep2Eta) <  1.5){
+	  histo[lepType+ 8][theCategory]->Fill((v1+v2).M(),totalWeight);
+        }
+        else if(TMath::Abs(thePandaFlat.looseLep1Eta) >= 1.5 && TMath::Abs(thePandaFlat.looseLep2Eta) >= 1.5){
+	  histo[lepType+12][theCategory]->Fill((v1+v2).M(),totalWeight);
+        }
+        else {
+	  histo[lepType+10][theCategory]->Fill((v1+v2).M(),totalWeight);
+        }
 
         double maxQCDscale = 1.0;
         if(theCategory != 0 && thePandaFlat.scale[0] != -1){
@@ -358,8 +410,8 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
         if(TMath::Abs(histoPtRecDA_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPtRecDA[ntype]->GetBinContent(nb)) > systQCDScale[0]) systQCDScale[0] = TMath::Abs(histoPtRecDA_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPtRecDA[ntype]->GetBinContent(nb));
         if(TMath::Abs(histoPtRecDY_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPtRecDY[ntype]->GetBinContent(nb)) > systQCDScale[1]) systQCDScale[1] = TMath::Abs(histoPtRecDY_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPtRecDY[ntype]->GetBinContent(nb));
       }
-      if(histoPtRecDA[ntype]->GetBinContent(nb) > 0) systQCDScale[0] = systQCDScale[0]/histoPtRecDA[ntype]->GetBinContent(nb); else systQCDScale[0] = 1;
-      if(histoPtRecDY[ntype]->GetBinContent(nb) > 0) systQCDScale[1] = systQCDScale[0]/histoPtRecDY[ntype]->GetBinContent(nb); else systQCDScale[1] = 1;
+      if(histoPtRecDA[ntype]->GetBinContent(nb) > 0) systQCDScale[0] = 1.0+systQCDScale[0]/histoPtRecDA[ntype]->GetBinContent(nb); else systQCDScale[0] = 1;
+      if(histoPtRecDY[ntype]->GetBinContent(nb) > 0) systQCDScale[1] = 1.0+systQCDScale[0]/histoPtRecDY[ntype]->GetBinContent(nb); else systQCDScale[1] = 1;
 
       histoPtRecDA_QCD[ntype]->SetBinContent(nb, histoPtRecDA[ntype]->GetBinContent(nb)*systQCDScale[0]);
       histoPtRecDY_QCD[ntype]->SetBinContent(nb, histoPtRecDY[ntype]->GetBinContent(nb)*systQCDScale[1]);
