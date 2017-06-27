@@ -490,7 +490,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
         if(TMath::Abs(histoPtRecDY_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPtRecDY[ntype]->GetBinContent(nb)) > systQCDScale[1]) systQCDScale[1] = TMath::Abs(histoPtRecDY_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPtRecDY[ntype]->GetBinContent(nb));
       }
       if(histoPtRecDA[ntype]->GetBinContent(nb) > 0) systQCDScale[0] = 1.0+systQCDScale[0]/histoPtRecDA[ntype]->GetBinContent(nb); else systQCDScale[0] = 1;
-      if(histoPtRecDY[ntype]->GetBinContent(nb) > 0) systQCDScale[1] = 1.0+systQCDScale[0]/histoPtRecDY[ntype]->GetBinContent(nb); else systQCDScale[1] = 1;
+      if(histoPtRecDY[ntype]->GetBinContent(nb) > 0) systQCDScale[1] = 1.0+systQCDScale[1]/histoPtRecDY[ntype]->GetBinContent(nb); else systQCDScale[1] = 1;
 
       histoPtRecDA_QCD[ntype]->SetBinContent(nb, histoPtRecDA[ntype]->GetBinContent(nb)*systQCDScale[0]);
       histoPtRecDY_QCD[ntype]->SetBinContent(nb, histoPtRecDY[ntype]->GetBinContent(nb)*systQCDScale[1]);
@@ -513,7 +513,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
         if(TMath::Abs(histoPt2RecDY_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPt2RecDY[ntype]->GetBinContent(nb)) > systQCDScale[1]) systQCDScale[1] = TMath::Abs(histoPt2RecDY_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPt2RecDY[ntype]->GetBinContent(nb));
       }
       if(histoPt2RecDA[ntype]->GetBinContent(nb) > 0) systQCDScale[0] = 1.0+systQCDScale[0]/histoPt2RecDA[ntype]->GetBinContent(nb); else systQCDScale[0] = 1;
-      if(histoPt2RecDY[ntype]->GetBinContent(nb) > 0) systQCDScale[1] = 1.0+systQCDScale[0]/histoPt2RecDY[ntype]->GetBinContent(nb); else systQCDScale[1] = 1;
+      if(histoPt2RecDY[ntype]->GetBinContent(nb) > 0) systQCDScale[1] = 1.0+systQCDScale[1]/histoPt2RecDY[ntype]->GetBinContent(nb); else systQCDScale[1] = 1;
 
       histoPt2RecDA_QCD[ntype]->SetBinContent(nb, histoPt2RecDA[ntype]->GetBinContent(nb)*systQCDScale[0]);
       histoPt2RecDY_QCD[ntype]->SetBinContent(nb, histoPt2RecDY[ntype]->GetBinContent(nb)*systQCDScale[1]);
