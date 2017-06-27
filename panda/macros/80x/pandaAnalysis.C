@@ -33,7 +33,7 @@ enum SelectionBit {
 
 const double mass_el = 0.000510998928;
 const double mass_mu = 0.10566;
-void pandaAnalysis(int isLO = 0, bool isMIT=false)
+void pandaAnalysis(int whichDY = 0, bool isMIT=false)
 {
   TString dirPathRM = TString(gSystem->Getenv("CMSSW_BASE")) + "/src/MitAnalysisRunII/data/80x/rcdata.2016.v3";
   RoccoR rmcor(dirPathRM.Data());
@@ -43,14 +43,16 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
   //*******************************************************
   TString filesPath = "/data/t3home000/ceballos/panda/v_004_0/";
   if(isMIT == false) filesPath = "/afs/cern.ch/work/c/ceballos/public/samples/panda/v_004_0/";
-  vector<TString> infileName_;  
-  vector<Int_t> infileCat_;  
+  vector<TString> infileName_;
+  vector<Int_t> infileCat_;
 
   infileName_.push_back(Form("%sdata.root",filesPath.Data()));                 infileCat_.push_back(0);
-  if(isLO)
+  if     (whichDY == 0)
  {infileName_.push_back(Form("%sDYJetsToLL_M-50_LO.root" ,filesPath.Data()));  infileCat_.push_back(1);}
-  else
+  else if(whichDY == 1)
  {infileName_.push_back(Form("%sDYJetsToLL_M-50_NLO.root",filesPath.Data()));  infileCat_.push_back(1);}
+  else if(whichDY == 2)
+ {infileName_.push_back(Form("%sDYJetsToLL_POWHEG.root",filesPath.Data()));    infileCat_.push_back(1);}
   infileName_.push_back(Form("%sDYJetsToLL_M-10to50.root" ,filesPath.Data())); infileCat_.push_back(1);
   infileName_.push_back(Form("%sqqWW.root" ,filesPath.Data()));                infileCat_.push_back(2);
   infileName_.push_back(Form("%sggWW.root" ,filesPath.Data()));                infileCat_.push_back(2);
@@ -70,12 +72,12 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
                                                        30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
                                                        40, 50, 60, 70, 80, 90,100,125,150,175, 
 						      200,250,300,350,400,450,500,1000};
-  /*const int nBinPt = 500; Float_t xbinsPt[nBinPt+1]; for(int i=0; i<=nBinPt;i++) xbinsPt[i] = i * 0.1;*/
+  const int nBinPt2 = 50; Float_t xbinsPt2[nBinPt2+1]; for(int i=0; i<=nBinPt2;i++) xbinsPt2[i] = i * 1.0;
 
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 15;
+  const int allPlots = 20;
   const int histBins = 9;
   TH1D* histo[allPlots][histBins];
   TString processName[histBins] = {".Data", "DY", "WW", "ZZ", "WZ", "VVV", "Top", "VG", "H125"};
@@ -85,6 +87,7 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
     else if(thePlot >=  4 && thePlot <=  5) {nBinPlot = 200; xminPlot =  0.0; xmaxPlot =2000;}
     else if(thePlot >=  6 && thePlot <=  7) {nBinPlot = 200; xminPlot =  0.0; xmaxPlot =  20;}
     else if(thePlot >=  8 && thePlot <= 13) {nBinPlot = 120; xminPlot = 91.1876-15; xmaxPlot = 91.1876+15;}
+    else if(thePlot >= 14 && thePlot <= 17) {nBinPlot = 100; xminPlot =-50.0; xmaxPlot = 50;}
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
@@ -119,6 +122,37 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
    for(int j=0; j<6; j++){
       histoPtRecDA_QCDPart[i][j] = new TH1D(Form("histoPtRecDA_QCDPart_%d_%d",i,j), Form("histoPtRecDA_QCDPart_%d_%d",i,j), nBinPt, xbinsPt);
       histoPtRecDY_QCDPart[i][j] = new TH1D(Form("histoPtRecDY_QCDPart_%d_%d",i,j), Form("histoPtRecDY_QCDPart_%d_%d",i,j), nBinPt, xbinsPt);
+    }
+  }
+
+  TH2D* histoPt2RecGen[2];
+  TH1D* histoPt2RecDA[2];
+  TH1D* histoPt2RecDY[2];
+  TH1D* histoPt2RecDA_MonRes[2];
+  TH1D* histoPt2RecDY_MonRes[2];
+  TH1D* histoPt2RecDA_PDF[2];
+  TH1D* histoPt2RecDY_PDF[2];
+  TH1D* histoPt2RecDA_QCD[2];
+  TH1D* histoPt2RecDY_QCD[2];
+  TH1D* histoPt2RecDA_QCDPart[2][6];
+  TH1D* histoPt2RecDY_QCDPart[2][6];
+  for(int i=0; i<2; i++){
+   histoPt2RecGen[i] = new TH2D(Form("histoPt2RecGen_%d",i), Form("histoPt2RecGen_%d",i), nBinPt2, xbinsPt2, nBinPt2, xbinsPt2);
+   histoPt2RecDA[i]  = new TH1D(Form("histoPt2RecDA_%d",i),  Form("histoPt2RecDA_%d",i),  nBinPt2, xbinsPt2);
+   histoPt2RecDY[i]  = new TH1D(Form("histoPt2RecDY_%d",i),  Form("histoPt2RecDY_%d",i),  nBinPt2, xbinsPt2);
+
+   histoPt2RecDA_MonRes[i] = new TH1D(Form("histoPt2RecDA_MonRes_%d",i), Form("histoPt2RecDA_MonRes_%d",i), nBinPt2, xbinsPt2);
+   histoPt2RecDY_MonRes[i] = new TH1D(Form("histoPt2RecDY_MonRes_%d",i), Form("histoPt2RecDY_MonRes_%d",i), nBinPt2, xbinsPt2);
+
+   histoPt2RecDA_PDF[i] = new TH1D(Form("histoPt2RecDA_PDF_%d",i), Form("histoPt2RecDA_PDF_%d",i), nBinPt2, xbinsPt2);
+   histoPt2RecDY_PDF[i] = new TH1D(Form("histoPt2RecDY_PDF_%d",i), Form("histoPt2RecDY_PDF_%d",i), nBinPt2, xbinsPt2);
+
+   histoPt2RecDA_QCD[i] = new TH1D(Form("histoPt2RecDA_QCD_%d",i), Form("histoPt2RecDA_QCD_%d",i), nBinPt2, xbinsPt2);
+   histoPt2RecDY_QCD[i] = new TH1D(Form("histoPt2RecDY_QCD_%d",i), Form("histoPt2RecDY_QCD_%d",i), nBinPt2, xbinsPt2);
+
+   for(int j=0; j<6; j++){
+      histoPt2RecDA_QCDPart[i][j] = new TH1D(Form("histoPt2RecDA_QCDPart_%d_%d",i,j), Form("histoPt2RecDA_QCDPart_%d_%d",i,j), nBinPt2, xbinsPt2);
+      histoPt2RecDY_QCDPart[i][j] = new TH1D(Form("histoPt2RecDY_QCDPart_%d_%d",i,j), Form("histoPt2RecDY_QCDPart_%d_%d",i,j), nBinPt2, xbinsPt2);
     }
   }
 
@@ -328,6 +362,8 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
         else {
 	  histo[lepType+10][theCategory]->Fill((v1+v2).M(),totalWeight);
         }
+	histo[lepType+14][theCategory]->Fill((v1+v2).Px(),totalWeight);
+	histo[lepType+16][theCategory]->Fill((v1+v2).Py(),totalWeight);
 
         double maxQCDscale = 1.0;
         if(theCategory != 0 && thePandaFlat.scale[0] != -1){
@@ -336,59 +372,102 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
         }
 
 	if     (theCategory == 1){
-          histoPtRecDY        [lepType]   ->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight);
-          histoPtRecDY_PDF    [lepType]   ->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight*thePandaFlat.pdfUp);
-          histoPtRecDY_QCDPart[lepType][0]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight*TMath::Abs(1+thePandaFlat.scale[0])/maxQCDscale);
-          histoPtRecDY_QCDPart[lepType][1]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight*TMath::Abs(1+thePandaFlat.scale[1])/maxQCDscale);
-          histoPtRecDY_QCDPart[lepType][2]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight*TMath::Abs(1+thePandaFlat.scale[2])/maxQCDscale);
-          histoPtRecDY_QCDPart[lepType][3]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight*TMath::Abs(1+thePandaFlat.scale[3])/maxQCDscale);
-          histoPtRecDY_QCDPart[lepType][4]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight*TMath::Abs(1+thePandaFlat.scale[4])/maxQCDscale);
-          histoPtRecDY_QCDPart[lepType][5]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight*TMath::Abs(1+thePandaFlat.scale[5])/maxQCDscale);
+          // Pt
+          histoPtRecDY        [lepType]   ->Fill(ZRecPt,totalWeight);
+          histoPtRecDY_PDF    [lepType]   ->Fill(ZRecPt,totalWeight*thePandaFlat.pdfUp);
+          histoPtRecDY_QCDPart[lepType][0]->Fill(ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[0])/maxQCDscale);
+          histoPtRecDY_QCDPart[lepType][1]->Fill(ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[1])/maxQCDscale);
+          histoPtRecDY_QCDPart[lepType][2]->Fill(ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[2])/maxQCDscale);
+          histoPtRecDY_QCDPart[lepType][3]->Fill(ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[3])/maxQCDscale);
+          histoPtRecDY_QCDPart[lepType][4]->Fill(ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[4])/maxQCDscale);
+          histoPtRecDY_QCDPart[lepType][5]->Fill(ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[5])/maxQCDscale);
+          // Pt2
+          histoPt2RecDY        [lepType]   ->Fill(ZRecPt*ZRecPt,totalWeight);
+          histoPt2RecDY_PDF    [lepType]   ->Fill(ZRecPt*ZRecPt,totalWeight*thePandaFlat.pdfUp);
+          histoPt2RecDY_QCDPart[lepType][0]->Fill(ZRecPt*ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[0])/maxQCDscale);
+          histoPt2RecDY_QCDPart[lepType][1]->Fill(ZRecPt*ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[1])/maxQCDscale);
+          histoPt2RecDY_QCDPart[lepType][2]->Fill(ZRecPt*ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[2])/maxQCDscale);
+          histoPt2RecDY_QCDPart[lepType][3]->Fill(ZRecPt*ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[3])/maxQCDscale);
+          histoPt2RecDY_QCDPart[lepType][4]->Fill(ZRecPt*ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[4])/maxQCDscale);
+          histoPt2RecDY_QCDPart[lepType][5]->Fill(ZRecPt*ZRecPt,totalWeight*TMath::Abs(1+thePandaFlat.scale[5])/maxQCDscale);
 	}
 	else if(theCategory == 0){
-          histoPtRecDA[lepType]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight);
-          histoPtRecDA_PDF    [lepType]   ->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight);
-          histoPtRecDA_QCDPart[lepType][0]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight);
-          histoPtRecDA_QCDPart[lepType][1]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight);
-          histoPtRecDA_QCDPart[lepType][2]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight);
-          histoPtRecDA_QCDPart[lepType][3]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight);
-          histoPtRecDA_QCDPart[lepType][4]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight);
-          histoPtRecDA_QCDPart[lepType][5]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),totalWeight);
+          // Pt
+          histoPtRecDA[lepType]           ->Fill(ZRecPt,totalWeight);
+          histoPtRecDA_PDF    [lepType]   ->Fill(ZRecPt,totalWeight);
+          histoPtRecDA_QCDPart[lepType][0]->Fill(ZRecPt,totalWeight);
+          histoPtRecDA_QCDPart[lepType][1]->Fill(ZRecPt,totalWeight);
+          histoPtRecDA_QCDPart[lepType][2]->Fill(ZRecPt,totalWeight);
+          histoPtRecDA_QCDPart[lepType][3]->Fill(ZRecPt,totalWeight);
+          histoPtRecDA_QCDPart[lepType][4]->Fill(ZRecPt,totalWeight);
+          histoPtRecDA_QCDPart[lepType][5]->Fill(ZRecPt,totalWeight);
+          // Pt2
+          histoPt2RecDA[lepType]           ->Fill(ZRecPt*ZRecPt,totalWeight);
+          histoPt2RecDA_PDF    [lepType]   ->Fill(ZRecPt*ZRecPt,totalWeight);
+          histoPt2RecDA_QCDPart[lepType][0]->Fill(ZRecPt*ZRecPt,totalWeight);
+          histoPt2RecDA_QCDPart[lepType][1]->Fill(ZRecPt*ZRecPt,totalWeight);
+          histoPt2RecDA_QCDPart[lepType][2]->Fill(ZRecPt*ZRecPt,totalWeight);
+          histoPt2RecDA_QCDPart[lepType][3]->Fill(ZRecPt*ZRecPt,totalWeight);
+          histoPt2RecDA_QCDPart[lepType][4]->Fill(ZRecPt*ZRecPt,totalWeight);
+          histoPt2RecDA_QCDPart[lepType][5]->Fill(ZRecPt*ZRecPt,totalWeight);
 	}
 	else {
-          histoPtRecDA        [lepType]   ->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight);
-          histoPtRecDA_PDF    [lepType]   ->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight*thePandaFlat.pdfUp);
+          // Pt
+          histoPtRecDA        [lepType]     ->Fill(ZRecPt,-1.0*totalWeight);
+          histoPtRecDA_PDF    [lepType]     ->Fill(ZRecPt,-1.0*totalWeight*thePandaFlat.pdfUp);
           if(thePandaFlat.scale[0] != -1){
-            histoPtRecDA_QCDPart[lepType][0]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[0])/maxQCDscale);
-            histoPtRecDA_QCDPart[lepType][1]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[1])/maxQCDscale);
-            histoPtRecDA_QCDPart[lepType][2]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[2])/maxQCDscale);
-            histoPtRecDA_QCDPart[lepType][3]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[3])/maxQCDscale);
-            histoPtRecDA_QCDPart[lepType][4]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[4])/maxQCDscale);
-            histoPtRecDA_QCDPart[lepType][5]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[5])/maxQCDscale);
+            histoPtRecDA_QCDPart[lepType][0]->Fill(ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[0])/maxQCDscale);
+            histoPtRecDA_QCDPart[lepType][1]->Fill(ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[1])/maxQCDscale);
+            histoPtRecDA_QCDPart[lepType][2]->Fill(ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[2])/maxQCDscale);
+            histoPtRecDA_QCDPart[lepType][3]->Fill(ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[3])/maxQCDscale);
+            histoPtRecDA_QCDPart[lepType][4]->Fill(ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[4])/maxQCDscale);
+            histoPtRecDA_QCDPart[lepType][5]->Fill(ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[5])/maxQCDscale);
           } else {
-            histoPtRecDA_QCDPart[lepType][0]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight);
-            histoPtRecDA_QCDPart[lepType][1]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight);
-            histoPtRecDA_QCDPart[lepType][2]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight);
-            histoPtRecDA_QCDPart[lepType][3]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight);
-            histoPtRecDA_QCDPart[lepType][4]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight);
-            histoPtRecDA_QCDPart[lepType][5]->Fill(TMath::Min(ZRecPt,xbinsPt[nBinPt]-0.001),-1.0*totalWeight);
+            histoPtRecDA_QCDPart[lepType][0]->Fill(ZRecPt,-1.0*totalWeight);
+            histoPtRecDA_QCDPart[lepType][1]->Fill(ZRecPt,-1.0*totalWeight);
+            histoPtRecDA_QCDPart[lepType][2]->Fill(ZRecPt,-1.0*totalWeight);
+            histoPtRecDA_QCDPart[lepType][3]->Fill(ZRecPt,-1.0*totalWeight);
+            histoPtRecDA_QCDPart[lepType][4]->Fill(ZRecPt,-1.0*totalWeight);
+            histoPtRecDA_QCDPart[lepType][5]->Fill(ZRecPt,-1.0*totalWeight);
+          }
+          // Pt2
+          histoPt2RecDA        [lepType]     ->Fill(ZRecPt*ZRecPt,-1.0*totalWeight);
+          histoPt2RecDA_PDF    [lepType]     ->Fill(ZRecPt*ZRecPt,-1.0*totalWeight*thePandaFlat.pdfUp);
+          if(thePandaFlat.scale[0] != -1){
+            histoPt2RecDA_QCDPart[lepType][0]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[0])/maxQCDscale);
+            histoPt2RecDA_QCDPart[lepType][1]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[1])/maxQCDscale);
+            histoPt2RecDA_QCDPart[lepType][2]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[2])/maxQCDscale);
+            histoPt2RecDA_QCDPart[lepType][3]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[3])/maxQCDscale);
+            histoPt2RecDA_QCDPart[lepType][4]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[4])/maxQCDscale);
+            histoPt2RecDA_QCDPart[lepType][5]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight*TMath::Abs(1+thePandaFlat.scale[5])/maxQCDscale);
+          } else {
+            histoPt2RecDA_QCDPart[lepType][0]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight);
+            histoPt2RecDA_QCDPart[lepType][1]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight);
+            histoPt2RecDA_QCDPart[lepType][2]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight);
+            histoPt2RecDA_QCDPart[lepType][3]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight);
+            histoPt2RecDA_QCDPart[lepType][4]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight);
+            histoPt2RecDA_QCDPart[lepType][5]->Fill(ZRecPt*ZRecPt,-1.0*totalWeight);
           }
 	}
 
 	if(theCategory == 1 && passFid == true){
-          histoPtRecGen[lepType]->Fill(ZRecPt,ZGenPt,totalWeight);
+          histoPtRecGen [lepType]->Fill(ZRecPt*ZRecPt,ZGenPt*ZGenPt,totalWeight);
+          histoPt2RecGen[lepType]->Fill(ZRecPt*ZRecPt,ZGenPt*ZGenPt,totalWeight);
 	}
       }
       
       if(passSystSel[0]){
 	if     (theCategory == 1){
-          histoPtRecDY_MonRes[lepType]->Fill(TMath::Min(ZRecSystPt[0],xbinsPt[nBinPt]-0.001),totalWeight);
+          histoPtRecDY_MonRes [lepType]->Fill(ZRecSystPt[0],totalWeight);
+          histoPt2RecDY_MonRes[lepType]->Fill(ZRecSystPt[0]*ZRecSystPt[0],totalWeight);
 	}
 	else if(theCategory == 0){
-          histoPtRecDA_MonRes[lepType]->Fill(TMath::Min(ZRecSystPt[0],xbinsPt[nBinPt]-0.001),totalWeight);
+          histoPtRecDA_MonRes[lepType] ->Fill(ZRecSystPt[0],totalWeight);
+          histoPt2RecDA_MonRes[lepType]->Fill(ZRecSystPt[0]*ZRecSystPt[0],totalWeight);
 	}
 	else {
-          histoPtRecDA_MonRes[lepType]->Fill(TMath::Min(ZRecSystPt[0],xbinsPt[nBinPt]-0.001),-1.0*totalWeight);
+          histoPtRecDA_MonRes[lepType] ->Fill(ZRecSystPt[0],-1.0*totalWeight);
+          histoPt2RecDA_MonRes[lepType]->Fill(ZRecSystPt[0]*ZRecSystPt[0],-1.0*totalWeight);
 	}
       }
     } // end event loop
@@ -440,11 +519,7 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
   outFilePlotsA->cd();
   histoPtRecGen[0]->Write();
   histoPtRecGen[1]->Write();
-  outFilePlotsA->Close();
 
-  sprintf(output,"histozllPtRec.root"); 
-  TFile* outFilePlotsB = new TFile(output,"recreate");
-  outFilePlotsB->cd();
   histoPtRecDA[0]->Write();
   histoPtRecDA[1]->Write();
   histoPtRecDY[0]->Write();
@@ -461,5 +536,32 @@ void pandaAnalysis(int isLO = 0, bool isMIT=false)
   histoPtRecDA_QCD[1]->Write();
   histoPtRecDY_QCD[0]->Write();
   histoPtRecDY_QCD[1]->Write();
+
+  outFilePlotsA->Close();
+
+  sprintf(output,"histozllPt2RecGen.root"); 
+  TFile* outFilePlotsB = new TFile(output,"recreate");
+  outFilePlotsB->cd();
+
+  histoPt2RecGen[0]->Write();
+  histoPt2RecGen[1]->Write();
+
+  histoPt2RecDA[0]->Write();
+  histoPt2RecDA[1]->Write();
+  histoPt2RecDY[0]->Write();
+  histoPt2RecDY[1]->Write();
+  histoPt2RecDA_MonRes[0]->Write();
+  histoPt2RecDA_MonRes[1]->Write();
+  histoPt2RecDY_MonRes[0]->Write();
+  histoPt2RecDY_MonRes[1]->Write();
+  histoPt2RecDA_PDF[0]->Write();
+  histoPt2RecDA_PDF[1]->Write();
+  histoPt2RecDY_PDF[0]->Write();
+  histoPt2RecDY_PDF[1]->Write();
+  histoPt2RecDA_QCD[0]->Write();
+  histoPt2RecDA_QCD[1]->Write();
+  histoPt2RecDY_QCD[0]->Write();
+  histoPt2RecDY_QCD[1]->Write();
+
   outFilePlotsB->Close();
 }
