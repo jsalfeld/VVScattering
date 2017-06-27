@@ -451,7 +451,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
 	}
 
 	if(theCategory == 1 && passFid == true){
-          histoPtRecGen [lepType]->Fill(ZRecPt*ZRecPt,ZGenPt*ZGenPt,totalWeight);
+          histoPtRecGen [lepType]->Fill(ZRecPt       ,ZGenPt       ,totalWeight);
           histoPt2RecGen[lepType]->Fill(ZRecPt*ZRecPt,ZGenPt*ZGenPt,totalWeight);
 	}
       }
@@ -494,6 +494,29 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
 
       histoPtRecDA_QCD[ntype]->SetBinContent(nb, histoPtRecDA[ntype]->GetBinContent(nb)*systQCDScale[0]);
       histoPtRecDY_QCD[ntype]->SetBinContent(nb, histoPtRecDY[ntype]->GetBinContent(nb)*systQCDScale[1]);
+    }
+  }
+  for(int ntype=0; ntype<2; ntype++){
+    printf("QCD2(%d): (%f/%f/%f/%f/%f/%f->%f) (%f/%f/%f/%f/%f/%f->%f)\n",ntype,
+           histoPt2RecDA_QCDPart[ntype][0]->GetSumOfWeights(),histoPt2RecDA_QCDPart[ntype][1]->GetSumOfWeights(),histoPt2RecDA_QCDPart[ntype][2]->GetSumOfWeights(),
+           histoPt2RecDA_QCDPart[ntype][3]->GetSumOfWeights(),histoPt2RecDA_QCDPart[ntype][4]->GetSumOfWeights(),histoPt2RecDA_QCDPart[ntype][5]->GetSumOfWeights(),histoPt2RecDA[ntype]->GetSumOfWeights(),
+           histoPt2RecDY_QCDPart[ntype][0]->GetSumOfWeights(),histoPt2RecDY_QCDPart[ntype][1]->GetSumOfWeights(),histoPt2RecDY_QCDPart[ntype][2]->GetSumOfWeights(),
+           histoPt2RecDY_QCDPart[ntype][3]->GetSumOfWeights(),histoPt2RecDY_QCDPart[ntype][4]->GetSumOfWeights(),histoPt2RecDY_QCDPart[ntype][5]->GetSumOfWeights(),histoPt2RecDY[ntype]->GetSumOfWeights());
+  }
+  for(int ntype=0; ntype<2; ntype++){
+    for(int nb=1; nb<=nBinPt2; nb++){
+      // QCD study
+      double systQCDScale[2] = {TMath::Abs(histoPt2RecDA_QCDPart[ntype][0]->GetBinContent(nb)-histoPt2RecDA[ntype]->GetBinContent(nb)),
+  			        TMath::Abs(histoPt2RecDY_QCDPart[ntype][0]->GetBinContent(nb)-histoPt2RecDY[ntype]->GetBinContent(nb))};
+      for(int nqcd=1; nqcd<6; nqcd++) {
+        if(TMath::Abs(histoPt2RecDA_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPt2RecDA[ntype]->GetBinContent(nb)) > systQCDScale[0]) systQCDScale[0] = TMath::Abs(histoPt2RecDA_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPt2RecDA[ntype]->GetBinContent(nb));
+        if(TMath::Abs(histoPt2RecDY_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPt2RecDY[ntype]->GetBinContent(nb)) > systQCDScale[1]) systQCDScale[1] = TMath::Abs(histoPt2RecDY_QCDPart[ntype][nqcd]->GetBinContent(nb)-histoPt2RecDY[ntype]->GetBinContent(nb));
+      }
+      if(histoPt2RecDA[ntype]->GetBinContent(nb) > 0) systQCDScale[0] = 1.0+systQCDScale[0]/histoPt2RecDA[ntype]->GetBinContent(nb); else systQCDScale[0] = 1;
+      if(histoPt2RecDY[ntype]->GetBinContent(nb) > 0) systQCDScale[1] = 1.0+systQCDScale[0]/histoPt2RecDY[ntype]->GetBinContent(nb); else systQCDScale[1] = 1;
+
+      histoPt2RecDA_QCD[ntype]->SetBinContent(nb, histoPt2RecDA[ntype]->GetBinContent(nb)*systQCDScale[0]);
+      histoPt2RecDY_QCD[ntype]->SetBinContent(nb, histoPt2RecDY[ntype]->GetBinContent(nb)*systQCDScale[1]);
     }
   }
 
