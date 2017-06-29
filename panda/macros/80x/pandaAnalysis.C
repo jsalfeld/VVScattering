@@ -481,7 +481,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
            histoPtRecDY_QCDPart[ntype][3]->GetSumOfWeights(),histoPtRecDY_QCDPart[ntype][4]->GetSumOfWeights(),histoPtRecDY_QCDPart[ntype][5]->GetSumOfWeights(),histoPtRecDY[ntype]->GetSumOfWeights());
   }
   for(int ntype=0; ntype<2; ntype++){
-    for(int nb=1; nb<=nBinPt; nb++){
+    for(int nb=1; nb<=nBinPt+1; nb++){
       // QCD study
       double systQCDScale[2] = {TMath::Abs(histoPtRecDA_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRecDA[ntype]->GetBinContent(nb)),
   			        TMath::Abs(histoPtRecDY_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRecDY[ntype]->GetBinContent(nb))};
@@ -504,7 +504,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
            histoPt2RecDY_QCDPart[ntype][3]->GetSumOfWeights(),histoPt2RecDY_QCDPart[ntype][4]->GetSumOfWeights(),histoPt2RecDY_QCDPart[ntype][5]->GetSumOfWeights(),histoPt2RecDY[ntype]->GetSumOfWeights());
   }
   for(int ntype=0; ntype<2; ntype++){
-    for(int nb=1; nb<=nBinPt2; nb++){
+    for(int nb=1; nb<=nBinPt2+1; nb++){
       // QCD study
       double systQCDScale[2] = {TMath::Abs(histoPt2RecDA_QCDPart[ntype][0]->GetBinContent(nb)-histoPt2RecDA[ntype]->GetBinContent(nb)),
   			        TMath::Abs(histoPt2RecDY_QCDPart[ntype][0]->GetBinContent(nb)-histoPt2RecDY[ntype]->GetBinContent(nb))};
@@ -522,7 +522,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
 
   char output[200];
   for(int thePlot=0; thePlot<allPlots; thePlot++){
-    sprintf(output,"histozll_%d.root",thePlot);	
+    sprintf(output,"histoDY%dzll_%d.root",whichDY,thePlot);	
     TFile* outFilePlotsNote = new TFile(output,"recreate");
     outFilePlotsNote->cd();
     double totBck = 0;
@@ -537,7 +537,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
     outFilePlotsNote->Close();
   }
 
-  sprintf(output,"histozllPtRecGen.root"); 
+  sprintf(output,"histoDY%dzllPtRecGen.root",whichDY); 
   TFile* outFilePlotsA = new TFile(output,"recreate");
   outFilePlotsA->cd();
   histoPtRecGen[0]->Write();
@@ -562,7 +562,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
 
   outFilePlotsA->Close();
 
-  sprintf(output,"histozllPt2RecGen.root"); 
+  sprintf(output,"histoDY%dzllPt2RecGen.root",whichDY); 
   TFile* outFilePlotsB = new TFile(output,"recreate");
   outFilePlotsB->cd();
 
