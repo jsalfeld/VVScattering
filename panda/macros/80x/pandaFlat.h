@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Sun Jun 11 13:53:49 2017 by ROOT version 6.06/01
+// Thu Jun 29 19:14:55 2017 by ROOT version 6.06/01
 // from TTree events/events
-// found on file: /export/data/t3home000/ceballos/panda/v_004_0/DYNJetsToLL.root
+// found on file: /afs/cern.ch/work/c/ceballos/public/samples/panda/v_004_0/finerptbin/DYJetsToLL_M-50_NLO.root
 //////////////////////////////////////////////////////////
 
 #ifndef pandaFlat_h
@@ -180,6 +180,10 @@ public :
    Float_t         sf_tight2;
    Float_t         sf_tight3;
    Float_t         sf_tight4;
+   Float_t         sf_unc1;
+   Float_t         sf_unc2;
+   Float_t         sf_unc3;
+   Float_t         sf_unc4;
    Float_t         normalizedWeight;
 
    // List of branches
@@ -341,6 +345,10 @@ public :
    TBranch        *b_sf_tight2;   //!
    TBranch        *b_sf_tight3;   //!
    TBranch        *b_sf_tight4;   //!
+   TBranch        *b_sf_unc1;   //!
+   TBranch        *b_sf_unc2;   //!
+   TBranch        *b_sf_unc3;   //!
+   TBranch        *b_sf_unc4;   //!
    TBranch        *b_normalizedWeight;   //!
 
    pandaFlat(TTree *tree=0);
@@ -362,9 +370,9 @@ pandaFlat::pandaFlat(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/export/data/t3home000/ceballos/panda/v_004_0/DYNJetsToLL.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/afs/cern.ch/work/c/ceballos/public/samples/panda/v_004_0/finerptbin/DYJetsToLL_M-50_NLO.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/export/data/t3home000/ceballos/panda/v_004_0/DYNJetsToLL.root");
+         f = new TFile("/afs/cern.ch/work/c/ceballos/public/samples/panda/v_004_0/finerptbin/DYJetsToLL_M-50_NLO.root");
       }
       f->GetObject("events",tree);
 
@@ -571,6 +579,10 @@ void pandaFlat::Init(TTree *tree)
    fChain->SetBranchAddress("sf_tight2", &sf_tight2, &b_sf_tight2);
    fChain->SetBranchAddress("sf_tight3", &sf_tight3, &b_sf_tight3);
    fChain->SetBranchAddress("sf_tight4", &sf_tight4, &b_sf_tight4);
+   fChain->SetBranchAddress("sf_unc1", &sf_unc1, &b_sf_unc1);
+   fChain->SetBranchAddress("sf_unc2", &sf_unc2, &b_sf_unc2);
+   fChain->SetBranchAddress("sf_unc3", &sf_unc3, &b_sf_unc3);
+   fChain->SetBranchAddress("sf_unc4", &sf_unc4, &b_sf_unc4);
    fChain->SetBranchAddress("normalizedWeight", &normalizedWeight, &b_normalizedWeight);
    Notify();
 }
