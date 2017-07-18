@@ -74,6 +74,14 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
                                                        40, 50, 60, 70, 80, 90,100,125,150,175, 
 						      200,250,300,350,400,450,500,1000};
 
+  const int nBinRecoPt =114; Float_t xbinsRecoPt[nBinRecoPt+1] = 
+                                                      {  0,0.5,   1,1.5,   2,2.5,   3,3.5,   4,4.5,   5,5.5,   6,6.5,   7,7.5,   8,8.5,   9,9.5,
+                                                       10,10.5, 11,11.5, 12,12.5, 13,13.5, 14,14.5, 15,15.5, 16,16.5, 17,17.5, 18,18.5, 19,19.5,
+                                                       20,20.5, 21,21.5, 22,22.5, 23,23.5, 24,24.5, 25,25.5, 26,26.5, 27,27.5, 28,28.5, 29,29.5,
+                                                       30,30.5, 31,31.5, 32,32.5, 33,33.5, 34,34.5, 35,35.5, 36,36.5, 37,37.5, 38,38.5, 39,39.5,
+                                                         40,45,   50,55,   60,65,   70,75,   80,85,   90,95, 100,115, 125,140, 150,160, 175,190, 
+						       200,225, 250,275, 300,325, 350,375, 400,425, 450,475, 500,750,    1000};
+
   const int nBinPt2 = 50; Float_t xbinsPt2[nBinPt2+1]; for(int i=0; i<=nBinPt2;i++) xbinsPt2[i] = i * 1.0;
 
   const int nBinRap = 24; Float_t xbinsRap[nBinRap+1]; for(int i=0; i<=nBinRap;i++) xbinsRap[i] = i * 0.1;
@@ -82,22 +90,47 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
                                                 		   10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                                                 		   20, 25, 30, 35, 40, 50, 60, 70, 80, 90,
                                                 		  100,150,200,300,400,500,1000};
+  const int nBinRecoPtRap0 = 72; Float_t xbinsRecoPtRap0[nBinRecoPtRap0+1] = 
+                                                                 {  0,0.5,   1,1.5,   2,2.5,   3,3.5,   4,4.5,   5,5.5,   6,6.5,   7,7.5,   8,8.5,   9,9.5,
+                                                                  10,10.5, 11,11.5, 12,12.5, 13,13.5, 14,14.5, 15,15.5, 16,16.5, 17,17.5, 18,18.5, 19,19.5,
+                                                		    20,23,  25,28,    30,33,   35,38,   40,45,   50,55,   60,65,   70,75,   80,85,   90,95,
+                                                		  100,125,150,175,200,250,   300,350, 400,450, 500,750,1000};
   const int nBinPtRap1 = 36; Float_t xbinsPtRap1[nBinPtRap1+1] = {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
                                                 		   10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                                                 		   20, 25, 30, 35, 40, 50, 60, 70, 80, 90,
                                                 		  100,150,200,300,400,500,1000};
+  const int nBinRecoPtRap1 = 72; Float_t xbinsRecoPtRap1[nBinRecoPtRap1+1] = 
+                                                                 {  0,0.5,   1,1.5,   2,2.5,   3,3.5,   4,4.5,   5,5.5,   6,6.5,   7,7.5,   8,8.5,   9,9.5,
+                                                                  10,10.5, 11,11.5, 12,12.5, 13,13.5, 14,14.5, 15,15.5, 16,16.5, 17,17.5, 18,18.5, 19,19.5,
+                                                		    20,23,  25,28,    30,33,   35,38,   40,45,   50,55,   60,65,   70,75,   80,85,   90,95,
+                                                		  100,125,150,175,200,250,   300,350, 400,450, 500,750,1000};
   const int nBinPtRap2 = 36; Float_t xbinsPtRap2[nBinPtRap2+1] = {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
                                                 		   10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                                                 		   20, 25, 30, 35, 40, 50, 60, 70, 80, 90,
                                                 		  100,150,200,300,400,500,1000};
+  const int nBinRecoPtRap2 = 72; Float_t xbinsRecoPtRap2[nBinRecoPtRap2+1] = 
+                                                                 {  0,0.5,   1,1.5,   2,2.5,   3,3.5,   4,4.5,   5,5.5,   6,6.5,   7,7.5,   8,8.5,   9,9.5,
+                                                                  10,10.5, 11,11.5, 12,12.5, 13,13.5, 14,14.5, 15,15.5, 16,16.5, 17,17.5, 18,18.5, 19,19.5,
+                                                		    20,23,  25,28,    30,33,   35,38,   40,45,   50,55,   60,65,   70,75,   80,85,   90,95,
+                                                		  100,125,150,175,200,250,   300,350, 400,450, 500,750,1000};
   const int nBinPtRap3 = 36; Float_t xbinsPtRap3[nBinPtRap3+1] = {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
                                                 		   10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                                                 		   20, 25, 30, 35, 40, 50, 60, 70, 80, 90,
                                                 		  100,150,200,300,400,500,1000};
+  const int nBinRecoPtRap3 = 72; Float_t xbinsRecoPtRap3[nBinRecoPtRap3+1] = 
+                                                                 {  0,0.5,   1,1.5,   2,2.5,   3,3.5,   4,4.5,   5,5.5,   6,6.5,   7,7.5,   8,8.5,   9,9.5,
+                                                                  10,10.5, 11,11.5, 12,12.5, 13,13.5, 14,14.5, 15,15.5, 16,16.5, 17,17.5, 18,18.5, 19,19.5,
+                                                		    20,23,  25,28,    30,33,   35,38,   40,45,   50,55,   60,65,   70,75,   80,85,   90,95,
+                                                		  100,125,150,175,200,250,   300,350, 400,450, 500,750,1000};
   const int nBinPtRap4 = 36; Float_t xbinsPtRap4[nBinPtRap4+1] = {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
                                                                   10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                                                                   20, 25, 30, 35, 40, 50, 60, 70, 80, 90,
                                                                  100,150,200,300,400,500,1000};
+  const int nBinRecoPtRap4 = 72; Float_t xbinsRecoPtRap4[nBinRecoPtRap4+1] = 
+                                                                 {  0,0.5,   1,1.5,   2,2.5,   3,3.5,   4,4.5,   5,5.5,   6,6.5,   7,7.5,   8,8.5,   9,9.5,
+                                                                  10,10.5, 11,11.5, 12,12.5, 13,13.5, 14,14.5, 15,15.5, 16,16.5, 17,17.5, 18,18.5, 19,19.5,
+                                                		    20,23,  25,28,    30,33,   35,38,   40,45,   50,55,   60,65,   70,75,   80,85,   90,95,
+                                                		  100,125,150,175,200,250,   300,350, 400,450, 500,750,1000};
 
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
@@ -134,26 +167,26 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH1D* histoPtRecDA_QCDPart[2][6];
   TH1D* histoPtRecDY_QCDPart[2][6];
   for(int i=0; i<2; i++){
-   histoPtRecGen[i] = new TH2D(Form("histoPtRecGen_%d",i), Form("histoPtRecGen_%d",i), nBinPt, xbinsPt, nBinPt, xbinsPt);
-   histoPtRecGen_LepEff[i] = new TH2D(Form("histoPtRecGen_LepEff_%d",i), Form("histoPtRecGen_LepEff_%d",i), nBinPt, xbinsPt, nBinPt, xbinsPt);
-   histoPtRecDA[i]  = new TH1D(Form("histoPtRecDA_%d",i),  Form("histoPtRecDA_%d",i),  nBinPt, xbinsPt);
-   histoPtRecDY[i]  = new TH1D(Form("histoPtRecDY_%d",i),  Form("histoPtRecDY_%d",i),  nBinPt, xbinsPt);
+   histoPtRecGen[i] = new TH2D(Form("histoPtRecGen_%d",i), Form("histoPtRecGen_%d",i), nBinRecoPt, xbinsRecoPt, nBinPt, xbinsPt);
+   histoPtRecGen_LepEff[i] = new TH2D(Form("histoPtRecGen_LepEff_%d",i), Form("histoPtRecGen_LepEff_%d",i), nBinRecoPt, xbinsRecoPt, nBinPt, xbinsPt);
+   histoPtRecDA[i]  = new TH1D(Form("histoPtRecDA_%d",i),  Form("histoPtRecDA_%d",i),  nBinRecoPt, xbinsRecoPt);
+   histoPtRecDY[i]  = new TH1D(Form("histoPtRecDY_%d",i),  Form("histoPtRecDY_%d",i),  nBinRecoPt, xbinsRecoPt);
 
-   histoPtRecDA_MomRes[i] = new TH1D(Form("histoPtRecDA_MomRes_%d",i), Form("histoPtRecDA_MomRes_%d",i), nBinPt, xbinsPt);
-   histoPtRecDY_MomRes[i] = new TH1D(Form("histoPtRecDY_MomRes_%d",i), Form("histoPtRecDY_MomRes_%d",i), nBinPt, xbinsPt);
+   histoPtRecDA_MomRes[i] = new TH1D(Form("histoPtRecDA_MomRes_%d",i), Form("histoPtRecDA_MomRes_%d",i), nBinRecoPt, xbinsRecoPt);
+   histoPtRecDY_MomRes[i] = new TH1D(Form("histoPtRecDY_MomRes_%d",i), Form("histoPtRecDY_MomRes_%d",i), nBinRecoPt, xbinsRecoPt);
 
-   histoPtRecDA_LepEff[i] = new TH1D(Form("histoPtRecDA_LepEff_%d",i), Form("histoPtRecDA_LepEff_%d",i), nBinPt, xbinsPt);
-   histoPtRecDY_LepEff[i] = new TH1D(Form("histoPtRecDY_LepEff_%d",i), Form("histoPtRecDY_LepEff_%d",i), nBinPt, xbinsPt);
+   histoPtRecDA_LepEff[i] = new TH1D(Form("histoPtRecDA_LepEff_%d",i), Form("histoPtRecDA_LepEff_%d",i), nBinRecoPt, xbinsRecoPt);
+   histoPtRecDY_LepEff[i] = new TH1D(Form("histoPtRecDY_LepEff_%d",i), Form("histoPtRecDY_LepEff_%d",i), nBinRecoPt, xbinsRecoPt);
 
-   histoPtRecDA_PDF[i] = new TH1D(Form("histoPtRecDA_PDF_%d",i), Form("histoPtRecDA_PDF_%d",i), nBinPt, xbinsPt);
-   histoPtRecDY_PDF[i] = new TH1D(Form("histoPtRecDY_PDF_%d",i), Form("histoPtRecDY_PDF_%d",i), nBinPt, xbinsPt);
+   histoPtRecDA_PDF[i] = new TH1D(Form("histoPtRecDA_PDF_%d",i), Form("histoPtRecDA_PDF_%d",i), nBinRecoPt, xbinsRecoPt);
+   histoPtRecDY_PDF[i] = new TH1D(Form("histoPtRecDY_PDF_%d",i), Form("histoPtRecDY_PDF_%d",i), nBinRecoPt, xbinsRecoPt);
 
-   histoPtRecDA_QCD[i] = new TH1D(Form("histoPtRecDA_QCD_%d",i), Form("histoPtRecDA_QCD_%d",i), nBinPt, xbinsPt);
-   histoPtRecDY_QCD[i] = new TH1D(Form("histoPtRecDY_QCD_%d",i), Form("histoPtRecDY_QCD_%d",i), nBinPt, xbinsPt);
+   histoPtRecDA_QCD[i] = new TH1D(Form("histoPtRecDA_QCD_%d",i), Form("histoPtRecDA_QCD_%d",i), nBinRecoPt, xbinsRecoPt);
+   histoPtRecDY_QCD[i] = new TH1D(Form("histoPtRecDY_QCD_%d",i), Form("histoPtRecDY_QCD_%d",i), nBinRecoPt, xbinsRecoPt);
 
    for(int j=0; j<6; j++){
-      histoPtRecDA_QCDPart[i][j] = new TH1D(Form("histoPtRecDA_QCDPart_%d_%d",i,j), Form("histoPtRecDA_QCDPart_%d_%d",i,j), nBinPt, xbinsPt);
-      histoPtRecDY_QCDPart[i][j] = new TH1D(Form("histoPtRecDY_QCDPart_%d_%d",i,j), Form("histoPtRecDY_QCDPart_%d_%d",i,j), nBinPt, xbinsPt);
+      histoPtRecDA_QCDPart[i][j] = new TH1D(Form("histoPtRecDA_QCDPart_%d_%d",i,j), Form("histoPtRecDA_QCDPart_%d_%d",i,j), nBinRecoPt, xbinsRecoPt);
+      histoPtRecDY_QCDPart[i][j] = new TH1D(Form("histoPtRecDY_QCDPart_%d_%d",i,j), Form("histoPtRecDY_QCDPart_%d_%d",i,j), nBinRecoPt, xbinsRecoPt);
     }
   }
 
@@ -248,26 +281,26 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH1D* histoPtRap0RecDA_QCDPart[2][6];
   TH1D* histoPtRap0RecDY_QCDPart[2][6];
   for(int i=0; i<2; i++){
-   histoPtRap0RecGen[i] = new TH2D(Form("histoPtRap0RecGen_%d",i), Form("histoPtRap0RecGen_%d",i), nBinPtRap0, xbinsPtRap0, nBinPtRap0, xbinsPtRap0);
-   histoPtRap0RecGen_LepEff[i] = new TH2D(Form("histoPtRap0RecGen_LepEff_%d",i), Form("histoPtRap0RecGen_LepEff_%d",i), nBinPtRap0, xbinsPtRap0, nBinPtRap0, xbinsPtRap0);
-   histoPtRap0RecDA[i]  = new TH1D(Form("histoPtRap0RecDA_%d",i),  Form("histoPtRap0RecDA_%d",i),  nBinPtRap0, xbinsPtRap0);
-   histoPtRap0RecDY[i]  = new TH1D(Form("histoPtRap0RecDY_%d",i),  Form("histoPtRap0RecDY_%d",i),  nBinPtRap0, xbinsPtRap0);
+   histoPtRap0RecGen[i] = new TH2D(Form("histoPtRap0RecGen_%d",i), Form("histoPtRap0RecGen_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0, nBinRecoPtRap0, xbinsRecoPtRap0);
+   histoPtRap0RecGen_LepEff[i] = new TH2D(Form("histoPtRap0RecGen_LepEff_%d",i), Form("histoPtRap0RecGen_LepEff_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0, nBinRecoPtRap0, xbinsRecoPtRap0);
+   histoPtRap0RecDA[i]  = new TH1D(Form("histoPtRap0RecDA_%d",i),  Form("histoPtRap0RecDA_%d",i),  nBinRecoPtRap0, xbinsRecoPtRap0);
+   histoPtRap0RecDY[i]  = new TH1D(Form("histoPtRap0RecDY_%d",i),  Form("histoPtRap0RecDY_%d",i),  nBinRecoPtRap0, xbinsRecoPtRap0);
 
-   histoPtRap0RecDA_MomRes[i] = new TH1D(Form("histoPtRap0RecDA_MomRes_%d",i), Form("histoPtRap0RecDA_MomRes_%d",i), nBinPtRap0, xbinsPtRap0);
-   histoPtRap0RecDY_MomRes[i] = new TH1D(Form("histoPtRap0RecDY_MomRes_%d",i), Form("histoPtRap0RecDY_MomRes_%d",i), nBinPtRap0, xbinsPtRap0);
+   histoPtRap0RecDA_MomRes[i] = new TH1D(Form("histoPtRap0RecDA_MomRes_%d",i), Form("histoPtRap0RecDA_MomRes_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0);
+   histoPtRap0RecDY_MomRes[i] = new TH1D(Form("histoPtRap0RecDY_MomRes_%d",i), Form("histoPtRap0RecDY_MomRes_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0);
 
-   histoPtRap0RecDA_LepEff[i] = new TH1D(Form("histoPtRap0RecDA_LepEff_%d",i), Form("histoPtRap0RecDA_LepEff_%d",i), nBinPtRap0, xbinsPtRap0);
-   histoPtRap0RecDY_LepEff[i] = new TH1D(Form("histoPtRap0RecDY_LepEff_%d",i), Form("histoPtRap0RecDY_LepEff_%d",i), nBinPtRap0, xbinsPtRap0);
+   histoPtRap0RecDA_LepEff[i] = new TH1D(Form("histoPtRap0RecDA_LepEff_%d",i), Form("histoPtRap0RecDA_LepEff_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0);
+   histoPtRap0RecDY_LepEff[i] = new TH1D(Form("histoPtRap0RecDY_LepEff_%d",i), Form("histoPtRap0RecDY_LepEff_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0);
 
-   histoPtRap0RecDA_PDF[i] = new TH1D(Form("histoPtRap0RecDA_PDF_%d",i), Form("histoPtRap0RecDA_PDF_%d",i), nBinPtRap0, xbinsPtRap0);
-   histoPtRap0RecDY_PDF[i] = new TH1D(Form("histoPtRap0RecDY_PDF_%d",i), Form("histoPtRap0RecDY_PDF_%d",i), nBinPtRap0, xbinsPtRap0);
+   histoPtRap0RecDA_PDF[i] = new TH1D(Form("histoPtRap0RecDA_PDF_%d",i), Form("histoPtRap0RecDA_PDF_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0);
+   histoPtRap0RecDY_PDF[i] = new TH1D(Form("histoPtRap0RecDY_PDF_%d",i), Form("histoPtRap0RecDY_PDF_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0);
 
-   histoPtRap0RecDA_QCD[i] = new TH1D(Form("histoPtRap0RecDA_QCD_%d",i), Form("histoPtRap0RecDA_QCD_%d",i), nBinPtRap0, xbinsPtRap0);
-   histoPtRap0RecDY_QCD[i] = new TH1D(Form("histoPtRap0RecDY_QCD_%d",i), Form("histoPtRap0RecDY_QCD_%d",i), nBinPtRap0, xbinsPtRap0);
+   histoPtRap0RecDA_QCD[i] = new TH1D(Form("histoPtRap0RecDA_QCD_%d",i), Form("histoPtRap0RecDA_QCD_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0);
+   histoPtRap0RecDY_QCD[i] = new TH1D(Form("histoPtRap0RecDY_QCD_%d",i), Form("histoPtRap0RecDY_QCD_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0);
 
    for(int j=0; j<6; j++){
-      histoPtRap0RecDA_QCDPart[i][j] = new TH1D(Form("histoPtRap0RecDA_QCDPart_%d_%d",i,j), Form("histoPtRap0RecDA_QCDPart_%d_%d",i,j), nBinPtRap0, xbinsPtRap0);
-      histoPtRap0RecDY_QCDPart[i][j] = new TH1D(Form("histoPtRap0RecDY_QCDPart_%d_%d",i,j), Form("histoPtRap0RecDY_QCDPart_%d_%d",i,j), nBinPtRap0, xbinsPtRap0);
+      histoPtRap0RecDA_QCDPart[i][j] = new TH1D(Form("histoPtRap0RecDA_QCDPart_%d_%d",i,j), Form("histoPtRap0RecDA_QCDPart_%d_%d",i,j), nBinRecoPtRap0, xbinsRecoPtRap0);
+      histoPtRap0RecDY_QCDPart[i][j] = new TH1D(Form("histoPtRap0RecDY_QCDPart_%d_%d",i,j), Form("histoPtRap0RecDY_QCDPart_%d_%d",i,j), nBinRecoPtRap0, xbinsRecoPtRap0);
     }
   }
 
@@ -286,26 +319,26 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH1D* histoPtRap1RecDA_QCDPart[2][6];
   TH1D* histoPtRap1RecDY_QCDPart[2][6];
   for(int i=0; i<2; i++){
-   histoPtRap1RecGen[i] = new TH2D(Form("histoPtRap1RecGen_%d",i), Form("histoPtRap1RecGen_%d",i), nBinPtRap1, xbinsPtRap1, nBinPtRap1, xbinsPtRap1);
-   histoPtRap1RecGen_LepEff[i] = new TH2D(Form("histoPtRap1RecGen_LepEff_%d",i), Form("histoPtRap1RecGen_LepEff_%d",i), nBinPtRap1, xbinsPtRap1, nBinPtRap1, xbinsPtRap1);
-   histoPtRap1RecDA[i]  = new TH1D(Form("histoPtRap1RecDA_%d",i),  Form("histoPtRap1RecDA_%d",i),  nBinPtRap1, xbinsPtRap1);
-   histoPtRap1RecDY[i]  = new TH1D(Form("histoPtRap1RecDY_%d",i),  Form("histoPtRap1RecDY_%d",i),  nBinPtRap1, xbinsPtRap1);
+   histoPtRap1RecGen[i] = new TH2D(Form("histoPtRap1RecGen_%d",i), Form("histoPtRap1RecGen_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1, nBinRecoPtRap1, xbinsRecoPtRap1);
+   histoPtRap1RecGen_LepEff[i] = new TH2D(Form("histoPtRap1RecGen_LepEff_%d",i), Form("histoPtRap1RecGen_LepEff_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1, nBinRecoPtRap1, xbinsRecoPtRap1);
+   histoPtRap1RecDA[i]  = new TH1D(Form("histoPtRap1RecDA_%d",i),  Form("histoPtRap1RecDA_%d",i),  nBinRecoPtRap1, xbinsRecoPtRap1);
+   histoPtRap1RecDY[i]  = new TH1D(Form("histoPtRap1RecDY_%d",i),  Form("histoPtRap1RecDY_%d",i),  nBinRecoPtRap1, xbinsRecoPtRap1);
 
-   histoPtRap1RecDA_MomRes[i] = new TH1D(Form("histoPtRap1RecDA_MomRes_%d",i), Form("histoPtRap1RecDA_MomRes_%d",i), nBinPtRap1, xbinsPtRap1);
-   histoPtRap1RecDY_MomRes[i] = new TH1D(Form("histoPtRap1RecDY_MomRes_%d",i), Form("histoPtRap1RecDY_MomRes_%d",i), nBinPtRap1, xbinsPtRap1);
+   histoPtRap1RecDA_MomRes[i] = new TH1D(Form("histoPtRap1RecDA_MomRes_%d",i), Form("histoPtRap1RecDA_MomRes_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1);
+   histoPtRap1RecDY_MomRes[i] = new TH1D(Form("histoPtRap1RecDY_MomRes_%d",i), Form("histoPtRap1RecDY_MomRes_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1);
 
-   histoPtRap1RecDA_LepEff[i] = new TH1D(Form("histoPtRap1RecDA_LepEff_%d",i), Form("histoPtRap1RecDA_LepEff_%d",i), nBinPtRap1, xbinsPtRap1);
-   histoPtRap1RecDY_LepEff[i] = new TH1D(Form("histoPtRap1RecDY_LepEff_%d",i), Form("histoPtRap1RecDY_LepEff_%d",i), nBinPtRap1, xbinsPtRap1);
+   histoPtRap1RecDA_LepEff[i] = new TH1D(Form("histoPtRap1RecDA_LepEff_%d",i), Form("histoPtRap1RecDA_LepEff_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1);
+   histoPtRap1RecDY_LepEff[i] = new TH1D(Form("histoPtRap1RecDY_LepEff_%d",i), Form("histoPtRap1RecDY_LepEff_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1);
 
-   histoPtRap1RecDA_PDF[i] = new TH1D(Form("histoPtRap1RecDA_PDF_%d",i), Form("histoPtRap1RecDA_PDF_%d",i), nBinPtRap1, xbinsPtRap1);
-   histoPtRap1RecDY_PDF[i] = new TH1D(Form("histoPtRap1RecDY_PDF_%d",i), Form("histoPtRap1RecDY_PDF_%d",i), nBinPtRap1, xbinsPtRap1);
+   histoPtRap1RecDA_PDF[i] = new TH1D(Form("histoPtRap1RecDA_PDF_%d",i), Form("histoPtRap1RecDA_PDF_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1);
+   histoPtRap1RecDY_PDF[i] = new TH1D(Form("histoPtRap1RecDY_PDF_%d",i), Form("histoPtRap1RecDY_PDF_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1);
 
-   histoPtRap1RecDA_QCD[i] = new TH1D(Form("histoPtRap1RecDA_QCD_%d",i), Form("histoPtRap1RecDA_QCD_%d",i), nBinPtRap1, xbinsPtRap1);
-   histoPtRap1RecDY_QCD[i] = new TH1D(Form("histoPtRap1RecDY_QCD_%d",i), Form("histoPtRap1RecDY_QCD_%d",i), nBinPtRap1, xbinsPtRap1);
+   histoPtRap1RecDA_QCD[i] = new TH1D(Form("histoPtRap1RecDA_QCD_%d",i), Form("histoPtRap1RecDA_QCD_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1);
+   histoPtRap1RecDY_QCD[i] = new TH1D(Form("histoPtRap1RecDY_QCD_%d",i), Form("histoPtRap1RecDY_QCD_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1);
 
    for(int j=0; j<6; j++){
-      histoPtRap1RecDA_QCDPart[i][j] = new TH1D(Form("histoPtRap1RecDA_QCDPart_%d_%d",i,j), Form("histoPtRap1RecDA_QCDPart_%d_%d",i,j), nBinPtRap1, xbinsPtRap1);
-      histoPtRap1RecDY_QCDPart[i][j] = new TH1D(Form("histoPtRap1RecDY_QCDPart_%d_%d",i,j), Form("histoPtRap1RecDY_QCDPart_%d_%d",i,j), nBinPtRap1, xbinsPtRap1);
+      histoPtRap1RecDA_QCDPart[i][j] = new TH1D(Form("histoPtRap1RecDA_QCDPart_%d_%d",i,j), Form("histoPtRap1RecDA_QCDPart_%d_%d",i,j), nBinRecoPtRap1, xbinsRecoPtRap1);
+      histoPtRap1RecDY_QCDPart[i][j] = new TH1D(Form("histoPtRap1RecDY_QCDPart_%d_%d",i,j), Form("histoPtRap1RecDY_QCDPart_%d_%d",i,j), nBinRecoPtRap1, xbinsRecoPtRap1);
     }
   }
 
@@ -324,26 +357,26 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH1D* histoPtRap2RecDA_QCDPart[2][6];
   TH1D* histoPtRap2RecDY_QCDPart[2][6];
   for(int i=0; i<2; i++){
-   histoPtRap2RecGen[i] = new TH2D(Form("histoPtRap2RecGen_%d",i), Form("histoPtRap2RecGen_%d",i), nBinPtRap2, xbinsPtRap2, nBinPtRap2, xbinsPtRap2);
-   histoPtRap2RecGen_LepEff[i] = new TH2D(Form("histoPtRap2RecGen_LepEff_%d",i), Form("histoPtRap2RecGen_LepEff_%d",i), nBinPtRap2, xbinsPtRap2, nBinPtRap2, xbinsPtRap2);
-   histoPtRap2RecDA[i]  = new TH1D(Form("histoPtRap2RecDA_%d",i),  Form("histoPtRap2RecDA_%d",i),  nBinPtRap2, xbinsPtRap2);
-   histoPtRap2RecDY[i]  = new TH1D(Form("histoPtRap2RecDY_%d",i),  Form("histoPtRap2RecDY_%d",i),  nBinPtRap2, xbinsPtRap2);
+   histoPtRap2RecGen[i] = new TH2D(Form("histoPtRap2RecGen_%d",i), Form("histoPtRap2RecGen_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2, nBinRecoPtRap2, xbinsRecoPtRap2);
+   histoPtRap2RecGen_LepEff[i] = new TH2D(Form("histoPtRap2RecGen_LepEff_%d",i), Form("histoPtRap2RecGen_LepEff_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2, nBinRecoPtRap2, xbinsRecoPtRap2);
+   histoPtRap2RecDA[i]  = new TH1D(Form("histoPtRap2RecDA_%d",i),  Form("histoPtRap2RecDA_%d",i),  nBinRecoPtRap2, xbinsRecoPtRap2);
+   histoPtRap2RecDY[i]  = new TH1D(Form("histoPtRap2RecDY_%d",i),  Form("histoPtRap2RecDY_%d",i),  nBinRecoPtRap2, xbinsRecoPtRap2);
 
-   histoPtRap2RecDA_MomRes[i] = new TH1D(Form("histoPtRap2RecDA_MomRes_%d",i), Form("histoPtRap2RecDA_MomRes_%d",i), nBinPtRap2, xbinsPtRap2);
-   histoPtRap2RecDY_MomRes[i] = new TH1D(Form("histoPtRap2RecDY_MomRes_%d",i), Form("histoPtRap2RecDY_MomRes_%d",i), nBinPtRap2, xbinsPtRap2);
+   histoPtRap2RecDA_MomRes[i] = new TH1D(Form("histoPtRap2RecDA_MomRes_%d",i), Form("histoPtRap2RecDA_MomRes_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2);
+   histoPtRap2RecDY_MomRes[i] = new TH1D(Form("histoPtRap2RecDY_MomRes_%d",i), Form("histoPtRap2RecDY_MomRes_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2);
 
-   histoPtRap2RecDA_LepEff[i] = new TH1D(Form("histoPtRap2RecDA_LepEff_%d",i), Form("histoPtRap2RecDA_LepEff_%d",i), nBinPtRap2, xbinsPtRap2);
-   histoPtRap2RecDY_LepEff[i] = new TH1D(Form("histoPtRap2RecDY_LepEff_%d",i), Form("histoPtRap2RecDY_LepEff_%d",i), nBinPtRap2, xbinsPtRap2);
+   histoPtRap2RecDA_LepEff[i] = new TH1D(Form("histoPtRap2RecDA_LepEff_%d",i), Form("histoPtRap2RecDA_LepEff_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2);
+   histoPtRap2RecDY_LepEff[i] = new TH1D(Form("histoPtRap2RecDY_LepEff_%d",i), Form("histoPtRap2RecDY_LepEff_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2);
 
-   histoPtRap2RecDA_PDF[i] = new TH1D(Form("histoPtRap2RecDA_PDF_%d",i), Form("histoPtRap2RecDA_PDF_%d",i), nBinPtRap2, xbinsPtRap2);
-   histoPtRap2RecDY_PDF[i] = new TH1D(Form("histoPtRap2RecDY_PDF_%d",i), Form("histoPtRap2RecDY_PDF_%d",i), nBinPtRap2, xbinsPtRap2);
+   histoPtRap2RecDA_PDF[i] = new TH1D(Form("histoPtRap2RecDA_PDF_%d",i), Form("histoPtRap2RecDA_PDF_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2);
+   histoPtRap2RecDY_PDF[i] = new TH1D(Form("histoPtRap2RecDY_PDF_%d",i), Form("histoPtRap2RecDY_PDF_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2);
 
-   histoPtRap2RecDA_QCD[i] = new TH1D(Form("histoPtRap2RecDA_QCD_%d",i), Form("histoPtRap2RecDA_QCD_%d",i), nBinPtRap2, xbinsPtRap2);
-   histoPtRap2RecDY_QCD[i] = new TH1D(Form("histoPtRap2RecDY_QCD_%d",i), Form("histoPtRap2RecDY_QCD_%d",i), nBinPtRap2, xbinsPtRap2);
+   histoPtRap2RecDA_QCD[i] = new TH1D(Form("histoPtRap2RecDA_QCD_%d",i), Form("histoPtRap2RecDA_QCD_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2);
+   histoPtRap2RecDY_QCD[i] = new TH1D(Form("histoPtRap2RecDY_QCD_%d",i), Form("histoPtRap2RecDY_QCD_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2);
 
    for(int j=0; j<6; j++){
-      histoPtRap2RecDA_QCDPart[i][j] = new TH1D(Form("histoPtRap2RecDA_QCDPart_%d_%d",i,j), Form("histoPtRap2RecDA_QCDPart_%d_%d",i,j), nBinPtRap2, xbinsPtRap2);
-      histoPtRap2RecDY_QCDPart[i][j] = new TH1D(Form("histoPtRap2RecDY_QCDPart_%d_%d",i,j), Form("histoPtRap2RecDY_QCDPart_%d_%d",i,j), nBinPtRap2, xbinsPtRap2);
+      histoPtRap2RecDA_QCDPart[i][j] = new TH1D(Form("histoPtRap2RecDA_QCDPart_%d_%d",i,j), Form("histoPtRap2RecDA_QCDPart_%d_%d",i,j), nBinRecoPtRap2, xbinsRecoPtRap2);
+      histoPtRap2RecDY_QCDPart[i][j] = new TH1D(Form("histoPtRap2RecDY_QCDPart_%d_%d",i,j), Form("histoPtRap2RecDY_QCDPart_%d_%d",i,j), nBinRecoPtRap2, xbinsRecoPtRap2);
     }
   }
 
@@ -362,26 +395,26 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH1D* histoPtRap3RecDA_QCDPart[2][6];
   TH1D* histoPtRap3RecDY_QCDPart[2][6];
   for(int i=0; i<2; i++){
-   histoPtRap3RecGen[i] = new TH2D(Form("histoPtRap3RecGen_%d",i), Form("histoPtRap3RecGen_%d",i), nBinPtRap3, xbinsPtRap3, nBinPtRap3, xbinsPtRap3);
-   histoPtRap3RecGen_LepEff[i] = new TH2D(Form("histoPtRap3RecGen_LepEff_%d",i), Form("histoPtRap3RecGen_LepEff_%d",i), nBinPtRap3, xbinsPtRap3, nBinPtRap3, xbinsPtRap3);
-   histoPtRap3RecDA[i]  = new TH1D(Form("histoPtRap3RecDA_%d",i),  Form("histoPtRap3RecDA_%d",i),  nBinPtRap3, xbinsPtRap3);
-   histoPtRap3RecDY[i]  = new TH1D(Form("histoPtRap3RecDY_%d",i),  Form("histoPtRap3RecDY_%d",i),  nBinPtRap3, xbinsPtRap3);
+   histoPtRap3RecGen[i] = new TH2D(Form("histoPtRap3RecGen_%d",i), Form("histoPtRap3RecGen_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3, nBinRecoPtRap3, xbinsRecoPtRap3);
+   histoPtRap3RecGen_LepEff[i] = new TH2D(Form("histoPtRap3RecGen_LepEff_%d",i), Form("histoPtRap3RecGen_LepEff_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3, nBinRecoPtRap3, xbinsRecoPtRap3);
+   histoPtRap3RecDA[i]  = new TH1D(Form("histoPtRap3RecDA_%d",i),  Form("histoPtRap3RecDA_%d",i),  nBinRecoPtRap3, xbinsRecoPtRap3);
+   histoPtRap3RecDY[i]  = new TH1D(Form("histoPtRap3RecDY_%d",i),  Form("histoPtRap3RecDY_%d",i),  nBinRecoPtRap3, xbinsRecoPtRap3);
 
-   histoPtRap3RecDA_MomRes[i] = new TH1D(Form("histoPtRap3RecDA_MomRes_%d",i), Form("histoPtRap3RecDA_MomRes_%d",i), nBinPtRap3, xbinsPtRap3);
-   histoPtRap3RecDY_MomRes[i] = new TH1D(Form("histoPtRap3RecDY_MomRes_%d",i), Form("histoPtRap3RecDY_MomRes_%d",i), nBinPtRap3, xbinsPtRap3);
+   histoPtRap3RecDA_MomRes[i] = new TH1D(Form("histoPtRap3RecDA_MomRes_%d",i), Form("histoPtRap3RecDA_MomRes_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3);
+   histoPtRap3RecDY_MomRes[i] = new TH1D(Form("histoPtRap3RecDY_MomRes_%d",i), Form("histoPtRap3RecDY_MomRes_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3);
 
-   histoPtRap3RecDA_LepEff[i] = new TH1D(Form("histoPtRap3RecDA_LepEff_%d",i), Form("histoPtRap3RecDA_LepEff_%d",i), nBinPtRap3, xbinsPtRap3);
-   histoPtRap3RecDY_LepEff[i] = new TH1D(Form("histoPtRap3RecDY_LepEff_%d",i), Form("histoPtRap3RecDY_LepEff_%d",i), nBinPtRap3, xbinsPtRap3);
+   histoPtRap3RecDA_LepEff[i] = new TH1D(Form("histoPtRap3RecDA_LepEff_%d",i), Form("histoPtRap3RecDA_LepEff_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3);
+   histoPtRap3RecDY_LepEff[i] = new TH1D(Form("histoPtRap3RecDY_LepEff_%d",i), Form("histoPtRap3RecDY_LepEff_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3);
 
-   histoPtRap3RecDA_PDF[i] = new TH1D(Form("histoPtRap3RecDA_PDF_%d",i), Form("histoPtRap3RecDA_PDF_%d",i), nBinPtRap3, xbinsPtRap3);
-   histoPtRap3RecDY_PDF[i] = new TH1D(Form("histoPtRap3RecDY_PDF_%d",i), Form("histoPtRap3RecDY_PDF_%d",i), nBinPtRap3, xbinsPtRap3);
+   histoPtRap3RecDA_PDF[i] = new TH1D(Form("histoPtRap3RecDA_PDF_%d",i), Form("histoPtRap3RecDA_PDF_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3);
+   histoPtRap3RecDY_PDF[i] = new TH1D(Form("histoPtRap3RecDY_PDF_%d",i), Form("histoPtRap3RecDY_PDF_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3);
 
-   histoPtRap3RecDA_QCD[i] = new TH1D(Form("histoPtRap3RecDA_QCD_%d",i), Form("histoPtRap3RecDA_QCD_%d",i), nBinPtRap3, xbinsPtRap3);
-   histoPtRap3RecDY_QCD[i] = new TH1D(Form("histoPtRap3RecDY_QCD_%d",i), Form("histoPtRap3RecDY_QCD_%d",i), nBinPtRap3, xbinsPtRap3);
+   histoPtRap3RecDA_QCD[i] = new TH1D(Form("histoPtRap3RecDA_QCD_%d",i), Form("histoPtRap3RecDA_QCD_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3);
+   histoPtRap3RecDY_QCD[i] = new TH1D(Form("histoPtRap3RecDY_QCD_%d",i), Form("histoPtRap3RecDY_QCD_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3);
 
    for(int j=0; j<6; j++){
-      histoPtRap3RecDA_QCDPart[i][j] = new TH1D(Form("histoPtRap3RecDA_QCDPart_%d_%d",i,j), Form("histoPtRap3RecDA_QCDPart_%d_%d",i,j), nBinPtRap3, xbinsPtRap3);
-      histoPtRap3RecDY_QCDPart[i][j] = new TH1D(Form("histoPtRap3RecDY_QCDPart_%d_%d",i,j), Form("histoPtRap3RecDY_QCDPart_%d_%d",i,j), nBinPtRap3, xbinsPtRap3);
+      histoPtRap3RecDA_QCDPart[i][j] = new TH1D(Form("histoPtRap3RecDA_QCDPart_%d_%d",i,j), Form("histoPtRap3RecDA_QCDPart_%d_%d",i,j), nBinRecoPtRap3, xbinsRecoPtRap3);
+      histoPtRap3RecDY_QCDPart[i][j] = new TH1D(Form("histoPtRap3RecDY_QCDPart_%d_%d",i,j), Form("histoPtRap3RecDY_QCDPart_%d_%d",i,j), nBinRecoPtRap3, xbinsRecoPtRap3);
     }
   }
 
@@ -400,26 +433,26 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH1D* histoPtRap4RecDA_QCDPart[2][6];
   TH1D* histoPtRap4RecDY_QCDPart[2][6];
   for(int i=0; i<2; i++){
-   histoPtRap4RecGen[i] = new TH2D(Form("histoPtRap4RecGen_%d",i), Form("histoPtRap4RecGen_%d",i), nBinPtRap4, xbinsPtRap4, nBinPtRap4, xbinsPtRap4);
-   histoPtRap4RecGen_LepEff[i] = new TH2D(Form("histoPtRap4RecGen_LepEff_%d",i), Form("histoPtRap4RecGen_LepEff_%d",i), nBinPtRap4, xbinsPtRap4, nBinPtRap4, xbinsPtRap4);
-   histoPtRap4RecDA[i]  = new TH1D(Form("histoPtRap4RecDA_%d",i),  Form("histoPtRap4RecDA_%d",i),  nBinPtRap4, xbinsPtRap4);
-   histoPtRap4RecDY[i]  = new TH1D(Form("histoPtRap4RecDY_%d",i),  Form("histoPtRap4RecDY_%d",i),  nBinPtRap4, xbinsPtRap4);
+   histoPtRap4RecGen[i] = new TH2D(Form("histoPtRap4RecGen_%d",i), Form("histoPtRap4RecGen_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4, nBinRecoPtRap4, xbinsRecoPtRap4);
+   histoPtRap4RecGen_LepEff[i] = new TH2D(Form("histoPtRap4RecGen_LepEff_%d",i), Form("histoPtRap4RecGen_LepEff_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4, nBinRecoPtRap4, xbinsRecoPtRap4);
+   histoPtRap4RecDA[i]  = new TH1D(Form("histoPtRap4RecDA_%d",i),  Form("histoPtRap4RecDA_%d",i),  nBinRecoPtRap4, xbinsRecoPtRap4);
+   histoPtRap4RecDY[i]  = new TH1D(Form("histoPtRap4RecDY_%d",i),  Form("histoPtRap4RecDY_%d",i),  nBinRecoPtRap4, xbinsRecoPtRap4);
 
-   histoPtRap4RecDA_MomRes[i] = new TH1D(Form("histoPtRap4RecDA_MomRes_%d",i), Form("histoPtRap4RecDA_MomRes_%d",i), nBinPtRap4, xbinsPtRap4);
-   histoPtRap4RecDY_MomRes[i] = new TH1D(Form("histoPtRap4RecDY_MomRes_%d",i), Form("histoPtRap4RecDY_MomRes_%d",i), nBinPtRap4, xbinsPtRap4);
+   histoPtRap4RecDA_MomRes[i] = new TH1D(Form("histoPtRap4RecDA_MomRes_%d",i), Form("histoPtRap4RecDA_MomRes_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4);
+   histoPtRap4RecDY_MomRes[i] = new TH1D(Form("histoPtRap4RecDY_MomRes_%d",i), Form("histoPtRap4RecDY_MomRes_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4);
 
-   histoPtRap4RecDA_LepEff[i] = new TH1D(Form("histoPtRap4RecDA_LepEff_%d",i), Form("histoPtRap4RecDA_LepEff_%d",i), nBinPtRap4, xbinsPtRap4);
-   histoPtRap4RecDY_LepEff[i] = new TH1D(Form("histoPtRap4RecDY_LepEff_%d",i), Form("histoPtRap4RecDY_LepEff_%d",i), nBinPtRap4, xbinsPtRap4);
+   histoPtRap4RecDA_LepEff[i] = new TH1D(Form("histoPtRap4RecDA_LepEff_%d",i), Form("histoPtRap4RecDA_LepEff_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4);
+   histoPtRap4RecDY_LepEff[i] = new TH1D(Form("histoPtRap4RecDY_LepEff_%d",i), Form("histoPtRap4RecDY_LepEff_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4);
 
-   histoPtRap4RecDA_PDF[i] = new TH1D(Form("histoPtRap4RecDA_PDF_%d",i), Form("histoPtRap4RecDA_PDF_%d",i), nBinPtRap4, xbinsPtRap4);
-   histoPtRap4RecDY_PDF[i] = new TH1D(Form("histoPtRap4RecDY_PDF_%d",i), Form("histoPtRap4RecDY_PDF_%d",i), nBinPtRap4, xbinsPtRap4);
+   histoPtRap4RecDA_PDF[i] = new TH1D(Form("histoPtRap4RecDA_PDF_%d",i), Form("histoPtRap4RecDA_PDF_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4);
+   histoPtRap4RecDY_PDF[i] = new TH1D(Form("histoPtRap4RecDY_PDF_%d",i), Form("histoPtRap4RecDY_PDF_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4);
 
-   histoPtRap4RecDA_QCD[i] = new TH1D(Form("histoPtRap4RecDA_QCD_%d",i), Form("histoPtRap4RecDA_QCD_%d",i), nBinPtRap4, xbinsPtRap4);
-   histoPtRap4RecDY_QCD[i] = new TH1D(Form("histoPtRap4RecDY_QCD_%d",i), Form("histoPtRap4RecDY_QCD_%d",i), nBinPtRap4, xbinsPtRap4);
+   histoPtRap4RecDA_QCD[i] = new TH1D(Form("histoPtRap4RecDA_QCD_%d",i), Form("histoPtRap4RecDA_QCD_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4);
+   histoPtRap4RecDY_QCD[i] = new TH1D(Form("histoPtRap4RecDY_QCD_%d",i), Form("histoPtRap4RecDY_QCD_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4);
 
    for(int j=0; j<6; j++){
-      histoPtRap4RecDA_QCDPart[i][j] = new TH1D(Form("histoPtRap4RecDA_QCDPart_%d_%d",i,j), Form("histoPtRap4RecDA_QCDPart_%d_%d",i,j), nBinPtRap4, xbinsPtRap4);
-      histoPtRap4RecDY_QCDPart[i][j] = new TH1D(Form("histoPtRap4RecDY_QCDPart_%d_%d",i,j), Form("histoPtRap4RecDY_QCDPart_%d_%d",i,j), nBinPtRap4, xbinsPtRap4);
+      histoPtRap4RecDA_QCDPart[i][j] = new TH1D(Form("histoPtRap4RecDA_QCDPart_%d_%d",i,j), Form("histoPtRap4RecDA_QCDPart_%d_%d",i,j), nBinRecoPtRap4, xbinsRecoPtRap4);
+      histoPtRap4RecDY_QCDPart[i][j] = new TH1D(Form("histoPtRap4RecDY_QCDPart_%d_%d",i,j), Form("histoPtRap4RecDY_QCDPart_%d_%d",i,j), nBinRecoPtRap4, xbinsRecoPtRap4);
     }
   }
 
@@ -1206,7 +1239,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
            histoPtRecDY_QCDPart[ntype][3]->GetSumOfWeights(),histoPtRecDY_QCDPart[ntype][4]->GetSumOfWeights(),histoPtRecDY_QCDPart[ntype][5]->GetSumOfWeights(),histoPtRecDY[ntype]->GetSumOfWeights());
   }
   for(int ntype=0; ntype<2; ntype++){
-    for(int nb=1; nb<=nBinPt+1; nb++){
+    for(int nb=1; nb<=nBinRecoPt+1; nb++){
       // QCD study
       double systQCDScale[2] = {TMath::Abs(histoPtRecDA_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRecDA[ntype]->GetBinContent(nb)),
   			        TMath::Abs(histoPtRecDY_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRecDY[ntype]->GetBinContent(nb))};
@@ -1281,7 +1314,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
            histoPtRap0RecDY_QCDPart[ntype][3]->GetSumOfWeights(),histoPtRap0RecDY_QCDPart[ntype][4]->GetSumOfWeights(),histoPtRap0RecDY_QCDPart[ntype][5]->GetSumOfWeights(),histoPtRap0RecDY[ntype]->GetSumOfWeights());
   }
   for(int ntype=0; ntype<2; ntype++){
-    for(int nb=1; nb<=nBinPtRap0+1; nb++){
+    for(int nb=1; nb<=nBinRecoPtRap0+1; nb++){
       // QCD study
       double systQCDScale[2] = {TMath::Abs(histoPtRap0RecDA_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRap0RecDA[ntype]->GetBinContent(nb)),
   			        TMath::Abs(histoPtRap0RecDY_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRap0RecDY[ntype]->GetBinContent(nb))};
@@ -1306,7 +1339,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
            histoPtRap1RecDY_QCDPart[ntype][3]->GetSumOfWeights(),histoPtRap1RecDY_QCDPart[ntype][4]->GetSumOfWeights(),histoPtRap1RecDY_QCDPart[ntype][5]->GetSumOfWeights(),histoPtRap1RecDY[ntype]->GetSumOfWeights());
   }
   for(int ntype=0; ntype<2; ntype++){
-    for(int nb=1; nb<=nBinPtRap1+1; nb++){
+    for(int nb=1; nb<=nBinRecoPtRap1+1; nb++){
       // QCD study
       double systQCDScale[2] = {TMath::Abs(histoPtRap1RecDA_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRap1RecDA[ntype]->GetBinContent(nb)),
   			        TMath::Abs(histoPtRap1RecDY_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRap1RecDY[ntype]->GetBinContent(nb))};
@@ -1331,7 +1364,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
            histoPtRap2RecDY_QCDPart[ntype][3]->GetSumOfWeights(),histoPtRap2RecDY_QCDPart[ntype][4]->GetSumOfWeights(),histoPtRap2RecDY_QCDPart[ntype][5]->GetSumOfWeights(),histoPtRap2RecDY[ntype]->GetSumOfWeights());
   }
   for(int ntype=0; ntype<2; ntype++){
-    for(int nb=1; nb<=nBinPtRap2+1; nb++){
+    for(int nb=1; nb<=nBinRecoPtRap2+1; nb++){
       // QCD study
       double systQCDScale[2] = {TMath::Abs(histoPtRap2RecDA_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRap2RecDA[ntype]->GetBinContent(nb)),
   			        TMath::Abs(histoPtRap2RecDY_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRap2RecDY[ntype]->GetBinContent(nb))};
@@ -1356,7 +1389,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
            histoPtRap3RecDY_QCDPart[ntype][3]->GetSumOfWeights(),histoPtRap3RecDY_QCDPart[ntype][4]->GetSumOfWeights(),histoPtRap3RecDY_QCDPart[ntype][5]->GetSumOfWeights(),histoPtRap3RecDY[ntype]->GetSumOfWeights());
   }
   for(int ntype=0; ntype<2; ntype++){
-    for(int nb=1; nb<=nBinPtRap3+1; nb++){
+    for(int nb=1; nb<=nBinRecoPtRap3+1; nb++){
       // QCD study
       double systQCDScale[2] = {TMath::Abs(histoPtRap3RecDA_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRap3RecDA[ntype]->GetBinContent(nb)),
   			        TMath::Abs(histoPtRap3RecDY_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRap3RecDY[ntype]->GetBinContent(nb))};
@@ -1381,7 +1414,7 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
            histoPtRap4RecDY_QCDPart[ntype][3]->GetSumOfWeights(),histoPtRap4RecDY_QCDPart[ntype][4]->GetSumOfWeights(),histoPtRap4RecDY_QCDPart[ntype][5]->GetSumOfWeights(),histoPtRap4RecDY[ntype]->GetSumOfWeights());
   }
   for(int ntype=0; ntype<2; ntype++){
-    for(int nb=1; nb<=nBinPtRap4+1; nb++){
+    for(int nb=1; nb<=nBinRecoPtRap4+1; nb++){
       // QCD study
       double systQCDScale[2] = {TMath::Abs(histoPtRap4RecDA_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRap4RecDA[ntype]->GetBinContent(nb)),
   			        TMath::Abs(histoPtRap4RecDY_QCDPart[ntype][0]->GetBinContent(nb)-histoPtRap4RecDY[ntype]->GetBinContent(nb))};
