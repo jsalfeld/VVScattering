@@ -324,8 +324,8 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH1D* histoPtRap0RecDA_QCDPart[2][6];
   TH1D* histoPtRap0RecDY_QCDPart[2][6];
   for(int i=0; i<2; i++){
-   histoPtRap0RecGen[i] = new TH2D(Form("histoPtRap0RecGen_%d",i), Form("histoPtRap0RecGen_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0, nBinRecoPtRap0, xbinsRecoPtRap0);
-   histoPtRap0RecGen_LepEff[i] = new TH2D(Form("histoPtRap0RecGen_LepEff_%d",i), Form("histoPtRap0RecGen_LepEff_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0, nBinRecoPtRap0, xbinsRecoPtRap0);
+   histoPtRap0RecGen[i] = new TH2D(Form("histoPtRap0RecGen_%d",i), Form("histoPtRap0RecGen_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0, nBinPtRap0, xbinsPtRap0);
+   histoPtRap0RecGen_LepEff[i] = new TH2D(Form("histoPtRap0RecGen_LepEff_%d",i), Form("histoPtRap0RecGen_LepEff_%d",i), nBinRecoPtRap0, xbinsRecoPtRap0, nBinPtRap0, xbinsPtRap0);
    histoPtRap0RecDA[i]  = new TH1D(Form("histoPtRap0RecDA_%d",i),  Form("histoPtRap0RecDA_%d",i),  nBinRecoPtRap0, xbinsRecoPtRap0);
    histoPtRap0RecDY[i]  = new TH1D(Form("histoPtRap0RecDY_%d",i),  Form("histoPtRap0RecDY_%d",i),  nBinRecoPtRap0, xbinsRecoPtRap0);
 
@@ -362,8 +362,8 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH1D* histoPtRap1RecDA_QCDPart[2][6];
   TH1D* histoPtRap1RecDY_QCDPart[2][6];
   for(int i=0; i<2; i++){
-   histoPtRap1RecGen[i] = new TH2D(Form("histoPtRap1RecGen_%d",i), Form("histoPtRap1RecGen_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1, nBinRecoPtRap1, xbinsRecoPtRap1);
-   histoPtRap1RecGen_LepEff[i] = new TH2D(Form("histoPtRap1RecGen_LepEff_%d",i), Form("histoPtRap1RecGen_LepEff_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1, nBinRecoPtRap1, xbinsRecoPtRap1);
+   histoPtRap1RecGen[i] = new TH2D(Form("histoPtRap1RecGen_%d",i), Form("histoPtRap1RecGen_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1, nBinPtRap1, xbinsPtRap1);
+   histoPtRap1RecGen_LepEff[i] = new TH2D(Form("histoPtRap1RecGen_LepEff_%d",i), Form("histoPtRap1RecGen_LepEff_%d",i), nBinRecoPtRap1, xbinsRecoPtRap1, nBinPtRap1, xbinsPtRap1);
    histoPtRap1RecDA[i]  = new TH1D(Form("histoPtRap1RecDA_%d",i),  Form("histoPtRap1RecDA_%d",i),  nBinRecoPtRap1, xbinsRecoPtRap1);
    histoPtRap1RecDY[i]  = new TH1D(Form("histoPtRap1RecDY_%d",i),  Form("histoPtRap1RecDY_%d",i),  nBinRecoPtRap1, xbinsRecoPtRap1);
 
@@ -400,8 +400,8 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH1D* histoPtRap2RecDA_QCDPart[2][6];
   TH1D* histoPtRap2RecDY_QCDPart[2][6];
   for(int i=0; i<2; i++){
-   histoPtRap2RecGen[i] = new TH2D(Form("histoPtRap2RecGen_%d",i), Form("histoPtRap2RecGen_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2, nBinRecoPtRap2, xbinsRecoPtRap2);
-   histoPtRap2RecGen_LepEff[i] = new TH2D(Form("histoPtRap2RecGen_LepEff_%d",i), Form("histoPtRap2RecGen_LepEff_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2, nBinRecoPtRap2, xbinsRecoPtRap2);
+   histoPtRap2RecGen[i] = new TH2D(Form("histoPtRap2RecGen_%d",i), Form("histoPtRap2RecGen_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2, nBinPtRap2, xbinsPtRap2);
+   histoPtRap2RecGen_LepEff[i] = new TH2D(Form("histoPtRap2RecGen_LepEff_%d",i), Form("histoPtRap2RecGen_LepEff_%d",i), nBinRecoPtRap2, xbinsRecoPtRap2, nBinPtRap2, xbinsPtRap2);
    histoPtRap2RecDA[i]  = new TH1D(Form("histoPtRap2RecDA_%d",i),  Form("histoPtRap2RecDA_%d",i),  nBinRecoPtRap2, xbinsRecoPtRap2);
    histoPtRap2RecDY[i]  = new TH1D(Form("histoPtRap2RecDY_%d",i),  Form("histoPtRap2RecDY_%d",i),  nBinRecoPtRap2, xbinsRecoPtRap2);
 
@@ -438,8 +438,8 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH1D* histoPtRap3RecDA_QCDPart[2][6];
   TH1D* histoPtRap3RecDY_QCDPart[2][6];
   for(int i=0; i<2; i++){
-   histoPtRap3RecGen[i] = new TH2D(Form("histoPtRap3RecGen_%d",i), Form("histoPtRap3RecGen_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3, nBinRecoPtRap3, xbinsRecoPtRap3);
-   histoPtRap3RecGen_LepEff[i] = new TH2D(Form("histoPtRap3RecGen_LepEff_%d",i), Form("histoPtRap3RecGen_LepEff_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3, nBinRecoPtRap3, xbinsRecoPtRap3);
+   histoPtRap3RecGen[i] = new TH2D(Form("histoPtRap3RecGen_%d",i), Form("histoPtRap3RecGen_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3, nBinPtRap3, xbinsPtRap3);
+   histoPtRap3RecGen_LepEff[i] = new TH2D(Form("histoPtRap3RecGen_LepEff_%d",i), Form("histoPtRap3RecGen_LepEff_%d",i), nBinRecoPtRap3, xbinsRecoPtRap3, nBinPtRap3, xbinsPtRap3);
    histoPtRap3RecDA[i]  = new TH1D(Form("histoPtRap3RecDA_%d",i),  Form("histoPtRap3RecDA_%d",i),  nBinRecoPtRap3, xbinsRecoPtRap3);
    histoPtRap3RecDY[i]  = new TH1D(Form("histoPtRap3RecDY_%d",i),  Form("histoPtRap3RecDY_%d",i),  nBinRecoPtRap3, xbinsRecoPtRap3);
 
@@ -476,8 +476,8 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH1D* histoPtRap4RecDA_QCDPart[2][6];
   TH1D* histoPtRap4RecDY_QCDPart[2][6];
   for(int i=0; i<2; i++){
-   histoPtRap4RecGen[i] = new TH2D(Form("histoPtRap4RecGen_%d",i), Form("histoPtRap4RecGen_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4, nBinRecoPtRap4, xbinsRecoPtRap4);
-   histoPtRap4RecGen_LepEff[i] = new TH2D(Form("histoPtRap4RecGen_LepEff_%d",i), Form("histoPtRap4RecGen_LepEff_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4, nBinRecoPtRap4, xbinsRecoPtRap4);
+   histoPtRap4RecGen[i] = new TH2D(Form("histoPtRap4RecGen_%d",i), Form("histoPtRap4RecGen_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4, nBinPtRap4, xbinsPtRap4);
+   histoPtRap4RecGen_LepEff[i] = new TH2D(Form("histoPtRap4RecGen_LepEff_%d",i), Form("histoPtRap4RecGen_LepEff_%d",i), nBinRecoPtRap4, xbinsRecoPtRap4, nBinPtRap4, xbinsPtRap4);
    histoPtRap4RecDA[i]  = new TH1D(Form("histoPtRap4RecDA_%d",i),  Form("histoPtRap4RecDA_%d",i),  nBinRecoPtRap4, xbinsRecoPtRap4);
    histoPtRap4RecDY[i]  = new TH1D(Form("histoPtRap4RecDY_%d",i),  Form("histoPtRap4RecDY_%d",i),  nBinRecoPtRap4, xbinsRecoPtRap4);
 
