@@ -11,7 +11,12 @@
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py VG                   
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py H125                 
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYNJetsToLL          
-/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_Pt      
+/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_Pt0To50   
+/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_Pt50To100 
+/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_Pt100To250  
+/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_Pt250To400  
+/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_Pt400To650  
+/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_Pt650ToInf  
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToTauTau     
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_M-10to50
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_M-50_NLO
