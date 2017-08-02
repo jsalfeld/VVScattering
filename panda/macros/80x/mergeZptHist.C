@@ -1,5 +1,5 @@
 void mergeZptHist() {
-TString inputFolder = "/data/t3home000/ceballos/panda/v_004_0";
+TString inputFolder = "/data/t3home000/ceballos/panda/v_003_0";
 
 TFile *_file[6];
 _file[0] = TFile::Open(Form("%s/DYJetsToLL_Pt0To50.root"  , inputFolder.Data()));
