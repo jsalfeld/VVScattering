@@ -1,4 +1,5 @@
-/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py ZZ                   
+/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py qqZZ                   
+/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py ggZZ
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py WZ                   
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py qqWW                 
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py ggWW                 
