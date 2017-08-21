@@ -732,6 +732,9 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
       
       if(thePandaFlat.nLooseLep != 2) continue;
 
+      bool passLepId = ((thePandaFlat.looseLep1SelBit & kMedium) == kMedium) && ((thePandaFlat.looseLep2SelBit & kMedium) == kMedium);
+      if(passLepId == false) continue;
+
       int theCategory = infileCat_[ifile];
       float lepPtSF[2] = {1,1};
       float lepPtSFSyst[2][nMomNuisances] = {1,1,1,1,1,1,1,1,1,1};
@@ -858,9 +861,6 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
           lepPtSFSyst[1][1] = lepPtSF[1];
         }
       }
-
-      bool passLepId = ((thePandaFlat.looseLep1SelBit & kMedium) == kMedium) && ((thePandaFlat.looseLep2SelBit & kMedium) == kMedium);
-      if(passLepId == false) continue;
 
       int lepType = -1;
       if     (abs(thePandaFlat.looseLep1PdgId)==13 && abs(thePandaFlat.looseLep2PdgId)==13 && thePandaFlat.looseLep1PdgId*thePandaFlat.looseLep2PdgId<0) lepType = 0;
