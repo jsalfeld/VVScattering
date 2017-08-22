@@ -1422,23 +1422,23 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
 	if(passSystSel[nc]){
 	  if     (theCategory == 2){
             histoPtRecDY_MomRes[lepType][nc] ->Fill(ZRecSystPt[nc],totalWeight);
-            histoPtRecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);
+            if(passPtFid == true) histoPtRecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);
             if(ZRecRap < 2.4) {
               histoRapRecDY_MomRes[lepType][nc] ->Fill(ZRecRap,totalWeight);
-              histoRapRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
+              if(passPtFid == true) histoRapRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
               if(thePandaFlat.looseLep1PdgId < 0){
         	histoRapPRecDY_MomRes[lepType][nc] ->Fill(ZRecRap,totalWeight);
-        	histoRapPRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
+        	if(passPtFid == true) histoRapPRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
               } else {
         	histoRapMRecDY_MomRes[lepType][nc] ->Fill(ZRecRap,totalWeight);
-        	histoRapMRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
+        	if(passPtFid == true) histoRapMRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
               }
             }
-            if     (ZRecRap < 0.5) {histoPtRap0RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap0RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
-            else if(ZRecRap < 1.0) {histoPtRap1RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap1RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
-            else if(ZRecRap < 1.5) {histoPtRap2RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap2RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
-            else if(ZRecRap < 2.0) {histoPtRap3RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap3RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
-            else if(ZRecRap < 2.4) {histoPtRap4RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap4RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
+            if     (ZRecRap < 0.5) {if(passPtFid == true) histoPtRap0RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap0RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
+            else if(ZRecRap < 1.0) {if(passPtFid == true) histoPtRap1RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap1RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
+            else if(ZRecRap < 1.5) {if(passPtFid == true) histoPtRap2RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap2RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
+            else if(ZRecRap < 2.0) {if(passPtFid == true) histoPtRap3RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap3RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
+            else if(ZRecRap < 2.4) {if(passPtFid == true) histoPtRap4RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap4RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
 	  }
 	  else if(theCategory == 0){
             histoPtRecDA_MomRes[lepType][nc] ->Fill(ZRecSystPt[nc],totalWeight);
