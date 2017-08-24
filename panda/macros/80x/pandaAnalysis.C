@@ -50,7 +50,10 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   //infileName_.push_back(Form("%sqqWW.root" ,filesPath.Data()));                infileCat_.push_back(1);
   //infileName_.push_back(Form("%sggWW.root" ,filesPath.Data()));                infileCat_.push_back(1);
   if     (whichDY == 0)
- {infileName_.push_back(Form("%sDYJetsToLL_M-50_LO.root" ,filesPath.Data()));  infileCat_.push_back(2);}
+ {infileName_.push_back(Form("%sDYJetsToLL_M-50_LO_Pt000To050.root" ,filesPath.Data()));  infileCat_.push_back(2);
+  infileName_.push_back(Form("%sDYJetsToLL_M-50_LO_Pt100to200.root" ,filesPath.Data()));  infileCat_.push_back(2);
+  infileName_.push_back(Form("%sDYJetsToLL_M-50_LO_Pt200toInf.root" ,filesPath.Data()));  infileCat_.push_back(2);
+  }
   else if(whichDY == 1)
  {infileName_.push_back(Form("%sDYJetsToLL_M-50_NLO.root",filesPath.Data()));  infileCat_.push_back(2);}
   else if(whichDY == 2)
