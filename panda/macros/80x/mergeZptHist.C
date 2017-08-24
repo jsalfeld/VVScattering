@@ -119,9 +119,9 @@ myOutputFile.Close();
 } else {
 const int nFiles = 3;
 TFile *_file[nFiles];
-_file[0] = TFile::Open(Form("%s/DYJetsToLL_M-50_LO_Pt000To050.root"  , inputFolder.Data()));
+_file[0] = TFile::Open(Form("%s/DYJetsToLL_M-50_LO_Pt000To050.root", inputFolder.Data()));
 _file[1] = TFile::Open(Form("%s/DYJetsToLL_M-50_LO_Pt100to200.root", inputFolder.Data()));
-_file[2] = TFile::Open(Form("%s/DYJetsToLL_M-50_LO_Pt100to200.root",inputFolder.Data()));
+_file[2] = TFile::Open(Form("%s/DYJetsToLL_M-50_LO_Pt200toInf.root",inputFolder.Data()));
 
 double xs[nFiles] = {2008.4*3,69.586,8.186};
 
