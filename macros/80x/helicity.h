@@ -51,3 +51,17 @@ double cos_theta_star(TLorentzVector lep1, TLorentzVector lep2, TLorentzVector g
   double cos_theta_star_l1 = p3_mother_grandma.Dot(p3_l1_mother) / ( p3_mother_grandma.Mag() * p3_l1_mother.Mag() );
   return cos_theta_star_l1;
 }
+
+// phi*
+double phi_star_eta(TLorentzVector lep1, TLorentzVector lep2, int pdgId1) {
+double theta_star_eta = 0;
+if(pdgId1 > 0){ // pdgId > 0 == q < 0
+  theta_star_eta = TMath::ACos(TMath::TanH((lep1.Eta()-lep2.Eta())/2.0));
+} else {
+  theta_star_eta = TMath::ACos(TMath::TanH((lep2.Eta()-lep1.Eta())/2.0));
+}
+
+double dphi = TMath::Abs(lep1.DeltaPhi(lep2));
+
+return TMath::Tan((TMath::Pi()-dphi)/2.0) * TMath::Sin(theta_star_eta);
+}
