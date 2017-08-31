@@ -13,6 +13,7 @@
 
 #include "MitAnalysisRunII/panda/macros/80x/pandaFlat.C"
 #include "MitAnalysisRunII/data/80x/RoccoR.cc"
+#include "MitAnalysisRunII/macros/80x/helicity.h"
 
 enum TriggerBits {
     kMETTrig	   =(1<<0),
@@ -50,7 +51,10 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   //infileName_.push_back(Form("%sqqWW.root" ,filesPath.Data()));                infileCat_.push_back(1);
   //infileName_.push_back(Form("%sggWW.root" ,filesPath.Data()));                infileCat_.push_back(1);
   if     (whichDY == 0)
- {infileName_.push_back(Form("%sDYJetsToLL_M-50_LO.root" ,filesPath.Data()));  infileCat_.push_back(2);}
+ {infileName_.push_back(Form("%sDYJetsToLL_M-50_LO_Pt000To050.root" ,filesPath.Data()));  infileCat_.push_back(2);
+  infileName_.push_back(Form("%sDYJetsToLL_M-50_LO_Pt100to200.root" ,filesPath.Data()));  infileCat_.push_back(2);
+  infileName_.push_back(Form("%sDYJetsToLL_M-50_LO_Pt200toInf.root" ,filesPath.Data()));  infileCat_.push_back(2);
+  }
   else if(whichDY == 1)
  {infileName_.push_back(Form("%sDYJetsToLL_M-50_NLO.root",filesPath.Data()));  infileCat_.push_back(2);}
   else if(whichDY == 2)
@@ -179,10 +183,19 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
 
   const int nBinRap = 24; Float_t xbinsRap[nBinRap+1]; for(int i=0; i<=nBinRap;i++) xbinsRap[i] = i * 0.1;
 
+  const int nBinPhiStar = 32; Float_t xbinsPhiStar[nBinPhiStar+1] = {0.0001,
+                                                                     0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.009,0.010,
+                                                                     0.020,0.030,0.040,0.050,0.060,0.070,0.080,0.090,0.100,0.200,                                                                                                             
+                                                                     0.300,0.400,0.500,0.600,0.700,0.800,0.900,1.000,2.000,3.000,4.000,5.000};
+
+  TFile *fLepton_Eta_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_eta_sf_37ifb.root"));
+  TH1D* scalefactors_Muon_Eta = (TH1D*)fLepton_Eta_SF->Get("scalefactors_Muon_Eta"); scalefactors_Muon_Eta->SetDirectory(0);
+  TH1D* scalefactors_Electron_Eta = (TH1D*)fLepton_Eta_SF->Get("scalefactors_Electron_Eta"); scalefactors_Electron_Eta->SetDirectory(0);
+
   TFile *fLepton_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_dylan_37ifb.root"));
   TH2D* scalefactors_Medium_Muon                       	   = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon");                          scalefactors_Medium_Muon			     ->SetDirectory(0);
-  TH2D* scalefactors_Medium_Muon_syst_error_combined   	   = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_syst_error_combined");      scalefactors_Medium_Muon_syst_error_combined       ->SetDirectory(0);
-  TH2D* scalefactors_Medium_Muon_stat_error_hi         	   = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_stat_error_hi");	          scalefactors_Medium_Muon_stat_error_hi	     ->SetDirectory(0);
+  //TH2D* scalefactors_Medium_Muon_syst_error_combined       = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_syst_error_combined");      scalefactors_Medium_Muon_syst_error_combined       ->SetDirectory(0);
+  //TH2D* scalefactors_Medium_Muon_stat_error_hi             = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_stat_error_hi");            scalefactors_Medium_Muon_stat_error_hi             ->SetDirectory(0);
   TH2D* scalefactors_Medium_Muon_syst_error_alt_bkg    	   = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_syst_error_alt_bkg");	  scalefactors_Medium_Muon_syst_error_alt_bkg        ->SetDirectory(0);
   TH2D* scalefactors_Medium_Muon_syst_error_generator  	   = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_syst_error_generator");     scalefactors_Medium_Muon_syst_error_generator      ->SetDirectory(0);
   TH2D* scalefactors_Medium_Muon_syst_error_alt_signal 	   = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_syst_error_alt_signal");    scalefactors_Medium_Muon_syst_error_alt_signal     ->SetDirectory(0);
@@ -191,8 +204,8 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   TH2D* scalefactors_Medium_Muon_stat_error_hi_bins[nMuSFBins];
   for(int nj=0; nj<nMuSFBins; nj++) {scalefactors_Medium_Muon_stat_error_hi_bins[nj] =(TH2D*)fLepton_SF->Get(Form("scalefactors_Medium_Muon_stat_error_hi_bins_%d",nj));scalefactors_Medium_Muon_stat_error_hi_bins[nj]->SetDirectory(0);}
   TH2D* scalefactors_Medium_Electron                       = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron");		          scalefactors_Medium_Electron		             ->SetDirectory(0);
-  TH2D* scalefactors_Medium_Electron_syst_error_combined   = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_syst_error_combined");  scalefactors_Medium_Electron_syst_error_combined   ->SetDirectory(0);
-  TH2D* scalefactors_Medium_Electron_stat_error_hi         = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_stat_error_hi");	  scalefactors_Medium_Electron_stat_error_hi         ->SetDirectory(0);
+  //TH2D* scalefactors_Medium_Electron_syst_error_combined   = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_syst_error_combined");  scalefactors_Medium_Electron_syst_error_combined   ->SetDirectory(0);
+  //TH2D* scalefactors_Medium_Electron_stat_error_hi         = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_stat_error_hi");	    scalefactors_Medium_Electron_stat_error_hi         ->SetDirectory(0);
   TH2D* scalefactors_Medium_Electron_syst_error_alt_bkg    = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_syst_error_alt_bkg");   scalefactors_Medium_Electron_syst_error_alt_bkg    ->SetDirectory(0);
   TH2D* scalefactors_Medium_Electron_syst_error_generator  = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_syst_error_generator"); scalefactors_Medium_Electron_syst_error_generator  ->SetDirectory(0);
   TH2D* scalefactors_Medium_Electron_syst_error_alt_signal = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_syst_error_alt_signal");scalefactors_Medium_Electron_syst_error_alt_signal ->SetDirectory(0);
@@ -200,11 +213,12 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
   const int nElSFBins = 140;
   TH2D* scalefactors_Medium_Electron_stat_error_hi_bins[nElSFBins];
   for(int nj=0; nj<nElSFBins; nj++) {scalefactors_Medium_Electron_stat_error_hi_bins[nj] = (TH2D*)fLepton_SF->Get(Form("scalefactors_Medium_Electron_stat_error_hi_bins_%d",nj)); scalefactors_Medium_Electron_stat_error_hi_bins[nj]->SetDirectory(0);}
+  fLepton_SF->Close();
 
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 20;
+  const int allPlots = 30;
   const int histBins = 9;
   TH1D* histo[allPlots][histBins];
   for(int thePlot=0; thePlot<allPlots; thePlot++){
@@ -215,7 +229,14 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
     else if(thePlot >=  8 && thePlot <= 13) {nBinPlot = 120; xminPlot = 91.1876-15; xmaxPlot = 91.1876+15;}
     else if(thePlot >= 14 && thePlot <= 17) {nBinPlot = 100; xminPlot =-50.0; xmaxPlot = 50;}
     else if(thePlot >= 18 && thePlot <= 19) {nBinPlot = 100; xminPlot =  0.0; xmaxPlot = 2.5;}
-    TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
+    else if(thePlot >= 20 && thePlot <= 23) {nBinPlot = 100; xminPlot = -1.0; xmaxPlot = 1.0;}
+    else if(thePlot >= 28 && thePlot <= 29) {nBinPlot = 200; xminPlot = -2.5; xmaxPlot = 2.5;}
+    TH1D* histos;
+    if(thePlot != 24 && thePlot != 25 && thePlot != 26 && thePlot != 27){
+      histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
+    } else {
+      histos = new TH1D("histos", "histos", nBinPhiStar, xbinsPhiStar);
+    }
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
     histos->Reset();histos->Clear();
@@ -732,131 +753,10 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
       
       if(thePandaFlat.nLooseLep != 2) continue;
 
-      int theCategory = infileCat_[ifile];
-      float lepPtSF[2] = {1,1};
-      float lepPtSFSyst[2][nMomNuisances] = {1,1,1,1,1,1,1,1,1,1};
-      if(theCategory == 0) { // Data
-        if(abs(thePandaFlat.looseLep1PdgId)==13) {
-	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
-          lepPtSF[0] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 0, 0);
-          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
-          double muonPtSystAll[4] = {lepPtSF[0], lepPtSF[0], lepPtSF[0], lepPtSF[0]};
-
-          for(int i=0; i<100; i++)
-            muonPtSystA[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 1, i);
-          for(int i=0; i<1; i++)
-            muonPtSystB[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 2, i);
-          for(int i=0; i<5; i++)
-            muonPtSystC[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 4, i);
-          for(int i=0; i<5; i++)
-            muonPtSystD[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 5, i);
-
-          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystA[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[0])) muonPtSystAll[0] = TMath::Abs(lepPtSF[0]-muonPtSystA[i]);
-          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystB[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[1])) muonPtSystAll[1] = TMath::Abs(lepPtSF[0]-muonPtSystB[i]);
-          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystC[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[2])) muonPtSystAll[2] = TMath::Abs(lepPtSF[0]-muonPtSystC[i]);
-          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystD[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[3])) muonPtSystAll[3] = TMath::Abs(lepPtSF[0]-muonPtSystD[i]);
-          lepPtSFSyst[0][0] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]+muonPtSystAll[1]*muonPtSystAll[1]+
-                                   muonPtSystAll[2]*muonPtSystAll[2]+muonPtSystAll[3]*muonPtSystAll[3])/lepPtSF[0];
-          lepPtSFSyst[0][1] = muonPtSystAll[0]/lepPtSF[0];
-          lepPtSFSyst[0][2] = muonPtSystAll[1]/lepPtSF[0];
-          lepPtSFSyst[0][3] = muonPtSystAll[2]/lepPtSF[0];
-          lepPtSFSyst[0][4] = muonPtSystAll[3]/lepPtSF[0];
-        }
-        if(abs(thePandaFlat.looseLep2PdgId)==13) {
-	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
-	  lepPtSF[1] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 0, 0);
-          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
-          double muonPtSystAll[4] = {lepPtSF[0], lepPtSF[0], lepPtSF[0], lepPtSF[0]};
-
-          for(int i=0; i<100; i++)
-            muonPtSystA[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 1, i);
-          for(int i=0; i<1; i++)
-            muonPtSystB[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 2, i);
-          for(int i=0; i<5; i++)
-            muonPtSystC[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 4, i);
-          for(int i=0; i<5; i++)
-            muonPtSystD[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 5, i);
-
-          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystA[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[0])) muonPtSystAll[0] = TMath::Abs(lepPtSF[1]-muonPtSystA[i]) + lepPtSF[1];
-          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystB[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[1])) muonPtSystAll[1] = TMath::Abs(lepPtSF[1]-muonPtSystB[i]) + lepPtSF[1];
-          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystC[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[2])) muonPtSystAll[2] = TMath::Abs(lepPtSF[1]-muonPtSystC[i]) + lepPtSF[1];
-          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystD[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[3])) muonPtSystAll[3] = TMath::Abs(lepPtSF[1]-muonPtSystD[i]) + lepPtSF[1];
-          lepPtSFSyst[1][0] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]+muonPtSystAll[1]*muonPtSystAll[1]+
-                                   muonPtSystAll[2]*muonPtSystAll[2]+muonPtSystAll[3]*muonPtSystAll[3])/lepPtSF[1];
-          lepPtSFSyst[1][1] = muonPtSystAll[0]/lepPtSF[1];
-          lepPtSFSyst[1][2] = muonPtSystAll[1]/lepPtSF[1];
-          lepPtSFSyst[1][3] = muonPtSystAll[2]/lepPtSF[1];
-          lepPtSFSyst[1][4] = muonPtSystAll[3]/lepPtSF[1];
-        }
-      } else { // MC
-        if(abs(thePandaFlat.looseLep1PdgId)==13) {
-	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
-          lepPtSF[0] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 0, 0);
-          double muonPtSyst[11];
-          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
-          double muonPtSystAll[4] = {lepPtSF[0], lepPtSF[0], lepPtSF[0], lepPtSF[0]};
-
-          for(int i=0; i<100; i++)
-            muonPtSystA[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 1, i);
-
-          for(int i=0; i<1; i++)
-            muonPtSystB[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 2, i);
-          for(int i=0; i<5; i++)
-            muonPtSystC[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 4, i);
-          for(int i=0; i<5; i++)
-            muonPtSystD[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 5, i);
-
-          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystA[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[0])) muonPtSystAll[0] = TMath::Abs(lepPtSF[0]-muonPtSystA[i]) + lepPtSF[0];
-          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystB[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[1])) muonPtSystAll[1] = TMath::Abs(lepPtSF[0]-muonPtSystB[i]) + lepPtSF[0];
-          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystC[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[2])) muonPtSystAll[2] = TMath::Abs(lepPtSF[0]-muonPtSystC[i]) + lepPtSF[0];
-          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystD[i]) > TMath::Abs(lepPtSF[0]-muonPtSystAll[3])) muonPtSystAll[3] = TMath::Abs(lepPtSF[0]-muonPtSystD[i]) + lepPtSF[0];
-          lepPtSFSyst[0][0] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]+muonPtSystAll[1]*muonPtSystAll[1]+
-                                   muonPtSystAll[2]*muonPtSystAll[2]+muonPtSystAll[3]*muonPtSystAll[3])/lepPtSF[0];
-          lepPtSFSyst[0][1] = muonPtSystAll[0]/lepPtSF[0];
-          lepPtSFSyst[0][2] = muonPtSystAll[1]/lepPtSF[0];
-          lepPtSFSyst[0][3] = muonPtSystAll[2]/lepPtSF[0];
-          lepPtSFSyst[0][4] = muonPtSystAll[3]/lepPtSF[0];
-        }
-        if(abs(thePandaFlat.looseLep2PdgId)==13) {
-	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
-	  lepPtSF[1] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 0, 0);
-          double muonPtSyst[11];
-          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
-          double muonPtSystAll[4] = {lepPtSF[1], lepPtSF[1], lepPtSF[1], lepPtSF[1]};
-
-          for(int i=0; i<100; i++)
-            muonPtSystA[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 1, i);
-
-          for(int i=0; i<1; i++)
-            muonPtSystB[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 2, i);
-          for(int i=0; i<5; i++)
-            muonPtSystC[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 4, i);
-          for(int i=0; i<5; i++)
-            muonPtSystD[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 5, i);
-
-          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystA[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[0])) muonPtSystAll[0] = TMath::Abs(lepPtSF[1]-muonPtSystA[i]) + lepPtSF[1];
-          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystB[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[1])) muonPtSystAll[1] = TMath::Abs(lepPtSF[1]-muonPtSystB[i]) + lepPtSF[1];
-          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystC[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[2])) muonPtSystAll[2] = TMath::Abs(lepPtSF[1]-muonPtSystC[i]) + lepPtSF[1];
-          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystD[i]) > TMath::Abs(lepPtSF[1]-muonPtSystAll[3])) muonPtSystAll[3] = TMath::Abs(lepPtSF[1]-muonPtSystD[i]) + lepPtSF[1];
-          lepPtSFSyst[1][0] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]+muonPtSystAll[1]*muonPtSystAll[1]+
-                                   muonPtSystAll[2]*muonPtSystAll[2]+muonPtSystAll[3]*muonPtSystAll[3])/lepPtSF[1];
-          lepPtSFSyst[1][1] = muonPtSystAll[0]/lepPtSF[1];
-          lepPtSFSyst[1][2] = muonPtSystAll[1]/lepPtSF[1];
-          lepPtSFSyst[1][3] = muonPtSystAll[2]/lepPtSF[1];
-          lepPtSFSyst[1][4] = muonPtSystAll[3]/lepPtSF[1];
-        }
-        if(abs(thePandaFlat.looseLep1PdgId)==11) {
-          if(TMath::Abs(thePandaFlat.looseLep1Eta) <  1.5) lepPtSF[0] = gRandom->Gaus(1.000,0.013);
-          else                                             lepPtSF[0] = gRandom->Gaus(0.993,0.025);
-        }
-        if(abs(thePandaFlat.looseLep2PdgId)==11) {
-          if(TMath::Abs(thePandaFlat.looseLep2Eta) <  1.5) lepPtSF[1] = gRandom->Gaus(1.000,0.013);
-          else                                             lepPtSF[1] = gRandom->Gaus(0.993,0.025);
-        }
-      }
-
       bool passLepId = ((thePandaFlat.looseLep1SelBit & kMedium) == kMedium) && ((thePandaFlat.looseLep2SelBit & kMedium) == kMedium);
       if(passLepId == false) continue;
+
+      int theCategory = infileCat_[ifile];
 
       int lepType = -1;
       if     (abs(thePandaFlat.looseLep1PdgId)==13 && abs(thePandaFlat.looseLep2PdgId)==13 && thePandaFlat.looseLep1PdgId*thePandaFlat.looseLep2PdgId<0) lepType = 0;
@@ -872,6 +772,132 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
       if(lepType >= 3 || (lepType == 2 && theCategory != 0)) continue;
       
       if(lepType == 2 && theCategory == 0) theCategory = 5; // using data e-mu events to estimate non-resonant background
+
+      float lepPtSF[2] = {1,1};
+      float lepPtSFSyst[2][nMomNuisances] = {1,1,1,1,1,1,1,1,1,1};
+      if(theCategory == 0 || theCategory == 5) { // Data
+        if(abs(thePandaFlat.looseLep1PdgId)==13) {
+	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
+          lepPtSF[0] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 0, 0);
+          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
+          double muonPtSystAll[4] = {0,0,0,0};
+
+          for(int i=0; i<100; i++)
+            muonPtSystA[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 1, i);
+          for(int i=0; i<1; i++)
+            muonPtSystB[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 2, i);
+          for(int i=0; i<5; i++)
+            muonPtSystC[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 4, i);
+          for(int i=0; i<5; i++)
+            muonPtSystD[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 5, i);
+
+          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystA[i]) > muonPtSystAll[0]) muonPtSystAll[0] = TMath::Abs(lepPtSF[0]-muonPtSystA[i]);
+          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystB[i]) > muonPtSystAll[1]) muonPtSystAll[1] = TMath::Abs(lepPtSF[0]-muonPtSystB[i]);
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystC[i]) > muonPtSystAll[2]) muonPtSystAll[2] = TMath::Abs(lepPtSF[0]-muonPtSystC[i]);
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystD[i]) > muonPtSystAll[3]) muonPtSystAll[3] = TMath::Abs(lepPtSF[0]-muonPtSystD[i]);
+          lepPtSFSyst[0][0] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]+muonPtSystAll[1]*muonPtSystAll[1]+
+                                   muonPtSystAll[2]*muonPtSystAll[2]+muonPtSystAll[3]*muonPtSystAll[3])/lepPtSF[0] + 1.0;
+          lepPtSFSyst[0][1] = muonPtSystAll[0]/lepPtSF[0] + 1.0;
+          lepPtSFSyst[0][2] = muonPtSystAll[1]/lepPtSF[0] + 1.0;
+          lepPtSFSyst[0][3] = muonPtSystAll[2]/lepPtSF[0] + 1.0;
+          lepPtSFSyst[0][4] = muonPtSystAll[3]/lepPtSF[0] + 1.0;
+        }
+        if(abs(thePandaFlat.looseLep2PdgId)==13) {
+	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
+	  lepPtSF[1] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 0, 0);
+          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
+          double muonPtSystAll[4] = {0,0,0,0};
+
+          for(int i=0; i<100; i++)
+            muonPtSystA[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 1, i);
+          for(int i=0; i<1; i++)
+            muonPtSystB[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 2, i);
+          for(int i=0; i<5; i++)
+            muonPtSystC[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 4, i);
+          for(int i=0; i<5; i++)
+            muonPtSystD[i] = rmcor.kScaleDT(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 5, i);
+
+          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystA[i]) > muonPtSystAll[0]) muonPtSystAll[0] = TMath::Abs(lepPtSF[1]-muonPtSystA[i]);
+          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystB[i]) > muonPtSystAll[1]) muonPtSystAll[1] = TMath::Abs(lepPtSF[1]-muonPtSystB[i]);
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystC[i]) > muonPtSystAll[2]) muonPtSystAll[2] = TMath::Abs(lepPtSF[1]-muonPtSystC[i]);
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystD[i]) > muonPtSystAll[3]) muonPtSystAll[3] = TMath::Abs(lepPtSF[1]-muonPtSystD[i]);
+          lepPtSFSyst[1][0] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]+muonPtSystAll[1]*muonPtSystAll[1]+
+                                   muonPtSystAll[2]*muonPtSystAll[2]+muonPtSystAll[3]*muonPtSystAll[3])/lepPtSF[1] + 1.0;
+          lepPtSFSyst[1][1] = muonPtSystAll[0]/lepPtSF[1] + 1.0;
+          lepPtSFSyst[1][2] = muonPtSystAll[1]/lepPtSF[1] + 1.0;
+          lepPtSFSyst[1][3] = muonPtSystAll[2]/lepPtSF[1] + 1.0;
+          lepPtSFSyst[1][4] = muonPtSystAll[3]/lepPtSF[1] + 1.0;
+        }
+      } else { // MC
+        if(abs(thePandaFlat.looseLep1PdgId)==13) {
+	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
+          lepPtSF[0] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 0, 0);
+          double muonPtSyst[11];
+          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
+          double muonPtSystAll[4] = {0,0,0,0};
+
+          for(int i=0; i<100; i++)
+            muonPtSystA[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 1, i);
+
+          for(int i=0; i<1; i++)
+            muonPtSystB[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 2, i);
+          for(int i=0; i<5; i++)
+            muonPtSystC[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 4, i);
+          for(int i=0; i<5; i++)
+            muonPtSystD[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep1PdgId)/thePandaFlat.looseLep1PdgId, thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi, 10, rnd[0], rnd[1], 5, i);
+
+          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystA[i]) > muonPtSystAll[0]) muonPtSystAll[0] = TMath::Abs(lepPtSF[0]-muonPtSystA[i]);
+          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystB[i]) > muonPtSystAll[1]) muonPtSystAll[1] = TMath::Abs(lepPtSF[0]-muonPtSystB[i]);
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystC[i]) > muonPtSystAll[2]) muonPtSystAll[2] = TMath::Abs(lepPtSF[0]-muonPtSystC[i]);
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[0]-muonPtSystD[i]) > muonPtSystAll[3]) muonPtSystAll[3] = TMath::Abs(lepPtSF[0]-muonPtSystD[i]);
+          lepPtSFSyst[0][0] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]+muonPtSystAll[1]*muonPtSystAll[1]+
+                                   muonPtSystAll[2]*muonPtSystAll[2]+muonPtSystAll[3]*muonPtSystAll[3])/lepPtSF[0] + 1.0;
+          lepPtSFSyst[0][1] = muonPtSystAll[0]/lepPtSF[0] + 1.0;
+          lepPtSFSyst[0][2] = muonPtSystAll[1]/lepPtSF[0] + 1.0;
+          lepPtSFSyst[0][3] = muonPtSystAll[2]/lepPtSF[0] + 1.0;
+          lepPtSFSyst[0][4] = muonPtSystAll[3]/lepPtSF[0] + 1.0;
+        }
+        if(abs(thePandaFlat.looseLep2PdgId)==13) {
+	  double rnd[2] = {gRandom->Rndm(), gRandom->Rndm()};
+	  lepPtSF[1] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 0, 0);
+          double muonPtSyst[11];
+          double muonPtSystA[100],muonPtSystB[1],muonPtSystC[5],muonPtSystD[5];
+          double muonPtSystAll[4] = {0,0,0,0};
+
+          for(int i=0; i<100; i++)
+            muonPtSystA[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 1, i);
+
+          for(int i=0; i<1; i++)
+            muonPtSystB[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 2, i);
+          for(int i=0; i<5; i++)
+            muonPtSystC[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 4, i);
+          for(int i=0; i<5; i++)
+            muonPtSystD[i] = rmcor.kScaleAndSmearMC(-1*abs(thePandaFlat.looseLep2PdgId)/thePandaFlat.looseLep2PdgId, thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi, 10, rnd[0], rnd[1], 5, i);
+
+          for(int i=0; i<100; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystA[i]) > muonPtSystAll[0]) muonPtSystAll[0] = TMath::Abs(lepPtSF[1]-muonPtSystA[i]);
+          for(int i=0; i<1  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystB[i]) > muonPtSystAll[1]) muonPtSystAll[1] = TMath::Abs(lepPtSF[1]-muonPtSystB[i]);
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystC[i]) > muonPtSystAll[2]) muonPtSystAll[2] = TMath::Abs(lepPtSF[1]-muonPtSystC[i]);
+          for(int i=0; i<5  ; i++) if(TMath::Abs(lepPtSF[1]-muonPtSystD[i]) > muonPtSystAll[3]) muonPtSystAll[3] = TMath::Abs(lepPtSF[1]-muonPtSystD[i]);
+          lepPtSFSyst[1][0] = sqrt(muonPtSystAll[0]*muonPtSystAll[0]+muonPtSystAll[1]*muonPtSystAll[1]+
+                                   muonPtSystAll[2]*muonPtSystAll[2]+muonPtSystAll[3]*muonPtSystAll[3])/lepPtSF[1] + 1.0;
+          lepPtSFSyst[1][1] = muonPtSystAll[0]/lepPtSF[1] + 1.0;
+          lepPtSFSyst[1][2] = muonPtSystAll[1]/lepPtSF[1] + 1.0;
+          lepPtSFSyst[1][3] = muonPtSystAll[2]/lepPtSF[1] + 1.0;
+          lepPtSFSyst[1][4] = muonPtSystAll[3]/lepPtSF[1] + 1.0;
+        }
+        if(abs(thePandaFlat.looseLep1PdgId)==11) {
+          if(TMath::Abs(thePandaFlat.looseLep1Eta) <  1.5) lepPtSF[0] = gRandom->Gaus(1.000,0.013);
+          else                                             lepPtSF[0] = gRandom->Gaus(0.993,0.025);
+          lepPtSFSyst[0][0] = lepPtSF[0];
+          lepPtSFSyst[0][1] = lepPtSF[0];
+        }
+        if(abs(thePandaFlat.looseLep2PdgId)==11) {
+          if(TMath::Abs(thePandaFlat.looseLep2Eta) <  1.5) lepPtSF[1] = gRandom->Gaus(1.000,0.013);
+          else                                             lepPtSF[1] = gRandom->Gaus(0.993,0.025);
+          lepPtSFSyst[1][0] = lepPtSF[1];
+          lepPtSFSyst[1][1] = lepPtSF[1];
+        }
+      }
 
       double thePDGMass[2] = {mass_mu, mass_mu};
       if     (abs(lepType) == 1) {thePDGMass[0] = mass_el; thePDGMass[1] = mass_el;}
@@ -891,7 +917,6 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
       vMomRes2[3].SetPtEtaPhiM(thePandaFlat.looseLep2Pt*lepPtSF[1]*lepPtSFSyst[1][3],thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi,thePDGMass[1]);
       vMomRes1[4].SetPtEtaPhiM(thePandaFlat.looseLep1Pt*lepPtSF[0]*lepPtSFSyst[0][4],thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi,thePDGMass[0]);
       vMomRes2[4].SetPtEtaPhiM(thePandaFlat.looseLep2Pt*lepPtSF[1]*lepPtSFSyst[1][4],thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi,thePDGMass[1]);
-
       bool passSel = TMath::Abs((v1+v2).M()-91.1876) < 15 && v1.Pt() > 25 && v2.Pt() > 25;
       bool passSystSel[nMomNuisances] = {TMath::Abs((vMomRes1[0]+vMomRes2[0]).M()-91.1876) < 15 && vMomRes1[0].Pt() > 25 && vMomRes2[0].Pt() > 25,
                                          TMath::Abs((vMomRes1[1]+vMomRes2[1]).M()-91.1876) < 15 && vMomRes1[1].Pt() > 25 && vMomRes2[1].Pt() > 25,
@@ -931,26 +956,29 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
       for(int ni=0; ni<2; ni++) for(int nj=0; nj<nEffNuisances; nj++) totalWeightLepEff[ni][nj] = 0.0;
 
       if(theCategory != 0 && theCategory != 5){
-        totalWeight = thePandaFlat.normalizedWeight * lumi * thePandaFlat.sf_pu *
-	              thePandaFlat.sf_trk1 * thePandaFlat.sf_medium1 *
-		      thePandaFlat.sf_trk2 * thePandaFlat.sf_medium2;
+
+        double the_eta_sf = 1.0;
         if(abs(thePandaFlat.looseLep1PdgId)==13){
           double etal = thePandaFlat.looseLep1Eta; if(etal >= 2.4) etal = 2.3999; else if(etal <= -2.4) etal = -2.3999;
           double ptl = thePandaFlat.looseLep1Pt; if(ptl>=1000) ptl = 999.999;
+          int binEta = scalefactors_Muon_Eta->GetXaxis()->FindFixBin(etal);
+          the_eta_sf = the_eta_sf * scalefactors_Muon_Eta->GetBinContent(binEta);
           int binXT = scalefactors_Medium_Muon->GetXaxis()->FindFixBin(etal);
           int binYT = scalefactors_Medium_Muon->GetYaxis()->FindFixBin(ptl);
-          totalWeightLepEff[0][0] = scalefactors_Medium_Muon_syst_error_combined  ->GetBinContent(binXT,binYT);
+          totalWeightLepEff[0][0] = scalefactors_Medium_Muon                      ->GetBinError  (binXT,binYT);
           totalWeightLepEff[0][1] = scalefactors_Medium_Muon_syst_error_alt_bkg   ->GetBinContent(binXT,binYT);
           totalWeightLepEff[0][2] = scalefactors_Medium_Muon_syst_error_generator ->GetBinContent(binXT,binYT);
           totalWeightLepEff[0][3] = scalefactors_Medium_Muon_syst_error_alt_signal->GetBinContent(binXT,binYT);
           totalWeightLepEff[0][4] = scalefactors_Medium_Muon_syst_error_alt_tag   ->GetBinContent(binXT,binYT);
           for(int nj=0; nj<nMuSFBins; nj++) totalWeightLepEff[0][nj+5] = scalefactors_Medium_Muon_stat_error_hi_bins[nj]->GetBinContent(binXT,binYT);
         } else {
-          double etal = thePandaFlat.looseLep1Eta; if(etal >= 2.4) etal = 2.3999; else if(etal <= -2.4) etal = -2.3999;
+          double etal = thePandaFlat.looseLep1Eta; if(etal >= 2.5) etal = 2.4999; else if(etal <= -2.5) etal = -2.4999;
           double ptl = thePandaFlat.looseLep1Pt; if(ptl>=1000) ptl = 999.999;
+          int binEta = scalefactors_Electron_Eta->GetXaxis()->FindFixBin(etal);
+          the_eta_sf = the_eta_sf * scalefactors_Electron_Eta->GetBinContent(binEta);
           int binXT = scalefactors_Medium_Electron->GetXaxis()->FindFixBin(etal);
           int binYT = scalefactors_Medium_Electron->GetYaxis()->FindFixBin(ptl);
-          totalWeightLepEff[0][0] = scalefactors_Medium_Electron_syst_error_combined  ->GetBinContent(binXT,binYT);
+          totalWeightLepEff[0][0] = scalefactors_Medium_Electron                      ->GetBinError  (binXT,binYT);
           totalWeightLepEff[0][1] = scalefactors_Medium_Electron_syst_error_alt_bkg   ->GetBinContent(binXT,binYT);
           totalWeightLepEff[0][2] = scalefactors_Medium_Electron_syst_error_generator ->GetBinContent(binXT,binYT);
           totalWeightLepEff[0][3] = scalefactors_Medium_Electron_syst_error_alt_signal->GetBinContent(binXT,binYT);
@@ -960,30 +988,52 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
         if(abs(thePandaFlat.looseLep2PdgId)==13){
           double etal = thePandaFlat.looseLep2Eta; if(etal >= 2.4) etal = 2.3999; else if(etal <= -2.4) etal = -2.3999;
           double ptl = thePandaFlat.looseLep2Pt; if(ptl>=1000) ptl = 999.999;
+          int binEta = scalefactors_Muon_Eta->GetXaxis()->FindFixBin(etal);
+          the_eta_sf = the_eta_sf * scalefactors_Muon_Eta->GetBinContent(binEta);
           int binXT = scalefactors_Medium_Muon->GetXaxis()->FindFixBin(etal);
           int binYT = scalefactors_Medium_Muon->GetYaxis()->FindFixBin(ptl);
-          totalWeightLepEff[1][0] = scalefactors_Medium_Muon_syst_error_combined  ->GetBinContent(binXT,binYT);
+          totalWeightLepEff[1][0] = scalefactors_Medium_Muon                      ->GetBinError  (binXT,binYT);
           totalWeightLepEff[1][1] = scalefactors_Medium_Muon_syst_error_alt_bkg   ->GetBinContent(binXT,binYT);
           totalWeightLepEff[1][2] = scalefactors_Medium_Muon_syst_error_generator ->GetBinContent(binXT,binYT);
           totalWeightLepEff[1][3] = scalefactors_Medium_Muon_syst_error_alt_signal->GetBinContent(binXT,binYT);
           totalWeightLepEff[1][4] = scalefactors_Medium_Muon_syst_error_alt_tag   ->GetBinContent(binXT,binYT);
           for(int nj=0; nj<nMuSFBins; nj++) totalWeightLepEff[1][nj+5] = scalefactors_Medium_Muon_stat_error_hi_bins[nj]->GetBinContent(binXT,binYT);
         } else {
-          double etal = thePandaFlat.looseLep2Eta; if(etal >= 2.4) etal = 2.3999; else if(etal <= -2.4) etal = -2.3999;
+          double etal = thePandaFlat.looseLep2Eta; if(etal >= 2.5) etal = 2.4999; else if(etal <= -2.5) etal = -2.4999;
           double ptl = thePandaFlat.looseLep2Pt; if(ptl>=1000) ptl = 999.999;
+          int binEta = scalefactors_Electron_Eta->GetXaxis()->FindFixBin(etal);
+          the_eta_sf = the_eta_sf * scalefactors_Electron_Eta->GetBinContent(binEta);
           int binXT = scalefactors_Medium_Electron->GetXaxis()->FindFixBin(etal);
           int binYT = scalefactors_Medium_Electron->GetYaxis()->FindFixBin(ptl);
-          totalWeightLepEff[1][0] = scalefactors_Medium_Electron_syst_error_combined  ->GetBinContent(binXT,binYT);
+          totalWeightLepEff[1][0] = scalefactors_Medium_Electron                      ->GetBinError  (binXT,binYT);
           totalWeightLepEff[1][1] = scalefactors_Medium_Electron_syst_error_alt_bkg   ->GetBinContent(binXT,binYT);
           totalWeightLepEff[1][2] = scalefactors_Medium_Electron_syst_error_generator ->GetBinContent(binXT,binYT);
           totalWeightLepEff[1][3] = scalefactors_Medium_Electron_syst_error_alt_signal->GetBinContent(binXT,binYT);
           totalWeightLepEff[1][4] = scalefactors_Medium_Electron_syst_error_alt_tag   ->GetBinContent(binXT,binYT);
           for(int nj=0; nj<nElSFBins; nj++) totalWeightLepEff[1][nj+5] = scalefactors_Medium_Electron_stat_error_hi_bins[nj]->GetBinContent(binXT,binYT);
         }
+
+        totalWeight = thePandaFlat.normalizedWeight * lumi * thePandaFlat.sf_pu *
+	              thePandaFlat.sf_trk1 * thePandaFlat.sf_medium1 *
+		      thePandaFlat.sf_trk2 * thePandaFlat.sf_medium2 * the_eta_sf;
+
+	/*
+	double totalSumWeightLepEff[2] = {0,0};
+	for(int nl=0; nl<2; nl++) {
+  	  for(int ns=1; ns<nEffNuisances; ns++) {
+	    totalSumWeightLepEff[nl] = totalSumWeightLepEff[nl] + totalWeightLepEff[nl][ns]*totalWeightLepEff[nl][ns];
+	  }
+	  printf("lep(%d) %7.4f-%7.4f=%7.4f ",nl,totalWeightLepEff[nl][0],sqrt(totalSumWeightLepEff[nl]),totalWeightLepEff[nl][0]-sqrt(totalSumWeightLepEff[nl]));
+	}
+        printf("\n");
+	*/
       }
 
       if(passSel){
-
+        double the_cos_theta_star = cos_theta_star(v1,v2,(v1+v2));
+	double the_phi_star_eta = phi_star_eta(v1,v2,thePandaFlat.looseLep1PdgId);
+	if     (the_phi_star_eta <= 0.0001) the_phi_star_eta = 0.0001;
+	else if(the_phi_star_eta >= 5.0000) the_phi_star_eta = 4.9999;
         if(theCategory != 5){
 	  histo[lepType+0][theCategory]->Fill((v1+v2).M(),totalWeight);
 	  histo[lepType+2][theCategory]->Fill(TMath::Min(ZRecPt, 199.999),totalWeight);
@@ -1001,6 +1051,14 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
 	  histo[lepType+14][theCategory]->Fill((v1+v2).Px(),totalWeight);
 	  histo[lepType+16][theCategory]->Fill((v1+v2).Py(),totalWeight);
 	  histo[lepType+18][theCategory]->Fill(ZRecRap,totalWeight);
+	  histo[lepType+20][theCategory]->Fill(the_cos_theta_star,totalWeight);
+	  if(ZRecPt > 100)
+	  histo[lepType+22][theCategory]->Fill(the_cos_theta_star,totalWeight);
+	  histo[lepType+24][theCategory]->Fill(the_phi_star_eta,totalWeight);
+	  if(ZRecPt > 100)
+	  histo[lepType+26][theCategory]->Fill(the_phi_star_eta,totalWeight);
+	  histo[lepType+28][theCategory]->Fill(thePandaFlat.looseLep1Eta,totalWeight);
+	  histo[lepType+28][theCategory]->Fill(thePandaFlat.looseLep2Eta,totalWeight);
         }
         else {
           for(int theLepType = 0; theLepType<2; theLepType++) {
@@ -1022,6 +1080,14 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
 	    histo[theLepType+14][theCategory]->Fill((v1+v2).Px(),totalWeight*theKeff);
 	    histo[theLepType+16][theCategory]->Fill((v1+v2).Py(),totalWeight*theKeff);
 	    histo[theLepType+18][theCategory]->Fill(ZRecRap,totalWeight*theKeff);
+	    histo[theLepType+20][theCategory]->Fill(the_cos_theta_star,totalWeight*theKeff);
+	    if(ZRecPt > 100)
+	    histo[theLepType+22][theCategory]->Fill(the_cos_theta_star,totalWeight*theKeff);
+	    histo[theLepType+24][theCategory]->Fill(the_phi_star_eta,totalWeight*theKeff);
+	    if(ZRecPt > 100)
+	    histo[theLepType+26][theCategory]->Fill(the_phi_star_eta,totalWeight*theKeff);
+	    histo[theLepType+28][theCategory]->Fill(thePandaFlat.looseLep1Eta,totalWeight*theKeff);
+	    histo[theLepType+28][theCategory]->Fill(thePandaFlat.looseLep2Eta,totalWeight*theKeff);
           }
         }
 
@@ -1418,23 +1484,23 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=false)
 	if(passSystSel[nc]){
 	  if     (theCategory == 2){
             histoPtRecDY_MomRes[lepType][nc] ->Fill(ZRecSystPt[nc],totalWeight);
-            histoPtRecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);
+            if(passPtFid == true) histoPtRecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);
             if(ZRecRap < 2.4) {
               histoRapRecDY_MomRes[lepType][nc] ->Fill(ZRecRap,totalWeight);
-              histoRapRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
+              if(passRapFid == true) histoRapRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
               if(thePandaFlat.looseLep1PdgId < 0){
         	histoRapPRecDY_MomRes[lepType][nc] ->Fill(ZRecRap,totalWeight);
-        	histoRapPRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
+        	if(passRapFid == true) histoRapPRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
               } else {
         	histoRapMRecDY_MomRes[lepType][nc] ->Fill(ZRecRap,totalWeight);
-        	histoRapMRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
+        	if(passRapFid == true) histoRapMRecGen_MomRes[lepType][nc]->Fill(ZRecRap,ZGenRap,totalWeight);
               }
             }
-            if     (ZRecRap < 0.5) {histoPtRap0RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap0RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
-            else if(ZRecRap < 1.0) {histoPtRap1RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap1RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
-            else if(ZRecRap < 1.5) {histoPtRap2RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap2RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
-            else if(ZRecRap < 2.0) {histoPtRap3RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap3RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
-            else if(ZRecRap < 2.4) {histoPtRap4RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap4RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
+            if     (ZRecRap < 0.5) {if(passPtRapFid[0] == true) histoPtRap0RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap0RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
+            else if(ZRecRap < 1.0) {if(passPtRapFid[1] == true) histoPtRap1RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap1RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
+            else if(ZRecRap < 1.5) {if(passPtRapFid[2] == true) histoPtRap2RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap2RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
+            else if(ZRecRap < 2.0) {if(passPtRapFid[3] == true) histoPtRap3RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap3RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
+            else if(ZRecRap < 2.4) {if(passPtRapFid[4] == true) histoPtRap4RecGen_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],ZGenPt,totalWeight);histoPtRap4RecDY_MomRes[lepType][nc]->Fill(ZRecSystPt[nc],totalWeight);}
 	  }
 	  else if(theCategory == 0){
             histoPtRecDA_MomRes[lepType][nc] ->Fill(ZRecSystPt[nc],totalWeight);
