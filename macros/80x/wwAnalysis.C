@@ -50,7 +50,7 @@ double topNormE[3] = {0.09,0.11,0.01};
 void wwAnalysis(
  unsigned int nJetsType = 0,
  int theControlRegion = 0,
- TString typeLepSel = "default",
+ TString typeLepSel = "defaultTight",
  bool isShapeAna = false,
  bool isMIT = true
  ){
@@ -750,9 +750,7 @@ void wwAnalysis(
 
       vector<int> idLep; vector<int> idTight; vector<int> idSoft; unsigned int goodIsTight = 0;
       for(int nlep=0; nlep<eventLeptons.p4->GetEntriesFast(); nlep++) {
-        if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake &&
-	   selectIdIsoCut(typeLepSel.Data(),TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
-        //if(selectIdIsoCut(typeLepSel.Data(),TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
+        if(selectIdIsoCut(typeLepSel.Data(),TMath::Abs((int)(*eventLeptons.pdgId)[nlep]),TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Pt()),
 	   TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[nlep])->Eta()),(double)(*eventLeptons.iso)[nlep],(int)(*eventLeptons.selBits)[nlep],(double)(*eventLeptons.mva)[nlep]))
 	                                                                                               {idTight.push_back(1); idLep.push_back(nlep); goodIsTight++;}
         else if(((int)(*eventLeptons.selBits)[nlep] & BareLeptons::LepFake)  == BareLeptons::LepFake ) {idTight.push_back(0); idLep.push_back(nlep);}
@@ -835,7 +833,7 @@ void wwAnalysis(
                      ((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt() +
                      theMET.Pt();
       for(int nj=0; nj<eventJets.p4->GetEntriesFast(); nj++){
-        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() < 15) continue;
+        if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() <= 20) continue;
 	if(TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()) >= 4.7) continue;
         //bool passId = passJetId(fMVACut, (float)(*eventJets.puId)[nj], ((TLorentzVector*)(*eventJets.p4)[nj])->Pt(), TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->Eta()));
         //if(passId == false) continue;
@@ -917,7 +915,7 @@ void wwAnalysis(
         if(dPhiJetMET   == -1) dPhiJetMET   = TMath::Abs(((TLorentzVector*)(*eventJets.p4)[nj])->DeltaPhi(theMET))*180./TMath::Pi();
         if(dPhiJetDiLep == -1) dPhiJetDiLep = TMath::Abs(dilep.DeltaPhi(*((TLorentzVector*)(*eventJets.p4)[nj])))*180./TMath::Pi();
 
-	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 15 && 
+	if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 20 && 
 	   (float)(*eventJets.bDiscr)[nj] > bDiscrMax) bDiscrMax = (float)(*eventJets.bDiscr)[nj];
 
         if(((TLorentzVector*)(*eventJets.p4)[nj])->Pt() > 30) theHT = theHT + ((TLorentzVector*)(*eventJets.p4)[nj])->Pt();
@@ -1176,7 +1174,7 @@ void wwAnalysis(
         else if(thePlot == 13 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[1]])->Pt(),199.999);}
         else if(thePlot == 14 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min((double)((TLorentzVector*)(*eventMet.p4)[0])->Pt(),199.999);}
         else if(thePlot == 15 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Abs(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->DeltaPhi(*(TLorentzVector*)(*eventLeptons.p4)[idLep[1]]))*180./TMath::Pi();}
-        else if(thePlot == 16 && passAllCuts[TOPSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(theHT,499.999);}
+        else if(thePlot == 16 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(theHT,499.999);}
         else if(thePlot == 17 && passAllCuts[TOPSEL] && typeSel == 2) {makePlot = true;theVar = TMath::Min(dilep.M(),799.999);}
 
         else if(thePlot == 18 && passAllCuts[DYSEL] && typeSel == 2)  {makePlot = true;theVar = TMath::Min(((TLorentzVector*)(*eventLeptons.p4)[idLep[0]])->Pt(),199.999);}
