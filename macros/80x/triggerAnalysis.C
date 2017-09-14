@@ -28,25 +28,60 @@ int typeAna = 0
   //*******************************************************
   vector<TString> infilenamev;
 
-  if(typeAna == 0){
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/MET_Run2016B.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/MET_Run2016C.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/MET_Run2016D.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/MET_Run2016E.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/MET_Run2016F.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/MET_Run2016G.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/MET_Run2016H.root");
+  TString filesPathDA  = "/mnt/hadoop/scratch/ceballos/Nero/v2.2/output_80x/data/";
+  TString filesPathMC  = "/mnt/hadoop/scratch/ceballos/Nero/v2.2/merging_80x/";
 
-  } else {
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/merging_80x/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_0000.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/merging_80x/WWTo2L2Nu_13TeV-powheg_0000.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/merging_80x/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8_0000.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/merging_80x/ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_0000.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/merging_80x/onlymet/DYJetsToLL_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/merging_80x/onlymet/DYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/merging_80x/onlymet/DYJetsToLL_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/merging_80x/onlymet/DYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root");
-    infilenamev.push_back("root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/merging_80x/onlymet/DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root");
+  if     (typeAna == 0){
+    infilenamev.push_back(Form("%sMET_Run2016B.root",filesPathDA.Data()));
+    infilenamev.push_back(Form("%sMET_Run2016C.root",filesPathDA.Data()));
+    infilenamev.push_back(Form("%sMET_Run2016D.root",filesPathDA.Data()));
+    infilenamev.push_back(Form("%sMET_Run2016E.root",filesPathDA.Data()));
+    infilenamev.push_back(Form("%sMET_Run2016F.root",filesPathDA.Data()));
+    infilenamev.push_back(Form("%sMET_Run2016G.root",filesPathDA.Data()));
+    infilenamev.push_back(Form("%sMET_Run2016H.root",filesPathDA.Data()));
+
+  } 
+  else if(typeAna == 1){
+    infilenamev.push_back(Form("%sDYJetsToLL_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sDYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sDYJetsToLL_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sDYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sDYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sGluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_herwigpp_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sGluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sGluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sGluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_HInt_MCFM_13TeV_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sGluGluWWTo2L2Nu_MCFM_13TeV_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sZLLGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg-herwigpp_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sWWTo2L2Nu_DoubleScattering_13TeV-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sWZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sWZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sZZTo2L2Nu_13TeV_powheg_pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sGluGluHToTauTau_M125_13TeV_powheg_pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sVBFHToTauTau_M125_13TeV_powheg_pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sWminusHToTauTau_M125_13TeV_powheg_pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sWplusHToTauTau_M125_13TeV_powheg_pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sVBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8_0000.root",filesPathMC.Data()));
+  }
+  else if(typeAna == 2){
+    infilenamev.push_back(Form("%sST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%stZq_ll_4f_13TeV-amcatnlo-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sTTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sTTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sTTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sTTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sTTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_0000.root",filesPathMC.Data()));
+    infilenamev.push_back(Form("%sVHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_0000.root",filesPathMC.Data()));
+  }
+  else {
+    return;
   }
 
   TString puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
@@ -347,6 +382,7 @@ int typeAna = 0
         else                      histo[typePair][5]->Fill(theBin,totalWeight);
       }
     } // end events loop
+    the_input_file->Close();
   } // end chain loop
 
   for(int i=0; i<4; i++){

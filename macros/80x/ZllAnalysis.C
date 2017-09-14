@@ -25,11 +25,18 @@ double mcPrescale = 1.0;
 bool isMINIAOD = true;
 
 void ZllAnalysis(
- TString typeLepSel = "medium"
+ TString typeLepSel = "medium",
+ bool isMIT = true
 ){
 
+  // File instances on EOS
   TString filesPathDA = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/";
   TString filesPathMC  = "root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/output_80x/";
+  // File instances on T3 hadoop
+  if(isMIT){
+    filesPathDA   = "/mnt/hadoop/scratch/ceballos/Nero/v2.2/output_80x/data/";
+    filesPathMC   = "/mnt/hadoop/scratch/ceballos/Nero/v2.2/output_80x/mc/";
+  }
   Double_t lumi = 35.9;
 
   const int etaBins = 5;
@@ -81,16 +88,24 @@ void ZllAnalysis(
   TH2D *fhDeltrksf= (TH2D*)(fTrackElectronReco_SF->Get("scalefactors_Reco_Electron")); assert(fhDeltrksf); fhDeltrksf->SetDirectory(0);
   delete fTrackElectronReco_SF;
 
+  TFile *fElSF_latinos = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_latinos_37ifb.root"));
   TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_37ifb.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
-  TH2D *fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
+  TH2D *fhDElTightSF;
   if(typeLepSel == "medium_mva") fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_MediumMVA_Electron"));
   if(typeLepSel == "default_mva") fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_TightMVA_Electron"));
+  if(strcmp(typeLepSel.Data(),"defaultTight")==0){
+    printf("Using defaultTight SF\n");
+    fhDElTightSF = (TH2D*)(fElSF_latinos->Get("scalefactors_Tight_Electron"));
+  } else {
+    fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
+  }
   assert(fhDElMediumSF);
   assert(fhDElTightSF);
   fhDElMediumSF->SetDirectory(0);
   fhDElTightSF->SetDirectory(0);
   delete fElSF;
+  delete fElSF_latinos;
 
   TFile *fElVeryTightSF = TFile::Open(Form("MitAnalysisRunII/data/80x/veryTightSF_37ifb.root"));
   TH1D *fhDVeryTightSF = (TH1D*)(fElVeryTightSF->Get("veryTightSF"));

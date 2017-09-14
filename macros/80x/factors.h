@@ -19,37 +19,39 @@ double fake_rate_e_25_verytight_syst[5][6] = {
 };
 
 double fake_rate_m_25_medium[5][6] = {
-0.305,0.269,0.260,0.242,0.217,0.214,
-0.320,0.283,0.269,0.257,0.239,0.237,
-0.363,0.332,0.319,0.298,0.284,0.261,
-0.408,0.386,0.381,0.363,0.344,0.319,
-0.432,0.421,0.418,0.409,0.386,0.346
+0.305,0.269,0.260,0.242,0.217,0.216,
+0.320,0.283,0.269,0.257,0.238,0.238,
+0.363,0.332,0.319,0.298,0.284,0.263,
+0.408,0.386,0.381,0.362,0.344,0.321,
+0.432,0.421,0.418,0.408,0.386,0.349
 };
 double fake_rate_m_25_verytight[5][6] = {
-//0.199,0.167,0.159,0.142,0.122,0.125,
-//0.209,0.178,0.167,0.156,0.138,0.146,
-//0.246,0.218,0.205,0.183,0.170,0.150,
-//0.289,0.265,0.260,0.243,0.222,0.204,
-//0.313,0.300,0.295,0.280,0.252,0.195
 0.305,0.269,0.260,0.242,0.217,0.214,
 0.320,0.283,0.269,0.257,0.239,0.237,
 0.363,0.332,0.319,0.298,0.284,0.261,
 0.408,0.386,0.381,0.363,0.344,0.319,
 0.432,0.421,0.418,0.409,0.386,0.346
 };
+double fake_rate_m_25_defaultTight[5][6] = {
+0.300,0.265,0.257,0.240,0.219,0.228,
+0.314,0.278,0.266,0.254,0.238,0.244,
+0.357,0.327,0.315,0.295,0.283,0.268,
+0.403,0.381,0.377,0.359,0.341,0.322,
+0.426,0.416,0.413,0.405,0.382,0.348
+};
 double fake_rate_e_25_medium[5][6] = {
-0.531,0.525,0.515,0.501,0.501,0.586,
-0.555,0.550,0.512,0.498,0.505,0.582,
-0.589,0.580,0.541,0.535,0.557,0.602,
-0.595,0.570,0.565,0.554,0.568,0.556,
-0.553,0.542,0.536,0.521,0.514,0.501
+0.399,0.469,0.480,0.485,0.495,0.578,
+0.447,0.489,0.478,0.480,0.495,0.574,
+0.451,0.518,0.500,0.513,0.539,0.591,
+0.461,0.491,0.516,0.519,0.542,0.536,
+0.419,0.449,0.465,0.458,0.462,0.460
 };
 double fake_rate_e_25_tight[5][6] = {
-0.390,0.390,0.368,0.326,0.324,0.364,
-0.372,0.423,0.366,0.345,0.327,0.378,
-0.414,0.449,0.395,0.380,0.394,0.426,
-0.437,0.388,0.376,0.351,0.353,0.346,
-0.337,0.329,0.313,0.300,0.301,0.300
+0.273,0.346,0.341,0.318,0.327,0.373,
+0.277,0.371,0.339,0.333,0.326,0.385,
+0.300,0.393,0.363,0.363,0.383,0.425,
+0.317,0.323,0.339,0.326,0.340,0.335,
+0.242,0.270,0.270,0.265,0.273,0.280
 };
 double fake_rate_e_25_verytight[5][6] = {
 0.247,0.313,0.304,0.267,0.253,0.230,
@@ -57,6 +59,13 @@ double fake_rate_e_25_verytight[5][6] = {
 0.252,0.333,0.292,0.279,0.255,0.229,
 0.265,0.250,0.240,0.217,0.194,0.157,
 0.165,0.152,0.136,0.110,0.096,0.082
+};
+double fake_rate_e_25_defaultTight[5][6] = {
+0.202,0.262,0.261,0.234,0.224,0.245,
+0.161,0.274,0.242,0.223,0.226,0.239,
+0.174,0.264,0.229,0.224,0.216,0.236,
+0.206,0.192,0.188,0.176,0.163,0.156,
+0.110,0.117,0.117,0.107,0.108,0.118
 };
 double fake_rate_e_25_veryverytight[5][6] = {
 0.201,0.259,0.257,0.230,0.211,0.201,
@@ -82,10 +91,18 @@ double fake_rate_e_25_tight_mva[5][6] = {
 
 double prompt_m_medium[5][8] = {
 0.749,0.792,0.840,0.885,0.927,0.966,0.983,0.990,
+0.772,0.811,0.856,0.897,0.937,0.973,0.986,0.991,
+0.798,0.837,0.879,0.916,0.946,0.979,0.988,0.992,
+0.828,0.864,0.903,0.935,0.959,0.985,0.991,0.993,
+0.830,0.867,0.906,0.937,0.962,0.985,0.993,0.995
+};
+
+double prompt_m_defaultTight[5][8] = {
+0.748,0.792,0.840,0.885,0.927,0.966,0.984,0.991,
 0.771,0.811,0.856,0.897,0.937,0.973,0.986,0.991,
-0.798,0.836,0.879,0.916,0.946,0.979,0.988,0.992,
-0.827,0.864,0.903,0.935,0.959,0.985,0.991,0.993,
-0.829,0.866,0.906,0.937,0.962,0.985,0.993,0.995
+0.798,0.837,0.879,0.916,0.947,0.979,0.989,0.992,
+0.829,0.864,0.903,0.935,0.960,0.985,0.992,0.993,
+0.831,0.867,0.906,0.938,0.963,0.985,0.993,0.996
 };
 
 double prompt_m_verytight[5][8] = {
@@ -97,19 +114,27 @@ double prompt_m_verytight[5][8] = {
 };
 
 double prompt_e_medium[5][8] = {
-0.771,0.821,0.860,0.882,0.900,0.921,0.939,0.952,
-0.813,0.848,0.876,0.892,0.909,0.929,0.945,0.958,
-0.857,0.878,0.893,0.905,0.916,0.934,0.948,0.962,
-0.816,0.861,0.891,0.917,0.939,0.961,0.974,0.985,
-0.814,0.845,0.871,0.887,0.908,0.933,0.959,0.975
+0.761,0.812,0.850,0.871,0.891,0.914,0.934,0.951,
+0.802,0.837,0.865,0.881,0.900,0.921,0.941,0.956,
+0.846,0.867,0.883,0.894,0.905,0.923,0.942,0.960,
+0.802,0.850,0.880,0.904,0.927,0.947,0.967,0.981,
+0.803,0.834,0.859,0.873,0.893,0.918,0.950,0.971
 };
 
 double prompt_e_tight[5][8] = {
-0.672,0.725,0.787,0.821,0.849,0.883,0.915,0.940,
-0.709,0.764,0.805,0.831,0.860,0.894,0.925,0.948,
-0.758,0.793,0.818,0.841,0.865,0.898,0.926,0.952,
-0.679,0.747,0.795,0.840,0.877,0.916,0.945,0.967,
-0.686,0.728,0.768,0.795,0.827,0.867,0.915,0.955
+0.663,0.716,0.776,0.810,0.839,0.875,0.911,0.938,
+0.698,0.753,0.794,0.820,0.850,0.885,0.919,0.946,
+0.746,0.781,0.806,0.828,0.852,0.885,0.919,0.949,
+0.666,0.735,0.782,0.825,0.863,0.900,0.937,0.963,
+0.673,0.716,0.755,0.780,0.811,0.851,0.905,0.951
+};
+
+double prompt_e_defaultTight[5][8] = {
+0.587,0.650,0.713,0.747,0.776,0.812,0.844,0.863,
+0.612,0.675,0.723,0.751,0.783,0.817,0.849,0.872,
+0.611,0.671,0.706,0.736,0.765,0.800,0.834,0.863,
+0.523,0.597,0.644,0.689,0.726,0.765,0.802,0.848,
+0.502,0.554,0.592,0.618,0.647,0.687,0.742,0.824
 };
 
 double prompt_e_verytight[5][8] = {
@@ -308,18 +333,20 @@ double selectIdIsoCut(TString type, int pdgId, double pt, double eta, double iso
   bool idCut = false;
   if     (TMath::Abs(pdgId) == 13) {
     if     (type=="loose" || type=="veto")              isoCut = 0.25;
-    else if(type=="verytight" || type=="veryverytight") isoCut = 0.15; // 0.10
+    else if(type=="verytight" || type=="veryverytight") isoCut = 0.15;
     else                                                isoCut = 0.15;
     if     (type == "medium" || type == "default" || type == "verytight" || type=="veryverytight" || type == "default_mva" || type == "medium_mva") idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP;
-    else if(type == "loose") idCut= (selBits & BareLeptons::LepLoose) == BareLeptons::LepLoose;
-    else if(type == "veto")  idCut= (selBits & BareLeptons::LepLoose) == BareLeptons::LepLoose;
+    else if(type == "loose") idCut = (selBits & BareLeptons::LepLoose) == BareLeptons::LepLoose;
+    else if(type == "veto")  idCut = (selBits & BareLeptons::LepLoose) == BareLeptons::LepLoose;
+    else if(type == "defaultTight") idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP && (selBits & BareLeptons::LepFake) == BareLeptons::LepFake;
     else printf("Problem with selectIsoCut!\n");
 
     return (idCut && iso/pt < isoCut);
   }
-  else if(TMath::Abs(pdgId) == 11 && (type == "medium" || type == "default" || type == "verytight" || type=="veryverytight" || type == "veto" || type == "loose")) {
-    if     (type == "medium")        idCut = (selBits & BareLeptons::LepMedium)  == BareLeptons::LepMedium;
-    else if(type == "default")       idCut = (selBits & BareLeptons::LepTight)   == BareLeptons::LepTight;
+  else if(TMath::Abs(pdgId) == 11 && (type == "medium" || type == "default" || type == "defaultTight" || type == "verytight" || type=="veryverytight" || type == "veto" || type == "loose")) {
+    if     (type == "medium")        idCut = (selBits & BareLeptons::LepMediumIP)== BareLeptons::LepMediumIP;
+    else if(type == "default")       idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP;
+    else if(type == "defaultTight")  idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP && (selBits & BareLeptons::LepFake) == BareLeptons::LepFake && (selBits & BareLeptons::EleNoMissingHits) == BareLeptons::EleNoMissingHits;
     else if(type == "verytight")     idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP && (selBits & BareLeptons::EleTripleCharge) == BareLeptons::EleTripleCharge && (selBits & BareLeptons::EleNoMissingHits) == BareLeptons::EleNoMissingHits;
     else if(type == "veryverytight") idCut = (selBits & BareLeptons::LepTightIP) == BareLeptons::LepTightIP && (selBits & BareLeptons::EleTripleCharge) == BareLeptons::EleTripleCharge && (selBits & BareLeptons::EleNoMissingHits) == BareLeptons::EleNoMissingHits && (selBits & BareLeptons::LepFake) == BareLeptons::LepFake;
     else if(type == "loose"  )       idCut = (selBits & BareLeptons::LepLoose)   == BareLeptons::LepLoose;
@@ -426,15 +453,15 @@ TH1D *fhDMuTrkSF, TH2D *fhDElTrkSF, int npv, bool useMuIsoSF, TH2D *fhDMuIsoSF, 
   Int_t binXB = 0;
   Int_t binYB = 0;
 
-  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default"   || type== "verytight" || type== "veryverytight" || type== "medium_mva" || type== "default_mva"))  {binXA = fhDMuMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDMuMediumSF->GetYaxis()->FindFixBin(pt);}
-  else if(TMath::Abs(nsel) == 11 && (type== "medium" || type== "medium_mva"))                                                                                                {binXA = fhDElMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDElMediumSF->GetYaxis()->FindFixBin(pt);}
-  else if(TMath::Abs(nsel) == 11 && (type== "default"|| type== "verytight" || type== "veryverytight" || type== "default_mva"))                                               {binXA = fhDElTightSF ->GetXaxis()->FindFixBin(eta);binYA = fhDElTightSF ->GetYaxis()->FindFixBin(pt);}
+  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default"   || type== "defaultTight"   || type== "verytight" || type== "veryverytight" || type== "medium_mva" || type== "default_mva"))  {binXA = fhDMuMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDMuMediumSF->GetYaxis()->FindFixBin(pt);}
+  else if(TMath::Abs(nsel) == 11 && (type== "medium" || type== "medium_mva"))                                                                                                                           {binXA = fhDElMediumSF->GetXaxis()->FindFixBin(eta);binYA = fhDElMediumSF->GetYaxis()->FindFixBin(pt);}
+  else if(TMath::Abs(nsel) == 11 && (type== "default"||type== "defaultTight" || type== "verytight" || type== "veryverytight" || type== "default_mva"))                                                  {binXA = fhDElTightSF ->GetXaxis()->FindFixBin(eta);binYA = fhDElTightSF ->GetYaxis()->FindFixBin(pt);}
   else    printf("PROBLEM WITH BINS\n");
 
   double result = 0.0;
-  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default"   || type== "verytight" || type== "veryverytight" || type== "medium_mva" || type== "default_mva")) result = fhDMuMediumSF->GetBinContent(binXA, binYA);
-  else if(TMath::Abs(nsel) == 11 && (type== "medium" || type== "medium_mva"))                                                                                               result = fhDElMediumSF->GetBinContent(binXA, binYA);
-  else if(TMath::Abs(nsel) == 11 &&( type== "default"|| type== "verytight" || type== "veryverytight" || type== "default_mva"))                                              result = fhDElTightSF ->GetBinContent(binXA, binYA);
+  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default"   || type== "defaultTight"   || type== "verytight" || type== "veryverytight" || type== "medium_mva" || type== "default_mva")) result = fhDMuMediumSF->GetBinContent(binXA, binYA);
+  else if(TMath::Abs(nsel) == 11 && (type== "medium" || type== "medium_mva"))                                                                                                                          result = fhDElMediumSF->GetBinContent(binXA, binYA);
+  else if(TMath::Abs(nsel) == 11 &&( type== "default"|| type== "defaultTight"   || type== "verytight" || type== "veryverytight" || type== "default_mva"))                                              result = fhDElTightSF ->GetBinContent(binXA, binYA);
 
   if(result <= 0) printf("Result <= 0! %f %d %d %d - %f %f\n",result,nsel,binXA,binYA,pt,eta);
   if(result <= 0) result = 1.0;
@@ -545,8 +572,10 @@ double fakeRateFactor(double pt, double eta, int nsel, int period, TString type)
 
   if     (TMath::Abs(nsel) == 13 && period == 1 && (type== "medium" || type== "default" || type== "medium_mva" || type== "default_mva")) return addFactor*fake_rate_m_25_medium        [iEta][iPt]/(1.0-fake_rate_m_25_medium        [iEta][iPt]);
   else if(TMath::Abs(nsel) == 13 && period == 1 && (type== "verytight" || type== "veryverytight"))                                       return addFactor*fake_rate_m_25_verytight     [iEta][iPt]/(1.0-fake_rate_m_25_verytight     [iEta][iPt]);
+  else if(TMath::Abs(nsel) == 13 && period == 1 && (type== "defaultTight"))                                                              return addFactor*fake_rate_m_25_defaultTight  [iEta][iPt]/(1.0-fake_rate_m_25_defaultTight  [iEta][iPt]);
   else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium")			                                                 return addFactor*fake_rate_e_25_medium        [iEta][iPt]/(1.0-fake_rate_e_25_medium        [iEta][iPt]);
   else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "default")			                                                 return addFactor*fake_rate_e_25_tight         [iEta][iPt]/(1.0-fake_rate_e_25_tight         [iEta][iPt]);
+  else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "defaultTight")			                                         return addFactor*fake_rate_e_25_defaultTight  [iEta][iPt]/(1.0-fake_rate_e_25_defaultTight  [iEta][iPt]);
   else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "verytight")			                                                 return addFactor*fake_rate_e_25_verytight     [iEta][iPt]/(1.0-fake_rate_e_25_verytight     [iEta][iPt]);
   else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "veryverytight")                                                              return addFactor*fake_rate_e_25_veryverytight [iEta][iPt]/(1.0-fake_rate_e_25_veryverytight [iEta][iPt]);
   else if(TMath::Abs(nsel) == 11 && period == 1 &&  type== "medium_mva")		                                                 return addFactor*fake_rate_e_25_medium_mva    [iEta][iPt]/(1.0-fake_rate_e_25_medium_mva    [iEta][iPt]);
@@ -589,10 +618,12 @@ double promptFactor(double pt, double eta, int nsel, int period, TString type){
   else if(TMath::Abs(eta) < 2.0) iEta = 3;
   else  			 iEta = 4;
 
-  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default" || type== "medium_mva" || type== "default_mva")) return (1.0-   prompt_m_medium[iEta][iPt])/	prompt_m_medium[iEta][iPt];
+  if     (TMath::Abs(nsel) == 13 && (type== "medium" || type== "default" || type== "medium_mva" || type== "default_mva")) return (1.0-prompt_m_medium[iEta][iPt])/prompt_m_medium[iEta][iPt];
   else if(TMath::Abs(nsel) == 13 && (type== "verytight" || type== "veryverytight"))                                       return (1.0-prompt_m_verytight[iEta][iPt])/prompt_m_verytight[iEta][iPt];
-  else if(TMath::Abs(nsel) == 11 &&  type== "medium")									  return (1.0-   prompt_e_medium[iEta][iPt])/   prompt_e_medium[iEta][iPt];
-  else if(TMath::Abs(nsel) == 11 &&  type== "default")  								  return (1.0-    prompt_e_tight[iEta][iPt])/    prompt_e_tight[iEta][iPt];
+  else if(TMath::Abs(nsel) == 13 && (type== "defaultTight"))                                                              return (1.0-prompt_m_defaultTight[iEta][iPt])/prompt_m_defaultTight[iEta][iPt];
+  else if(TMath::Abs(nsel) == 11 &&  type== "medium")									  return (1.0-prompt_e_medium[iEta][iPt])/prompt_e_medium[iEta][iPt];
+  else if(TMath::Abs(nsel) == 11 &&  type== "default")  								  return (1.0-prompt_e_tight[iEta][iPt])/prompt_e_tight[iEta][iPt];
+  else if(TMath::Abs(nsel) == 11 &&  type== "defaultTight")  								  return (1.0-prompt_e_defaultTight[iEta][iPt])/prompt_e_defaultTight[iEta][iPt];
   else if(TMath::Abs(nsel) == 11 &&  type== "verytight")								  return (1.0-prompt_e_verytight[iEta][iPt])/prompt_e_verytight[iEta][iPt];
   else if(TMath::Abs(nsel) == 11 &&  type== "veryverytight")								  return (1.0-prompt_e_veryverytight[iEta][iPt])/prompt_e_veryverytight[iEta][iPt];
   else if(TMath::Abs(nsel) == 11 &&  type== "medium_mva")								  return  1.0;

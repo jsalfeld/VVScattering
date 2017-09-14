@@ -64,10 +64,10 @@ PandaAnalysis/T3/merging/merge_Leptonic.py data_overlaps
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_POWHEG
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToMM_POWHEG
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToEE_POWHEG
-/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py SingleMuon           
-/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py SingleElectron     
-/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py MuonEG       
-/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DoubleEG     
-/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DoubleMuon
+#/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py SingleMuon           
+#/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py SingleElectron     
+#/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py MuonEG       
+#/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DoubleEG     
+#/home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py DoubleMuon
 /home/ceballos/cms/cmssw/047/CMSSW_8_0_26_patch1/src/PandaAnalysis/T3/merging/merge_Leptonic.py data_overlaps
 >>>>>>> 3d30e7db9e37241a6cf263fb7c0c4b24b4100b07
