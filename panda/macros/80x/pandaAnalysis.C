@@ -14,6 +14,7 @@
 #include "MitAnalysisRunII/panda/macros/80x/pandaFlat.C"
 #include "MitAnalysisRunII/data/80x/RoccoR.cc"
 #include "MitAnalysisRunII/macros/80x/helicity.h"
+#include "MitAnalysisRunII/panda/macros/80x/auxiliar.h"
 
 enum TriggerBits {
     kMETTrig	   =(1<<0),
@@ -937,7 +938,8 @@ void pandaAnalysis(int whichDY = 0, bool isMIT=true)
 
         totalWeight = thePandaFlat.normalizedWeight * lumi * thePandaFlat.sf_pu *
 		      thePandaFlat.sf_trk1 * thePandaFlat.sf_medium1 *
-		      thePandaFlat.sf_trk2 * thePandaFlat.sf_medium2 * the_eta_sf;
+		      thePandaFlat.sf_trk2 * thePandaFlat.sf_medium2 * the_eta_sf *
+		      trigger_sf(thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1PdgId,thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2PdgId);
 	/*
 	double totalSumWeightLepEff[2] = {0,0};
 	for(int nl=0; nl<2; nl++) {
