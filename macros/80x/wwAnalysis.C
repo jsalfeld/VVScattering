@@ -210,14 +210,22 @@ void wwAnalysis(
   TH2D *fhDeltrksf= (TH2D*)(fTrackElectronReco_SF->Get("scalefactors_Reco_Electron")); assert(fhDeltrksf); fhDeltrksf->SetDirectory(0);
   delete fTrackElectronReco_SF;
 
+  TFile *fElSF_latinos = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_latinos_37ifb.root"));
   TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_37ifb.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
-  TH2D *fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
+  TH2D *fhDElTightSF;
+  if(strcmp(typeLepSel.Data(),"defaultTight")==0){
+    printf("Using defaultTight SF\n");
+    fhDElTightSF = (TH2D*)(fElSF_latinos->Get("scalefactors_Tight_Electron"));
+  } else {
+    fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
+  }
   assert(fhDElMediumSF);
   assert(fhDElTightSF);
   fhDElMediumSF->SetDirectory(0);
   fhDElTightSF->SetDirectory(0);
   delete fElSF;
+  delete fElSF_latinos;
 
   TString theVeryTightSFName = "MitAnalysisRunII/data/80x/veryTightSF_37ifb.root";
   if(strcmp(typeLepSel.Data(),"veryverytight")==0){
@@ -1137,6 +1145,8 @@ void wwAnalysis(
       double btagCorr[2] = {(total_bjet_probLOOSEUP[1]  /total_bjet_probLOOSEUP[0]  )/(total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0]),
                             (total_bjet_probLOOSEDOWN[1]/total_bjet_probLOOSEDOWN[0])/(total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0])};
 
+      //if(passAllCuts[SIGSEL]) printf("AAA %f %f %f %f %f %f %f %f\n",totalWeight,mcWeight,theLumi,puWeight,effSF,fakeSF,thePtwwWeight[0],total_bjet_probLOOSE[1]/total_bjet_probLOOSE[0]);
+
       if(totalWeight == 0) continue;
       // end event weighting
 
@@ -1844,9 +1854,9 @@ void wwAnalysis(
   histo_qqWW_CMS_MVAWW_sup_nlo	          ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_qqWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_qqWW_CMS_MVAWW_sup_nlo         ->GetBinContent(i)/histo_qqWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
   histo_qqWW_CMS_MVAWW_sdown_nlo	  ->Write(); for(int i=1; i<=histo_qqWW->GetNbinsX(); i++) {if(histo_qqWW    ->GetBinContent(i)>0)printf("%5.1f ",histo_qqWW_CMS_MVAWW_sdown_nlo       ->GetBinContent(i)/histo_qqWW    ->GetBinContent(i)*100);else printf("100.0 ");} printf("\n");
   outFileLimits->Close();
-  double theUEPS[2] = {1.032, 1.036};
+  double theUEPS[3] = {1.032, 1.036, 1.036};
   if(nJetsType != 0){
-    theUEPS[0] = 0.995; theUEPS[1] = 0.947;
+    theUEPS[0] = 0.995; theUEPS[1] = 0.947; theUEPS[2] = 0.965;
   }
   double lumiE = 1.025;
   double systLepResE[9] = {1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01};
@@ -2149,7 +2159,7 @@ void wwAnalysis(
     newcardShape << Form("%s                                     lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",effEName,systLepEffE[0],systLepEffE[1],systLepEffE[2],systLepEffE[3],systLepEffE[4],systLepEffE[5],systLepEffE[6],systLepEffE[7],systLepEffE[8]);
     newcardShape << Form("%s                                     lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",momMName,systLepResM[0],systLepResM[1],systLepResM[2],systLepResM[3],systLepResM[4],systLepResM[5],systLepResM[6],systLepResM[7],systLepResM[8]);
     newcardShape << Form("%s                                     lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",momEName,systLepResE[0],systLepResE[1],systLepResE[2],systLepResE[3],systLepResE[4],systLepResE[5],systLepResE[6],systLepResE[7],systLepResE[8]);
-    newcardShape << Form("CMS_pu                                 lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systPU[0],systPU[1],systPU[2],systPU[3],systPU[4],systPU[5],systPU[6],systPU[7],systPU[8]);
+    //newcardShape << Form("CMS_pu                                 lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systPU[0],systPU[1],systPU[2],systPU[3],systPU[4],systPU[5],systPU[6],systPU[7],systPU[8]);
     newcardShape << Form("CMS_scale_met                          lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systMet[0],systMet[1],systMet[2],systMet[3],systMet[4],systMet[5],systMet[6],systMet[7],systMet[8]);
     newcardShape << Form("CMS_scale_j                            lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systJes[0],systJes[1],systJes[2],systJes[3],systJes[4],systJes[5],systJes[6],systJes[7],systJes[8]);
     newcardShape << Form("CMS_jer                                lnN  %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f %7.5f  -    -  \n",systJer[0],systJer[1],systJer[2],systJer[3],systJer[4],systJer[5],systJer[6],systJer[7],systJer[8]);
@@ -2173,7 +2183,7 @@ void wwAnalysis(
     newcardShape << Form("norm_WjetsE		                 lnN    -     -     -     -     -     -     -     -     -    -  %7.5f\n",1.30);	    
     newcardShape << Form("WWNNLO_resum		                 lnN  %7.5f   -     -     -     -     -     -     -	-    -    -  \n",systWWNNLO[0]);	    
     newcardShape << Form("WWNNLO_scale		                 lnN  %7.5f   -     -     -     -     -     -     -	-    -    -  \n",systWWNNLO[1]);	    
-    newcardShape << Form("UEPS                                   lnN  %7.5f %7.5f   -     -     -     -     -     -     -    -    -  \n",theUEPS[0],theUEPS[1]);	    
+    newcardShape << Form("UEPS                                   lnN  %7.5f %7.5f   -     -     -     -     -     -   %7.5f  -    -  \n",theUEPS[0],theUEPS[1],theUEPS[2]);	    
     if(histo_qqWW->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAqqWWStatBounding_%s_Bin%d    lnN  %7.5f   -     -     -     -     -     -     -     -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_qqWW->GetBinError(nb)/histo_qqWW->GetBinContent(nb),0.999));
     if(histo_ggWW->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVAggWWStatBounding_%s_Bin%d    lnN    -   %7.5f   -     -     -     -     -     -	 -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_ggWW->GetBinError(nb)/histo_ggWW->GetBinContent(nb),0.999));
     if(histo_Top->GetBinContent(nb)	  > 0) newcardShape << Form("CMS_ww%s_%dj_MVATopStatBounding_%s_Bin%d     lnN    -     -   %7.5f   -     -     -     -     -	 -     -   -  \n",finalStateName,nJetsType,ECMsb.Data(),nb-1,1.0+TMath::Min(histo_Top->GetBinError(nb)/histo_Top->GetBinContent(nb),0.999));
