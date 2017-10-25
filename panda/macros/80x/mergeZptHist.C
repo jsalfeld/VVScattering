@@ -1,5 +1,5 @@
 void mergeZptHist(int nsel = 0) {
-TString inputFolder = "/data/t3home000/ceballos/panda/v_004_0";
+TString inputFolder = "/data/t3home000/ceballos/panda/v_005_0";
 
 if(nsel == 0){ // NLO
 const int nFiles = 6;
@@ -11,7 +11,7 @@ _file[3] = TFile::Open(Form("%s/DYJetsToLL_Pt250To400.root",inputFolder.Data()))
 _file[4] = TFile::Open(Form("%s/DYJetsToLL_Pt400To650.root",inputFolder.Data()));
 _file[5] = TFile::Open(Form("%s/DYJetsToLL_Pt650ToInf.root",inputFolder.Data()));
 
-double xs[6] = {5387.789,357.200,81.2000,3.06200,0.39050,0.03613};
+double xs[6] = {5512.4400,374.6800,86.5200,3.3247,0.4491,0.0422};
 
 TH1D *hDITotalMCWeight[nFiles];
 
