@@ -34,10 +34,14 @@ root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/Gl
 
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/GluGluHToTauTau_M125_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}GluGluHToTauTau_M125_13TeV_powheg_pythia8.root\",\"gghtautau125\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_herwigpp_0000.root\",\"$OUTPUTDIR/${PREFIX}GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_herwigpp.root\",\"gghwwlnln125\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8-CUETP8M1Down_0000.root\",\"$OUTPUTDIR/${PREFIX}GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8-CUETP8M1Down.root\",\"gghwwlnln125\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8-CUETP8M1Up_0000.root\",\"$OUTPUTDIR/${PREFIX}GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8-CUETP8M1Up.root\",\"gghwwlnln125\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8.root\",\"gghwwlnln125\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8.root\",\"gghzz4l125\",$1\)
 
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/VBFHToTauTau_M125_13TeV_powheg_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}VBFHToTauTau_M125_13TeV_powheg_pythia8.root\",\"vbfhtautau125\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8-CUETP8M1Down_0000.root\",\"$OUTPUTDIR/${PREFIX}VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8-CUETP8M1Down.root\",\"vbfhwwlnln125\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8-CUETP8M1Up_0000.root\",\"$OUTPUTDIR/${PREFIX}VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgen_pythia8-CUETP8M1Up.root\",\"vbfhwwlnln125\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}VBFHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8.root\",\"vbfhwwlnln125\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/VBF_HToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}VBF_HToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8.root\",\"vbfhzz4l125\",$1\)
 
@@ -107,6 +111,8 @@ root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WG
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.root\",\"zllg\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root\",\"wln\",$1\)
 
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WWTo2L2Nu_13TeV-powheg-CUETP8M1Down_0000.root\",\"$OUTPUTDIR/${PREFIX}WWTo2L2Nu_13TeV-powheg-CUETP8M1Down.root\",\"wwlnln\",$1\)
+root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WWTo2L2Nu_13TeV-powheg-CUETP8M1Up_0000.root\",\"$OUTPUTDIR/${PREFIX}WWTo2L2Nu_13TeV-powheg-CUETP8M1Up.root\",\"wwlnln\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WWTo2L2Nu_13TeV-powheg_0000.root\",\"$OUTPUTDIR/${PREFIX}WWTo2L2Nu_13TeV-powheg.root\",\"wwlnln\",$1\)
 root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/WWTo2L2Nu_13TeV-powheg-herwigpp_0000.root\",\"$OUTPUTDIR/${PREFIX}WWTo2L2Nu_13TeV-powheg-herwigpp.root\",\"wwlnln\",$1\)
 
