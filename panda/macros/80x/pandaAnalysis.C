@@ -90,12 +90,32 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
     infileName_.push_back(Form("%sDYJetsToLL_Pt400To650.root",filesPath.Data()));infileCat_.push_back(2);
     infileName_.push_back(Form("%sDYJetsToLL_Pt650ToInf.root",filesPath.Data()));infileCat_.push_back(2);
     }
+    else if(whichDY == 30 && whichAnaFlow == 2)
+   {infileName_.push_back(Form("%sDYJetsToLL_Pt0To50.root",filesPath.Data()));   infileCat_.push_back(2);
+    }
+    else if(whichDY == 31 && whichAnaFlow == 2)
+   {infileName_.push_back(Form("%sDYJetsToLL_Pt50To100.root",filesPath.Data())); infileCat_.push_back(2);
+    }
+    else if(whichDY == 32 && whichAnaFlow == 2)
+   {infileName_.push_back(Form("%sDYJetsToLL_Pt100To250.root",filesPath.Data()));infileCat_.push_back(2);
+    }
+    else if(whichDY == 33 && whichAnaFlow == 2)
+   {infileName_.push_back(Form("%sDYJetsToLL_Pt250To400.root",filesPath.Data()));infileCat_.push_back(2);
+    }
+    else if(whichDY == 34 && whichAnaFlow == 2)
+   {infileName_.push_back(Form("%sDYJetsToLL_Pt400To650.root",filesPath.Data()));infileCat_.push_back(2);
+    infileName_.push_back(Form("%sDYJetsToLL_Pt650ToInf.root",filesPath.Data()));infileCat_.push_back(2);
+    }
+    else {return;}
   }
 
+  const int nRecNuisances = 1;
+  const int nEffNuisances = 7+1050;
+  const int nMomNuisances = 5;
   const double dileptonPtCut = 0.0;
   const int nBinTot = 1; Float_t xbinsTot[nBinTot+1] = {0,1};
   const int nBinPt = 36; Float_t xbinsPt[nBinPt+1] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,18,20,22,25,28,32,37,43,52,65,85,120,160,190,220,250,300,400,500,800,1500};
-  //const int nBinPt = 5; Float_t xbinsPt[nBinPt+1] = {250,300,400,500,800,1500};
+  //const int nBinPt = 7; Float_t xbinsPt[nBinPt+1] = {200,220,250,300,400,500,800,1500};
   const int nBinRap = 12; Float_t xbinsRap[nBinRap+1] = {0.0,0.2,0.4,0.6,0.8,1.0,1.2,1.4,1.6,1.8,2.0,2.2,2.4};
   const int nBinPhiStar = 34; Float_t xbinsPhiStar[nBinPhiStar+1] = {
                                          1e-3, 2e-3, 3e-3, 4e-3, 5e-3, 6e-3, 7e-3, 8e-3, 9e-3,
@@ -109,11 +129,11 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
   const int nBinPtRap4 = 34; Float_t xbinsPtRap4[nBinPtRap4+1] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,18,20,22,25,28,32,37,43,52,65,85,120,160,190,220,250,300,400,1500};
 
   const int nBinRecoTot = 1; Float_t xbinsRecoTot[nBinRecoTot+1] = {0,1};
-  const int nBinRecoPt     = 72; Float_t xbinsRecoPt[nBinRecoPt+1]	 = { 0, 0.5,  1, 1.5,  2, 2.5, 3, 3.5,  4,4.5,  5,5.5,  6,6.5,  7,7.5,  8, 8.5,   9, 9.5,
-  									    10,10.5, 11,11.5, 12,12.5,13,13.5, 14, 15, 16, 17, 18, 19, 20, 21, 22,23.5,  25,26.5,
-  									    28,  30, 32,  35, 37,  40,43,  48, 52, 59, 65, 75, 86,100,120,140,160, 175, 190, 205,
-  									   220, 235,250, 275,300, 350,400,450,500,650,800,1150,1500};
-  //const int nBinRecoPt     = 10; Float_t xbinsRecoPt[nBinRecoPt+1]         = {250,275,300,350,400,450,500,650,800,1150,1500};
+  const int nBinRecoPt     = 72; Float_t xbinsRecoPt[nBinRecoPt+1]     = { 0, 0.5,  1, 1.5,  2, 2.5, 3, 3.5,  4,4.5,  5,5.5,  6,6.5,  7,7.5,  8, 8.5, 9, 9.5,
+  								      10,10.5, 11,11.5, 12,12.5,13,13.5, 14, 15, 16, 17, 18, 19, 20, 21, 22,23.5,  25,26.5,
+  								      28,  30, 32,  35, 37,  40,43,  48, 52, 59, 65, 75, 85,100,120,140,160, 175, 190, 205,
+  								     220, 235,250, 275,300, 350,400,450,500,650,800,1150,1500};
+  //const int nBinRecoPt     = 14; Float_t xbinsRecoPt[nBinRecoPt+1]         = {200,210,220,235,250,275,300,350,400,450,500,650,800,1150,1500};
 
   const int nBinRecoRap = 24; Float_t xbinsRecoRap[nBinRecoRap+1] = {0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3,2.4};
 
@@ -173,9 +193,9 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
   TH2D* scalefactors_Medium_Muon_bkgModelTNP	    = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_bkgModelTNP");        scalefactors_Medium_Muon_bkgModelTNP       ->SetDirectory(0);
   TH2D* scalefactors_Medium_Muon_tagBiasTNP	    = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_tagBiasTNP");         scalefactors_Medium_Muon_tagBiasTNP        ->SetDirectory(0);
   TH2D* scalefactors_Medium_Muon_generatorChoiceTNP = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_generatorChoiceTNP"); scalefactors_Medium_Muon_generatorChoiceTNP->SetDirectory(0);
-  //const int nMuSFBins = 0;
-  //TH2D* scalefactors_Medium_Muon_stat_error_hi_bins[nMuSFBins];
-  //for(int nj=0; nj<nMuSFBins; nj++) {scalefactors_Medium_Muon_stat_error_hi_bins[nj] =(TH2D*)fLepton_SF->Get(Form("scalefactors_Medium_Muon_stat_error_hi_bins_%d",nj));scalefactors_Medium_Muon_stat_error_hi_bins[nj]->SetDirectory(0);}
+  const int nMuSFBins = 1050;
+  TH2D* scalefactors_Medium_Muon_stat_error_hi_bins[nMuSFBins];
+  for(int nj=0; nj<nMuSFBins; nj++) {scalefactors_Medium_Muon_stat_error_hi_bins[nj] =(TH2D*)fLepton_SF->Get(Form("scalefactors_Medium_Muon_stat_error_hi_bins_%d",nj));scalefactors_Medium_Muon_stat_error_hi_bins[nj]->SetDirectory(0);}
 
   TH2D* scalefactors_Medium_Electron_stat_error_hi      = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_stat_error_hi");      scalefactors_Medium_Electron_stat_error_hi     ->SetDirectory(0);
   TH2D* scalefactors_Medium_Electron_signalFsrTNP       = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_signalFsrTNP");       scalefactors_Medium_Electron_signalFsrTNP      ->SetDirectory(0);
@@ -183,9 +203,9 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
   TH2D* scalefactors_Medium_Electron_bkgModelTNP        = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_bkgModelTNP");        scalefactors_Medium_Electron_bkgModelTNP       ->SetDirectory(0);
   TH2D* scalefactors_Medium_Electron_tagBiasTNP         = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_tagBiasTNP");         scalefactors_Medium_Electron_tagBiasTNP        ->SetDirectory(0);
   TH2D* scalefactors_Medium_Electron_generatorChoiceTNP = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Electron_generatorChoiceTNP"); scalefactors_Medium_Electron_generatorChoiceTNP->SetDirectory(0);
-  //const int nElSFBins = 0;
-  //TH2D* scalefactors_Medium_Electron_stat_error_hi_bins[nElSFBins];
-  //for(int nj=0; nj<nElSFBins; nj++) {scalefactors_Medium_Electron_stat_error_hi_bins[nj] = (TH2D*)fLepton_SF->Get(Form("scalefactors_Medium_Electron_stat_error_hi_bins_%d",nj)); scalefactors_Medium_Electron_stat_error_hi_bins[nj]->SetDirectory(0);}
+  const int nElSFBins = 480;
+  TH2D* scalefactors_Medium_Electron_stat_error_hi_bins[nElSFBins];
+  for(int nj=0; nj<nElSFBins; nj++) {scalefactors_Medium_Electron_stat_error_hi_bins[nj] = (TH2D*)fLepton_SF->Get(Form("scalefactors_Medium_Electron_stat_error_hi_bins_%d",nj)); scalefactors_Medium_Electron_stat_error_hi_bins[nj]->SetDirectory(0);}
 
   fLepton_SF->Close();
 
@@ -230,10 +250,6 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
     histos->Reset();histos->Clear();
   }
-
-  const int nRecNuisances = 1;
-  const int nEffNuisances = 7;
-  const int nMomNuisances = 5;
 
   TH2D* histoTotRecGen[2];
   TH2D* histoTotRecGen_RecEff[2][nRecNuisances];
@@ -1044,13 +1060,15 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
           if(TMath::Abs(thePandaFlat.looseLep1Eta) <  1.5) lepPtSF[0] = gRandom->Gaus(1.000,0.013);
           else                                             lepPtSF[0] = gRandom->Gaus(0.993,0.025);
           lepPtSFSyst[0][0] = lepPtSF[0];
-          lepPtSFSyst[0][1] = lepPtSF[0];
+          if(TMath::Abs(thePandaFlat.looseLep1Eta) <  1.5) {lepPtSFSyst[0][1] = lepPtSF[0]; lepPtSFSyst[0][2] = 1.0;}
+	  else                                             {lepPtSFSyst[0][1] = 1.0;        lepPtSFSyst[0][2] = lepPtSF[0];}
         }
         if(abs(thePandaFlat.looseLep2PdgId)==11) {
           if(TMath::Abs(thePandaFlat.looseLep2Eta) <  1.5) lepPtSF[1] = gRandom->Gaus(1.000,0.013);
           else                                             lepPtSF[1] = gRandom->Gaus(0.993,0.025);
           lepPtSFSyst[1][0] = lepPtSF[1];
-          lepPtSFSyst[1][1] = lepPtSF[1];
+          if(TMath::Abs(thePandaFlat.looseLep1Eta) <  1.5) {lepPtSFSyst[1][1] = lepPtSF[1]; lepPtSFSyst[1][2] = 1.0;}
+	  else                                             {lepPtSFSyst[1][1] = 1.0;        lepPtSFSyst[1][2] = lepPtSF[1];}
         }
       }
 
@@ -1131,7 +1149,7 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
           sfSystWeightLepEff[0][4] = scalefactors_Medium_Muon_bkgModelTNP	->GetBinContent(binXT,binYT_s);
           sfSystWeightLepEff[0][5] = scalefactors_Medium_Muon_tagBiasTNP	->GetBinContent(binXT,binYT_s);
           sfSystWeightLepEff[0][6] = scalefactors_Medium_Muon_generatorChoiceTNP->GetBinContent(binXT,binYT_s);
-          //for(int nj=0; nj<nMuSFBins; nj++) sfSystWeightLepEff[0][nj+5] = scalefactors_Medium_Muon_stat_error_hi_bins[nj]->GetBinContent(binXT,binYT_s);
+          for(int nj=0; nj<nMuSFBins; nj++) sfSystWeightLepEff[0][nj+7] = scalefactors_Medium_Muon_stat_error_hi_bins[nj]->GetBinContent(binXT,binYT_s);
         } else {
           double etal = thePandaFlat.looseLep1Eta; if(etal >= 2.5) etal = 2.4999; else if(etal <= -2.5) etal = -2.4999;
           int binXT   = scalefactors_Medium_Electron->GetXaxis()->FindFixBin(etal);
@@ -1145,7 +1163,7 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
           sfSystWeightLepEff[0][4] = scalefactors_Medium_Electron_bkgModelTNP	    ->GetBinContent(binXT,binYT_s);
           sfSystWeightLepEff[0][5] = scalefactors_Medium_Electron_tagBiasTNP	    ->GetBinContent(binXT,binYT_s);
           sfSystWeightLepEff[0][6] = scalefactors_Medium_Electron_generatorChoiceTNP->GetBinContent(binXT,binYT_s);
-          //for(int nj=0; nj<nElSFBins; nj++) sfSystWeightLepEff[0][nj+5] = scalefactors_Medium_Electron_stat_error_hi_bins[nj]->GetBinContent(binXT,binYT_s);
+          for(int nj=0; nj<nElSFBins; nj++) sfSystWeightLepEff[0][nj+7] = scalefactors_Medium_Electron_stat_error_hi_bins[nj]->GetBinContent(binXT,binYT_s);
         }
         if(abs(thePandaFlat.looseLep2PdgId)==13){
           double etal = thePandaFlat.looseLep2Eta; if(etal >= 2.4) etal = 2.3999; else if(etal <= -2.4) etal = -2.3999;
@@ -1160,7 +1178,7 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
           sfSystWeightLepEff[1][4] = scalefactors_Medium_Muon_bkgModelTNP	->GetBinContent(binXT,binYT_s);
           sfSystWeightLepEff[1][5] = scalefactors_Medium_Muon_tagBiasTNP	->GetBinContent(binXT,binYT_s);
           sfSystWeightLepEff[1][6] = scalefactors_Medium_Muon_generatorChoiceTNP->GetBinContent(binXT,binYT_s);
-          //for(int nj=0; nj<nMuSFBins; nj++) sfSystWeightLepEff[1][nj+5] = scalefactors_Medium_Muon_stat_error_hi_bins[nj]->GetBinContent(binXT,binYT_s);
+          for(int nj=0; nj<nMuSFBins; nj++) sfSystWeightLepEff[1][nj+7] = scalefactors_Medium_Muon_stat_error_hi_bins[nj]->GetBinContent(binXT,binYT_s);
         } else {
           double etal = thePandaFlat.looseLep2Eta; if(etal >= 2.5) etal = 2.4999; else if(etal <= -2.5) etal = -2.4999;
           int binXT   = scalefactors_Medium_Electron->GetXaxis()->FindFixBin(etal);
@@ -1174,7 +1192,7 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
           sfSystWeightLepEff[1][4] = scalefactors_Medium_Electron_bkgModelTNP	    ->GetBinContent(binXT,binYT_s);
           sfSystWeightLepEff[1][5] = scalefactors_Medium_Electron_tagBiasTNP	    ->GetBinContent(binXT,binYT_s);
           sfSystWeightLepEff[1][6] = scalefactors_Medium_Electron_generatorChoiceTNP->GetBinContent(binXT,binYT_s);
-          //for(int nj=0; nj<nElSFBins; nj++) sfSystWeightLepEff[1][nj+5] = scalefactors_Medium_Electron_stat_error_hi_bins[nj]->GetBinContent(binXT,binYT_s);
+          for(int nj=0; nj<nElSFBins; nj++) sfSystWeightLepEff[1][nj+7] = scalefactors_Medium_Electron_stat_error_hi_bins[nj]->GetBinContent(binXT,binYT_s);
         }
 
         /*
