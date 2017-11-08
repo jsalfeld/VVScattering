@@ -14,6 +14,13 @@
 #include "MitAnalysisRunII/panda/macros/80x/pandaFlat.C"
 #include "MitAnalysisRunII/data/80x/RoccoR.cc"
 
+double nPUScaleFactor(TH1D *fhDPU, float npu){
+  double mynpu = TMath::Min(npu,(float)79.999);
+  Int_t npuxbin = fhDPU->GetXaxis()->FindBin(mynpu);
+  //return TMath::Min(fhDPU->GetBinContent(npuxbin),2.5);
+  return fhDPU->GetBinContent(npuxbin);
+}
+
 enum TriggerBits {
     kMETTrig	   =(1<<0),
     kSinglePhoTrig =(1<<1),
@@ -33,7 +40,7 @@ enum SelectionBit {
 
 const double mass_el = 0.000510998928;
 const double mass_mu = 0.10566;
-void pandaZAnalysis(int whichDY = 0, bool isMIT=false)
+void pandaZAnalysis(int whichDY = 0, bool isMIT = true, bool isTopSel = false)
 {
   TString dirPathRM = TString(gSystem->Getenv("CMSSW_BASE")) + "/src/MitAnalysisRunII/data/80x/rcdata.2016.v3";
   RoccoR rmcor(dirPathRM.Data());
@@ -81,22 +88,32 @@ void pandaZAnalysis(int whichDY = 0, bool isMIT=false)
   //infileName_.push_back(Form("%sH125.root" ,filesPath.Data()));                infileCat_.push_back(7);
 */
 
+  TFile *fPUFile = TFile::Open(Form("MitAnalysisRunII/data/90x/puWeights_90x.root"));
+  TH1D *fhDPU = (TH1D*)(fPUFile->Get("puWeights")); assert(fhDPU); fhDPU->SetDirectory(0);
+  delete fPUFile;
+
   int nBinPlot      = 200;
   double xminPlot   = 0.0;
   double xmaxPlot   = 200.0;
-  const int allPlots = 25;
+  const int allPlots = 60;
   const int histBins = 9;
   TH1D* histo[allPlots][histBins];
   for(int thePlot=0; thePlot<allPlots; thePlot++){
     if     (thePlot >=  0 && thePlot <=  1) {nBinPlot = 120; xminPlot = 91.1876-15; xmaxPlot = 91.1876+15;}
-    if     (thePlot >=  2 && thePlot <=  2) {nBinPlot = 200; xminPlot =  0.0; xmaxPlot = 200;}
+    else if(thePlot >=  2 && thePlot <=  2) {nBinPlot = 200; xminPlot = 20.0; xmaxPlot = 220;}
     else if(thePlot >=  3 && thePlot <=  5) {nBinPlot =  10; xminPlot = -0.5; xmaxPlot = 9.5;}
     else if(thePlot >=  6 && thePlot <=  8) {nBinPlot =   5; xminPlot = -0.5; xmaxPlot = 4.5;}
-    else if(thePlot >=  9 && thePlot <= 11) {nBinPlot = 500; xminPlot =  0.0; xmaxPlot = 500;}
-    else if(thePlot >= 12 && thePlot <= 14) {nBinPlot = 500; xminPlot =  0.0; xmaxPlot = 500;}
-    else if(thePlot >= 15 && thePlot <= 17) {nBinPlot = 500; xminPlot =  0.0; xmaxPlot = 500;}
-    else if(thePlot >= 18 && thePlot <= 20) {nBinPlot = 500; xminPlot =  0.0; xmaxPlot = 500;}
-    else if(thePlot >= 21 && thePlot <= 23) {nBinPlot = 500; xminPlot =  0.0; xmaxPlot = 500;}
+    else if(thePlot >=  9 && thePlot <= 11) {nBinPlot =1000; xminPlot =  0.0; xmaxPlot =1000;}
+    else if(thePlot >= 12 && thePlot <= 26) {nBinPlot = 500; xminPlot =  0.0; xmaxPlot = 500;}
+    else if(thePlot >= 27 && thePlot <= 32) {nBinPlot = 100; xminPlot =  0.0; xmaxPlot = TMath::Pi();}
+    else if(thePlot >= 33 && thePlot <= 38) {nBinPlot = 100; xminPlot =  0.0; xmaxPlot = 2.0;}
+    else if(thePlot >= 39 && thePlot <= 44) {nBinPlot = 100; xminPlot =  0.0; xmaxPlot = 5.0;}
+    else if(thePlot >= 45 && thePlot <= 47) {nBinPlot =  80; xminPlot = -0.5; xmaxPlot = 79.5;}
+    else if(thePlot >= 48 && thePlot <= 53) {nBinPlot = 100; xminPlot = -2.5; xmaxPlot = 2.5;}
+    else if(thePlot >= 54 && thePlot <= 59) {nBinPlot = 200; xminPlot = 25.0; xmaxPlot = 225;}
+    
+    if(isTopSel == true && (thePlot >=  0 && thePlot <=  1)) {nBinPlot = 200; xminPlot = 20.0; xmaxPlot = 220;}
+
     TH1D* histos = new TH1D("histos", "histos", nBinPlot, xminPlot, xmaxPlot);
     histos->Sumw2();
     for(int i=0; i<histBins; i++) histo[thePlot][i] = (TH1D*) histos->Clone(Form("histo%d",i));
@@ -120,7 +137,7 @@ void pandaZAnalysis(int whichDY = 0, bool isMIT=false)
       bool passTrigger = (thePandaFlat.trigger & kMuEGTrig) == kMuEGTrig || (thePandaFlat.trigger & kMuMuTrig) == kMuMuTrig ||
                          (thePandaFlat.trigger & kMuTrig)   == kMuTrig   || (thePandaFlat.trigger & kEGEGTrig) == kEGEGTrig ||
 			 (thePandaFlat.trigger & kEGTrig)   == kEGTrig;
-      //if(passTrigger == false) continue;
+      if(passTrigger == false) continue;
       //if(thePandaFlat.metFilter == 0) continue;
       
       if(thePandaFlat.nLooseLep != 2) continue;
@@ -138,7 +155,7 @@ void pandaZAnalysis(int whichDY = 0, bool isMIT=false)
       else if(abs(thePandaFlat.looseLep1PdgId)==11 && abs(thePandaFlat.looseLep2PdgId)==11 && thePandaFlat.looseLep1PdgId*thePandaFlat.looseLep2PdgId>0) lepType = 4;
       else if(abs(thePandaFlat.looseLep1PdgId)==13 && abs(thePandaFlat.looseLep2PdgId)==11 && thePandaFlat.looseLep1PdgId*thePandaFlat.looseLep2PdgId>0) lepType = 5;
       else if(abs(thePandaFlat.looseLep1PdgId)==11 && abs(thePandaFlat.looseLep2PdgId)==13 && thePandaFlat.looseLep1PdgId*thePandaFlat.looseLep2PdgId>0) lepType = 5;
-      //else printf("Impossible dilepton combination: %d %d\n",thePandaFlat.looseLep1PdgId,thePandaFlat.looseLep2PdgId);
+      else printf("Impossible dilepton combination: %d %d\n",thePandaFlat.looseLep1PdgId,thePandaFlat.looseLep2PdgId);
 
       if(lepType >= 3 || lepType == -1) continue;
 
@@ -146,11 +163,22 @@ void pandaZAnalysis(int whichDY = 0, bool isMIT=false)
       if     (abs(lepType) == 1) {thePDGMass[0] = mass_el; thePDGMass[1] = mass_el;}
       else if(abs(lepType) == 2 && abs(thePandaFlat.looseLep1PdgId)==11) {thePDGMass[0] = mass_el;}
       else if(abs(lepType) == 2 && abs(thePandaFlat.looseLep2PdgId)==11) {thePDGMass[1] = mass_el;}
-      TLorentzVector v1,v2;
+      TLorentzVector v1,v2,metP4;
       v1.SetPtEtaPhiM(thePandaFlat.looseLep1Pt,thePandaFlat.looseLep1Eta,thePandaFlat.looseLep1Phi,thePDGMass[0]);
       v2.SetPtEtaPhiM(thePandaFlat.looseLep2Pt,thePandaFlat.looseLep2Eta,thePandaFlat.looseLep2Phi,thePDGMass[1]);
+      TLorentzVector dilep = v1+v2;
+      metP4.SetPtEtaPhiM(thePandaFlat.pfmet,0,thePandaFlat.pfmetphi,0);
+
+      double dPhiDiLepMET = TMath::Abs(dilep.DeltaPhi(metP4));
+      double ptFrac = TMath::Abs(dilep.Pt()-metP4.Pt())/dilep.Pt();
+      double caloMinusPFMETRel = TMath::Abs(thePandaFlat.calomet-thePandaFlat.pfmet)/thePandaFlat.pfmet;
+      double dphill = TMath::Abs(v1.DeltaPhi(v2));
+      double detall = TMath::Abs(v1.Eta()-v2.Eta());
+      double drll = sqrt(dphill*dphill+detall*detall);
+      double mtW = TMath::Sqrt(2.0*dilep.Pt()*metP4.Pt()*(1.0 - TMath::Cos(dPhiDiLepMET)));
 
       bool passSel = (TMath::Abs((v1+v2).M()-91.1876) < 15 || (lepType == 2 && (v1+v2).M() > 20)) && v1.Pt() > 25 && v2.Pt() > 25;
+      if(isTopSel == true) passSel = (TMath::Abs((v1+v2).M()-91.1876) > 15 || lepType == 2) && (v1+v2).M() > 20 && v1.Pt() > 25 && v2.Pt() > 25 && mtW > 50;
       if(passSel == false) continue;
 
       double totalWeight = 1.0;
@@ -160,24 +188,39 @@ void pandaZAnalysis(int whichDY = 0, bool isMIT=false)
 		      thePandaFlat.sf_trk2 * thePandaFlat.sf_medium2;
       }
       else if(theCategory == 1){
-        totalWeight = 0.24;
+        totalWeight = 0.36335 * nPUScaleFactor(fhDPU,thePandaFlat.npv);
+        //totalWeight = 1.0;
       }
 
       histo[lepType+ 0][theCategory]->Fill((v1+v2).M(),totalWeight);
       histo[lepType+ 3][theCategory]->Fill(TMath::Min((double)thePandaFlat.nJet, 9.4999),totalWeight);
       histo[lepType+ 6][theCategory]->Fill(TMath::Min((double)thePandaFlat.jetNLBtags,4.4999),totalWeight);
-      histo[lepType+ 9][theCategory]->Fill(TMath::Min((v1+v2).Pt(), 499.999),totalWeight);
+      histo[lepType+ 9][theCategory]->Fill(TMath::Min((v1+v2).Pt(), 999.999),totalWeight);
       histo[lepType+12][theCategory]->Fill(TMath::Min((double)thePandaFlat.pfmet, 499.999),totalWeight);
       histo[lepType+15][theCategory]->Fill(TMath::Min((double)thePandaFlat.puppimet, 499.999),totalWeight);
       histo[lepType+18][theCategory]->Fill(TMath::Min((double)thePandaFlat.calomet, 499.999),totalWeight);
       histo[lepType+21][theCategory]->Fill(TMath::Min((double)thePandaFlat.trkmet, 499.999),totalWeight);
+      histo[lepType+24][theCategory]->Fill(TMath::Min(mtW, 499.999),totalWeight);
+      histo[lepType+27][theCategory]->Fill(dPhiDiLepMET,totalWeight);
+      histo[lepType+30][theCategory]->Fill(dphill,totalWeight);
+      histo[lepType+33][theCategory]->Fill(TMath::Min(ptFrac,1.999),totalWeight);
+      histo[lepType+36][theCategory]->Fill(TMath::Min(caloMinusPFMETRel,1.999),totalWeight);
+      histo[lepType+39][theCategory]->Fill(TMath::Min(detall,4.999),totalWeight);
+      histo[lepType+42][theCategory]->Fill(TMath::Min(drll,4.999),totalWeight);
+      histo[lepType+45][theCategory]->Fill(TMath::Min((double)thePandaFlat.npv,79.499),totalWeight);
+      histo[lepType+48][theCategory]->Fill(thePandaFlat.looseLep1Eta,totalWeight);
+      histo[lepType+51][theCategory]->Fill(thePandaFlat.looseLep2Eta,totalWeight);
+      histo[lepType+54][theCategory]->Fill(TMath::Min((double)thePandaFlat.looseLep1Pt, 224.999),totalWeight);
+      histo[lepType+57][theCategory]->Fill(TMath::Min((double)thePandaFlat.looseLep2Pt, 224.999),totalWeight);
 
     } // end event loop
   } // end samples loop
 
   char output[200];
   for(int thePlot=0; thePlot<allPlots; thePlot++){
-    sprintf(output,"histoDY%dzll_%d.root",whichDY,thePlot);	
+    TString addSuffix = "";
+    if(isTopSel == true) addSuffix = "_topsel";
+    sprintf(output,"histoDY%dzll_%d%s.root",whichDY,thePlot,addSuffix.Data());	
     TFile* outFilePlotsNote = new TFile(output,"recreate");
     outFilePlotsNote->cd();
     double totBck = 0;
