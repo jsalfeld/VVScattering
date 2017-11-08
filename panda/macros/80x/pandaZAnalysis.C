@@ -49,8 +49,8 @@ void pandaZAnalysis(int whichDY = 0, bool isMIT = true, bool isTopSel = false)
   //*******************************************************
   //Input Files
   //*******************************************************
-  TString filesPathOld = "/data/t3home000/ceballos/panda/v_004_0/";
-  TString filesPath    = "/data/t3home000/ceballos/panda/v_005_0/";
+  TString filesPathOld = "/data/t3home000/ceballos/panda/v_005_0/";
+  TString filesPath    = "/data/t3home000/ceballos/panda/v_006_0/";
   if(isMIT == false) filesPath = "/afs/cern.ch/work/c/ceballos/public/samples/panda/v_005_0/";
   vector<TString> infileName_;
   vector<Int_t> infileCat_;
@@ -188,7 +188,7 @@ void pandaZAnalysis(int whichDY = 0, bool isMIT = true, bool isTopSel = false)
 		      thePandaFlat.sf_trk2 * thePandaFlat.sf_medium2;
       }
       else if(theCategory == 1){
-        totalWeight = 0.36335 * nPUScaleFactor(fhDPU,thePandaFlat.npv);
+        totalWeight = 0.773 * nPUScaleFactor(fhDPU,thePandaFlat.npv);
         //totalWeight = 1.0;
       }
 
