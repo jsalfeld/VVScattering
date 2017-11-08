@@ -26,13 +26,21 @@ bool isMINIAOD = true;
 void QCDAnalysis(
  Int_t typeSel = 4,
  TString typeLepSel = "medium",
- Int_t applyPrescale = 1
+ Int_t applyPrescale = 1,
+ bool isMIT = true
  ){
 
   Int_t period = 1;
+  // File instances on EOS
   TString filesPathDA = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/";
   TString filesPathMC  = "root://eoscms.cern.ch//eos/cms/store/caf/user/ceballos/Nero/output_80x/";
   TString filesPathMC2 = "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/ceballos/Nero/output_80x/mc/";
+  // File instances on T3 hadoop
+  if(isMIT){
+    filesPathDA   = "/mnt/hadoop/scratch/ceballos/Nero/v2.2/output_80x/data/";
+    filesPathMC   = "/mnt/hadoop/scratch/ceballos/Nero/v2.2/output_80x/mc/";
+    filesPathMC2  = "/mnt/hadoop/scratch/ceballos/Nero/v2.2/output_80x/mc/";
+  }
   Double_t lumi = 35.9;
 
   Double_t prescale[6];
@@ -65,8 +73,8 @@ void QCDAnalysis(
   if     (period==0){
   }
   else if(period==1){
-  if     (typeSel == 11) {prescale[0]=0.00244;prescale[1]=0.00275;prescale[2]=0.00262;prescale[3]=0.00257;prescale[4]=0.00260;prescale[5]=0.00262;}
-  else if(typeSel == 13) {prescale[0]=0.00570;prescale[1]=0.00643;prescale[2]=0.00678;prescale[3]=0.00659;prescale[4]=0.00633;prescale[5]=0.00658;}
+  if     (typeSel == 11) {prescale[0]=0.00237;prescale[1]=0.00260;prescale[2]=0.00251;prescale[3]=0.00251;prescale[4]=0.00254;prescale[5]=0.00256;}
+  else if(typeSel == 13) {prescale[0]=0.00565;prescale[1]=0.00639;prescale[2]=0.00680;prescale[3]=0.00661;prescale[4]=0.00633;prescale[5]=0.00656;}
 
   puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
 
@@ -147,16 +155,24 @@ void QCDAnalysis(
   TH2D *fhDeltrksf= (TH2D*)(fTrackElectronReco_SF->Get("scalefactors_Reco_Electron")); assert(fhDeltrksf); fhDeltrksf->SetDirectory(0);
   delete fTrackElectronReco_SF;
 
+  TFile *fElSF_latinos = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_latinos_37ifb.root"));
   TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_37ifb.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
-  TH2D *fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
+  TH2D *fhDElTightSF;
   if(typeLepSel == "medium_mva") fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_MediumMVA_Electron"));
   if(typeLepSel == "default_mva") fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_TightMVA_Electron"));
+  if(strcmp(typeLepSel.Data(),"defaultTight")==0){
+    printf("Using defaultTight SF\n");
+    fhDElTightSF = (TH2D*)(fElSF_latinos->Get("scalefactors_Tight_Electron"));
+  } else {
+    fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
+  }
   assert(fhDElMediumSF);
   assert(fhDElTightSF);
   fhDElMediumSF->SetDirectory(0);
   fhDElTightSF->SetDirectory(0);
   delete fElSF;
+  delete fElSF_latinos;
 
   TString theVeryTightSFName = "MitAnalysisRunII/data/80x/veryTightSF_37ifb.root";
   if(strcmp(typeLepSel.Data(),"veryverytight")==0){

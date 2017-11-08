@@ -27,9 +27,9 @@ PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_M-50_LO_Pt200toInf
 PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToLL_POWHEG
 PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToMM_POWHEG
 PandaAnalysis/T3/merging/merge_Leptonic.py DYJetsToEE_POWHEG
-PandaAnalysis/T3/merging/merge_Leptonic.py SingleMuon           
-PandaAnalysis/T3/merging/merge_Leptonic.py SingleElectron     
-PandaAnalysis/T3/merging/merge_Leptonic.py MuonEG       
-PandaAnalysis/T3/merging/merge_Leptonic.py DoubleEG     
-PandaAnalysis/T3/merging/merge_Leptonic.py DoubleMuon
+#PandaAnalysis/T3/merging/merge_Leptonic.py SingleMuon           
+#PandaAnalysis/T3/merging/merge_Leptonic.py SingleElectron     
+#PandaAnalysis/T3/merging/merge_Leptonic.py MuonEG       
+#PandaAnalysis/T3/merging/merge_Leptonic.py DoubleEG     
+#PandaAnalysis/T3/merging/merge_Leptonic.py DoubleMuon
 PandaAnalysis/T3/merging/merge_Leptonic.py data_overlaps
