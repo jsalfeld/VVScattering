@@ -35,22 +35,22 @@ TH1D *hDIDilPtRap4EE[nFiles]; TH1D *hDIDilPtRap4EE_PDF[nFiles]; TH1D *hDIDilPtRa
 for(int i=0; i<nFiles; i++){
   hDITotalMCWeight[i] = (TH1D*)_file[i]->Get("hDTotalMCWeight");	 
 
-  hDIDilPtMM[i]       = (TH1D*)_file[i]->Get("hDDilPtMM");     hDIDilPtMM[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
-  hDIDilPtEE[i]       = (TH1D*)_file[i]->Get("hDDilPtEE");     hDIDilPtEE[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
-  hDIDilRapMM[i]      = (TH1D*)_file[i]->Get("hDDilRapMM");    hDIDilRapMM[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
-  hDIDilRapEE[i]      = (TH1D*)_file[i]->Get("hDDilRapEE");    hDIDilRapEE[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
-  hDIDilPhiStarMM[i]  = (TH1D*)_file[i]->Get("hDDilPhiStarMM");hDIDilPhiStarMM[i]->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());       
-  hDIDilPhiStarEE[i]  = (TH1D*)_file[i]->Get("hDDilPhiStarEE");hDIDilPhiStarEE[i]->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());       
-  hDIDilPtRap0MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap0MM"); hDIDilPtRap0MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap0EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap0EE"); hDIDilPtRap0EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap1MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap1MM"); hDIDilPtRap1MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap1EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap1EE"); hDIDilPtRap1EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap2MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap2MM"); hDIDilPtRap2MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap2EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap2EE"); hDIDilPtRap2EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap3MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap3MM"); hDIDilPtRap3MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap3EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap3EE"); hDIDilPtRap3EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap4MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap4MM"); hDIDilPtRap4MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap4EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap4EE"); hDIDilPtRap4EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtMM[i]       = (TH1D*)_file[i]->Get("hDDilPtMM");     hDIDilPtMM[i]->Sumw2();     hDIDilPtMM[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
+  hDIDilPtEE[i]       = (TH1D*)_file[i]->Get("hDDilPtEE");     hDIDilPtEE[i]->Sumw2();     hDIDilPtEE[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
+  hDIDilRapMM[i]      = (TH1D*)_file[i]->Get("hDDilRapMM");    hDIDilRapMM[i]->Sumw2();    hDIDilRapMM[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
+  hDIDilRapEE[i]      = (TH1D*)_file[i]->Get("hDDilRapEE");    hDIDilRapEE[i]->Sumw2();    hDIDilRapEE[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
+  hDIDilPhiStarMM[i]  = (TH1D*)_file[i]->Get("hDDilPhiStarMM");hDIDilPhiStarMM[i]->Sumw2();hDIDilPhiStarMM[i]->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());	    
+  hDIDilPhiStarEE[i]  = (TH1D*)_file[i]->Get("hDDilPhiStarEE");hDIDilPhiStarEE[i]->Sumw2();hDIDilPhiStarEE[i]->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());	    
+  hDIDilPtRap0MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap0MM"); hDIDilPtRap0MM[i]->Sumw2(); hDIDilPtRap0MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap0EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap0EE"); hDIDilPtRap0EE[i]->Sumw2(); hDIDilPtRap0EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap1MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap1MM"); hDIDilPtRap1MM[i]->Sumw2(); hDIDilPtRap1MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap1EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap1EE"); hDIDilPtRap1EE[i]->Sumw2(); hDIDilPtRap1EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap2MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap2MM"); hDIDilPtRap2MM[i]->Sumw2(); hDIDilPtRap2MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap2EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap2EE"); hDIDilPtRap2EE[i]->Sumw2(); hDIDilPtRap2EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap3MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap3MM"); hDIDilPtRap3MM[i]->Sumw2(); hDIDilPtRap3MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap3EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap3EE"); hDIDilPtRap3EE[i]->Sumw2(); hDIDilPtRap3EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap4MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap4MM"); hDIDilPtRap4MM[i]->Sumw2(); hDIDilPtRap4MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap4EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap4EE"); hDIDilPtRap4EE[i]->Sumw2(); hDIDilPtRap4EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
 
   hDIDilPtMM_PDF[i]       = (TH1D*)_file[i]->Get("hDDilPtMM_PDF");     hDIDilPtMM_PDF[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
   hDIDilPtEE_PDF[i]       = (TH1D*)_file[i]->Get("hDDilPtEE_PDF");     hDIDilPtEE_PDF[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
@@ -244,7 +244,8 @@ TFile myOutputFile("genZpt_NLO.root","RECREATE");
   hDDilPtRap4EE_QCD ->Write();
 myOutputFile.Close();
 
-} else { // LO
+} 
+else if(nsel == 1){ // LO
 const int nFiles = 3;
 TFile *_file[nFiles];
 _file[0] = TFile::Open(Form("%s/DYJetsToLL_M-50_LO_Pt000To050.root", inputFolder.Data()));
@@ -275,22 +276,22 @@ TH1D *hDIDilPtRap4EE[nFiles]; TH1D *hDIDilPtRap4EE_PDF[nFiles]; TH1D *hDIDilPtRa
 for(int i=0; i<nFiles; i++){
   hDITotalMCWeight[i] = (TH1D*)_file[i]->Get("hDTotalMCWeight");	 
 
-  hDIDilPtMM[i]       = (TH1D*)_file[i]->Get("hDDilPtMM");     hDIDilPtMM[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
-  hDIDilPtEE[i]       = (TH1D*)_file[i]->Get("hDDilPtEE");     hDIDilPtEE[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
-  hDIDilRapMM[i]      = (TH1D*)_file[i]->Get("hDDilRapMM");    hDIDilRapMM[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
-  hDIDilRapEE[i]      = (TH1D*)_file[i]->Get("hDDilRapEE");    hDIDilRapEE[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
-  hDIDilPhiStarMM[i]  = (TH1D*)_file[i]->Get("hDDilPhiStarMM");hDIDilPhiStarMM[i]->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());       
-  hDIDilPhiStarEE[i]  = (TH1D*)_file[i]->Get("hDDilPhiStarEE");hDIDilPhiStarEE[i]->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());       
-  hDIDilPtRap0MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap0MM"); hDIDilPtRap0MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap0EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap0EE"); hDIDilPtRap0EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap1MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap1MM"); hDIDilPtRap1MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap1EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap1EE"); hDIDilPtRap1EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap2MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap2MM"); hDIDilPtRap2MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap2EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap2EE"); hDIDilPtRap2EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap3MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap3MM"); hDIDilPtRap3MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap3EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap3EE"); hDIDilPtRap3EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap4MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap4MM"); hDIDilPtRap4MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
-  hDIDilPtRap4EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap4EE"); hDIDilPtRap4EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtMM[i]       = (TH1D*)_file[i]->Get("hDDilPtMM");     hDIDilPtMM[i]->Sumw2();     hDIDilPtMM[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
+  hDIDilPtEE[i]       = (TH1D*)_file[i]->Get("hDDilPtEE");     hDIDilPtEE[i]->Sumw2();     hDIDilPtEE[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
+  hDIDilRapMM[i]      = (TH1D*)_file[i]->Get("hDDilRapMM");    hDIDilRapMM[i]->Sumw2();    hDIDilRapMM[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
+  hDIDilRapEE[i]      = (TH1D*)_file[i]->Get("hDDilRapEE");    hDIDilRapEE[i]->Sumw2();    hDIDilRapEE[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
+  hDIDilPhiStarMM[i]  = (TH1D*)_file[i]->Get("hDDilPhiStarMM");hDIDilPhiStarMM[i]->Sumw2();hDIDilPhiStarMM[i]->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());	  
+  hDIDilPhiStarEE[i]  = (TH1D*)_file[i]->Get("hDDilPhiStarEE");hDIDilPhiStarEE[i]->Sumw2();hDIDilPhiStarEE[i]->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());	  
+  hDIDilPtRap0MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap0MM"); hDIDilPtRap0MM[i]->Sumw2(); hDIDilPtRap0MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap0EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap0EE"); hDIDilPtRap0EE[i]->Sumw2(); hDIDilPtRap0EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap1MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap1MM"); hDIDilPtRap1MM[i]->Sumw2(); hDIDilPtRap1MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap1EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap1EE"); hDIDilPtRap1EE[i]->Sumw2(); hDIDilPtRap1EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap2MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap2MM"); hDIDilPtRap2MM[i]->Sumw2(); hDIDilPtRap2MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap2EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap2EE"); hDIDilPtRap2EE[i]->Sumw2(); hDIDilPtRap2EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap3MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap3MM"); hDIDilPtRap3MM[i]->Sumw2(); hDIDilPtRap3MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap3EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap3EE"); hDIDilPtRap3EE[i]->Sumw2(); hDIDilPtRap3EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap4MM[i]   = (TH1D*)_file[i]->Get("hDDilPtRap4MM"); hDIDilPtRap4MM[i]->Sumw2(); hDIDilPtRap4MM[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
+  hDIDilPtRap4EE[i]   = (TH1D*)_file[i]->Get("hDDilPtRap4EE"); hDIDilPtRap4EE[i]->Sumw2(); hDIDilPtRap4EE[i] ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());
 
   hDIDilPtMM_PDF[i]       = (TH1D*)_file[i]->Get("hDDilPtMM_PDF");     hDIDilPtMM_PDF[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
   hDIDilPtEE_PDF[i]       = (TH1D*)_file[i]->Get("hDDilPtEE_PDF");     hDIDilPtEE_PDF[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
@@ -482,6 +483,89 @@ TFile myOutputFile("genZpt_LO.root","RECREATE");
   hDDilPtRap3EE_QCD ->Write();
   hDDilPtRap4MM_QCD ->Write();
   hDDilPtRap4EE_QCD ->Write();
+myOutputFile.Close();
+}
+else if(nsel == 2){ // WW
+const int nFiles = 2;
+TFile *_file[nFiles];
+_file[0] = TFile::Open(Form("%s/qqWW.root", inputFolder.Data()));
+_file[1] = TFile::Open(Form("%s/ggWW.root", inputFolder.Data()));
+
+double xs[nFiles] = {(118.7-3.974)*0.1086*0.1086*9,3.974*0.1086*0.1086*9*1.4};
+
+TH1D *hDITotalMCWeight[nFiles];
+
+TH1D *hDIWWMLL[nFiles];     TH1D *hDIWWMLL_PDF[nFiles];	   TH1D *hDIWWMLL_QCD[nFiles];	 
+TH1D *hDIWWPTL1[nFiles];    TH1D *hDIWWPTL1_PDF[nFiles];   TH1D *hDIWWPTL1_QCD[nFiles];	 
+TH1D *hDIWWPTL2[nFiles];    TH1D *hDIWWPTL2_PDF[nFiles];   TH1D *hDIWWPTL2_QCD[nFiles];   
+TH1D *hDIWWDPHILL[nFiles];  TH1D *hDIWWDPHILL_PDF[nFiles]; TH1D *hDIWWDPHILL_QCD[nFiles];   
+
+for(int i=0; i<nFiles; i++){
+  hDITotalMCWeight[i] = (TH1D*)_file[i]->Get("hDTotalMCWeight");	 
+
+  hDIWWMLL[i]       = (TH1D*)_file[i]->Get("hDWWMLL");    hDIWWMLL[i]->Sumw2();    hDIWWMLL[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
+  hDIWWPTL1[i]      = (TH1D*)_file[i]->Get("hDWWPTL1");   hDIWWPTL1[i]->Sumw2();   hDIWWPTL1[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
+  hDIWWPTL2[i]      = (TH1D*)_file[i]->Get("hDWWPTL2");   hDIWWPTL2[i]->Sumw2();   hDIWWPTL2[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
+  hDIWWDPHILL[i]    = (TH1D*)_file[i]->Get("hDWWDPHILL"); hDIWWDPHILL[i]->Sumw2(); hDIWWDPHILL[i]  ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
+
+  hDIWWMLL_PDF[i]       = (TH1D*)_file[i]->Get("hDWWMLL_PDF");    hDIWWMLL_PDF[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
+  hDIWWPTL1_PDF[i]      = (TH1D*)_file[i]->Get("hDWWPTL1_PDF");   hDIWWPTL1_PDF[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
+  hDIWWPTL2_PDF[i]      = (TH1D*)_file[i]->Get("hDWWPTL2_PDF");   hDIWWPTL2_PDF[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
+  hDIWWDPHILL_PDF[i]    = (TH1D*)_file[i]->Get("hDWWDPHILL_PDF"); hDIWWDPHILL_PDF[i]  ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
+
+  hDIWWMLL_QCD[i]       = (TH1D*)_file[i]->Get("hDWWMLL_QCD");    hDIWWMLL_QCD[i]     ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
+  hDIWWPTL1_QCD[i]      = (TH1D*)_file[i]->Get("hDWWPTL1_QCD");   hDIWWPTL1_QCD[i]	->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights());  
+  hDIWWPTL2_QCD[i]      = (TH1D*)_file[i]->Get("hDWWPTL2_QCD");   hDIWWPTL2_QCD[i]    ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
+  hDIWWDPHILL_QCD[i]    = (TH1D*)_file[i]->Get("hDWWDPHILL_QCD"); hDIWWDPHILL_QCD[i]  ->Scale(xs[i]/hDITotalMCWeight[i]->GetSumOfWeights()); 
+}
+
+TH1D *hDWWMLL          = (TH1D*)hDIWWMLL     [0]->Clone();
+TH1D *hDWWPTL1         = (TH1D*)hDIWWPTL1    [0]->Clone();
+TH1D *hDWWPTL2         = (TH1D*)hDIWWPTL2    [0]->Clone();
+TH1D *hDWWDPHILL       = (TH1D*)hDIWWDPHILL  [0]->Clone();
+
+TH1D *hDWWMLL_PDF      = (TH1D*)hDIWWMLL_PDF     [0]->Clone();
+TH1D *hDWWPTL1_PDF     = (TH1D*)hDIWWPTL1_PDF    [0]->Clone();
+TH1D *hDWWPTL2_PDF     = (TH1D*)hDIWWPTL2_PDF    [0]->Clone();
+TH1D *hDWWDPHILL_PDF   = (TH1D*)hDIWWDPHILL_PDF  [0]->Clone();
+
+TH1D *hDWWMLL_QCD      = (TH1D*)hDIWWMLL_QCD     [0]->Clone();
+TH1D *hDWWPTL1_QCD     = (TH1D*)hDIWWPTL1_QCD    [0]->Clone();
+TH1D *hDWWPTL2_QCD     = (TH1D*)hDIWWPTL2_QCD    [0]->Clone();
+TH1D *hDWWDPHILL_QCD   = (TH1D*)hDIWWDPHILL_QCD  [0]->Clone();
+
+for(int i=1; i<nFiles; i++){
+  hDWWMLL   	->Add(hDIWWMLL	    [i]);   
+  hDWWPTL1   	->Add(hDIWWPTL1	    [i]);   
+  hDWWPTL2  	->Add(hDIWWPTL2     [i]);  
+  hDWWDPHILL	->Add(hDIWWDPHILL   [i]);  
+
+  hDWWMLL_PDF       ->Add(hDIWWMLL_PDF       [i]);   
+  hDWWPTL1_PDF      ->Add(hDIWWPTL1_PDF      [i]);   
+  hDWWPTL2_PDF      ->Add(hDIWWPTL2_PDF      [i]);  
+  hDWWDPHILL_PDF    ->Add(hDIWWDPHILL_PDF    [i]);  
+
+  hDWWMLL_QCD       ->Add(hDIWWMLL_QCD       [i]);   
+  hDWWPTL1_QCD      ->Add(hDIWWPTL1_QCD      [i]);   
+  hDWWPTL2_QCD      ->Add(hDIWWPTL2_QCD      [i]);  
+  hDWWDPHILL_QCD    ->Add(hDIWWDPHILL_QCD    [i]);  
+}
+
+TFile myOutputFile("genWW.root","RECREATE");
+  hDWWMLL	->Write(); 
+  hDWWPTL1	->Write(); 
+  hDWWPTL2	->Write();
+  hDWWDPHILL	->Write();
+
+  hDWWMLL_PDF     ->Write(); 
+  hDWWPTL1_PDF    ->Write(); 
+  hDWWPTL2_PDF    ->Write();
+  hDWWDPHILL_PDF  ->Write();
+
+  hDWWMLL_QCD     ->Write(); 
+  hDWWPTL1_QCD    ->Write(); 
+  hDWWPTL2_QCD    ->Write();
+  hDWWDPHILL_QCD  ->Write();
 myOutputFile.Close();
 }
 }
