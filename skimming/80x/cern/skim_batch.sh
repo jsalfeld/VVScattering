@@ -31,9 +31,9 @@ echo 'Working folder: '${thePWD}
 
 #if [[ -e /eos/cms/store ]] &&  [[ -e $CMSSW_BASE/src ]]; then
 if [[ -e $CMSSW_BASE/src ]]; then
-   ###root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"root://eoscms.cern.ch//eos/${INPUTDIR}/${datasetName}/${fileName}\",\"${thePWD}/${SKIMDIR}/${datasetName}/${fileName}\",\"${TYPE}\",0,0\);
+   ###root -l -q -b VVScattering/skimming/80x/makeOneSkimSample.C+\(\"root://eoscms.cern.ch//eos/${INPUTDIR}/${datasetName}/${fileName}\",\"${thePWD}/${SKIMDIR}/${datasetName}/${fileName}\",\"${TYPE}\",0,0\);
    mkdir -p ${thePWD}/eos/${SKIMDIR}/${datasetName};
-   root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"root://eoscms.cern.ch//eos/${INPUTDIR}/${datasetName}/${fileName}\",\"${thePWD}/eos/${SKIMDIR}/${datasetName}/${fileName}\",\"${TYPE}\",0,0\);
+   root -l -q -b VVScattering/skimming/80x/makeOneSkimSample.C+\(\"root://eoscms.cern.ch//eos/${INPUTDIR}/${datasetName}/${fileName}\",\"${thePWD}/eos/${SKIMDIR}/${datasetName}/${fileName}\",\"${TYPE}\",0,0\);
    eos rm /eos/${SKIMDIR}/${datasetName}/${fileName};
    xrdcp ${thePWD}/eos/${SKIMDIR}/${datasetName}/${fileName} root://eoscms.cern.ch//eos/${SKIMDIR}/${datasetName}/${fileName};
    rm -f ${thePWD}/eos/${SKIMDIR}/${datasetName}/${fileName};

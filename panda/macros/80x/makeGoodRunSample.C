@@ -51,7 +51,7 @@ readEventList(char const* _fileName)
 void makeGoodRunSample(
  TString input_file     = "nero_old.root",
  TString outputFileName = "nero_new.root",
- string jsonFile        = "/home/ceballos/cms/cmssw/046/CMSSW_8_0_26_patch1/src/MitAnalysisRunII/json/80x/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"
+ string jsonFile        = "/home/ceballos/cms/cmssw/046/CMSSW_8_0_26_patch1/src/VVScattering/json/80x/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"
  ){
 
   TFile *the_input_file = TFile::Open(input_file.Data());

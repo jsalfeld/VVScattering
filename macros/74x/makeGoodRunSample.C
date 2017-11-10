@@ -53,7 +53,7 @@ readEventList(char const* _fileName)
 void makeGoodRunSample(
  TString input_file     = "nero_old.root",
  TString outputFileName = "nero_new.root",
- string jsonFile        = "MitAnalysisRunII/json/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt",
+ string jsonFile        = "VVScattering/json/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt",
  string badFile         = "json/csc2015_Dec01.txt"
  ){
 

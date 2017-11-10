@@ -16,7 +16,7 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
-#include "MitAnalysisRunII/macros/74x/factors.h"
+#include "VVScattering/macros/74x/factors.h"
 
 bool usePureMC = false; 
 double mcPrescale = 1.0;
@@ -38,7 +38,7 @@ void zzAnalysis(
 
   TString puPath = "";
   if      (period==1){
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_25ns.root";
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/VVScattering/data/74x/puWeights_13TeV_25ns.root";
   infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data()));												infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data()));												infilecatv.push_back(0);

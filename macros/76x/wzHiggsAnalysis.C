@@ -19,9 +19,9 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
-#include "MitAnalysisRunII/macros/76x/factors.h"
+#include "VVScattering/macros/76x/factors.h"
 
-#include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
+#include "VVScattering/macros/LeptonScaleLookup.h"
 
 enum selType                     { SIGSEL, nSelTypes};
 TString selTypeName[nSelTypes]= { "SIGSEL"};
@@ -51,7 +51,7 @@ void wzHiggsAnalysisNEWwithSysRenameSystematics(
   TString filesPathMCSig  = "/scratch/jsalfeld/VBFWZ_76X_13TeV_Signal/met_";
 
 
-TString fileFakeShape ="MitAnalysisRunII/data/80x/fakeShape2016.root";
+TString fileFakeShape ="VVScattering/data/80x/fakeShape2016.root";
 
 
 //TString filesPathDA  = "/scratch/ceballos/ntuples_weightsDA_76x/met_";
@@ -68,7 +68,7 @@ TString fileFakeShape ="MitAnalysisRunII/data/80x/fakeShape2016.root";
 
   TString puPath = "";
   if      (period==1){
-  puPath = "MitAnalysisRunII/data/76x/puWeights_76x.root";
+  puPath = "VVScattering/data/76x/puWeights_76x.root";
         infilenamev.push_back(Form("%sdata_AOD_Run2015C_25ns.root",filesPathDA.Data()));											      infilecatv.push_back(0);
      infilenamev.push_back(Form("%sdata_AOD_Run2015D_25ns.root",filesPathDA.Data()));											      infilecatv.push_back(0);
 
@@ -211,7 +211,7 @@ infilenamev.push_back(Form("%sTT_TuneCUETP8M1_13TeV-powheg-pythia8+RunIIFall15DR
   TH1D *fhDPUDown = (TH1D*)(fPUFile->Get("puWeightsDown")); assert(fhDPUDown);fhDPUDown->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  TFile *fElSF = TFile::Open(Form("VVScattering/data/76x/scalefactors_hww.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Medium_ele"));
   TH2D *fhDElTightSF  = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Tight_ele"));
   TH2D *fhDElMediumMVASF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_MediumMVA_ele"));
@@ -226,7 +226,7 @@ infilenamev.push_back(Form("%sTT_TuneCUETP8M1_13TeV-powheg-pythia8+RunIIFall15DR
   fhDElTightMVASF ->SetDirectory(0);
   delete fElSF;
 
-  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  TFile *fMuSF = TFile::Open(Form("VVScattering/data/76x/scalefactors_hww.root"));
   TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Medium_mu"));
   TH2D *fhDMuIsoSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Iso_mu"));
   assert(fhDMuMediumSF);

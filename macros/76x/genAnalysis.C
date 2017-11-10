@@ -16,7 +16,7 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
-#include "MitAnalysisRunII/macros/76x/factors.h"
+#include "VVScattering/macros/76x/factors.h"
 
 void genAnalysis(
  Int_t period = 1
@@ -34,7 +34,7 @@ void genAnalysis(
   vector<Int_t> infilecatv;  
 
   TString puPath = "";
-  puPath = "MitAnalysisRunII/data/76x/puWeights_76x.root";
+  puPath = "VVScattering/data/76x/puWeights_76x.root";
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data())); 					   infilecatv.push_back(1);
   infilenamev.push_back(Form("%sWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		 infilecatv.push_back(2);
   infilenamev.push_back(Form("%sWGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1+AODSIM.root",filesPathMC.Data()));		   infilecatv.push_back(3);

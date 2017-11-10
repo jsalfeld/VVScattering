@@ -16,7 +16,7 @@
 #include "NeroProducer/Core/interface/BareTrigger.hpp"
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 
-#include "MitAnalysisRunII/macros/76x/factors.h"
+#include "VVScattering/macros/76x/factors.h"
 
 double mcPrescale = 1.0;
 
@@ -52,7 +52,7 @@ void QCDAnalysis(
   if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00828;prescale[2]=0.00499;prescale[3]=0.00716;prescale[4]=0.00887;}
   else if(typeSel == 13) {prescale[0]=0.00245;prescale[1]=0.06880;prescale[2]=0.09568;prescale[3]=0.09479;prescale[4]=0.09383;}
 
-  puPath = "MitAnalysisRunII/data/76x/puWeights_76x.root";
+  puPath = "VVScattering/data/76x/puWeights_76x.root";
   infilenamev.push_back(Form("%sdata_AOD_Run2015C_25ns.root",filesPathDA.Data()));											      infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D_25ns.root",filesPathDA.Data()));											      infilecatv.push_back(0);
 
@@ -118,7 +118,7 @@ void QCDAnalysis(
   fhDPU->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  TFile *fElSF = TFile::Open(Form("VVScattering/data/76x/scalefactors_hww.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Medium_ele"));
   TH2D *fhDElTightSF  = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Tight_ele"));
   TH2D *fhDElMediumMVASF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_MediumMVA_ele"));
@@ -133,7 +133,7 @@ void QCDAnalysis(
   fhDElTightMVASF ->SetDirectory(0);
   delete fElSF;
 
-  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  TFile *fMuSF = TFile::Open(Form("VVScattering/data/76x/scalefactors_hww.root"));
   TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Medium_mu"));
   TH2D *fhDMuIsoSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Iso_mu"));
   assert(fhDMuMediumSF);

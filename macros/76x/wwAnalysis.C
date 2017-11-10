@@ -18,9 +18,9 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
-#include "MitAnalysisRunII/macros/76x/factors.h"
+#include "VVScattering/macros/76x/factors.h"
 
-#include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
+#include "VVScattering/macros/LeptonScaleLookup.h"
 
 #include "WWAnalysis/resummation/WWpTreweight.h"
 
@@ -60,7 +60,7 @@ void wwAnalysis(
 
   TString puPath = "";
   if      (period==1){
-  puPath = "MitAnalysisRunII/data/76x/puWeights_76x.root";
+  puPath = "VVScattering/data/76x/puWeights_76x.root";
 
   infilenamev.push_back(Form("%sdata_AOD_Run2015C_25ns.root",filesPathDA.Data()));											      infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D_25ns.root",filesPathDA.Data()));											      infilecatv.push_back(0);
@@ -153,7 +153,7 @@ void wwAnalysis(
   unsigned int nlep_= -1;
   unsigned int njets_= -1;
 
-  LeptonScaleLookup trigLookup(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  LeptonScaleLookup trigLookup(Form("VVScattering/data/76x/scalefactors_hww.root"));
 
   TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
   TH1D *fhDPU     = (TH1D*)(fPUFile->Get("puWeights"));     assert(fhDPU);    fhDPU    ->SetDirectory(0);
@@ -163,7 +163,7 @@ void wwAnalysis(
   fhDPU->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  TFile *fElSF = TFile::Open(Form("VVScattering/data/76x/scalefactors_hww.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Medium_ele"));
   TH2D *fhDElTightSF  = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Tight_ele"));
   TH2D *fhDElMediumMVASF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_MediumMVA_ele"));
@@ -178,7 +178,7 @@ void wwAnalysis(
   fhDElTightMVASF ->SetDirectory(0);
   delete fElSF;
 
-  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  TFile *fMuSF = TFile::Open(Form("VVScattering/data/76x/scalefactors_hww.root"));
   TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Medium_mu"));
   TH2D *fhDMuIsoSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Iso_mu"));
   assert(fhDMuMediumSF);
@@ -187,7 +187,7 @@ void wwAnalysis(
   fhDMuIsoSF->SetDirectory(0);
   delete fMuSF;
 
-  TFile *fWWPtRatio = TFile::Open(Form("/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/MyRatioWWpTHistogramAll.root"));
+  TFile *fWWPtRatio = TFile::Open(Form("/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/VVScattering/data/74x/MyRatioWWpTHistogramAll.root"));
   TH1D *fhDWWPtRatio           = (TH1D*)(fWWPtRatio->Get("wwpt"));
   TH1D *fhDWWPtRatio_scaleup   = (TH1D*)(fWWPtRatio->Get("wwpt_scaleup"));
   TH1D *fhDWWPtRatio_scaledown = (TH1D*)(fWWPtRatio->Get("wwpt_scaledown"));

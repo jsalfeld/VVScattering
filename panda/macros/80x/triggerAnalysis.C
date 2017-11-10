@@ -10,7 +10,7 @@
 #include <fstream>
 #include "TLorentzVector.h"
 
-#include "MitAnalysisRunII/panda/macros/80x/pandaFlat.C"
+#include "VVScattering/panda/macros/80x/pandaFlat.C"
 
 enum TriggerBits {
     kMETTrig	   =(1<<0),

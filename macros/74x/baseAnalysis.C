@@ -16,7 +16,7 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
-#include "MitAnalysisRunII/macros/74x/factors.h"
+#include "VVScattering/macros/74x/factors.h"
 
 bool usePureMC = false; 
 double mcPrescale = 1.0;
@@ -44,7 +44,7 @@ void baseAnalysis(
 
   TString puPath = "";
   if      (period==0){
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_50ns.root";
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/VVScattering/data/74x/puWeights_13TeV_50ns.root";
   infilenamev.push_back(Form("%sdata_AOD_50ns.root",filesPath.Data()));														  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sWWTo2L2Nu_13TeV-powheg+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2+AODSIM.root",filesPath.Data()));						  infilecatv.push_back(1);
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1+AODSIM.root",filesPath.Data()));	  infilecatv.push_back(2);
@@ -57,7 +57,7 @@ void baseAnalysis(
   assert(0);
   }
   else if(period==1){
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_25ns.root";
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/VVScattering/data/74x/puWeights_13TeV_25ns.root";
   infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data()));											      infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data()));											      infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data()));											      infilecatv.push_back(0);
@@ -126,8 +126,8 @@ void baseAnalysis(
   fhDPU->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/74x/scalefactors_dylan.root"));
-  //TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/74x/scalefactors_hww.root"));
+  TFile *fElSF = TFile::Open(Form("VVScattering/data/74x/scalefactors_dylan.root"));
+  //TFile *fElSF = TFile::Open(Form("VVScattering/data/74x/scalefactors_hww.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Medium_ele"));
   TH2D *fhDElTightSF  = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Tight_ele"));
   assert(fhDElMediumSF);
@@ -136,8 +136,8 @@ void baseAnalysis(
   fhDElTightSF ->SetDirectory(0);
   delete fElSF;
 
-  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/74x/scalefactors_dylan.root"));
-  //TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/74x/scalefactors_hww.root"));
+  TFile *fMuSF = TFile::Open(Form("VVScattering/data/74x/scalefactors_dylan.root"));
+  //TFile *fMuSF = TFile::Open(Form("VVScattering/data/74x/scalefactors_hww.root"));
   TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Medium_mu"));
   assert(fhDMuMediumSF);
   fhDMuMediumSF->SetDirectory(0);

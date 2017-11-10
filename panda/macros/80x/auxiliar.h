@@ -1,4 +1,4 @@
-#include "MitAnalysisRunII/panda/macros/80x/auxiliar_data.h"
+#include "VVScattering/panda/macros/80x/auxiliar_data.h"
 
 double trigger_sf(double theTrgEff[2][2][nTrgBinPt1][nTrgBinPt2][nTrgBinEta1][nTrgBinEta2], double pt1, double eta1, int pdg1, double pt2, double eta2, int pdg2){
   double ptaux = pt1;

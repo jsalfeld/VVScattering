@@ -15,7 +15,7 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
-#include "MitAnalysisRunII/macros/80x/factors.h"
+#include "VVScattering/macros/80x/factors.h"
 
 void triggerAnalysis(
 bool applyFullLepSel = false,
@@ -84,7 +84,7 @@ int typeAna = 0
     return;
   }
 
-  TString puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
+  TString puPath = "VVScattering/data/80x/puWeights_80x_37ifb.root";
   TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
   TH1D *fhDPU     = (TH1D*)(fPUFile->Get("puWeights"));     assert(fhDPU);    fhDPU    ->SetDirectory(0);
   TH1D *fhDPUUp   = (TH1D*)(fPUFile->Get("puWeightsUp"));   assert(fhDPUUp);  fhDPUUp  ->SetDirectory(0);

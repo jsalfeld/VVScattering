@@ -22,7 +22,7 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "MitAna/Utils/interface/SimpleTable.h"
 
-#include "MitAnalysisRunII/macros/74x/factors.h"
+#include "VVScattering/macros/74x/factors.h"
 #include "WWAnalysis/resummation/WWpTreweight.h"
 
 // filterType = -1 ==> no filter
@@ -79,7 +79,7 @@ void makeSkimSample(
               "WWAnalysis/resummation/powheg_2l2nu_sdown_nlo.dat",
               "WWAnalysis/resummation/powheg_2l2nu_nnlo.dat");
 
-  mithep::SimpleTable xstab("$CMSSW_BASE/src/MitAnalysisRunII/data/xs.dat");
+  mithep::SimpleTable xstab("$CMSSW_BASE/src/VVScattering/data/xs.dat");
   Double_t crossSection = xstab.Get(processName.Data()) * 1000.0; // cross section in fb
   printf("crossSection(%s): %f fb\n",processName.Data(),crossSection);
 

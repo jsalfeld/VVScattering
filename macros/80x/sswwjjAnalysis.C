@@ -18,10 +18,10 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
-#include "MitAnalysisRunII/macros/80x/factors.h"
-#include "MitAnalysisRunII/macros/80x/BTagCalibrationStandalone.cc"
+#include "VVScattering/macros/80x/factors.h"
+#include "VVScattering/macros/80x/BTagCalibrationStandalone.cc"
 
-#include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
+#include "VVScattering/macros/LeptonScaleLookup.h"
 
 const double effTimesXsFiducial[2] = {0.177093*0.0269642*1000, 0.157640*0.0269642*1000}; // eff x cross section x 1000 (pb -> fb)
 
@@ -98,7 +98,7 @@ void sswwjjAnalysis(
   TString triggerSuffix = "*";
   if(isMINIAOD) triggerSuffix = "";
   if      (period==1){
-  puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
+  puPath = "VVScattering/data/80x/puWeights_80x_37ifb.root";
 
   //data samples
   if(isMINIAOD) {
@@ -254,7 +254,7 @@ void sswwjjAnalysis(
   Float_t fMVACut[4][4];
   InitializeJetIdCuts(fMVACut);
 
-  BTagCalibration2 *btagCalib = new BTagCalibration2("csvv2","MitAnalysisRunII/data/80x/CSVv2_Moriond17_B_H.csv");
+  BTagCalibration2 *btagCalib = new BTagCalibration2("csvv2","VVScattering/data/80x/CSVv2_Moriond17_B_H.csv");
 
   BTagCalibration2Reader btagReaderBCLOOSE(btagCalib,BTagEntry::OP_MEDIUM,"comb","central");
   BTagCalibration2Reader btagReaderLLOOSE(btagCalib,BTagEntry::OP_MEDIUM,"incl","central");
@@ -270,7 +270,7 @@ void sswwjjAnalysis(
   BTagCalibration2Reader btagReaderBCTIGHTDOWN(btagCalib,BTagEntry::OP_TIGHT,"comb","down");
   BTagCalibration2Reader btagReaderLTIGHTDOWN(btagCalib,BTagEntry::OP_TIGHT,"incl","down");
 
-  LeptonScaleLookup trigLookup(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  LeptonScaleLookup trigLookup(Form("VVScattering/data/76x/scalefactors_hww.root"));
 
   TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
   TH1D *fhDPU     = (TH1D*)(fPUFile->Get("puWeights"));     assert(fhDPU);    fhDPU    ->SetDirectory(0);
@@ -278,11 +278,11 @@ void sswwjjAnalysis(
   TH1D *fhDPUDown = (TH1D*)(fPUFile->Get("puWeightsDown")); assert(fhDPUDown);fhDPUDown->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fTrackElectronReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_37ifb.root"));
+  TFile *fTrackElectronReco_SF = TFile::Open(Form("VVScattering/data/80x/scalefactors_80x_egpog_37ifb.root"));
   TH2D *fhDeltrksf= (TH2D*)(fTrackElectronReco_SF->Get("scalefactors_Reco_Electron")); assert(fhDeltrksf); fhDeltrksf->SetDirectory(0);
   delete fTrackElectronReco_SF;
 
-  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_37ifb.root"));
+  TFile *fElSF = TFile::Open(Form("VVScattering/data/80x/scalefactors_80x_egpog_37ifb.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
   TH2D *fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
   if(typeLepSel == "medium_mva") fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_MediumMVA_Electron"));
@@ -293,35 +293,35 @@ void sswwjjAnalysis(
   fhDElTightSF->SetDirectory(0);
   delete fElSF;
 
-  TFile *fElVeryTightSF = TFile::Open(Form("MitAnalysisRunII/data/80x/veryTightSF_37ifb.root"));
+  TFile *fElVeryTightSF = TFile::Open(Form("VVScattering/data/80x/veryTightSF_37ifb.root"));
   TH1D *fhDVeryTightSF = (TH1D*)(fElVeryTightSF->Get("veryTightSF"));
   assert(fhDVeryTightSF);
   fhDVeryTightSF->SetDirectory(0);
   delete fElVeryTightSF;
 
-  //TFile *fElveryTightWrongSignEff = TFile::Open(Form("MitAnalysisRunII/data/80x/veryTightWrongSignEff_37ifb.root"));
+  //TFile *fElveryTightWrongSignEff = TFile::Open(Form("VVScattering/data/80x/veryTightWrongSignEff_37ifb.root"));
   //TH1D *fhDveryTightWrongSignEff = (TH1D*)(fElveryTightWrongSignEff->Get("veryTightWrongSignEff"));
   //assert(fhDveryTightWrongSignEff);
   //fhDveryTightWrongSignEff->SetDirectory(0);
   //delete fElveryTightWrongSignEff;
 
-  TFile *fTrackMuonReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/Tracking_EfficienciesAndSF_BCDEFGH.root"));
+  TFile *fTrackMuonReco_SF = TFile::Open(Form("VVScattering/data/80x/Tracking_EfficienciesAndSF_BCDEFGH.root"));
   TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackMuonReco_SF->Get("ratio_eff_eta3_dr030e030_corr")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
   delete fTrackMuonReco_SF;
 
-  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/80x/muon_scalefactors_37ifb.root"));
+  TFile *fMuSF = TFile::Open(Form("VVScattering/data/80x/muon_scalefactors_37ifb.root"));
   TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("scalefactors_TightId_Muon")); assert(fhDMuMediumSF); fhDMuMediumSF->SetDirectory(0);
-  //TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/80x/MuonID_Z_RunBCD_prompt80X_7p65.root"));
+  //TFile *fMuSF = TFile::Open(Form("VVScattering/data/80x/MuonID_Z_RunBCD_prompt80X_7p65.root"));
   //TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("MC_NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/abseta_pt_ratio")); assert(fhDMuMediumSF); fhDMuMediumSF->SetDirectory(0);
   delete fMuSF;
 
-  TFile *fMuIsoSF = TFile::Open(Form("MitAnalysisRunII/data/80x/muon_scalefactors_37ifb.root"));
+  TFile *fMuIsoSF = TFile::Open(Form("VVScattering/data/80x/muon_scalefactors_37ifb.root"));
   TH2D *fhDMuIsoSF = (TH2D*)(fMuIsoSF->Get("scalefactors_Iso_MuonTightId")); assert(fhDMuIsoSF); fhDMuIsoSF->SetDirectory(0);
-  //TFile *fMuIsoSF = TFile::Open(Form("MitAnalysisRunII/data/80x/MuonIso_Z_RunBCD_prompt80X_7p65.root"));
+  //TFile *fMuIsoSF = TFile::Open(Form("VVScattering/data/80x/MuonIso_Z_RunBCD_prompt80X_7p65.root"));
   //TH2D *fhDMuIsoSF = (TH2D*)(fMuIsoSF->Get("MC_NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/abseta_pt_ratio")); assert(fhDMuIsoSF); fhDMuIsoSF->SetDirectory(0);
   delete fMuIsoSF;
 
-  TFile *fEWKInt_syst = TFile::Open(Form("MitAnalysisRunII/data/80x/phantom_interference_2D.root"));
+  TFile *fEWKInt_syst = TFile::Open(Form("VVScattering/data/80x/phantom_interference_2D.root"));
   TH2D *fhDEWKInt_syst = (TH2D*)(fEWKInt_syst->Get("interference"));
   assert(fhDEWKInt_syst);
   fhDEWKInt_syst->SetDirectory(0);

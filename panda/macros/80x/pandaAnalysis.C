@@ -12,10 +12,10 @@
 #include "TRandom.h"
 #include "TLorentzVector.h"
 
-#include "MitAnalysisRunII/panda/macros/80x/pandaFlat.C"
-#include "MitAnalysisRunII/data/80x/RoccoR.cc"
-#include "MitAnalysisRunII/macros/80x/helicity.h"
-#include "MitAnalysisRunII/panda/macros/80x/auxiliar.h"
+#include "VVScattering/panda/macros/80x/pandaFlat.C"
+#include "VVScattering/data/80x/RoccoR.cc"
+#include "VVScattering/macros/80x/helicity.h"
+#include "VVScattering/panda/macros/80x/auxiliar.h"
 
 enum TriggerBits {
     kMETTrig	   =(1<<0),
@@ -43,7 +43,7 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
   TString isNoDYName = "";
   if(whichAnaFlow == 1) isNoDYName = "_nody";
 
-  TString dirPathRM = TString(gSystem->Getenv("CMSSW_BASE")) + "/src/MitAnalysisRunII/data/80x/rcdata.2016.v3";
+  TString dirPathRM = TString(gSystem->Getenv("CMSSW_BASE")) + "/src/VVScattering/data/80x/rcdata.2016.v3";
   RoccoR rmcor(dirPathRM.Data());
   double lumi = 35.8;
   double k_eff = sqrt(20374493./12953378.);
@@ -170,20 +170,20 @@ void pandaAnalysis(int whichDY = 0, int whichAnaFlow = 0, bool isMIT=true)
                                                                               28,  30, 32,  35, 37,  40,43,  48, 52, 59, 65, 75, 86,100,120,140,160, 175, 190, 205,
                                                                              220, 235,250, 275,300, 350,400,450,500,750,1500};
 
-  TFile *fLepton_Eta_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_eta_sf_37ifb_ori.root"));
+  TFile *fLepton_Eta_SF = TFile::Open(Form("VVScattering/data/80x/scalefactors_80x_eta_sf_37ifb_ori.root"));
   TH1D* scalefactors_Muon_Eta = (TH1D*)fLepton_Eta_SF->Get("scalefactors_Muon_Eta"); scalefactors_Muon_Eta->SetDirectory(0);
   TH1D* scalefactors_Electron_Eta = (TH1D*)fLepton_Eta_SF->Get("scalefactors_Electron_Eta"); scalefactors_Electron_Eta->SetDirectory(0);
   fLepton_Eta_SF->Close();
 
-  TFile *fLepton_SF_mu_central = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_dylan_MediumIdOnly_ori.root"));
+  TFile *fLepton_SF_mu_central = TFile::Open(Form("VVScattering/data/80x/scalefactors_80x_dylan_MediumIdOnly_ori.root"));
   TH2D* scalefactors_Medium_Muon = (TH2D*)fLepton_SF_mu_central->Get("scalefactors_Medium_Muon"); scalefactors_Medium_Muon->SetDirectory(0);
   fLepton_SF_mu_central->Close();
 
-  TFile *fLepton_SF_el_central = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_dylan_MediumIdOnly_ori.root"));
+  TFile *fLepton_SF_el_central = TFile::Open(Form("VVScattering/data/80x/scalefactors_80x_dylan_MediumIdOnly_ori.root"));
   TH2D* scalefactors_Medium_Electron = (TH2D*)fLepton_SF_el_central->Get("scalefactors_Medium_Electron"); scalefactors_Medium_Electron->SetDirectory(0);
   fLepton_SF_el_central->Close();
 
-  TFile *fLepton_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_dylan_MediumIdOnly_ori.root"));
+  TFile *fLepton_SF = TFile::Open(Form("VVScattering/data/80x/scalefactors_80x_dylan_MediumIdOnly_ori.root"));
 
   TH2D* scalefactors_Medium_Muon_stat_error_hi      = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_stat_error_hi");      scalefactors_Medium_Muon_stat_error_hi     ->SetDirectory(0);
   TH2D* scalefactors_Medium_Muon_signalFsrTNP	    = (TH2D*)fLepton_SF->Get("scalefactors_Medium_Muon_signalFsrTNP");       scalefactors_Medium_Muon_signalFsrTNP      ->SetDirectory(0);

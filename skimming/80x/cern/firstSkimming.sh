@@ -37,7 +37,7 @@ for datasetName in `cat $theRND.txt`; do
   mkdir -p $SKIMDIR/$datasetName;
   ls $INPUTDIR/$datasetName|grep root > $SKIMDIR/$datasetName.txt;
   for fileName in `cat $SKIMDIR/$datasetName.txt`; do
-    root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/$datasetName/$fileName\",\"$SKIMDIR/$datasetName/$fileName\",\"${TYPE}\",-1,0\);
+    root -l -q -b VVScattering/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/$datasetName/$fileName\",\"$SKIMDIR/$datasetName/$fileName\",\"${TYPE}\",-1,0\);
   done
   rm -f $SKIMDIR/$datasetName.txt;
 done

@@ -11,8 +11,8 @@
 #include "TRandom.h"
 #include "TLorentzVector.h"
 
-#include "MitAnalysisRunII/panda/macros/80x/pandaFlat.C"
-#include "MitAnalysisRunII/data/80x/RoccoR.cc"
+#include "VVScattering/panda/macros/80x/pandaFlat.C"
+#include "VVScattering/data/80x/RoccoR.cc"
 
 double nPUScaleFactor(TH1D *fhDPU, float npu){
   double mynpu = TMath::Min(npu,(float)79.999);
@@ -42,7 +42,7 @@ const double mass_el = 0.000510998928;
 const double mass_mu = 0.10566;
 void pandaZAnalysis(int whichDY = 0, bool isMIT = true, bool isTopSel = false)
 {
-  TString dirPathRM = TString(gSystem->Getenv("CMSSW_BASE")) + "/src/MitAnalysisRunII/data/80x/rcdata.2016.v3";
+  TString dirPathRM = TString(gSystem->Getenv("CMSSW_BASE")) + "/src/VVScattering/data/80x/rcdata.2016.v3";
   RoccoR rmcor(dirPathRM.Data());
   double lumi = 35.8;
   double k_eff = 0.5 * sqrt(20285930./12446486.);
@@ -88,7 +88,7 @@ void pandaZAnalysis(int whichDY = 0, bool isMIT = true, bool isTopSel = false)
   //infileName_.push_back(Form("%sH125.root" ,filesPath.Data()));                infileCat_.push_back(7);
 */
 
-  TFile *fPUFile = TFile::Open(Form("MitAnalysisRunII/data/90x/puWeights_90x.root"));
+  TFile *fPUFile = TFile::Open(Form("VVScattering/data/90x/puWeights_90x.root"));
   TH1D *fhDPU = (TH1D*)(fPUFile->Get("puWeights")); assert(fhDPU); fhDPU->SetDirectory(0);
   delete fPUFile;
 

@@ -16,9 +16,9 @@
 #include "NeroProducer/Core/interface/BareTrigger.hpp"
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 
-#include "MitAnalysisRunII/macros/80x/factors.h"
+#include "VVScattering/macros/80x/factors.h"
 
-#include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
+#include "VVScattering/macros/LeptonScaleLookup.h"
 
 int whichSkim = 0;
 double mcPrescale = 1.0;
@@ -59,7 +59,7 @@ void ZllAnalysis(
 
   TString triggerSuffix = "*";
   if(isMINIAOD) triggerSuffix = "";
-  TString puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
+  TString puPath = "VVScattering/data/80x/puWeights_80x_37ifb.root";
   if(isMINIAOD) {
     infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data())); infilecatv.push_back(0);
     infilenamev.push_back(Form("%sdata_Run2016C.root",filesPathDA.Data())); infilecatv.push_back(0);
@@ -84,12 +84,12 @@ void ZllAnalysis(
   TH1D *fhDPUDown = (TH1D*)(fPUFile->Get("puWeightsDown")); assert(fhDPUDown);fhDPUDown->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fTrackElectronReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_37ifb.root"));
+  TFile *fTrackElectronReco_SF = TFile::Open(Form("VVScattering/data/80x/scalefactors_80x_egpog_37ifb.root"));
   TH2D *fhDeltrksf= (TH2D*)(fTrackElectronReco_SF->Get("scalefactors_Reco_Electron")); assert(fhDeltrksf); fhDeltrksf->SetDirectory(0);
   delete fTrackElectronReco_SF;
 
-  TFile *fElSF_latinos = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_latinos_37ifb.root"));
-  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_37ifb.root"));
+  TFile *fElSF_latinos = TFile::Open(Form("VVScattering/data/80x/scalefactors_80x_latinos_37ifb.root"));
+  TFile *fElSF = TFile::Open(Form("VVScattering/data/80x/scalefactors_80x_egpog_37ifb.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
   TH2D *fhDElTightSF;
   if(typeLepSel == "medium_mva") fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_MediumMVA_Electron"));
@@ -107,25 +107,25 @@ void ZllAnalysis(
   delete fElSF;
   delete fElSF_latinos;
 
-  TFile *fElVeryTightSF = TFile::Open(Form("MitAnalysisRunII/data/80x/veryTightSF_37ifb.root"));
+  TFile *fElVeryTightSF = TFile::Open(Form("VVScattering/data/80x/veryTightSF_37ifb.root"));
   TH1D *fhDVeryTightSF = (TH1D*)(fElVeryTightSF->Get("veryTightSF"));
   assert(fhDVeryTightSF);
   fhDVeryTightSF->SetDirectory(0);
   delete fElVeryTightSF;
 
-  TFile *fTrackMuonReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/Tracking_EfficienciesAndSF_BCDEFGH.root"));
+  TFile *fTrackMuonReco_SF = TFile::Open(Form("VVScattering/data/80x/Tracking_EfficienciesAndSF_BCDEFGH.root"));
   TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackMuonReco_SF->Get("ratio_eff_eta3_dr030e030_corr")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
   delete fTrackMuonReco_SF;
 
-  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/80x/muon_scalefactors_37ifb.root"));
+  TFile *fMuSF = TFile::Open(Form("VVScattering/data/80x/muon_scalefactors_37ifb.root"));
   TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("scalefactors_TightId_Muon")); assert(fhDMuMediumSF); fhDMuMediumSF->SetDirectory(0);
-  //TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/80x/MuonID_Z_RunBCD_prompt80X_7p65.root"));
+  //TFile *fMuSF = TFile::Open(Form("VVScattering/data/80x/MuonID_Z_RunBCD_prompt80X_7p65.root"));
   //TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("MC_NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/abseta_pt_ratio")); assert(fhDMuMediumSF); fhDMuMediumSF->SetDirectory(0);
   delete fMuSF;
 
-  TFile *fMuIsoSF = TFile::Open(Form("MitAnalysisRunII/data/80x/muon_scalefactors_37ifb.root"));
+  TFile *fMuIsoSF = TFile::Open(Form("VVScattering/data/80x/muon_scalefactors_37ifb.root"));
   TH2D *fhDMuIsoSF = (TH2D*)(fMuIsoSF->Get("scalefactors_Iso_MuonTightId")); assert(fhDMuIsoSF); fhDMuIsoSF->SetDirectory(0);
-  //TFile *fMuIsoSF = TFile::Open(Form("MitAnalysisRunII/data/80x/MuonIso_Z_RunBCD_prompt80X_7p65.root"));
+  //TFile *fMuIsoSF = TFile::Open(Form("VVScattering/data/80x/MuonIso_Z_RunBCD_prompt80X_7p65.root"));
   //TH2D *fhDMuIsoSF = (TH2D*)(fMuIsoSF->Get("MC_NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/abseta_pt_ratio")); assert(fhDMuIsoSF); fhDMuIsoSF->SetDirectory(0);
   delete fMuIsoSF;
 

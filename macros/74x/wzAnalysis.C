@@ -18,7 +18,7 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
-#include "MitAnalysisRunII/macros/74x/factors.h"
+#include "VVScattering/macros/74x/factors.h"
 
 enum selType                     { SIGSEL, nSelTypes};
 TString selTypeName[nSelTypes]= { "SIGSEL"};
@@ -52,7 +52,7 @@ void wzAnalysis(
 
   TString puPath = "";
   if      (period==1){
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_25ns.root";
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/VVScattering/data/74x/puWeights_13TeV_25ns.root";
 
   infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
@@ -114,7 +114,7 @@ void wzAnalysis(
   fhDPU->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fElSF = TFile::Open(Form("/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/scalefactors_dylan.root"));
+  TFile *fElSF = TFile::Open(Form("/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/VVScattering/data/74x/scalefactors_dylan.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Medium_ele"));
   TH2D *fhDElTightSF  = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Tight_ele"));
   assert(fhDElMediumSF);
@@ -123,7 +123,7 @@ void wzAnalysis(
   fhDElTightSF ->SetDirectory(0);
   delete fElSF;
 
-  TFile *fMuSF = TFile::Open(Form("/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/scalefactors_dylan.root"));
+  TFile *fMuSF = TFile::Open(Form("/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/VVScattering/data/74x/scalefactors_dylan.root"));
   TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Medium_mu"));
   assert(fhDMuMediumSF);
   fhDMuMediumSF->SetDirectory(0);

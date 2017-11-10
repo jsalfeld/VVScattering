@@ -16,7 +16,7 @@
 #include "NeroProducer/Core/interface/BareTrigger.hpp"
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 
-#include "MitAnalysisRunII/macros/74x/factors.h"
+#include "VVScattering/macros/74x/factors.h"
 
 double mcPrescale = 1.0;
 
@@ -52,7 +52,7 @@ void QCDAnalysis(
   if     (typeSel == 11) {prescale[0]=0.00000;prescale[1]=0.00828;prescale[2]=0.00499;prescale[3]=0.00716;prescale[4]=0.00887;}
   else if(typeSel == 13) {prescale[0]=0.00245;prescale[1]=0.06880;prescale[2]=0.09568;prescale[3]=0.09479;prescale[4]=0.09383;}
 
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_25ns.root";
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/VVScattering/data/74x/puWeights_13TeV_25ns.root";
   infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data())); 												  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data())); 												  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D4_25ns.root",filesPath.Data())); 												  infilecatv.push_back(0);

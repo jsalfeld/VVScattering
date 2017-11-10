@@ -1,5 +1,5 @@
 --> setup
-source MitAnalysisRunII/panda/bin/80x/setup_leptonic.sh
+source VVScattering/panda/bin/80x/setup_leptonic.sh
 
 --> run macro 
 PandaAnalysis/T3/inputs/skim_lep_tmpl.py

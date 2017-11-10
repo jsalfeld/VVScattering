@@ -18,7 +18,7 @@
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 #include "NeroProducer/Core/interface/BareMonteCarlo.hpp"
 
-#include "MitAnalysisRunII/macros/74x/factors.h"
+#include "VVScattering/macros/74x/factors.h"
 #include "WWAnalysis/resummation/WWpTreweight.h"
 
 enum selType                     { SIGSEL, nSelTypes};
@@ -54,7 +54,7 @@ void wwAnalysis(
 
   TString puPath = "";
   if      (period==1){
-  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/puWeights_13TeV_25ns.root";
+  puPath = "/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/VVScattering/data/74x/puWeights_13TeV_25ns.root";
 
   infilenamev.push_back(Form("%sdata_AOD_Run2015C1_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D3_25ns.root",filesPath.Data()));												  infilecatv.push_back(0);
@@ -145,7 +145,7 @@ void wwAnalysis(
   fhDPU->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fWWPtRatio = TFile::Open(Form("/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/MitAnalysisRunII/data/74x/MyRatioWWpTHistogramAll.root"));
+  TFile *fWWPtRatio = TFile::Open(Form("/home/ceballos/cms/cmssw/042/CMSSW_7_4_6/src/VVScattering/data/74x/MyRatioWWpTHistogramAll.root"));
   TH1D *fhDWWPtRatio           = (TH1D*)(fWWPtRatio->Get("wwpt"));
   TH1D *fhDWWPtRatio_scaleup   = (TH1D*)(fWWPtRatio->Get("wwpt_scaleup"));
   TH1D *fhDWWPtRatio_scaledown = (TH1D*)(fWWPtRatio->Get("wwpt_scaledown"));

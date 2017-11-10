@@ -16,9 +16,9 @@
 #include "NeroProducer/Core/interface/BareTrigger.hpp"
 #include "NeroProducer/Core/interface/BareVertex.hpp"
 
-#include "MitAnalysisRunII/macros/76x/factors.h"
+#include "VVScattering/macros/76x/factors.h"
 
-#include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
+#include "VVScattering/macros/LeptonScaleLookup.h"
 
 Int_t period = 1;
 
@@ -36,7 +36,7 @@ void ZllAnalysis(TString typeLepSel = "default"){
 
   TString puPath = "";
   if     (period==1){
-  puPath = "MitAnalysisRunII/data/76x/puWeights_76x.root";
+  puPath = "VVScattering/data/76x/puWeights_76x.root";
   infilenamev.push_back(Form("%sdata_AOD_Run2015C_25ns.root",filesPathDA.Data()));											      infilecatv.push_back(0);
   infilenamev.push_back(Form("%sdata_AOD_Run2015D_25ns.root",filesPathDA.Data()));											      infilecatv.push_back(0);
   infilenamev.push_back(Form("%sDYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8+RunIIFall15DR76-PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext1-v1+AODSIM.root",filesPathMC.Data()));         infilecatv.push_back(1);
@@ -49,7 +49,7 @@ void ZllAnalysis(TString typeLepSel = "default"){
   Float_t fMVACut[4][4];
   InitializeJetIdCuts(fMVACut);
 
-  LeptonScaleLookup trigLookup(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  LeptonScaleLookup trigLookup(Form("VVScattering/data/76x/scalefactors_hww.root"));
  
   TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
   TH1D *fhDPU = (TH1D*)(fPUFile->Get("puWeights"));
@@ -57,7 +57,7 @@ void ZllAnalysis(TString typeLepSel = "default"){
   fhDPU->SetDirectory(0);
   delete fPUFile;
 
-  TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  TFile *fElSF = TFile::Open(Form("VVScattering/data/76x/scalefactors_hww.root"));
   TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Medium_ele"));
   TH2D *fhDElTightSF  = (TH2D*)(fElSF->Get("unfactorized_scalefactors_Tight_ele"));
   TH2D *fhDElMediumMVASF = (TH2D*)(fElSF->Get("unfactorized_scalefactors_MediumMVA_ele"));
@@ -72,7 +72,7 @@ void ZllAnalysis(TString typeLepSel = "default"){
   fhDElTightMVASF ->SetDirectory(0);
   delete fElSF;
 
-  TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  TFile *fMuSF = TFile::Open(Form("VVScattering/data/76x/scalefactors_hww.root"));
   TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Medium_mu"));
   TH2D *fhDMuIsoSF = (TH2D*)(fMuSF->Get("unfactorized_scalefactors_Iso_mu"));
   assert(fhDMuMediumSF);

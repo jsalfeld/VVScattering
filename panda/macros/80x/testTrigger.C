@@ -10,8 +10,8 @@
 #include <fstream>
 #include "TLorentzVector.h"
 
-//#include "MitAnalysisRunII/panda/macros/80x/auxiliar_old.h"
-#include "MitAnalysisRunII/panda/macros/80x/auxiliar.h"
+//#include "VVScattering/panda/macros/80x/auxiliar_old.h"
+#include "VVScattering/panda/macros/80x/auxiliar.h"
 
 void testTrigger(){
 

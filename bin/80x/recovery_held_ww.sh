@@ -17,7 +17,7 @@ condor_q ceballos|grep H|grep ceballos|awk '{printf("condor_rm %s\n",$1)}' > lll
 chmod a+x lll3;./lll3;
 rm -f lll0 lll1 lll2 lll3;
 
-cp $CMSSW_BASE/src/MitAnalysisRunII/bin/80x/submit_configs_ww.sh submit_configs_temp.sh;
-sed -i 's|--analysis=$CMSSW_BASE/src/MitAnalysisRunII/python/80x/bambuToNero.py|--update --name=ww_all|' submit_configs_temp.sh;
+cp $CMSSW_BASE/src/VVScattering/bin/80x/submit_configs_ww.sh submit_configs_temp.sh;
+sed -i 's|--analysis=$CMSSW_BASE/src/VVScattering/python/80x/bambuToNero.py|--update --name=ww_all|' submit_configs_temp.sh;
 ./submit_configs_temp.sh;
 rm -f submit_configs_temp.sh;

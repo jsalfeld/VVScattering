@@ -22,9 +22,9 @@
 #include "TMVA/Reader.h"
 #include "TMVA/Tools.h"
 
-#include "MitAnalysisRunII/macros/80x/factors.h"
+#include "VVScattering/macros/80x/factors.h"
 
-#include "MitAnalysisRunII/macros/LeptonScaleLookup.h"
+#include "VVScattering/macros/LeptonScaleLookup.h"
 
 
 double superVar(double mjjIn, double jetDetaJJ){
@@ -179,7 +179,7 @@ void wzScatteringAnalysis(
   TString puPath = "";
   if      (period==1){
 
-  puPath = "MitAnalysisRunII/data/80x/puWeights_80x_37ifb.root";
+  puPath = "VVScattering/data/80x/puWeights_80x_37ifb.root";
 
 
     infilenamev.push_back(Form("%sdata_Run2016B.root",filesPathDA.Data())); infilecatv.push_back(0);
@@ -282,7 +282,7 @@ infilenamev.push_back(Form("%sTT_TuneCUETP8M1_13TeV-powheg-pythia8+RunIIFall15DR
   InitializeJetIdCuts(fMVACut);
   //cout<<"hi"<<endl;
 
-  LeptonScaleLookup trigLookup(Form("MitAnalysisRunII/data/76x/scalefactors_hww.root"));
+  LeptonScaleLookup trigLookup(Form("VVScattering/data/76x/scalefactors_hww.root"));
 
 
   TFile *fPUFile = TFile::Open(Form("%s",puPath.Data()));
@@ -292,11 +292,11 @@ infilenamev.push_back(Form("%sTT_TuneCUETP8M1_13TeV-powheg-pythia8+RunIIFall15DR
   delete fPUFile;
   //cout<<"hello1"<<endl;  
 
-  TFile *fTrackElectronReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_37ifb.root"));
+  TFile *fTrackElectronReco_SF = TFile::Open(Form("VVScattering/data/80x/scalefactors_80x_egpog_37ifb.root"));
   TH2D *fhDeltrksf= (TH2D*)(fTrackElectronReco_SF->Get("scalefactors_Reco_Electron")); assert(fhDeltrksf); fhDeltrksf->SetDirectory(0);
    delete fTrackElectronReco_SF;
 cout<<"hello1"<<endl;  
-   TFile *fElSF = TFile::Open(Form("MitAnalysisRunII/data/80x/scalefactors_80x_egpog_37ifb.root"));
+   TFile *fElSF = TFile::Open(Form("VVScattering/data/80x/scalefactors_80x_egpog_37ifb.root"));
    TH2D *fhDElMediumSF = (TH2D*)(fElSF->Get("scalefactors_Medium_Electron"));
    TH2D *fhDElTightSF = (TH2D*)(fElSF->Get("scalefactors_Tight_Electron"));
    assert(fhDElMediumSF);
@@ -307,30 +307,30 @@ cout<<"hello1"<<endl;
 
 
  cout<<"hello2"<<endl;  
-   //TFile *fTrackMuonReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/trackMuReco_SF.root"));
-   TFile *fTrackMuonReco_SF = TFile::Open(Form("MitAnalysisRunII/data/80x/Tracking_EfficienciesAndSF_BCDEFGH.root"));
+   //TFile *fTrackMuonReco_SF = TFile::Open(Form("VVScattering/data/80x/trackMuReco_SF.root"));
+   TFile *fTrackMuonReco_SF = TFile::Open(Form("VVScattering/data/80x/Tracking_EfficienciesAndSF_BCDEFGH.root"));
    //TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackMuonReco_SF->Get("mutrksfptg10")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
     TH1D *fhDmutrksfptg10 = (TH1D*)(fTrackMuonReco_SF->Get("ratio_eff_eta3_dr030e030_corr")); assert(fhDmutrksfptg10); fhDmutrksfptg10->SetDirectory(0);
    //TH1D *fhDmutrksfptl10 = (TH1D*)(fTrackMuonReco_SF->Get("mutrksfptl10")); assert(fhDmutrksfptl10); fhDmutrksfptl10->SetDirectory(0);
    delete fTrackMuonReco_SF;
 cout<<"hello3"<<endl;  
  
-   TFile *fMuSF = TFile::Open(Form("MitAnalysisRunII/data/80x/muon_scalefactors_37ifb.root"));
+   TFile *fMuSF = TFile::Open(Form("VVScattering/data/80x/muon_scalefactors_37ifb.root"));
    TH2D *fhDMuMediumSF = (TH2D*)(fMuSF->Get("scalefactors_TightId_Muon")); assert(fhDMuMediumSF); fhDMuMediumSF->SetDirectory(0);
    delete fMuSF;
 
 
 
-   TFile *fMuIsoSF = TFile::Open(Form("MitAnalysisRunII/data/80x/muon_scalefactors_37ifb.root"));
+   TFile *fMuIsoSF = TFile::Open(Form("VVScattering/data/80x/muon_scalefactors_37ifb.root"));
    TH2D *fhDMuIsoSF = (TH2D*)(fMuIsoSF->Get("scalefactors_Iso_MuonTightId")); assert(fhDMuIsoSF); fhDMuIsoSF->SetDirectory(0);
    delete fMuIsoSF;
 
 
 
- TString theVeryTightSFName = "MitAnalysisRunII/data/80x/veryTightSF_37ifb.root";
+ TString theVeryTightSFName = "VVScattering/data/80x/veryTightSF_37ifb.root";
 
   if(strcmp(typeLepSel.Data(),"veryverytight")==0){
-    theVeryTightSFName = "MitAnalysisRunII/data/80x/veryveryTightSF_37ifb.root";
+    theVeryTightSFName = "VVScattering/data/80x/veryveryTightSF_37ifb.root";
     printf("Using veryverytight SF\n");
   }
 

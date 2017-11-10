@@ -20,8 +20,8 @@ fi
 
 if [ $2 == 0 ]
 then
-root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}TTTo2L2Nu_13TeV-powheg.root\",\"tt2l\",$1\)
+root -l -q -b VVScattering/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}TTTo2L2Nu_13TeV-powheg.root\",\"tt2l\",$1\)
 elif [ $2 == 1 ]
 then
-root -l -q -b MitAnalysisRunII/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}TTToSemiLeptonic_13TeV-powheg.root\",\"ttqql\",$1\)
+root -l -q -b VVScattering/skimming/80x/makeOneSkimSample.C+\(\"$INPUTDIR/TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_0000.root\",\"$OUTPUTDIR/${PREFIX}TTToSemiLeptonic_13TeV-powheg.root\",\"ttqql\",$1\)
 fi
