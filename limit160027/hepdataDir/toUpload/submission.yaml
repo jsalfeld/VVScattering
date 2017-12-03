@@ -1,0 +1,10 @@
+comment: A search for charged Higgs bosons produced via vector boson fusion and decaying into $W^{\pm}$ and $Z$ bosons using proton-proton collisions at $\sqrt{s}=13$ TeV is presented. The data sample corresponds to an integrated luminosity of 15.2\fbinv collected with the CMS detector in 2015 and 2016. The event selection requires three leptons (electrons or muons), two jets with large pseudorapidity separation and high dijet mass, and missing transverse momentum. The observation agrees with the standard model prediction. Limits on the vector boson fusion production cross section times branching fraction for new charged physical states are reported as a function of mass from 200 to 2000 GeV and interpreted in the context of Higgs triplet models.
+---
+data_file: Table1.yaml
+description: Expected and observed exclusion limits at 95% confidence level as a function of $m(H^{\pm})$ for $\sigma_\mathrm{VBF}(H^{\pm}) \, \mathcal{B}(H^{\pm}\to W^{\pm}Z)$ for 15.2 $\mathrm{fb}^{-1}$ of proton-proton collisions at 13 TeV collected in 2015 and 2016.
+keywords:
+  - {name: reactions, values: [HIGGS+ --> Z0 W]}
+  - {name: cmenergies, values: [13000.0]}
+  - {name: phrases, values: [VBF, WZ, lllv, Georgi-Machacek Model, HIGGS+ --> Z0 W]}
+location: Data from Figure 3
+name: Table 1

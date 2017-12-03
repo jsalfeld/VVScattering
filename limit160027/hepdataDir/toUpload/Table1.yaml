@@ -1,0 +1,104 @@
+dependent_variables:
+- header: {name: Cross section times branching ratio upper limit at 95% CL, units: fb}
+  qualifiers:
+  - {name: Limit, value: Observed}
+  - {name: SQRT(S), units: GeV, value: 13000}
+  - {name: LUMINOSITY, units: 'fb$^{-1}$', value: 15.2}
+  values:
+  - {value: 572.54}
+  - {value: 892.95}
+  - {value: 635.46}
+  - {value: 178.61}
+  - {value: 130.82}
+  - {value: 88.77}
+  - {value: 71.79}
+  - {value: 55.85}
+  - {value: 48.93}
+  - {value: 37.43}
+  - {value: 35.82}
+- header: {name: Cross section times branching ratio upper limit at 95% CL, units: fb}
+  qualifiers:
+  - {name: Limit, value: Expected}
+  - {name: SQRT(S), units: GeV, value: 13000}
+  - {name: LUMINOSITY, units: 'fb$^{-1}$', value: 15.2}
+  values:
+  - errors:
+    - asymerror: {minus: -215.64, plus: 326.81}
+      label: 1 sigma
+    - asymerror: {minus: -347.19, plus: 746.01}
+      label: 2 sigma
+    value: 725.56
+  - errors:
+    - asymerror: {minus: -158.78, plus: 238.69}
+      label: 1 sigma
+    - asymerror: {minus: -255.65, plus: 551.45}
+      label: 2 sigma
+    value: 529.92
+  - errors:
+    - asymerror: {minus: -118.73, plus: 182.22}
+      label: 1 sigma
+    - asymerror: {minus: -193.59, plus: 421.00}
+      label: 2 sigma
+    value: 404.56
+  - errors:
+    - asymerror: {minus: -63.28, plus: 101.66}
+      label: 1 sigma
+    - asymerror: {minus: -100.00, plus: 243.72}
+      label: 2 sigma
+    value: 194.68
+  - errors:
+    - asymerror: {minus: -52.22, plus: 85.05}
+      label: 1 sigma
+    - asymerror: {minus: -83.03, plus: 201.96}
+      label: 2 sigma
+    value: 162.87
+  - errors:
+    - asymerror: {minus: -38.89, plus: 65.11}
+      label: 1 sigma
+    - asymerror: {minus: -60.33, plus: 159.83}
+      label: 2 sigma
+    value: 111.11
+  - errors:
+    - asymerror: {minus: -34.26, plus: 58.71}
+      label: 1 sigma
+    - asymerror: {minus: -53.81, plus: 141.84}
+      label: 2 sigma
+    value: 100.19
+  - errors:
+    - asymerror: {minus: -30.24, plus: 51.74}
+      label: 1 sigma
+    - asymerror: {minus: -46.92, plus: 127.85}
+      label: 2 sigma
+    value: 84.28
+  - errors:
+    - asymerror: {minus: -27.34, plus: 46.78}
+      label: 1 sigma
+    - asymerror: {minus: -42.42, plus: 117.30}
+      label: 2 sigma
+    value: 76.21
+  - errors:
+    - asymerror: {minus: -21.03, plus: 37.57}
+      label: 1 sigma
+    - asymerror: {minus: -31.85, plus: 94.29}
+      label: 2 sigma
+    value: 52.94
+  - errors:
+    - asymerror: {minus: -19.21, plus: 35.70}
+      label: 1 sigma
+    - asymerror: {minus: -28.75, plus: 90.98}
+      label: 2 sigma
+    value: 45.23
+independent_variables:
+- header: {name: Mass, units: GeV}
+  values:
+  - {value: 200}
+  - {value: 300}
+  - {value: 400}
+  - {value: 500}
+  - {value: 600}
+  - {value: 700}
+  - {value: 800}
+  - {value: 900}
+  - {value: 1000}
+  - {value: 1500}
+  - {value: 2000}
