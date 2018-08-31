@@ -1,0 +1,27 @@
+imax 1 number of channels
+jmax * number of background
+kmax * number of nuisance parameters
+shapes * * wz3l3lEW_input_13TeV2016.root histo_$PROCESS histo_$PROCESS_$SYSTEMATIC
+shapes data_obs * wz3l3lEW_input_13TeV2016.root histo_Data
+Observation -1
+bin wz3l13TeV20161 wz3l13TeV20161 wz3l13TeV20161 wz3l13TeV20161 wz3l13TeV20161 wz3l13TeV20161
+process Zg VVV WZ ZZ Fake EWWZ
+process 1 2 5 3 4 0 
+rate -1.00000 -1.00000  -1.00000  -1.00000  -1.00000  -1.00000
+lumi_13TeV                               lnN  	1.02500   1.02500   1.02500   1.02500    -    1.02500       
+norm_WZ_13TeV2016		                   lnN    	  -      -      1.05000     -      -     -          
+CMS_eff_b_mistag_13TeV2016				   lnN  	0.98000   0.98000   0.98000    0.98000    -    0.98000       
+CMS_wz3l_FakeSys		                   lnN   	  -       -       -       -    1.30000    -         
+CMS_eff_m                               shape  	1.00000   1.00000   1.00000   1.00000   -     1.00000       
+CMS_eff_e                               shape  	1.00000   1.00000   1.00000   1.00000   -     1.00000       
+CMS_pu                               shape  	1.00000   1.00000   1.00000   1.00000   -     1.00000       
+CMS_scale_j                               shape  	1.00000   1.00000   1.00000   1.00000   -     1.00000       
+CMS_res_j                               shape  	1.00000   1.00000   1.00000   1.00000   -     1.00000       
+CMS_scale_l                               shape  	1.00000   1.00000   1.00000   1.00000   -     1.00000       
+CMS_QCDScale_Zg	                             shape   	1.00000     -       -      -      -       -         
+CMS_QCDScale_VVV	                             shape   	  -     1.00000     -      -      -       -         
+CMS_QCDScale_WZ	                             shape        -       -      1.00000   -      -       -         
+CMS_QCDScale_ZZ	                             shape   	  -       -        -    1.00000   -       -         
+CMS_QCDScale_EWWZ	                             shape        -       -        -      -     -     1.00000       
+CMS_pdf_qqbar	                             shape   	1.00000   1.00000    1.00000  1.00000   -     1.00000       
+* autoMCStats 0 
