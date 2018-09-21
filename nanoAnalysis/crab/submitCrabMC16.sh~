@@ -1,0 +1,40 @@
+#!/bin/bash
+
+samplesAndDatasets[0]="/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17__017_realistic_v11-v1-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[1]="/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17__017_realistic_v11-v1-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[2]="/WZZ_TuneCP5_13TeV-amcatnlo-pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17__017_realistic_v11-v1-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[3]="/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17__017_realistic_v11-v1-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[4]="/tZq_ll_4f_ckm_NLO_TuneCP5_PSweights_13TeV-amcatnlo-pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17__017_realistic_v10-v1-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[5]="/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[6]="/GluGluToContinToZZTo2e2mu_13TeV_MCFM701_pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[7]="/GluGluToContinToZZTo2e2nu_13TeV_MCFM701_pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[8]="/GluGluToContinToZZTo2e2tau_13TeV_MCFM701_pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[9]="/GluGluToContinToZZTo2mu2nu_13TeV_MCFM701_pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[10]="/GluGluToContinToZZTo2mu2tau_13TeV_MCFM701_pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[11]="/GluGluToContinToZZTo4mu_13TeV_MCFM701_pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[12]="/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[13]="/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[14]="/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[15]="/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+samplesAndDatasets[16]="/ZZTo4L_13TeV_powheg_pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER"
+
+# ZG sample missing (general)
+#WWZ sample missing
+#WZZ sample missing
+#ZZZ sample missing
+#WJe sample missing
+#tZq sample missing
+
+
+#IFS='/' read -r -a array <<< "$samplesAndDatasets[1]"
+#echo ${array[1]}
+
+
+for j in {0..16}; do
+	echo ${samplesAndDatasets[j]}
+	IFS='/' read -r -a array <<< "${samplesAndDatasets[j]}"
+	#echo ${array[1]}
+	crab submit -c crab_cfgAuto.py General.requestName=${array[1]} Data.inputDataset=${samplesAndDatasets[j]}
+	array=0
+	
+done

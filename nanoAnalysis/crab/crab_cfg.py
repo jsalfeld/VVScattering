@@ -1,0 +1,25 @@
+from WMCore.Configuration import Configuration
+config = Configuration()
+
+config.section_("General")
+config.General.requestName = 'NanoPost8'
+config.General.transferLogs=True
+config.section_("JobType")
+config.JobType.pluginName = 'Analysis'
+config.JobType.psetName = 'PSet.py'
+config.JobType.scriptExe = 'crab_script.sh'
+config.JobType.inputFiles = ['./crab_script.py','../scripts/haddnano.py'] #hadd nano will not be needed once nano tools are in cmssw
+config.JobType.sendPythonFolder	 = True
+config.section_("Data")
+config.Data.inputDataset = '/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8/arizzi-RunIIFall17MiniAOD-94X-Nano01Fall17-e273b12d9f89d622a34e4bc98b05ee29/USER'
+#config.Data.inputDBS = 'global'
+config.Data.splitting = 'FileBased'
+#config.Data.splitting = 'EventAwareLumiBased'
+config.Data.unitsPerJob = 5
+config.Data.totalUnits = 2000
+config.Data.inputDBS='phys03'
+config.Data.outLFNDirBase = '/store/user/jsalfeld/'
+config.Data.publication = False
+config.Data.outputDatasetTag = 'NanoTestPost2'
+config.section_("Site")
+config.Site.storageSite = "T2_CH_CERN"
